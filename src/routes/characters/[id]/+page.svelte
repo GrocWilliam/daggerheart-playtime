@@ -25,7 +25,7 @@
 {#if form?.error}<p role="alert">{form.error}</p>{/if}
 
 {#each [['hp', 'HP'], ['stress', 'Stress'], ['hope', 'Hope'], ['armor', 'Armor']] as [key, label] (key)}
-	<form method="POST" action="?/tracker">
+	<form class="tracker" method="POST" action="?/tracker">
 		<input type="hidden" name="tracker" value={key} />
 		{label}:
 		<button type="submit" name="delta" value="-1">-</button>

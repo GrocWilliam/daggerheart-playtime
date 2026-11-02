@@ -36,7 +36,7 @@
 		</h3>
 		<p>{ch.class}, level {ch.level}</p>
 		{#each [['hp', 'HP'], ['stress', 'Stress'], ['hope', 'Hope'], ['armor', 'Armor']] as [key, label] (key)}
-			<form method="POST" action="?/tracker">
+			<form class="tracker" method="POST" action="?/tracker">
 				<input type="hidden" name="characterId" value={ch.id} />
 				<input type="hidden" name="tracker" value={key} />
 				{label}:

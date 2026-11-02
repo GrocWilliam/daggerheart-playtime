@@ -32,3 +32,9 @@ describe('party grid', () => {
 		expect(css).toMatch(/min-width: 1024px\)[\s\S]*\.party\s*\{[^}]*repeat\(3,/);
 	});
 });
+
+describe('trackers', () => {
+	it('keeps controls on one centred, non-wrapping line', () => {
+		expect(css).toMatch(/\.tracker\s*\{[^}]*display: flex[^}]*flex-wrap: nowrap[^}]*align-items: center/);
+	});
+});

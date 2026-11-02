@@ -146,3 +146,15 @@ article {
 		grid-template-columns: repeat(3, minmax(0, 1fr));
 	}
 }
+
+.tracker {
+	display: flex;
+	flex-wrap: nowrap;
+	align-items: center;
+	gap: 0.5rem;
+}
+
+.tracker > span {
+	min-width: 2ch;
+	text-align: center;
+}
