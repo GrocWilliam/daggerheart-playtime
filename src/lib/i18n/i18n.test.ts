@@ -41,3 +41,12 @@ describe('campaign glossary', () => {
 		expect(translate('en', 'badge.restrained')).toBe('Restrained');
 	});
 });
+
+describe('character sheet glossary', () => {
+	it('translates inventory, gold and gold units', () => {
+		expect(translate('fr', 'section.inventory')).toBe('Inventaire');
+		expect(translate('fr', 'section.gold')).toBe('Or');
+		expect(translate('fr', 'gold.bags')).toBe('bourses');
+		expect(translate('en', 'condition.clear.hidden')).toBe('Clear hidden');
+	});
+});
