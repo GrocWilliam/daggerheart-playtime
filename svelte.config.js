@@ -5,7 +5,10 @@ import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
 const config = {
 	preprocess: vitePreprocess(),
 	kit: {
-		adapter: adapter()
+		adapter: adapter(),
+		// adapter-node assumes https behind a proxy, which breaks SvelteKit's
+		// built-in check on plain http; hooks.server.ts does the check instead.
+		csrf: { checkOrigin: false }
 	}
 };
 

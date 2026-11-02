@@ -18,3 +18,10 @@ describe('clampFear', () => {
 		expect(clampFear(12, -100)).toBe(0);
 	});
 });
+
+describe('createCampaign validation', () => {
+	it('rejects an invalid name before touching the database', async () => {
+		const { createCampaign, ApiError } = await import('./campaigns');
+		await expect(createCampaign({ name: '  ' })).rejects.toBeInstanceOf(ApiError);
+	});
+});

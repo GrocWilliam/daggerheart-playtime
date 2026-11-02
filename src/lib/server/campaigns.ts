@@ -59,3 +59,26 @@ export function detail(
 }
 
 export { json };
+
+type CampaignRow = { id: string; name: string; fear: number };
+
+export async function listCampaigns(): Promise<CampaignRow[]> {
+	const { getDb } = await import('./db');
+	const db = await getDb();
+	const { rows } = await db.query<CampaignRow>(
+		'SELECT id, name, fear FROM campaigns ORDER BY created_at, seq'
+	);
+	return rows;
+}
+
+/** Validates the name (throws ApiError 400) and inserts a campaign. */
+export async function createCampaign(body: unknown): Promise<CampaignRow> {
+	const name = parseName(body);
+	const { getDb } = await import('./db');
+	const db = await getDb();
+	const { rows } = await db.query<CampaignRow>(
+		'INSERT INTO campaigns (name) VALUES ($1) RETURNING id, name, fear',
+		[name]
+	);
+	return rows[0];
+}
