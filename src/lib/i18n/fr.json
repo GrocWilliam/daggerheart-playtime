@@ -78,5 +78,9 @@
 	"reference.kind.armors": "Armures",
 	"reference.kind.consumables": "Consommables",
 	"reference.kind.items": "Objets",
-	"reference.kind.rules": "Règles"
+	"reference.kind.rules": "Règles",
+	"field.subclass": "Sous-classe",
+	"field.ancestry": "Ascendance",
+	"field.community": "Communauté",
+	"option.none": "Aucune"
 }

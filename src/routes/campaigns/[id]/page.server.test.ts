@@ -13,7 +13,7 @@ describe('campaign page server', () => {
 
 	it('load returns the campaign', async () => {
 		const r = await load({ params: { id: 'x' }, fetch: reply(200, { id: 'x', fear: 1 }) } as never);
-		expect(r).toEqual({ campaign: { id: 'x', fear: 1 } });
+		expect(r).toEqual({ campaign: { id: 'x', fear: 1 }, chosen: {} });
 	});
 
 	it('fear action forwards delta', async () => {

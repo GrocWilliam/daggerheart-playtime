@@ -57,6 +57,14 @@ async function post(pageUrl, formHtml, { fill = {}, check = [], button } = {}) {
 		const n = attr(a, 'name');
 		if (n) body.set(n, unesc(content));
 	}
+	// <select>: like a browser, submit the selected option (or the first one).
+	for (const [, a, content] of formHtml.matchAll(/<select\b([^>]*)>([\s\S]*?)<\/select>/gi)) {
+		const n = attr(a, 'name');
+		if (!n) continue;
+		const opts = [...content.matchAll(/<option\b([^>]*)>/gi)].map((m) => m[1]);
+		const o = opts.find((x) => /\bselected\b/i.test(x)) ?? opts[0];
+		if (o !== undefined) body.set(n, unesc(attr(o, 'value') ?? ''));
+	}
 	for (const [k, v] of Object.entries(fill)) body.set(k, String(v));
 	for (const n of check) {
 		const c = inputs(formHtml).find((i) => attr(i, 'name') === n && /checkbox/i.test(i));

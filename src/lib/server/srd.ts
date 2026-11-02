@@ -147,3 +147,67 @@ export function searchSrd(kind: SrdKind | undefined, q: string, lang: Lang): { k
 			}))
 	}));
 }
+
+const upper = (s: unknown) => String(s ?? '');
+const cap = (s: unknown) => upper(s).charAt(0) + upper(s).slice(1).toLowerCase().replace(/_/g, ' ');
+
+function paragraphs(desc: unknown): string[] {
+	return Array.isArray(desc)
+		? desc.map((d) => d?.paragraph?.['en-US']).filter((x): x is string => typeof x === 'string')
+		: [];
+}
+
+/** English help lines of an SRD element: facts, description paragraphs, then "<feature>: <text>". */
+export function helpLines(kind: SrdKind, e: Raw): string[] {
+	const out: string[] = [];
+	if (kind === 'weapons') {
+		const dmg = e.damage ?? {};
+		out.push(
+			[cap(e.trait), cap(e.range), `${dmg.dice ?? ''} ${cap(dmg.type)}`.trim(), cap(e.burden)].join(' · ')
+		);
+	} else if (kind === 'armors') {
+		out.push(`thresholds ${e.baseMajorThreshold}/${e.baseSevereThreshold} · score ${e.baseScore}`);
+	} else if (kind === 'domain-cards') {
+		out.push(`${cap(e.domain)} · level ${e.level} · recall cost ${e.recallCost}`);
+	}
+	out.push(...paragraphs(e.description));
+	(function walk(n: unknown) {
+		if (Array.isArray(n)) return n.forEach(walk);
+		if (n && typeof n === 'object') {
+			const o = n as Raw;
+			if (Array.isArray(o.description) && (o.name?.['en-US'] || !o.name)) {
+				const ps = paragraphs(o.description);
+				const nm = o.name?.['en-US'];
+				if (nm) out.push(`${nm}: ${ps[0] ?? ''}`.trim(), ...ps.slice(1));
+				else out.push(...ps);
+			} else {
+				for (const [k, v] of Object.entries(o)) if (k !== 'description' && k !== 'name') walk(v);
+			}
+		}
+	})(Object.fromEntries(Object.entries(e).filter(([k]) => k !== 'description' && k !== 'name')));
+	return out;
+}
+
+export type Pick = { id: string; name: string; en: string[] };
+
+function toPick(kind: SrdKind, d: { element: SrdElement; name: string }, lang: Lang): Pick {
+	return { id: d.element.id, name: localize(d.element.id, d.name, lang), en: helpLines(kind, d.element) };
+}
+
+export function pickList(kind: SrdKind, lang: Lang): Pick[] {
+	return data.get(kind)!.map((d) => toPick(kind, d, lang));
+}
+
+/** The subclasses of a class given by its English name (e.g. "Ranger"); [] for unknown classes. */
+export function subclassesOf(className: string, lang: Lang): Pick[] {
+	const cls = className.toUpperCase();
+	return data
+		.get('subclasses')!
+		.filter((d) => d.element.class === cls)
+		.map((d) => toPick('subclasses', d, lang));
+}
+
+export function pickOf(kind: SrdKind, id: string | null | undefined, lang: Lang): Pick | null {
+	const d = id ? data.get(kind)!.find((x) => x.element.id === id) : undefined;
+	return d ? toPick(kind, d, lang) : null;
+}

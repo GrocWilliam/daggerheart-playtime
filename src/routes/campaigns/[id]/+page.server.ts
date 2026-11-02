@@ -1,4 +1,5 @@
 import { error, fail } from '@sveltejs/kit';
+import { pickOf } from '$lib/server/srd';
 import type { Actions, PageServerLoad } from './$types';
 
 type Fetch = typeof fetch;
@@ -27,11 +28,20 @@ function failure(r: { status: number; data: { error?: string } | null }, extra: 
 	return fail(r.status, { error: r.data?.error ?? 'request failed', ...extra });
 }
 
-export const load: PageServerLoad = async ({ params, fetch }) => {
+export const load: PageServerLoad = async ({ params, fetch, locals }) => {
 	const r = await call(fetch, 'GET', `/api/campaigns/${encodeURIComponent(params.id)}`);
 	if (r.status === 404 || r.status === 400) error(404, 'Campaign not found');
 	if (!r.ok) error(r.status, 'Could not load campaign');
-	return { campaign: r.data };
+	const lang = locals?.lang ?? 'en';
+	const chosen: Record<string, unknown> = {};
+	for (const ch of r.data.characters ?? []) {
+		chosen[ch.id] = {
+			subclass: pickOf('subclasses', ch.subclass, lang),
+			ancestry: pickOf('ancestries', ch.ancestry, lang),
+			community: pickOf('communities', ch.community, lang)
+		};
+	}
+	return { campaign: r.data, chosen };
 };
 
 export const actions: Actions = {

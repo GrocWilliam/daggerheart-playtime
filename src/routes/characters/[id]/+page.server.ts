@@ -1,4 +1,5 @@
 import { error, fail } from '@sveltejs/kit';
+import { pickList, pickOf, subclassesOf, getSrd } from '$lib/server/srd';
 import type { Actions, PageServerLoad } from './$types';
 
 type Fetch = typeof fetch;
@@ -30,11 +31,26 @@ function failure(r: { status: number; data: { error?: string } | null }, extra: 
 
 const enc = encodeURIComponent;
 
-export const load: PageServerLoad = async ({ params, fetch }) => {
+export const load: PageServerLoad = async ({ params, fetch, locals }) => {
 	const r = await call(fetch, 'GET', `/api/characters/${enc(params.id)}`);
 	if (r.status === 404 || r.status === 400) error(404, 'Character not found');
 	if (!r.ok) error(r.status, 'Could not load character');
-	return { character: r.data };
+	const lang = locals?.lang ?? 'en';
+	const ch = r.data;
+	return {
+		character: ch,
+		picks: {
+			classes: pickList('classes', lang).map((p, i) => ({ ...p, value: pickList('classes', 'en')[i].name })),
+			subclasses: subclassesOf(String(ch.class), lang),
+			ancestries: pickList('ancestries', lang),
+			communities: pickList('communities', lang)
+		},
+		chosen: {
+			subclass: pickOf('subclasses', ch.subclass, lang),
+			ancestry: pickOf('ancestries', ch.ancestry, lang),
+			community: pickOf('communities', ch.community, lang)
+		}
+	};
 };
 
 export const actions: Actions = {
@@ -62,6 +78,15 @@ export const actions: Actions = {
 			class: form.get('class') ?? ''
 		};
 		for (const k of NUMERIC) body[k] = num(form.get(k));
+		for (const k of ['subclass', 'ancestry', 'community']) {
+			const v = form.get(k);
+			if (v !== null) body[k] = typeof v === 'string' && v !== '' ? v : null;
+		}
+		// a subclass belongs to one class: drop it when the class changed
+		if (typeof body.subclass === 'string') {
+			const sc = getSrd('subclasses', body.subclass, 'en');
+			if (sc && String(sc.class) !== String(body.class).toUpperCase()) body.subclass = null;
+		}
 		const r = await call(fetch, 'PATCH', `/api/characters/${enc(params.id)}`, body);
 		return r.ok ? { ok: true } : failure(r);
 	},

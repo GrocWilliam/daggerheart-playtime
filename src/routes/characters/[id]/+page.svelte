@@ -3,12 +3,12 @@
 	import Pips from '$lib/Pips.svelte';
 
 	import Help from '$lib/Help.svelte';
+	import Chosen from '$lib/Chosen.svelte';
 	let { data, form } = $props();
 	const t = (key: string) => translate(data.lang, key);
 	const c = $derived(data.character);
 	const fields = $derived([
 		['name', 'field.name', 'text', c.name],
-		['class', 'field.class', 'text', c.class],
 		['level', 'field.level', 'number', c.level],
 		['evasion', 'field.evasion', 'number', c.evasion],
 		['majorThreshold', 'field.majorThreshold', 'number', c.majorThreshold],
@@ -26,6 +26,7 @@
 	{#if c.hp.marked === c.hp.max}<span data-testid="down">{t('badge.down')}</span>{/if}
 </h1>
 <p class="muted">{c.class}, {t('character.level')} {c.level} <Help id="level" name={t('character.level')} lang={data.lang} /></p>
+<Chosen chosen={data.chosen} lang={data.lang} />
 
 {#if form?.error}<p role="alert">{form.error}</p>{/if}
 
@@ -64,7 +65,41 @@
 
 <h2>{t('section.edit')}</h2>
 <form method="POST" action="?/edit">
-	{#each fields as [name, label, type, value] (name)}
+	{#each fields.slice(0, 1) as [name, label, type, value] (name)}
+		<label>{t(label)} <input {type} {name} {value} required /></label>
+	{/each}
+	<label>
+		{t('field.class')}
+		<select name="class">
+			{#if !data.picks.classes.some((p: { value: string }) => p.value === c.class)}
+				<option value={c.class} selected>{c.class}</option>
+			{/if}
+			{#each data.picks.classes as p (p.id)}
+				<option value={p.value} selected={p.value === c.class}>{p.name}</option>
+			{/each}
+		</select>
+	</label>
+	<label>
+		{t('field.subclass')}
+		<select name="subclass">
+			<option value="" selected={!c.subclass}>{t('option.none')}</option>
+			{#each data.picks.subclasses as p (p.id)}
+				<option value={p.id} selected={p.id === c.subclass}>{p.name}</option>
+			{/each}
+		</select>
+	</label>
+	{#each [['ancestry', data.picks.ancestries], ['community', data.picks.communities]] as [k, list] (k)}
+		<label>
+			{t(`field.${k}`)}
+			<select name={k}>
+				<option value="" selected={!c[k]}>{t('option.none')}</option>
+				{#each list as p (p.id)}
+					<option value={p.id} selected={p.id === c[k]}>{p.name}</option>
+				{/each}
+			</select>
+		</label>
+	{/each}
+	{#each fields.slice(1) as [name, label, type, value] (name)}
 		<label>{t(label)} <input {type} {name} {value} required /></label>
 	{/each}
 	<button type="submit">{t('action.save')}</button>
