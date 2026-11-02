@@ -151,3 +151,43 @@
 		</li>
 	{/each}
 </ul>
+
+<h2>{t('section.cards')}</h2>
+<ul class="cards">
+	{#each data.cards as card (card.id)}
+		<li data-testid="card">
+			<span class="card-name">{card.name}</span>
+			<span class="muted">{card.domainName}, {t('card.level')} {card.level}</span>
+			<Help id={card.id} name={card.name} lang={data.lang} en={card.en} />
+			<form method="POST" action="?/removeCard">
+				<input type="hidden" name="cardId" value={card.id} />
+				<button type="submit">{t('action.remove')}</button>
+			</form>
+		</li>
+	{/each}
+</ul>
+<form method="POST" action="?/addCard">
+	<label>
+		{t('card.add')}
+		<select name="cardId" required>
+			{#each data.cardGroups as g (g.domain)}
+				<optgroup label={g.label}>
+					{#each g.cards as card (card.id)}
+						<option value={card.id}>{card.name}</option>
+					{/each}
+				</optgroup>
+			{/each}
+		</select>
+	</label>
+	<button type="submit">{t('action.addCard')}</button>
+</form>
+
+<style>
+	.cards {
+		list-style: none;
+		padding: 0;
+	}
+	.cards li {
+		overflow-wrap: anywhere;
+	}
+</style>

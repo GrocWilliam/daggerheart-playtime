@@ -211,3 +211,38 @@ export function pickOf(kind: SrdKind, id: string | null | undefined, lang: Lang)
 	const d = id ? data.get(kind)!.find((x) => x.element.id === id) : undefined;
 	return d ? toPick(kind, d, lang) : null;
 }
+
+export type CardPick = Pick & { domain: string; domainName: string; level: number };
+
+function toCardPick(d: { element: SrdElement; name: string }, lang: Lang): CardPick {
+	const dom = String(d.element.domain);
+	const domId = `core_domain_${dom.toLowerCase()}`;
+	return {
+		...toPick('domain-cards', d, lang),
+		domain: dom,
+		domainName: localize(domId, dom.charAt(0) + dom.slice(1).toLowerCase(), lang),
+		level: Number(d.element.level)
+	};
+}
+
+/** Domain cards by id, in the order given; unknown ids are skipped. */
+export function cardsByIds(ids: string[], lang: Lang): CardPick[] {
+	const all = data.get('domain-cards')!;
+	return ids.flatMap((id) => {
+		const d = all.find((x) => x.element.id === id);
+		return d ? [toCardPick(d, lang)] : [];
+	});
+}
+
+/** All domain cards grouped by domain; the domains of the class (English name) come first. */
+export function cardGroups(className: string, lang: Lang): { domain: string; label: string; cards: CardPick[] }[] {
+	const cls = data.get('classes')!.find((c) => c.element.name === className.toUpperCase());
+	const first: string[] = cls ? (cls.element.domains as string[]) : [];
+	const all = data.get('domain-cards')!.map((d) => toCardPick(d, lang));
+	const domains = [...new Set(all.map((c) => c.domain))];
+	const order = [...first.filter((d) => domains.includes(d)), ...domains.filter((d) => !first.includes(d))];
+	return order.map((domain) => {
+		const cards = all.filter((c) => c.domain === domain);
+		return { domain, label: cards[0].domainName, cards };
+	});
+}

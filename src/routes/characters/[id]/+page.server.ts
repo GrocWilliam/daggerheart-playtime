@@ -1,5 +1,5 @@
 import { error, fail } from '@sveltejs/kit';
-import { pickList, pickOf, subclassesOf, getSrd } from '$lib/server/srd';
+import { pickList, pickOf, subclassesOf, getSrd, cardsByIds, cardGroups } from '$lib/server/srd';
 import type { Actions, PageServerLoad } from './$types';
 
 type Fetch = typeof fetch;
@@ -45,6 +45,8 @@ export const load: PageServerLoad = async ({ params, fetch, locals }) => {
 			ancestries: pickList('ancestries', lang),
 			communities: pickList('communities', lang)
 		},
+		cards: cardsByIds(Array.isArray(ch.cards) ? ch.cards : [], lang),
+		cardGroups: cardGroups(String(ch.class), lang),
 		chosen: {
 			subclass: pickOf('subclasses', ch.subclass, lang),
 			ancestry: pickOf('ancestries', ch.ancestry, lang),
@@ -131,6 +133,22 @@ export const actions: Actions = {
 	removeItem: async ({ request, fetch }) => {
 		const form = await request.formData();
 		const r = await call(fetch, 'DELETE', `/api/items/${enc(String(form.get('itemId')))}`);
+		return r.ok ? { ok: true } : failure(r);
+	},
+	addCard: async ({ request, params, fetch }) => {
+		const form = await request.formData();
+		const r = await call(fetch, 'POST', `/api/characters/${enc(params.id)}/cards`, {
+			cardId: String(form.get('cardId') ?? '')
+		});
+		return r.ok ? { ok: true } : failure(r);
+	},
+	removeCard: async ({ request, params, fetch }) => {
+		const form = await request.formData();
+		const r = await call(
+			fetch,
+			'DELETE',
+			`/api/characters/${enc(params.id)}/cards/${enc(String(form.get('cardId') ?? ''))}`
+		);
 		return r.ok ? { ok: true } : failure(r);
 	}
 };

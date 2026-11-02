@@ -82,5 +82,9 @@
 	"field.subclass": "Sous-classe",
 	"field.ancestry": "Ascendance",
 	"field.community": "Communauté",
-	"option.none": "Aucune"
+	"option.none": "Aucune",
+	"section.cards": "Cartes de domaine",
+	"card.level": "Niveau",
+	"card.add": "Ajouter une carte de domaine",
+	"action.addCard": "Ajouter la carte"
 }

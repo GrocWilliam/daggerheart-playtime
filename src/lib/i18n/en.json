@@ -82,5 +82,9 @@
 	"field.subclass": "Subclass",
 	"field.ancestry": "Ancestry",
 	"field.community": "Community",
-	"option.none": "None"
+	"option.none": "None",
+	"section.cards": "Domain cards",
+	"card.level": "Level",
+	"card.add": "Add a domain card",
+	"action.addCard": "Add card"
 }

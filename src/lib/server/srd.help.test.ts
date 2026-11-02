@@ -30,3 +30,17 @@ describe('SRD pick-lists', () => {
 function pickOfRaw(kind: 'weapons') {
 	return { trait: 'AGILITY', range: 'MELEE', damage: { dice: 'D8', type: 'PHYSICAL' }, burden: 'ONE_HANDED', kind };
 }
+
+import { cardGroups, cardsByIds } from './srd';
+describe('domain card pick-lists', () => {
+	it('groups all 189 cards by domain, class domains first', () => {
+		const g = cardGroups('Bard', 'en');
+		expect(g.map((x) => x.domain).slice(0, 2)).toEqual(['GRACE', 'CODEX']);
+		expect(g).toHaveLength(9);
+		expect(g.reduce((n, x) => n + x.cards.length, 0)).toBe(189);
+	});
+	it('resolves held cards in order and skips unknown ids', () => {
+		const ids = cardGroups('Bard', 'fr')[0].cards.slice(0, 2).map((c) => c.id);
+		expect(cardsByIds(['nope', ...ids.reverse()], 'fr').map((c) => c.id)).toEqual(ids);
+	});
+});
