@@ -27,6 +27,7 @@
 </form>
 
 <h2>Characters</h2>
+<div class="party">
 {#each c.characters as ch (ch.id)}
 	<article data-testid="character-card">
 		<h3>
@@ -65,6 +66,7 @@
 {:else}
 	<p>No characters yet.</p>
 {/each}
+</div>
 
 <h2>Add character</h2>
 <form method="POST" action="?/addCharacter">

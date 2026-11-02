@@ -24,3 +24,11 @@ describe('touch targets', () => {
 		expect(css).toMatch(/label:has\(input\[type='checkbox'\]\)\s*\{[^}]*min-height: 2\.75rem/);
 	});
 });
+
+describe('party grid', () => {
+	it('is 1 column by default, 2 from 600px, 3 from 1024px', () => {
+		expect(css).toMatch(/\.party\s*\{[^}]*minmax\(0, 1fr\)/);
+		expect(css).toMatch(/min-width: 600px\)\s*\{\s*\.party\s*\{[^}]*repeat\(2,/);
+		expect(css).toMatch(/min-width: 1024px\)[\s\S]*\.party\s*\{[^}]*repeat\(3,/);
+	});
+});
