@@ -23,7 +23,7 @@ body {
 	color: var(--text);
 	margin: 0;
 	padding: 0.75rem;
-	font-family: system-ui, sans-serif;
+	font-family: 'EB Garamond', serif;
 	font-size: 16px;
 	line-height: 1.4;
 	overflow-wrap: anywhere;
@@ -32,6 +32,14 @@ body {
 main,
 body > div {
 	max-width: 100%;
+}
+
+h1,
+h2,
+h3,
+[data-testid='character-name'] {
+	font-family: Cinzel, serif;
+	font-weight: 700;
 }
 
 h1 { font-size: 1.5rem; }

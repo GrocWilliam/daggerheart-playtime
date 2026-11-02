@@ -1,4 +1,7 @@
 <script lang="ts">
+	import '@fontsource/cinzel/700.css';
+	import '@fontsource/eb-garamond/400.css';
+	import '@fontsource/eb-garamond/700.css';
 	import '../app.css';
 	import LanguageSwitcher from '$lib/LanguageSwitcher.svelte';
 	import { translate } from '$lib/i18n';
