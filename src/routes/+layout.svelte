@@ -1,6 +1,9 @@
 <script lang="ts">
 	import '../app.css';
-	let { children } = $props();
+	import LanguageSwitcher from '$lib/LanguageSwitcher.svelte';
+	let { children, data } = $props();
 </script>
+
+<LanguageSwitcher lang={data.lang} />
 
 {@render children()}

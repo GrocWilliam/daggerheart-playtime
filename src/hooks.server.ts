@@ -1,4 +1,5 @@
 import type { Handle } from '@sveltejs/kit';
+import { resolveLang } from '$lib/i18n';
 import { getDb } from '$lib/server/db';
 
 // Kick off the DB connection (and its migrations) as soon as the server
@@ -27,5 +28,9 @@ export const handle: Handle = async ({ event, resolve }) => {
 			return new Response('Cross-site form submissions are forbidden', { status: 403 });
 		}
 	}
-	return resolve(event);
+	const lang = resolveLang(event.cookies.get('lang'), request.headers.get('accept-language'));
+	event.locals.lang = lang;
+	return resolve(event, {
+		transformPageChunk: ({ html }) => html.replace('<html lang="en"', `<html lang="${lang}"`)
+	});
 };
