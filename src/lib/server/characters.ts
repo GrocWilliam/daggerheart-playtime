@@ -117,6 +117,20 @@ export function parsePatch(
 	return p;
 }
 
+export const CONDITION_KEYS = ['vulnerable', 'restrained', 'hidden'] as const;
+
+/** Validates a conditions body; returns only the supplied boolean fields. */
+export function parseConditions(body: unknown): Partial<Record<(typeof CONDITION_KEYS)[number], boolean>> {
+	const b = asObject(body);
+	const out: Partial<Record<(typeof CONDITION_KEYS)[number], boolean>> = {};
+	for (const k of CONDITION_KEYS) {
+		if (b[k] === undefined) continue;
+		if (typeof b[k] !== 'boolean') throw new ApiError(400, `${k} must be a boolean`);
+		out[k] = b[k] as boolean;
+	}
+	return out;
+}
+
 export type Tracker = 'hp' | 'stress' | 'hope' | 'armor';
 
 export function parseDelta(body: unknown): number {

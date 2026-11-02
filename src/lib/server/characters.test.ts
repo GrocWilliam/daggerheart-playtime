@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { characterJson, parseCreate, parsePatch } from './characters';
+import { TRACKER_SQL, characterJson, parseConditions, parseCreate, parseDelta, parsePatch } from './characters';
 
 const valid = {
 	name: ' Rook ', class: 'Guardian', evasion: 10,
@@ -41,7 +41,18 @@ describe('characterJson', () => {
 	});
 });
 
-import { TRACKER_SQL, parseDelta } from './characters';
+describe('parseConditions', () => {
+	it('returns only supplied booleans', () => {
+		expect(parseConditions({})).toEqual({});
+		expect(parseConditions({ hidden: true, restrained: false, x: 1 })).toEqual({ hidden: true, restrained: false });
+	});
+	it('rejects non-booleans and non-objects', () => {
+		expect(() => parseConditions({ vulnerable: 'yes' })).toThrow();
+		expect(() => parseConditions({ hidden: null })).toThrow();
+		expect(() => parseConditions([])).toThrow();
+	});
+});
+
 
 describe('parseDelta', () => {
 	it('accepts integers only', () => {
