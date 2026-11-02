@@ -31,7 +31,7 @@ async function interfaceTexts(page) {
 		const out = [];
 		const skip = (el) => el.closest('[data-testid="campaign-link"]');
 		for (const el of document.querySelectorAll('h1,h2,h3,h4,h5,h6,label,button,summary,legend,th,[role="button"]')) {
-			if (skip(el)) continue;
+			if (skip(el) || el.closest('[lang="en"]:not(html)') || el.matches('[data-testid="help"] > summary')) continue; // US-45
 			const clone = el.cloneNode(true);
 			clone.querySelectorAll('input,select,textarea').forEach((i) => i.remove());
 			const t = clone.textContent.replace(/\s+/g, ' ').trim();
@@ -45,7 +45,7 @@ async function interfaceTexts(page) {
 
 async function noForeignWords(lang, other) {
 	const { ctx, page } = await open(lang);
-	const text = await page.evaluate(() => document.body.innerText);
+	const text = await page.evaluate(() => { const els = [...document.querySelectorAll('[lang="en"]:not(html)')]; els.forEach((e) => { e.style.display = 'none'; }); return document.body.innerText; }); // US-45: ignore lang=en text
 	const bad = Object.keys(dict[other]).filter((k) =>
 		dict[other][k] !== dict[lang][k] && hasWord(text, dict[other][k])).map((k) => `${k}=${dict[other][k]}`);
 	await ctx.close();

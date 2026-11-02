@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { translate } from '$lib/i18n';
+	import Help from '$lib/Help.svelte';
 	let { data, form } = $props();
 	const t = (key: string) => translate(data.lang, key);
 	const c = $derived(data.character);
@@ -22,7 +23,7 @@
 	<span data-testid="character-name">{c.name}</span>
 	{#if c.hp.marked === c.hp.max}<span data-testid="down">{t('badge.down')}</span>{/if}
 </h1>
-<p class="muted">{c.class}, {t('character.level')} {c.level}</p>
+<p class="muted">{c.class}, {t('character.level')} {c.level} <Help id="level" name={t('character.level')} lang={data.lang} /></p>
 
 {#if form?.error}<p role="alert">{form.error}</p>{/if}
 
@@ -30,6 +31,7 @@
 	<form class="tracker" method="POST" action="?/tracker">
 		<input type="hidden" name="tracker" value={key} />
 		{t(label)}:
+		<Help id={key} name={t(label)} lang={data.lang} />
 		<button type="submit" name="delta" value="-1">{t('action.decrease')}</button>
 		<span data-testid={key}
 			>{typeof c[key] === 'number' ? c[key] : `${c[key].marked}/${c[key].max}`}</span
@@ -37,13 +39,15 @@
 		<button type="submit" name="delta" value="1">{t('action.increase')}</button>
 	</form>
 {/each}
-<p>{t('stat.evasion')}: <span data-testid="evasion">{c.evasion}</span></p>
-<p>{t('stat.thresholds')}: <span data-testid="thresholds">{c.majorThreshold}/{c.severeThreshold}</span></p>
-<p>
-	{#if c.conditions.vulnerable}<span data-testid="condition-vulnerable">{t('badge.vulnerable')}</span>{/if}
-	{#if c.conditions.restrained}<span data-testid="condition-restrained">{t('badge.restrained')}</span>{/if}
-	{#if c.conditions.hidden}<span data-testid="condition-hidden">{t('badge.hidden')}</span>{/if}
-</p>
+<ul class="stats">
+	<li>{t('stat.evasion')}: <Help id="evasion" name={t('stat.evasion')} lang={data.lang} /> <span data-testid="evasion">{c.evasion}</span></li>
+	<li>{t('stat.thresholds')}: <Help id="thresholds" name={t('stat.thresholds')} lang={data.lang} /> <span data-testid="thresholds">{c.majorThreshold}/{c.severeThreshold}</span></li>
+</ul>
+<div>
+	{#if c.conditions.vulnerable}<span data-testid="condition-vulnerable">{t('badge.vulnerable')}</span><Help id="vulnerable" name={t('badge.vulnerable')} lang={data.lang} />{/if}
+	{#if c.conditions.restrained}<span data-testid="condition-restrained">{t('badge.restrained')}</span><Help id="restrained" name={t('badge.restrained')} lang={data.lang} />{/if}
+	{#if c.conditions.hidden}<span data-testid="condition-hidden">{t('badge.hidden')}</span><Help id="hidden" name={t('badge.hidden')} lang={data.lang} />{/if}
+</div>
 
 <form method="POST" action="?/damage">
 	<label>{t('damage.label')} <input type="number" name="amount" min="0" required /></label>
@@ -76,6 +80,7 @@
 </form>
 
 <h2>{t('section.gold')}</h2>
+<Help id="gold" name={t('section.gold')} lang={data.lang} />
 <p data-testid="gold">{c.gold.chests} {t('gold.chests')}, {c.gold.bags} {t('gold.bags')}, {c.gold.handfuls} {t('gold.handfuls')}</p>
 <form method="POST" action="?/gold">
 	<label>{t('gold.adjust')} <input type="number" name="handfuls" step="1" required /></label>

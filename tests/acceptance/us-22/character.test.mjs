@@ -42,12 +42,14 @@ async function open(lang, id) {
 }
 const esc = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 const hasWord = (text, w) => new RegExp(`(?<![\\p{L}\\p{N}_])${esc(w)}(?![\\p{L}\\p{N}_])`, 'u').test(text);
-const bodyText = (page) => page.evaluate(() => document.body.innerText);
+// US-45: text inside lang="en" elements (SRD text) is ignored by the "no foreign language" rule.
+const bodyText = (page) => page.evaluate(() => { const els = [...document.querySelectorAll('[lang="en"]:not(html)')]; const old = els.map((e) => e.style.display); els.forEach((e) => { e.style.display = 'none'; }); const t = document.body.innerText; els.forEach((e, i) => { e.style.display = old[i]; }); return t; });
 
 async function interfaceTexts(page) {
 	return page.evaluate(() => {
 		const out = [];
 		for (const el of document.querySelectorAll('h1,h2,h3,h4,h5,h6,label,button,summary,legend,th,[role="button"]')) {
+			if (el.closest('[lang="en"]:not(html)') || el.matches('[data-testid="help"] > summary')) continue; // US-45: SRD text, and the "?" helper toggle (named by aria-label)
 			if (el.querySelector('[data-testid="character-name"]')) continue; // user data
 			const clone = el.cloneNode(true);
 			clone.querySelectorAll('input,select,textarea').forEach((i) => i.remove());

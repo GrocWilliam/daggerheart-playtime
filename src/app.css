@@ -213,3 +213,49 @@ form:not(.tracker) { background-color: var(--surface); padding: 0.5rem; }
 	min-width: 2ch;
 	text-align: center;
 }
+
+.help {
+	display: inline-block;
+	vertical-align: middle;
+}
+
+.help > summary {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 2.75rem;
+	min-height: 2.75rem;
+	cursor: pointer;
+	list-style: none;
+	font-weight: bold;
+}
+
+.help > summary::-webkit-details-marker {
+	display: none;
+}
+
+.help[open] {
+	min-width: 0;
+	flex-shrink: 1;
+}
+
+.help-body,
+.help-text {
+	display: block;
+}
+
+.help-body {
+	padding: 0.25rem 0.5rem;
+	border-left: 3px solid var(--muted);
+}
+
+.help-line {
+	display: block;
+	margin: 0.25rem 0;
+}
+
+.stats {
+	list-style: none;
+	padding: 0;
+	margin: 0 0 0.75rem;
+}
