@@ -61,5 +61,22 @@
 	"condition.set.restrained": "Set restrained",
 	"condition.clear.restrained": "Clear restrained",
 	"condition.set.hidden": "Set hidden",
-	"condition.clear.hidden": "Clear hidden"
+	"condition.clear.hidden": "Clear hidden",
+	"reference.title": "SRD reference",
+	"reference.kind": "Kind",
+	"reference.all": "All",
+	"reference.search": "Name",
+	"reference.filter": "Filter",
+	"nav.reference": "Reference",
+	"reference.kind.classes": "Classes",
+	"reference.kind.subclasses": "Subclasses",
+	"reference.kind.ancestries": "Ancestries",
+	"reference.kind.communities": "Communities",
+	"reference.kind.domains": "Domains",
+	"reference.kind.domain-cards": "Domain cards",
+	"reference.kind.weapons": "Weapons",
+	"reference.kind.armors": "Armor",
+	"reference.kind.consumables": "Consumables",
+	"reference.kind.items": "Items",
+	"reference.kind.rules": "Rules"
 }

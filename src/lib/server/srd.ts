@@ -101,3 +101,49 @@ export function getSrd(kind: SrdKind, id: string, lang: Lang): (SrdElement & { n
 	const d = data.get(kind)!.find((x) => x.element.id === id);
 	return d ? { ...d.element, nameLocalized: localize(d.element.id, d.name, lang) } : null;
 }
+
+const domainsEn: Record<string, string> = Object.fromEntries(
+	(JSON.parse(readSrdFile('domains.json')) as { id: string; en: string }[]).map((d) => [d.id, d.en])
+);
+
+// Collects the English SRD text of an element (descriptions, features), in order.
+function collectText(node: unknown, out: string[]): void {
+	if (Array.isArray(node)) node.forEach((n) => collectText(n, out));
+	else if (node && typeof node === 'object') {
+		for (const [k, v] of Object.entries(node as Raw)) {
+			if (k === 'en-US' && typeof v === 'string') out.push(v);
+			else collectText(v, out);
+		}
+	}
+}
+
+function englishLines(kind: SrdKind, e: Raw): string[] {
+	if (kind === 'domains') return [domainsEn[e.id] ?? String(e.name['en-US'])];
+	const facts = Object.entries(e)
+		.filter(([k, v]) => k !== 'id' && k !== 'name' && (typeof v === 'string' || typeof v === 'number'))
+		.map(([k, v]) => `${k}: ${v}`);
+	const out: string[] = [];
+	if (facts.length) out.push(facts.join(' · '));
+	collectText(Object.fromEntries(Object.entries(e).filter(([k]) => k !== 'name')), out);
+	if (!out.length) out.push(String(e.name?.['en-US'] ?? e.name));
+	return out;
+}
+
+export type RefItem = { kind: SrdKind; id: string; name: string; en: string[] };
+
+/** Elements of `kind` (all kinds if undefined) whose English or French name contains `q`. */
+export function searchSrd(kind: SrdKind | undefined, q: string, lang: Lang): { kind: SrdKind; items: RefItem[] }[] {
+	const needle = q.trim().toLowerCase();
+	return SRD_KINDS.filter((k) => !kind || k === kind).map((k) => ({
+		kind: k,
+		items: data
+			.get(k)!
+			.filter((d) => !needle || d.name.toLowerCase().includes(needle) || (fr[d.element.id] ?? '').toLowerCase().includes(needle))
+			.map((d) => ({
+				kind: k,
+				id: d.element.id,
+				name: localize(d.element.id, d.name, lang),
+				en: englishLines(k, d.element)
+			}))
+	}));
+}

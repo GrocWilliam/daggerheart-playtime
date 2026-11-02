@@ -61,5 +61,22 @@
 	"condition.set.restrained": "Rendre entravé",
 	"condition.clear.restrained": "Retirer entravé",
 	"condition.set.hidden": "Rendre caché",
-	"condition.clear.hidden": "Retirer caché"
+	"condition.clear.hidden": "Retirer caché",
+	"reference.title": "Référence SRD",
+	"reference.kind": "Type",
+	"reference.all": "Tous",
+	"reference.search": "Nom",
+	"reference.filter": "Filtrer",
+	"nav.reference": "Référence",
+	"reference.kind.classes": "Classes",
+	"reference.kind.subclasses": "Sous-classes",
+	"reference.kind.ancestries": "Ascendances",
+	"reference.kind.communities": "Communautés",
+	"reference.kind.domains": "Domaines",
+	"reference.kind.domain-cards": "Cartes de domaine",
+	"reference.kind.weapons": "Armes",
+	"reference.kind.armors": "Armures",
+	"reference.kind.consumables": "Consommables",
+	"reference.kind.items": "Objets",
+	"reference.kind.rules": "Règles"
 }
