@@ -1,0 +1,69 @@
+import { describe, expect, it } from 'vitest';
+import { load, actions } from './+page.server';
+
+type Act = (e: unknown) => Promise<unknown>;
+
+function recorder(status = 200, body: unknown = {}) {
+	const calls: { url: string; method: string; body: unknown }[] = [];
+	const f = (async (url: string, init: RequestInit) => {
+		calls.push({ url, method: init.method!, body: init.body ? JSON.parse(String(init.body)) : undefined });
+		return new Response(JSON.stringify(body), { status });
+	}) as unknown as typeof fetch;
+	return { calls, f };
+}
+const run = (name: keyof typeof actions, fields: Record<string, string>, f: typeof fetch) =>
+	(actions[name] as never as Act)({
+		request: new Request('http://x', { method: 'POST', body: new URLSearchParams(fields) }),
+		params: { id: 'c1' },
+		fetch: f
+	});
+
+describe('character page server', () => {
+	it('load 404s for unknown character', async () => {
+		const { f } = recorder(404, { error: 'nf' });
+		await expect(load({ params: { id: 'x' }, fetch: f } as never)).rejects.toMatchObject({ status: 404 });
+	});
+
+	it('edit patches numeric fields as numbers', async () => {
+		const { calls, f } = recorder();
+		await run('edit', { name: 'A', class: 'B', level: '3', evasion: '-1' }, f);
+		expect(calls[0]).toMatchObject({ method: 'PATCH', url: '/api/characters/c1' });
+		expect(calls[0].body).toMatchObject({ name: 'A', level: 3, evasion: -1, maxHp: '' });
+	});
+
+	it('condition maps on/off to a boolean', async () => {
+		const { calls, f } = recorder();
+		await run('condition', { condition: 'hidden', value: 'on' }, f);
+		expect(calls[0]).toMatchObject({ method: 'PUT', body: { hidden: true } });
+		await run('condition', { condition: 'hidden', value: 'off' }, f);
+		expect(calls[1].body).toEqual({ hidden: false });
+	});
+
+	it('condition rejects unknown names', async () => {
+		const { calls, f } = recorder();
+		const r = (await run('condition', { condition: 'x', value: 'on' }, f)) as { status: number };
+		expect(r.status).toBe(400);
+		expect(calls).toHaveLength(0);
+	});
+
+	it('gold surfaces API errors', async () => {
+		const { f } = recorder(400, { error: 'not enough gold' });
+		const r = (await run('gold', { handfuls: '-2' }, f)) as { status: number; data: { error: string } };
+		expect(r.status).toBe(400);
+		expect(r.data.error).toBe('not enough gold');
+	});
+
+	it('addItem omits an empty quantity', async () => {
+		const { calls, f } = recorder();
+		await run('addItem', { name: 'Rope', quantity: '' }, f);
+		expect(calls[0].body).toEqual({ name: 'Rope' });
+	});
+
+	it('setQuantity and removeItem hit the item endpoint', async () => {
+		const { calls, f } = recorder();
+		await run('setQuantity', { itemId: 'i1', quantity: '5' }, f);
+		await run('removeItem', { itemId: 'i1' }, f);
+		expect(calls[0]).toMatchObject({ method: 'PATCH', url: '/api/items/i1', body: { quantity: 5 } });
+		expect(calls[1]).toMatchObject({ method: 'DELETE', url: '/api/items/i1' });
+	});
+});
