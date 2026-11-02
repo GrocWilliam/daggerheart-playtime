@@ -16,3 +16,11 @@ describe('mobile base', () => {
 		expect(css).not.toMatch(/@media[^{]*max-width/);
 	});
 });
+
+describe('touch targets', () => {
+	it('sizes links, inputs and checkbox labels to 2.75rem (44px)', () => {
+		expect(css).toMatch(/\ba\s*\{[^}]*min-height: 2\.75rem/);
+		expect(css).toMatch(/textarea\s*\{[^}]*min-height: 2\.75rem/);
+		expect(css).toMatch(/label:has\(input\[type='checkbox'\]\)\s*\{[^}]*min-height: 2\.75rem/);
+	});
+});
