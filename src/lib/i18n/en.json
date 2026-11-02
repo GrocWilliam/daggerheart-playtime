@@ -1,5 +1,10 @@
 {
 	"language.label": "Language",
 	"language.en": "English",
-	"language.fr": "Français"
+	"language.fr": "Français",
+	"home.title": "Daggerheart Playtime",
+	"home.name": "Name",
+	"home.create": "Create campaign",
+	"home.error": "Enter a campaign name.",
+	"home.campaigns": "Campaigns"
 }

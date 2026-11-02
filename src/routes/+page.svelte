@@ -1,8 +1,12 @@
 <script lang="ts">
+	import { translate } from '$lib/i18n';
 	let { data, form } = $props();
+	const t = (key: string) => translate(data.lang, key);
 </script>
 
-<h1>Daggerheart Playtime</h1>
+<h1>{t('home.title')}</h1>
+
+<h2>{t('home.campaigns')}</h2>
 
 <ul>
 	{#each data.campaigns as c (c.id)}
@@ -11,7 +15,7 @@
 </ul>
 
 <form method="POST">
-	<label>Name <input type="text" name="name" value={form?.name ?? ''} /></label>
-	<button type="submit">Create campaign</button>
-	{#if form?.error}<p role="alert">{form.error}</p>{/if}
+	<label>{t('home.name')} <input type="text" name="name" value={form?.name ?? ''} /></label>
+	<button type="submit">{t('home.create')}</button>
+	{#if form?.error}<p role="alert">{t('home.error')}</p>{/if}
 </form>
