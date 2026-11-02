@@ -40,3 +40,18 @@ describe('characterJson', () => {
 		expect(characterJson({ hp_marked: 0, hp_max: 3 }).down).toBe(false);
 	});
 });
+
+import { TRACKER_SQL, parseDelta } from './characters';
+
+describe('parseDelta', () => {
+	it('accepts integers only', () => {
+		expect(parseDelta({ delta: -3 })).toBe(-3);
+		for (const b of [{ delta: 'two' }, { delta: 1.5 }, {}, null]) expect(() => parseDelta(b)).toThrow();
+	});
+});
+
+describe('TRACKER_SQL', () => {
+	it('covers the four trackers', () => {
+		expect(Object.keys(TRACKER_SQL).sort()).toEqual(['armor', 'hope', 'hp', 'stress']);
+	});
+});

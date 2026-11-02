@@ -116,3 +116,26 @@ export function parsePatch(
 	}
 	return p;
 }
+
+export type Tracker = 'hp' | 'stress' | 'hope' | 'armor';
+
+export function parseDelta(body: unknown): number {
+	const d = (body as { delta?: unknown } | null)?.delta;
+	if (typeof d !== 'number' || !Number.isSafeInteger(d)) {
+		throw new ApiError(400, 'delta must be an integer');
+	}
+	return d;
+}
+
+// Single atomic UPDATE per tracker ($1 = delta, $2 = id); SET expressions read the old row.
+const NEW_STRESS = 'LEAST(stress_max, GREATEST(0, stress_marked + $1::bigint))';
+export const TRACKER_SQL: Record<Tracker, string> = {
+	hp: 'hp_marked = LEAST(hp_max, GREATEST(0, hp_marked + $1::bigint))::int',
+	hope: 'hope = LEAST(6, GREATEST(0, hope + $1::bigint))::int',
+	armor: 'armor_marked = LEAST(armor_max, GREATEST(0, armor_marked + $1::bigint))::int',
+	stress: `stress_marked = ${NEW_STRESS}::int,
+		hp_marked = LEAST(hp_max, hp_marked + CASE WHEN $1::bigint > 0
+			THEN GREATEST(0, stress_marked + $1::bigint - stress_max) ELSE 0 END)::int,
+		vulnerable = CASE WHEN ${NEW_STRESS} = stress_max THEN true
+			WHEN stress_marked = stress_max THEN false ELSE vulnerable END`
+};
