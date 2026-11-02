@@ -51,8 +51,11 @@ export async function readJson(request: Request): Promise<unknown> {
 	}
 }
 
-export function detail(row: { id: string; name: string; fear: number }) {
-	return { id: row.id, name: row.name, fear: row.fear, characters: [] };
+export function detail(
+	row: { id: string; name: string; fear: number },
+	characters: unknown[] = []
+) {
+	return { id: row.id, name: row.name, fear: row.fear, characters };
 }
 
 export { json };
