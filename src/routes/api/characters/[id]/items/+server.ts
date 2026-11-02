@@ -14,7 +14,7 @@ export const POST: RequestHandler = api(async ({ params, request }) => {
 		`INSERT INTO items (character_id, name, quantity) VALUES ($1,$2,$3)
 		ON CONFLICT (character_id, lower(btrim(name)))
 		DO UPDATE SET quantity = items.quantity + EXCLUDED.quantity
-		RETURNING id, name, quantity, (xmax = 0) AS inserted`,
+		RETURNING id, name, quantity, srd_id, (xmax = 0) AS inserted`,
 		[params.id, name, quantity]
 	);
 	return json(itemJson(rows[0]), { status: rows[0].inserted ? 201 : 200 });

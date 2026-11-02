@@ -19,7 +19,8 @@ export const PATCH: RequestHandler = api(async ({ params, request }) => {
 	if (!cur.rows[0]) throw new ApiError(404, 'character not found');
 	const p = parsePatch(body, {
 		majorThreshold: cur.rows[0].major_threshold,
-		severeThreshold: cur.rows[0].severe_threshold
+		severeThreshold: cur.rows[0].severe_threshold,
+		class: cur.rows[0].class
 	});
 	const cols: Record<string, [string, unknown]> = {
 		name: ['name', p.name],
@@ -31,7 +32,10 @@ export const PATCH: RequestHandler = api(async ({ params, request }) => {
 		maxHp: ['hp_max', p.maxHp],
 		maxStress: ['stress_max', p.maxStress],
 		armorSlots: ['armor_max', p.armorSlots],
-		notes: ['notes', p.notes]
+		notes: ['notes', p.notes],
+		subclass: ['subclass', p.subclass],
+		ancestry: ['ancestry', p.ancestry],
+		community: ['community', p.community]
 	};
 	const sets: string[] = [];
 	const vals: unknown[] = [];

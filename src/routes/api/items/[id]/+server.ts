@@ -9,8 +9,8 @@ export const PATCH: RequestHandler = api(async ({ params, request }) => {
 	const quantity = parseItemQuantity(body);
 	const sql =
 		quantity === 0
-			? 'DELETE FROM items WHERE id = $1 RETURNING id, name, quantity'
-			: 'UPDATE items SET quantity = $2 WHERE id = $1 RETURNING id, name, quantity';
+			? 'DELETE FROM items WHERE id = $1 RETURNING id, name, quantity, srd_id'
+			: 'UPDATE items SET quantity = $2 WHERE id = $1 RETURNING id, name, quantity, srd_id';
 	const { rows } = await db.query(sql, quantity === 0 ? [params.id] : [params.id, quantity]);
 	if (!rows[0]) throw new ApiError(404, 'item not found');
 	if (quantity === 0) return new Response(null, { status: 204 });

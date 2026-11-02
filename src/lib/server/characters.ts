@@ -1,11 +1,13 @@
 import { ApiError } from './campaigns';
+import { getSrd } from './srd';
 
 const BASE_COLS = `id, campaign_id, name, class, level, evasion, major_threshold,
 	severe_threshold, hp_marked, hp_max, stress_marked, stress_max, hope, armor_marked, armor_max,
-	vulnerable, restrained, hidden, notes, gold_handfuls, gold_bags, gold_chests`;
+	vulnerable, restrained, hidden, notes, gold_handfuls, gold_bags, gold_chests,
+	subclass, ancestry, community, cards`;
 
 const ITEMS_SUBQUERY = (idRef: string) => `(SELECT COALESCE(json_agg(json_build_object(
-	'id', i.id, 'name', i.name, 'quantity', i.quantity) ORDER BY i.created_at, i.id), '[]'::json)
+	'id', i.id, 'name', i.name, 'quantity', i.quantity, 'srdId', i.srd_id) ORDER BY i.created_at, i.id), '[]'::json)
 	FROM items i WHERE i.character_id = ${idRef}) AS items`;
 
 export const CHARACTER_COLS = `${BASE_COLS}, ${ITEMS_SUBQUERY('characters.id')}`;
@@ -27,6 +29,10 @@ export function characterJson(r: any) {
 		conditions: { vulnerable: r.vulnerable, restrained: r.restrained, hidden: r.hidden },
 		notes: r.notes,
 		gold: { handfuls: r.gold_handfuls, bags: r.gold_bags, chests: r.gold_chests },
+		subclass: r.subclass ?? null,
+		ancestry: r.ancestry ?? null,
+		community: r.community ?? null,
+		cards: r.cards ?? [],
 		items: r.items ?? [],
 		down: r.hp_marked === r.hp_max
 	};
@@ -59,6 +65,23 @@ export interface CharacterFields {
 	maxStress: number;
 	armorSlots: number;
 	notes: string;
+	subclass: string | null;
+	ancestry: string | null;
+	community: string | null;
+}
+
+const SRD_FIELDS = [
+	['subclass', 'subclasses'],
+	['ancestry', 'ancestries'],
+	['community', 'communities']
+] as const;
+
+function srdId(v: unknown, field: string, kind: (typeof SRD_FIELDS)[number][1]): string | null {
+	if (v === null) return null;
+	if (typeof v !== 'string' || !getSrd(kind, v, 'en')) {
+		throw new ApiError(400, `${field} must be an SRD ${kind} id or null`);
+	}
+	return v;
 }
 
 function checkThresholds(major: number, severe: number) {
@@ -86,7 +109,10 @@ export function parseCreate(body: unknown): CharacterFields {
 		maxHp: int(b.maxHp, 'maxHp', 1, 12),
 		maxStress: b.maxStress === undefined ? 6 : int(b.maxStress, 'maxStress', 1, 12),
 		armorSlots: int(b.armorSlots, 'armorSlots', 0, 12),
-		notes: ''
+		notes: '',
+		subclass: null,
+		ancestry: null,
+		community: null
 	};
 	checkThresholds(f.majorThreshold, f.severeThreshold);
 	return f;
@@ -95,7 +121,7 @@ export function parseCreate(body: unknown): CharacterFields {
 /** Validates a PATCH body; returns only supplied fields. `current` supplies the other threshold. */
 export function parsePatch(
 	body: unknown,
-	current: { majorThreshold: number; severeThreshold: number }
+	current: { majorThreshold: number; severeThreshold: number; class?: string }
 ): Partial<CharacterFields> {
 	const b = asObject(body);
 	const p: Partial<CharacterFields> = {};
@@ -113,6 +139,15 @@ export function parsePatch(
 			throw new ApiError(400, 'notes must be a string of up to 5000 characters');
 		}
 		p.notes = b.notes;
+	}
+	for (const [field, kind] of SRD_FIELDS) {
+		if (b[field] !== undefined) p[field] = srdId(b[field], field, kind);
+	}
+	if (p.subclass) {
+		const cls = (p.class ?? current.class ?? '').toUpperCase();
+		if (getSrd('subclasses', p.subclass, 'en')?.class !== cls) {
+			throw new ApiError(400, "subclass must belong to the character's class");
+		}
 	}
 	if (p.majorThreshold !== undefined || p.severeThreshold !== undefined) {
 		checkThresholds(
@@ -198,7 +233,7 @@ export function parseItemQuantity(body: unknown): number {
 }
 
 export function itemJson(r: any) {
-	return { id: r.id, name: r.name, quantity: r.quantity };
+	return { id: r.id, name: r.name, quantity: r.quantity, srdId: r.srd_id ?? null };
 }
 
 export function parseGold(body: unknown): number {

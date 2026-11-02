@@ -31,7 +31,7 @@ test('POST {"name":"Torch"} -> 201 {id,name:"Torch",quantity:1}', async () => {
 	const cid = await newChar();
 	const r = await addItem(cid, { name: 'Torch' });
 	assert.equal(r.status, 201, r.text);
-	assert.deepEqual(Object.keys(r.json).sort(), ['id', 'name', 'quantity']);
+	assert.deepEqual(Object.keys(r.json).sort(), ['id', 'name', 'quantity', 'srdId']);
 	assert.equal(typeof r.json.id, 'string');
 	assert.equal(r.json.name, 'Torch');
 	assert.equal(r.json.quantity, 1);
@@ -65,7 +65,7 @@ test('PATCH {"quantity":5} -> 200 {id,name,quantity:5}', async () => {
 	const a = await addItem(cid, { name: 'Torch' });
 	const r = await call('PATCH', `/api/items/${a.json.id}`, { quantity: 5 });
 	assert.equal(r.status, 200, r.text);
-	assert.deepEqual(r.json, { id: a.json.id, name: 'Torch', quantity: 5 });
+	assert.deepEqual(r.json, { id: a.json.id, name: 'Torch', quantity: 5, srdId: null });
 });
 
 test('PATCH {"quantity":0} -> 204 empty, item gone from character GET', async () => {

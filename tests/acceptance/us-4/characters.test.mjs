@@ -24,7 +24,7 @@ const valid = {
 	majorThreshold: 5, severeThreshold: 10, maxHp: 6, armorSlots: 3
 };
 const mk = async (cid, over = {}) => call('POST', `/api/campaigns/${cid}/characters`, { ...valid, ...over });
-const SHAPE = ['id','campaignId','name','class','level','evasion','majorThreshold','severeThreshold','hp','stress','hope','armor','conditions','notes','gold','items','down'];
+const SHAPE = ['id','campaignId','name','class','level','evasion','majorThreshold','severeThreshold','hp','stress','hope','armor','conditions','notes','gold','items','down','subclass','ancestry','community','cards'];
 
 function checkDefault(c, cid) {
 	assert.deepEqual(Object.keys(c).sort(), [...SHAPE].sort());
@@ -44,6 +44,7 @@ function checkDefault(c, cid) {
 	assert.equal(c.notes, '');
 	assert.deepEqual(c.gold, { handfuls: 0, bags: 0, chests: 0 });
 	assert.deepEqual(c.items, []);
+	assert.equal(c.subclass, null); assert.equal(c.ancestry, null); assert.equal(c.community, null); assert.deepEqual(c.cards, []);
 	assert.equal(c.down, false);
 }
 

@@ -125,7 +125,14 @@ describe('items parsing', () => {
 		expect(() => parseItemQuantity({})).toThrow();
 	});
 	it('itemJson picks public fields', () => {
-		expect(itemJson({ id: 'x', name: 'n', quantity: 2, character_id: 'c' })).toEqual({ id: 'x', name: 'n', quantity: 2 });
+		expect(itemJson({ id: 'x', name: 'n', quantity: 2, character_id: 'c' })).toEqual({ id: 'x', name: 'n', quantity: 2, srdId: null });
+	});
+	it('parsePatch validates subclass/ancestry/community', () => {
+		const cur = { majorThreshold: 5, severeThreshold: 10, class: 'Ranger' };
+		expect(parsePatch({ ancestry: null }, cur).ancestry).toBeNull();
+		expect(() => parsePatch({ ancestry: 'nope' }, cur)).toThrow();
+		expect(() => parsePatch({ community: 5 }, cur)).toThrow();
+		expect(() => parsePatch({ subclass: 'nope' }, cur)).toThrow();
 	});
 });
 
