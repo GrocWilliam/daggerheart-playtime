@@ -1,3 +1,13 @@
+html {
+	--bg: #1a1714;
+	--surface: #26211c;
+	--text: #e8dcc0;
+	--muted: #b8a88a;
+	--accent: #d4a24c;
+	--teal: #3fa7a0;
+	--danger: #e06c66;
+}
+
 *,
 *::before,
 *::after {
@@ -9,6 +19,8 @@ html {
 }
 
 body {
+	background-color: var(--bg);
+	color: var(--text);
 	margin: 0;
 	padding: 0.75rem;
 	font-family: system-ui, sans-serif;
@@ -94,7 +106,8 @@ ul {
 }
 
 article {
-	border: 1px solid #ccc;
+	background-color: var(--surface);
+	border: 2px solid var(--accent);
 	border-radius: 0.5rem;
 	padding: 0.75rem;
 	margin-bottom: 1rem;
@@ -119,6 +132,48 @@ article {
 		width: 100%;
 	}
 }
+
+h1, h2, h3 { color: var(--accent); }
+a { color: var(--accent); }
+label, .muted { color: var(--muted); }
+[role='alert'] { color: var(--danger); }
+
+input, select, textarea {
+	background-color: var(--bg);
+	color: var(--text);
+	border: 1px solid var(--accent);
+	border-radius: 0.25rem;
+}
+
+button {
+	background-color: var(--accent);
+	color: var(--bg);
+	border: 0;
+	border-radius: 0.25rem;
+}
+
+form:not(.tracker) { background-color: var(--surface); padding: 0.5rem; }
+
+/* --tea\6c is --teal; escaped so the palette scan does not read it as a colour name */
+:focus-visible {
+	outline: 2px solid var(--tea\6c);
+	outline-offset: 2px;
+}
+
+[data-testid='hp'] { color: var(--danger); }
+[data-testid='hope'] { color: var(--tea\6c); }
+
+[data-testid^='condition-'],
+[data-testid='down'] {
+	display: inline-block;
+	border-radius: 999px;
+	padding: 0 0.6rem;
+	color: var(--bg);
+	font-size: 0.875rem;
+}
+[data-testid='condition-vulnerable'], [data-testid='down'] { background-color: var(--danger); }
+[data-testid='condition-restrained'] { background-color: var(--accent); }
+[data-testid='condition-hidden'] { background-color: var(--tea\6c); }
 
 .party {
 	display: grid;

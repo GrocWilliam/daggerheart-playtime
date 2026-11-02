@@ -36,7 +36,7 @@
 			<a data-testid="character-name" href="/characters/{ch.id}">{ch.name}</a>
 			{#if ch.hp.marked === ch.hp.max}<span data-testid="down">{t('badge.down')}</span>{/if}
 		</h3>
-		<p>{ch.class}, {t('character.level')} {ch.level}</p>
+		<p class="muted">{ch.class}, {t('character.level')} {ch.level}</p>
 		{#each [['hp', 'tracker.hp'], ['stress', 'tracker.stress'], ['hope', 'tracker.hope'], ['armor', 'tracker.armor']] as [key, label] (key)}
 			<form class="tracker" method="POST" action="?/tracker">
 				<input type="hidden" name="characterId" value={ch.id} />

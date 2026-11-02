@@ -22,7 +22,7 @@
 	<span data-testid="character-name">{c.name}</span>
 	{#if c.hp.marked === c.hp.max}<span data-testid="down">{t('badge.down')}</span>{/if}
 </h1>
-<p>{c.class}, {t('character.level')} {c.level}</p>
+<p class="muted">{c.class}, {t('character.level')} {c.level}</p>
 
 {#if form?.error}<p role="alert">{form.error}</p>{/if}
 
