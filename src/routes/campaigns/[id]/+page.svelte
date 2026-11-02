@@ -1,5 +1,7 @@
 <script lang="ts">
 	import { translate } from '$lib/i18n';
+	import Pips from '$lib/Pips.svelte';
+
 	import Help from '$lib/Help.svelte';
 	let { data, form } = $props();
 	const t = (key: string) => translate(data.lang, key);
@@ -29,6 +31,7 @@
 	<span data-testid="fear">{c.fear}</span>
 	<button type="submit" name="delta" value="1">{t('action.increase')}</button>
 </form>
+<Pips name="fear" max={12} filled={c.fear} />
 
 <h2>{t('campaign.characters')}</h2>
 <div class="party">
@@ -51,6 +54,11 @@
 				>
 				<button type="submit" name="delta" value="1">{t('action.increase')}</button>
 			</form>
+			{#if typeof ch[key] === 'number'}
+				<Pips name={key} max={6} filled={ch[key]} />
+			{:else}
+				<Pips name={key} max={ch[key].max} filled={ch[key].marked} />
+			{/if}
 		{/each}
 		<ul class="stats">
 			<li>{t('stat.evasion')}: <Help id="evasion" name={t('stat.evasion')} lang={data.lang} /> <span data-testid="evasion">{ch.evasion}</span></li>

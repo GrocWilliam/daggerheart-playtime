@@ -214,6 +214,31 @@ form:not(.tracker) { background-color: var(--surface); padding: 0.5rem; }
 	text-align: center;
 }
 
+.pips {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 4px;
+	font-size: 16px;
+	margin-bottom: 0.75rem;
+	--pip: var(--muted);
+}
+
+[data-testid='hp-pips'], [data-testid='fear-pips'] { --pip: var(--danger); }
+[data-testid='stress-pips'] { --pip: var(--accent); }
+[data-testid='hope-pips'] { --pip: var(--tea\6c); }
+[data-testid='armor-pips'] { --pip: var(--muted); }
+
+.pip {
+	display: inline-block;
+	width: 12px;
+	height: 12px;
+	border-radius: 50%;
+	background-color: transparent;
+	border: 1px solid var(--pip);
+}
+
+.pip.filled { background-color: var(--pip); }
+
 .help {
 	display: inline-block;
 	vertical-align: middle;

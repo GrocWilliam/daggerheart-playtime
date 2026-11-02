@@ -38,3 +38,11 @@ describe('trackers', () => {
 		expect(css).toMatch(/\.tracker\s*\{[^}]*display: flex[^}]*flex-wrap: nowrap[^}]*align-items: center/);
 	});
 });
+
+describe('pips', () => {
+	it('draws filled and empty pips in the tracker colour', () => {
+		expect(css).toMatch(/\.pip\s*\{[^}]*border: 1px solid var\(--pip\)/);
+		expect(css).toMatch(/\.pip\.filled\s*\{\s*background-color: var\(--pip\)/);
+		expect(css).toMatch(/\[data-testid='hp-pips'\][^{]*\{\s*--pip: var\(--danger\)/);
+	});
+});
