@@ -32,3 +32,12 @@ describe('translate', () => {
 		expect(translate('fr', 'nope')).toBe('nope');
 	});
 });
+
+describe('campaign glossary', () => {
+	it('translates trackers and badges', () => {
+		expect(translate('fr', 'tracker.hp')).toBe('PV');
+		expect(translate('fr', 'tracker.hope')).toBe('Espoir');
+		expect(translate('fr', 'badge.down')).toBe('À terre');
+		expect(translate('en', 'badge.restrained')).toBe('Restrained');
+	});
+});
