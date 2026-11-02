@@ -139,3 +139,29 @@ export const TRACKER_SQL: Record<Tracker, string> = {
 		vulnerable = CASE WHEN ${NEW_STRESS} = stress_max THEN true
 			WHEN stress_marked = stress_max THEN false ELSE vulnerable END`
 };
+
+export function parseDamage(body: unknown): { amount: number; useArmor: boolean } {
+	const b = body as { amount?: unknown; useArmor?: unknown } | null;
+	if (typeof b?.amount !== 'number' || !Number.isSafeInteger(b.amount)) {
+		throw new ApiError(400, 'amount must be an integer');
+	}
+	if (typeof b.useArmor !== 'boolean') throw new ApiError(400, 'useArmor must be a boolean');
+	return { amount: b.amount, useArmor: b.useArmor };
+}
+
+// Atomic damage: $1 = amount, $2 = useArmor, $3 = id. The CTE locks the row and computes the hit once.
+export const DAMAGE_SQL = `
+WITH old AS (
+	SELECT id, armor_marked < armor_max AND $2::boolean AS armor_used,
+		CASE WHEN $1::bigint <= 0 THEN 0
+			WHEN $1::bigint < major_threshold THEN 1
+			WHEN $1::bigint < severe_threshold THEN 2 ELSE 3 END AS base_hit
+	FROM characters WHERE id = $3 FOR UPDATE
+), calc AS (
+	SELECT id, armor_used, GREATEST(0, base_hit - CASE WHEN armor_used THEN 1 ELSE 0 END) AS hp_hit FROM old
+)
+UPDATE characters c SET
+	hp_marked = LEAST(c.hp_max, GREATEST(0, c.hp_marked + calc.hp_hit))::int,
+	armor_marked = c.armor_marked + CASE WHEN calc.armor_used THEN 1 ELSE 0 END
+FROM calc WHERE c.id = calc.id
+RETURNING ${CHARACTER_COLS.replace(/\b([a-z_]+)\b/g, 'c.$1')}, calc.hp_hit, calc.armor_used`;
