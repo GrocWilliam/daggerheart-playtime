@@ -111,7 +111,7 @@ import { itemJson, parseItemCreate, parseItemQuantity } from './characters';
 
 describe('items parsing', () => {
 	it('parseItemCreate trims and defaults quantity', () => {
-		expect(parseItemCreate({ name: ' Torch ' })).toEqual({ name: 'Torch', quantity: 1 });
+		expect(parseItemCreate({ name: ' Torch ' })).toEqual({ name: 'Torch', quantity: 1, srdId: null });
 		expect(parseItemCreate({ name: 'Rope', quantity: 3 }).quantity).toBe(3);
 	});
 	it('parseItemCreate rejects bad input', () => {
@@ -171,5 +171,24 @@ describe('GOLD_SQL', () => {
 	it('returns no rows for unknown ids', async () => {
 		const { db } = await make(0, 0, 0);
 		expect((await db.query(GOLD_SQL, [1, 'nope'])).rows).toHaveLength(0);
+	});
+});
+
+describe('parseItemCreate / parseCardId (SRD)', () => {
+	it('resolves an SRD item to its English name', async () => {
+		const { listSrd } = await import('./srd');
+		const w = listSrd('weapons', 'en')[0];
+		const { parseItemCreate } = await import('./characters');
+		expect(parseItemCreate({ srdId: w.id, quantity: 2 })).toEqual({ name: w.name, quantity: 2, srdId: w.id });
+		expect(() => parseItemCreate({ srdId: 'nope' })).toThrow();
+		expect(() => parseItemCreate({ srdId: 5 })).toThrow();
+	});
+	it('validates card ids', async () => {
+		const { listSrd } = await import('./srd');
+		const { parseCardId } = await import('./characters');
+		const c = listSrd('domain-cards', 'en')[0];
+		expect(parseCardId({ cardId: c.id })).toBe(c.id);
+		expect(() => parseCardId({ cardId: 'nope' })).toThrow();
+		expect(() => parseCardId({})).toThrow();
 	});
 });

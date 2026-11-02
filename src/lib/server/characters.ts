@@ -221,11 +221,21 @@ UPDATE characters c SET
 FROM calc WHERE c.id = calc.id
 RETURNING ${BASE_COLS.replace(/\b([a-z_]+)\b/g, 'c.$1')}, ${ITEMS_SUBQUERY('c.id')}, calc.hp_hit, calc.armor_used`;
 
-export function parseItemCreate(body: unknown): { name: string; quantity: number } {
+const ITEM_KINDS = ['weapons', 'armors', 'consumables', 'items'] as const;
+
+export function parseItemCreate(body: unknown): { name: string; quantity: number; srdId: string | null } {
 	const b = asObject(body);
-	const name = str(b.name, 'name', 1, 100);
 	const quantity = b.quantity === undefined ? 1 : int(b.quantity, 'quantity', 1, 1_000_000);
-	return { name, quantity };
+	if (b.srdId !== undefined && b.srdId !== null) {
+		const id = b.srdId;
+		const found =
+			typeof id === 'string'
+				? ITEM_KINDS.map((k) => getSrd(k, id, 'en')).find((e) => e)
+				: undefined;
+		if (!found) throw new ApiError(400, 'srdId must be an SRD weapon, armor, consumable or item id');
+		return { name: found.nameLocalized, quantity, srdId: found.id };
+	}
+	return { name: str(b.name, 'name', 1, 100), quantity, srdId: null };
 }
 
 export function parseItemQuantity(body: unknown): number {
@@ -258,3 +268,11 @@ WITH old AS (
 	RETURNING ${BASE_COLS.replace(/\b([a-z_]+)\b/g, 'c.$1')}, ${ITEMS_SUBQUERY('c.id')}
 )
 SELECT old.total AS gold_total, upd.* FROM old LEFT JOIN upd ON true`;
+
+export function parseCardId(body: unknown): string {
+	const id = asObject(body).cardId;
+	if (typeof id !== 'string' || !getSrd('domain-cards', id, 'en')) {
+		throw new ApiError(400, 'cardId must be an SRD domain card id');
+	}
+	return id;
+}
