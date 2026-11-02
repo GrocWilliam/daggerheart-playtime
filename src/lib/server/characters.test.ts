@@ -107,6 +107,28 @@ describe('DAMAGE_SQL', () => {
 	});
 });
 
+import { itemJson, parseItemCreate, parseItemQuantity } from './characters';
+
+describe('items parsing', () => {
+	it('parseItemCreate trims and defaults quantity', () => {
+		expect(parseItemCreate({ name: ' Torch ' })).toEqual({ name: 'Torch', quantity: 1 });
+		expect(parseItemCreate({ name: 'Rope', quantity: 3 }).quantity).toBe(3);
+	});
+	it('parseItemCreate rejects bad input', () => {
+		for (const b of [{}, { name: '  ' }, { name: 'a', quantity: 0 }, { name: 'a', quantity: 1.5 }, null])
+			expect(() => parseItemCreate(b)).toThrow();
+	});
+	it('parseItemQuantity allows 0 but not negatives/non-integers', () => {
+		expect(parseItemQuantity({ quantity: 0 })).toBe(0);
+		expect(() => parseItemQuantity({ quantity: -1 })).toThrow();
+		expect(() => parseItemQuantity({ quantity: 1.5 })).toThrow();
+		expect(() => parseItemQuantity({})).toThrow();
+	});
+	it('itemJson picks public fields', () => {
+		expect(itemJson({ id: 'x', name: 'n', quantity: 2, character_id: 'c' })).toEqual({ id: 'x', name: 'n', quantity: 2 });
+	});
+});
+
 import { GOLD_SQL, parseGold } from './characters';
 
 describe('parseGold', () => {

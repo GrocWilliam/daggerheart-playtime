@@ -1,8 +1,14 @@
 import { ApiError } from './campaigns';
 
-export const CHARACTER_COLS = `id, campaign_id, name, class, level, evasion, major_threshold,
+const BASE_COLS = `id, campaign_id, name, class, level, evasion, major_threshold,
 	severe_threshold, hp_marked, hp_max, stress_marked, stress_max, hope, armor_marked, armor_max,
 	vulnerable, restrained, hidden, notes, gold_handfuls, gold_bags, gold_chests`;
+
+const ITEMS_SUBQUERY = (idRef: string) => `(SELECT COALESCE(json_agg(json_build_object(
+	'id', i.id, 'name', i.name, 'quantity', i.quantity) ORDER BY i.created_at, i.id), '[]'::json)
+	FROM items i WHERE i.character_id = ${idRef}) AS items`;
+
+export const CHARACTER_COLS = `${BASE_COLS}, ${ITEMS_SUBQUERY('characters.id')}`;
 
 export function characterJson(r: any) {
 	return {
@@ -21,7 +27,7 @@ export function characterJson(r: any) {
 		conditions: { vulnerable: r.vulnerable, restrained: r.restrained, hidden: r.hidden },
 		notes: r.notes,
 		gold: { handfuls: r.gold_handfuls, bags: r.gold_bags, chests: r.gold_chests },
-		items: [],
+		items: r.items ?? [],
 		down: r.hp_marked === r.hp_max
 	};
 }
@@ -178,7 +184,22 @@ UPDATE characters c SET
 	hp_marked = LEAST(c.hp_max, GREATEST(0, c.hp_marked + calc.hp_hit))::int,
 	armor_marked = c.armor_marked + CASE WHEN calc.armor_used THEN 1 ELSE 0 END
 FROM calc WHERE c.id = calc.id
-RETURNING ${CHARACTER_COLS.replace(/\b([a-z_]+)\b/g, 'c.$1')}, calc.hp_hit, calc.armor_used`;
+RETURNING ${BASE_COLS.replace(/\b([a-z_]+)\b/g, 'c.$1')}, ${ITEMS_SUBQUERY('c.id')}, calc.hp_hit, calc.armor_used`;
+
+export function parseItemCreate(body: unknown): { name: string; quantity: number } {
+	const b = asObject(body);
+	const name = str(b.name, 'name', 1, 100);
+	const quantity = b.quantity === undefined ? 1 : int(b.quantity, 'quantity', 1, 1_000_000);
+	return { name, quantity };
+}
+
+export function parseItemQuantity(body: unknown): number {
+	return int(asObject(body).quantity, 'quantity', 0, 1_000_000);
+}
+
+export function itemJson(r: any) {
+	return { id: r.id, name: r.name, quantity: r.quantity };
+}
 
 export function parseGold(body: unknown): number {
 	const h = (body as { handfuls?: unknown } | null)?.handfuls;
@@ -199,6 +220,6 @@ WITH old AS (
 		gold_bags = ((old.total / 10) % 10)::int,
 		gold_handfuls = (old.total % 10)::int
 	FROM old WHERE c.id = old.id AND old.total >= 0
-	RETURNING ${CHARACTER_COLS.replace(/\b([a-z_]+)\b/g, 'c.$1')}
+	RETURNING ${BASE_COLS.replace(/\b([a-z_]+)\b/g, 'c.$1')}, ${ITEMS_SUBQUERY('c.id')}
 )
 SELECT old.total AS gold_total, upd.* FROM old LEFT JOIN upd ON true`;
