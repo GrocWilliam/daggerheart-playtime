@@ -26,8 +26,8 @@ if [ ! -f "$DOCKERFILE" ]; then
   exit 1
 fi
 
-if ! grep -qE '^FROM[[:space:]]+node:20-bookworm' "$DOCKERFILE"; then
-  echo "Dockerfile does not FROM node:20-bookworm" >&2
+if ! grep -qE '^FROM[[:space:]]+node:26-bookworm' "$DOCKERFILE"; then
+  echo "Dockerfile does not FROM node:26-bookworm" >&2
   exit 1
 fi
 
