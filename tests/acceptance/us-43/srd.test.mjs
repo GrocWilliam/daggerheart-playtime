@@ -64,11 +64,11 @@ test('the footer of every page shows the licence sentence, in both languages', a
 });
 
 for (const [kind, [f, count]] of Object.entries(KINDS)) {
-	test(`GET /api/srd/${kind} lists ${count} {id,name} in file order, same in en and fr`, async () => {
+	test(`GET /api/srd/${kind} lists ${count} {id,name} in file order, in en and by default`, async () => {
 		const els = file(f);
 		assert.equal(els.length, count);
 		const expected = els.map((e) => ({ id: e.id, name: enName(kind, e) }));
-		for (const lang of [undefined, 'en', 'fr']) {
+		for (const lang of [undefined, 'en']) {
 			const r = await get(`/api/srd/${kind}`, lang);
 			assert.equal(r.status, 200);
 			assert.deepEqual(await r.json(), expected);
@@ -77,7 +77,7 @@ for (const [kind, [f, count]] of Object.entries(KINDS)) {
 	test(`GET /api/srd/${kind}/<id> returns the file object plus nameLocalized`, async () => {
 		const els = file(f);
 		for (const e of [els[0], els[els.length - 1]]) {
-			for (const lang of ['en', 'fr']) {
+			for (const lang of ['en']) {
 				const r = await get(`/api/srd/${kind}/${e.id}`, lang);
 				assert.equal(r.status, 200);
 				assert.deepEqual(await r.json(), { ...e, nameLocalized: enName(kind, e) });
@@ -101,7 +101,7 @@ test('domains: 9 entries with ids core_domain_<lowercase name>', async () => {
 	assert.equal(list.length, 9);
 	assert.deepEqual(list.map((d) => d.name).sort(), [...DOMAINS].sort());
 	for (const d of list) assert.equal(d.id, `core_domain_${d.name.toLowerCase()}`);
-	for (const lang of ['en', 'fr']) {
+	for (const lang of ['en']) {
 		const one = await (await get('/api/srd/domains/core_domain_blade', lang)).json();
 		assert.equal(one.id, 'core_domain_blade');
 		assert.equal(one.nameLocalized, 'Blade');

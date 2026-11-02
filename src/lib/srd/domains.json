@@ -1,0 +1,47 @@
+[
+  {
+    "id": "core_domain_arcana",
+    "en": "Raw, innate magic: elemental and unstable power.",
+    "fr": "Magie brute et innée : puissance élémentaire et instable."
+  },
+  {
+    "id": "core_domain_blade",
+    "en": "Weapon mastery and martial prowess.",
+    "fr": "Maîtrise des armes et prouesse martiale."
+  },
+  {
+    "id": "core_domain_bone",
+    "en": "Swiftness, tactics and command of the body.",
+    "fr": "Vivacité, tactique et maîtrise du corps."
+  },
+  {
+    "id": "core_domain_codex",
+    "en": "Studied magic from books and formulas.",
+    "fr": "Magie étudiée dans les livres et les formules."
+  },
+  {
+    "id": "core_domain_grace",
+    "en": "Charisma, persuasion and enchantment.",
+    "fr": "Charisme, persuasion et enchantement."
+  },
+  {
+    "id": "core_domain_midnight",
+    "en": "Shadows, secrecy and stealth.",
+    "fr": "Ombres, secrets et discrétion."
+  },
+  {
+    "id": "core_domain_sage",
+    "en": "The natural world, its creatures and growth.",
+    "fr": "La nature, ses créatures et sa croissance."
+  },
+  {
+    "id": "core_domain_splendor",
+    "en": "Life, healing and divine light.",
+    "fr": "La vie, les soins et la lumière divine."
+  },
+  {
+    "id": "core_domain_valor",
+    "en": "Protection, endurance and courage.",
+    "fr": "Protection, endurance et courage."
+  }
+]

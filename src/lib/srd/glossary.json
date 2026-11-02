@@ -1,0 +1,62 @@
+[
+  {
+    "id": "hp",
+    "en": "Hit Points. Damage marks HP; when every HP is marked, the character is Down.",
+    "fr": "Points de vie. Les dégâts marquent des PV ; quand tous sont marqués, le personnage est à terre."
+  },
+  {
+    "id": "stress",
+    "en": "Stress marks strain. When every Stress is marked, more Stress marks an HP instead and the character becomes Vulnerable.",
+    "fr": "Le Stress marque la tension. Quand tout le Stress est marqué, le Stress suivant marque un PV et le personnage devient Vulnérable."
+  },
+  {
+    "id": "hope",
+    "en": "Hope (0 to 6) is gained when the Hope die rolls higher, and spent on Hope features, Experiences and helping allies.",
+    "fr": "L'Espoir (0 à 6) se gagne quand le dé d'Espoir fait plus, et se dépense pour les capacités d'Espoir, les Expériences et aider ses alliés."
+  },
+  {
+    "id": "fear",
+    "en": "Fear (0 to 12) is the GM's resource, gained when a player rolls with Fear and spent to make GM moves.",
+    "fr": "La Peur (0 à 12) est la ressource du MJ : il la gagne quand un joueur obtient un jet avec Peur et la dépense pour ses actions."
+  },
+  {
+    "id": "armor",
+    "en": "Mark an Armor slot to lower the severity of an incoming hit by one threshold.",
+    "fr": "Marquez un emplacement d'Armure pour réduire d'un seuil la gravité d'une attaque reçue."
+  },
+  {
+    "id": "evasion",
+    "en": "Evasion is the Difficulty of attack rolls made against the character.",
+    "fr": "L'Évasion est la Difficulté des jets d'attaque contre le personnage."
+  },
+  {
+    "id": "thresholds",
+    "en": "Damage below Major marks 1 HP, from Major 2 HP, from Severe 3 HP.",
+    "fr": "Des dégâts sous le seuil Majeur marquent 1 PV, à partir de Majeur 2 PV, à partir de Grave 3 PV."
+  },
+  {
+    "id": "vulnerable",
+    "en": "Vulnerable: rolls against the character have advantage.",
+    "fr": "Vulnérable : les jets contre le personnage ont l'avantage."
+  },
+  {
+    "id": "restrained",
+    "en": "Restrained: the character cannot move, but can still act.",
+    "fr": "Entravé : le personnage ne peut pas se déplacer, mais peut agir."
+  },
+  {
+    "id": "hidden",
+    "en": "Hidden: rolls against the character have disadvantage until they are seen.",
+    "fr": "Caché : les jets contre le personnage ont le désavantage tant qu'il n'est pas vu."
+  },
+  {
+    "id": "gold",
+    "en": "10 handfuls make a bag, 10 bags make a chest.",
+    "fr": "10 poignées font une bourse, 10 bourses font un coffre."
+  },
+  {
+    "id": "level",
+    "en": "Level 1 to 10: tier 1 is level 1, tier 2 levels 2–4, tier 3 levels 5–7, tier 4 levels 8–10.",
+    "fr": "Niveau 1 à 10 : palier 1 au niveau 1, palier 2 aux niveaux 2–4, palier 3 aux niveaux 5–7, palier 4 aux niveaux 8–10."
+  }
+]

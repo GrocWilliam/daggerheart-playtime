@@ -35,19 +35,23 @@ const FILES: Record<Exclude<SrdKind, 'domains'>, string> = {
 
 // Files are read once at startup. Located relative to the source in dev/tests
 // and relative to the working directory (the repo root) in the built server.
-function readCore(file: string): Raw[] {
+function readSrdFile(file: string): string {
 	const candidates = [
-		new URL(`../srd/core/${file}`, import.meta.url),
-		new URL(`file://${process.cwd()}/src/lib/srd/core/${file}`)
+		new URL(`../srd/${file}`, import.meta.url),
+		new URL(`file://${process.cwd()}/src/lib/srd/${file}`)
 	];
 	for (const url of candidates) {
 		try {
-			return JSON.parse(readFileSync(url, 'utf8'));
+			return readFileSync(url, 'utf8');
 		} catch {
 			/* try next */
 		}
 	}
 	throw new Error(`SRD file not found: ${file}`);
+}
+
+function readCore(file: string): Raw[] {
+	return JSON.parse(readSrdFile(`core/${file}`));
 }
 
 function englishName(kind: SrdKind, e: Raw): string {
@@ -83,16 +87,17 @@ export function isSrdKind(v: unknown): v is SrdKind {
 	return typeof v === 'string' && (SRD_KINDS as readonly string[]).includes(v);
 }
 
-// French names arrive in a later story: every language gets the English name.
-function localize(name: string, _lang: Lang): string {
-	return name;
+const fr: Record<string, string> = JSON.parse(readSrdFile('fr.json'));
+
+function localize(id: string, name: string, lang: Lang): string {
+	return lang === 'fr' ? (fr[id] ?? name) : name;
 }
 
 export function listSrd(kind: SrdKind, lang: Lang): { id: string; name: string }[] {
-	return data.get(kind)!.map((d) => ({ id: d.element.id, name: localize(d.name, lang) }));
+	return data.get(kind)!.map((d) => ({ id: d.element.id, name: localize(d.element.id, d.name, lang) }));
 }
 
 export function getSrd(kind: SrdKind, id: string, lang: Lang): (SrdElement & { nameLocalized: string }) | null {
 	const d = data.get(kind)!.find((x) => x.element.id === id);
-	return d ? { ...d.element, nameLocalized: localize(d.name, lang) } : null;
+	return d ? { ...d.element, nameLocalized: localize(d.element.id, d.name, lang) } : null;
 }
