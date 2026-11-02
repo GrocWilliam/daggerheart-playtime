@@ -179,3 +179,26 @@ UPDATE characters c SET
 	armor_marked = c.armor_marked + CASE WHEN calc.armor_used THEN 1 ELSE 0 END
 FROM calc WHERE c.id = calc.id
 RETURNING ${CHARACTER_COLS.replace(/\b([a-z_]+)\b/g, 'c.$1')}, calc.hp_hit, calc.armor_used`;
+
+export function parseGold(body: unknown): number {
+	const h = (body as { handfuls?: unknown } | null)?.handfuls;
+	if (typeof h !== 'number' || !Number.isSafeInteger(h)) {
+		throw new ApiError(400, 'handfuls must be an integer');
+	}
+	return h;
+}
+
+// Atomic gold change: $1 = handfuls delta, $2 = id. Locks the row; updates only if the new total is >= 0.
+export const GOLD_SQL = `
+WITH old AS (
+	SELECT id, gold_chests::bigint * 100 + gold_bags::bigint * 10 + gold_handfuls + $1::bigint AS total
+	FROM characters WHERE id = $2 FOR UPDATE
+), upd AS (
+	UPDATE characters c SET
+		gold_chests = (old.total / 100)::int,
+		gold_bags = ((old.total / 10) % 10)::int,
+		gold_handfuls = (old.total % 10)::int
+	FROM old WHERE c.id = old.id AND old.total >= 0
+	RETURNING ${CHARACTER_COLS.replace(/\b([a-z_]+)\b/g, 'c.$1')}
+)
+SELECT old.total AS gold_total, upd.* FROM old LEFT JOIN upd ON true`;

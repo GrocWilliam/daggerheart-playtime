@@ -106,3 +106,41 @@ describe('DAMAGE_SQL', () => {
 		expect((await db.query(DAMAGE_SQL, [5, false, 'nope'])).rows).toHaveLength(0);
 	});
 });
+
+import { GOLD_SQL, parseGold } from './characters';
+
+describe('parseGold', () => {
+	it('accepts integers only', () => {
+		expect(parseGold({ handfuls: -4 })).toBe(-4);
+		for (const b of [{ handfuls: 'two' }, { handfuls: 1.5 }, {}, null]) expect(() => parseGold(b)).toThrow();
+	});
+});
+
+describe('GOLD_SQL', () => {
+	async function make(h: number, b: number, c: number) {
+		const db = await getDb();
+		const camp = await db.query(`INSERT INTO campaigns (name) VALUES ('c') RETURNING id`);
+		const r = await db.query(
+			`INSERT INTO characters (campaign_id, name, class, evasion, major_threshold, severe_threshold,
+				hp_max, armor_max, gold_handfuls, gold_bags, gold_chests) VALUES ($1,'n','k',10,5,10,10,2,$2,$3,$4) RETURNING id`,
+			[camp.rows[0].id, h, b, c]
+		);
+		return { db, id: r.rows[0].id as string };
+	}
+	it('normalizes', async () => {
+		const { db, id } = await make(5, 9, 0);
+		const { rows } = await db.query(GOLD_SQL, [5, id]);
+		expect([rows[0].gold_handfuls, rows[0].gold_bags, rows[0].gold_chests]).toEqual([0, 0, 1]);
+	});
+	it('refuses overspending without changing anything', async () => {
+		const { db, id } = await make(2, 0, 0);
+		const { rows } = await db.query(GOLD_SQL, [-5, id]);
+		expect(Number(rows[0].gold_total)).toBe(-3);
+		const cur = await db.query('SELECT gold_handfuls FROM characters WHERE id = $1', [id]);
+		expect(cur.rows[0].gold_handfuls).toBe(2);
+	});
+	it('returns no rows for unknown ids', async () => {
+		const { db } = await make(0, 0, 0);
+		expect((await db.query(GOLD_SQL, [1, 'nope'])).rows).toHaveLength(0);
+	});
+});
