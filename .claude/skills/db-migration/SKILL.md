@@ -5,17 +5,16 @@ description: Change the database schema of daggerheart-playtime - new table, col
 
 # Database migration
 
-- Add `migrations/NNN_short_name.sql` with the next number (look at `ls migrations`). Never edit, rename or renumber
-  an existing file: deployed databases already applied it, and `schema_migrations` records it by file name.
-- `migrate.ts` runs each file at startup as one multi-statement query, in one implicit transaction with its record:
-  a failing migration leaves nothing behind. Do not add `BEGIN`/`COMMIT`.
-- The same SQL runs on PGlite (dev, tests) and Postgres (`DATABASE_URL`): plain PostgreSQL, no extensions.
-- Write it re-runnable: `CREATE TABLE IF NOT EXISTS`, `ADD COLUMN IF NOT EXISTS`, `CREATE INDEX IF NOT EXISTS`.
-- A new column on an existing table needs a `DEFAULT` (or is nullable): rows already exist.
-- Follow the existing schema: `id text PRIMARY KEY DEFAULT gen_random_uuid()::text`, `created_at timestamptz NOT NULL
-  DEFAULT now()`, foreign keys `REFERENCES parent(id) ON DELETE CASCADE`. Case-insensitive uniqueness is a unique
-  index on `lower(btrim(name))` (see `005_items_unique_name.sql`).
-- Then update the code that reads the table: the column list constants and the JSON mapper in `src/lib/server/`.
+Legacy `migrations/*.sql` (run by `migrate.ts`) is **frozen**: never add, edit or rename a file there. New schema
+changes go through Drizzle:
+
+1. Edit `src/lib/server/schema.ts` (the Drizzle schema; it mirrors `migrations/001`-`006` for the old tables).
+2. Run `npx drizzle-kit generate --name short_name`: it writes `drizzle/NNNN_short_name.sql` and updates
+   `drizzle/meta/`. Commit all of it. Never edit an applied file; `drizzle/0000_baseline.sql` is `SELECT 1;`.
+3. `getDb()` applies legacy migrations, then Drizzle's migrator on `drizzle/` (path from `process.cwd()`), at startup.
+   `getDrizzle()` returns the typed Drizzle instance on the same connection.
+4. A new column on an existing table needs a default (or is nullable). Update the column lists/mappers in
+   `src/lib/server/`. `npx drizzle-kit generate` must then say "No schema changes".
 
 ## Check
 

@@ -25,13 +25,13 @@ any change that makes it wrong, and add what the next agent would otherwise redi
 | `src/lib/i18n/{en,fr}.json` | Every UI string, by key. `translate(lang, key)`; pages get `data.lang`. |
 | `src/lib/srd/` | SRD data (JSON) and its licence; `fr.json` holds the French names. |
 | `src/app.css` | All global styles and the palette (CSS variables on `html`). |
-| `migrations/NNN_name.sql` | Applied in number order at startup (`migrate.ts`), recorded in `schema_migrations`. |
+| `migrations/NNN_name.sql` | Frozen legacy SQL, applied at startup (`migrate.ts`). Then `drizzle/` (drizzle-kit output, baseline `SELECT 1;`) is applied by Drizzle's migrator in `db.ts`. |
 | `scripts/postbuild.mjs` | Wraps `build/index.js` so `PORT` defaults to 8080. |
 | `tests/acceptance/us-N/` | Frozen acceptance tests, one folder per story. Never edit them. |
 
 ## Conventions
 
-- Schema change = a new numbered migration file. Never edit an applied one.
+- Schema change = edit `src/lib/server/schema.ts` + `npx drizzle-kit generate` (see `db-migration` skill). `migrations/` is frozen legacy.
 - New UI text: add the key to both `en.json` and `fr.json` (`i18n.test.ts` checks they match).
 - Form posts must come from the same origin: `hooks.server.ts` rejects cross-site form submissions with 403.
 - Styles go in `src/app.css` with the palette variables (`--bg`, `--surface`, `--text`, `--muted`, `--accent`, `--teal`,
