@@ -295,3 +295,15 @@ describe('SRD ids', () => {
 		expect(msg(cardIdSchema, null)).toBe(OBJ);
 	});
 });
+
+describe('form field schemas', () => {
+	it('trackerFieldSchema / conditionFieldSchema use the form messages', async () => {
+		const { trackerFieldSchema, conditionFieldSchema } = await import('./characters');
+		expect(trackerFieldSchema.parse('hp')).toBe('hp');
+		expect(trackerFieldSchema.safeParse('gold').error?.issues[0].message).toBe('unknown tracker');
+		expect(trackerFieldSchema.safeParse(null).error?.issues[0].message).toBe('unknown tracker');
+		expect(conditionFieldSchema.parse('hidden')).toBe('hidden');
+		expect(conditionFieldSchema.safeParse('burning').error?.issues[0].message).toBe('unknown condition');
+		expect(conditionFieldSchema.safeParse(null).error?.issues[0].message).toBe('unknown condition');
+	});
+});

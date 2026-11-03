@@ -1,4 +1,5 @@
 import { readFileSync } from 'node:fs';
+import * as z from 'zod';
 import type { Lang } from '$lib/i18n';
 
 export const SRD_KINDS = [
@@ -83,9 +84,17 @@ for (const [kind, file] of Object.entries(FILES) as [SrdKind, string][]) {
 	);
 }
 
-export function isSrdKind(v: unknown): v is SrdKind {
-	return typeof v === 'string' && (SRD_KINDS as readonly string[]).includes(v);
-}
+/** The `[kind]` route param (404 on rejection). */
+export const srdKindSchema = z.enum(SRD_KINDS, { error: 'unknown SRD kind' });
+
+/** The `[id]` route param (404 on rejection; unknown ids are caught by the lookup). */
+export const srdIdSchema = z.string({ error: 'unknown SRD element' }).min(1, { error: 'unknown SRD element' });
+
+/** Reference page query: an unknown or missing `kind` means all kinds, a missing `q` is empty. */
+export const srdSearchSchema = z.object({
+	kind: srdKindSchema.optional().catch(undefined),
+	q: z.string().catch('')
+});
 
 const fr: Record<string, string> = JSON.parse(readSrdFile('fr.json'));
 

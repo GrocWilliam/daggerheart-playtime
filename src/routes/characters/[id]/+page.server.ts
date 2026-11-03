@@ -1,5 +1,6 @@
 import { error, fail } from '@sveltejs/kit';
 import { pickList, pickOf, subclassesOf, getSrd, cardsByIds, cardGroups, itemGroups, itemPicks } from '$lib/server/srd';
+import { conditionFieldSchema, trackerFieldSchema } from '$lib/server/characters';
 import type { Actions, PageServerLoad } from './$types';
 
 type Fetch = typeof fetch;
@@ -14,9 +15,7 @@ async function call(fetchFn: Fetch, method: string, path: string, body?: unknown
 	return { ok: res.ok, status: res.status, data };
 }
 
-const TRACKERS = ['hp', 'stress', 'hope', 'armor'];
 const NUMERIC = ['level', 'evasion', 'majorThreshold', 'severeThreshold', 'maxHp', 'maxStress', 'armorSlots'];
-const CONDITIONS = ['vulnerable', 'restrained', 'hidden'];
 
 /** Form field to number; empty/non-numeric stays a string so the API rejects it. */
 function num(v: FormDataEntryValue | null): number | string {
@@ -63,8 +62,9 @@ export const load: PageServerLoad = async ({ params, fetch, locals }) => {
 export const actions: Actions = {
 	tracker: async ({ request, params, fetch }) => {
 		const form = await request.formData();
-		const tracker = String(form.get('tracker'));
-		if (!TRACKERS.includes(tracker)) return fail(400, { error: 'unknown tracker' });
+		const t = trackerFieldSchema.safeParse(form.get('tracker'));
+		if (!t.success) return fail(400, { error: t.error.issues[0].message });
+		const tracker = t.data;
 		const r = await call(fetch, 'POST', `/api/characters/${enc(params.id)}/${tracker}`, {
 			delta: Number(form.get('delta'))
 		});
@@ -99,8 +99,9 @@ export const actions: Actions = {
 	},
 	condition: async ({ request, params, fetch }) => {
 		const form = await request.formData();
-		const key = String(form.get('condition'));
-		if (!CONDITIONS.includes(key)) return fail(400, { error: 'unknown condition' });
+		const c = conditionFieldSchema.safeParse(form.get('condition'));
+		if (!c.success) return fail(400, { error: c.error.issues[0].message });
+		const key = c.data;
 		const r = await call(fetch, 'PUT', `/api/characters/${enc(params.id)}/conditions`, {
 			[key]: form.get('value') === 'on'
 		});

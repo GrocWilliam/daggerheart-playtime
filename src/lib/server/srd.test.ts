@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { getSrd, isSrdKind, listSrd, SRD_KINDS } from './srd';
+import { getSrd, listSrd, SRD_KINDS, srdIdSchema, srdKindSchema, srdSearchSchema } from './srd';
 
 const COUNTS = [9, 18, 18, 9, 9, 189, 192, 34, 60, 60, 14];
 
@@ -16,7 +16,6 @@ describe('srd', () => {
 		expect(e?.name).toBe('BARD');
 		expect(e?.nameLocalized).toBe('Barde');
 		expect(getSrd('classes', 'nope', 'en')).toBeNull();
-		expect(isSrdKind('nonsense')).toBe(false);
 	});
 	it('returns French names when the language is French', () => {
 		expect(getSrd('domains', 'core_domain_blade', 'fr')?.nameLocalized).toBe('Lame');
@@ -40,5 +39,43 @@ describe('item pick-lists', () => {
 		const id = itemGroups('en')[0].picks[0].id;
 		const r = itemPicks([id, 'nope'], 'en');
 		expect(Object.keys(r)).toEqual([id]);
+	});
+});
+
+describe('srdKindSchema', () => {
+	it('accepts every kind', () => {
+		for (const k of SRD_KINDS) expect(srdKindSchema.safeParse(k).success).toBe(true);
+	});
+	it('rejects others with the legacy message', () => {
+		for (const v of ['nonsense', '', 'Classes', 'toString', '__proto__', undefined, 1]) {
+			const r = srdKindSchema.safeParse(v);
+			expect(r.success).toBe(false);
+			expect(r.error?.issues[0].message).toBe('unknown SRD kind');
+		}
+	});
+});
+
+describe('srdIdSchema', () => {
+	it('accepts any non-empty string', () => {
+		expect(srdIdSchema.parse('core_class_bard')).toBe('core_class_bard');
+		expect(srdIdSchema.safeParse('x').success).toBe(true);
+	});
+	it('rejects empty and non-strings', () => {
+		for (const v of ['', undefined, null, 3]) {
+			const r = srdIdSchema.safeParse(v);
+			expect(r.success).toBe(false);
+			expect(r.error?.issues[0].message).toBe('unknown SRD element');
+		}
+	});
+});
+
+describe('srdSearchSchema', () => {
+	it('keeps a valid kind and q', () => {
+		expect(srdSearchSchema.parse({ kind: 'weapons', q: 'axe' })).toEqual({ kind: 'weapons', q: 'axe' });
+	});
+	it('falls back for unknown or missing values', () => {
+		expect(srdSearchSchema.parse({ kind: 'nope', q: 'a' })).toEqual({ kind: undefined, q: 'a' });
+		expect(srdSearchSchema.parse({})).toEqual({ kind: undefined, q: '' });
+		expect(srdSearchSchema.parse({ kind: undefined, q: 5 })).toEqual({ kind: undefined, q: '' });
 	});
 });

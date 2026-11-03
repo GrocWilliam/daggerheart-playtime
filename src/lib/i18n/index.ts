@@ -1,3 +1,4 @@
+import * as z from 'zod';
 import en from './en.json';
 import fr from './fr.json';
 
@@ -6,16 +7,18 @@ export const LANGS: readonly Lang[] = ['en', 'fr'];
 
 const dictionaries: Record<Lang, Record<string, string>> = { en, fr };
 
-export function isLang(v: unknown): v is Lang {
-	return v === 'en' || v === 'fr';
-}
+/** A supported language code. */
+export const LANG_ERROR = 'lang must be "en" or "fr"';
+export const langSchema = z.enum(['en', 'fr'], { error: LANG_ERROR });
 
 /** Cookie first, then the first supported language of Accept-Language, then en. */
 export function resolveLang(cookie: string | undefined | null, acceptLanguage: string | null): Lang {
-	if (isLang(cookie)) return cookie;
+	const c = langSchema.safeParse(cookie);
+	if (c.success) return c.data;
 	for (const part of (acceptLanguage ?? '').split(',')) {
 		const primary = part.split(';')[0].trim().toLowerCase().split('-')[0];
-		if (isLang(primary)) return primary;
+		const p = langSchema.safeParse(primary);
+		if (p.success) return p.data;
 	}
 	return 'en';
 }

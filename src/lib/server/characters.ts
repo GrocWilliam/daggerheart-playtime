@@ -125,7 +125,11 @@ export type Conditions = z.infer<typeof conditionsSchema>;
 
 export const TRACKERS = ['hp', 'stress', 'hope', 'armor'] as const;
 /** The `[tracker]` route param. */
-export const trackerSchema = z.enum(TRACKERS);
+export const trackerSchema = z.enum(TRACKERS, { error: 'not found' });
+/** The `tracker` form field of the pages (400 with the form's message). */
+export const trackerFieldSchema = z.enum(TRACKERS, { error: 'unknown tracker' });
+/** The `condition` form field of the pages. */
+export const conditionFieldSchema = z.enum(CONDITION_KEYS, { error: 'unknown condition' });
 export type Tracker = z.infer<typeof trackerSchema>;
 
 export const deltaSchema = z.object({ delta: safeIntField('delta') }, { error: 'delta must be an integer' });

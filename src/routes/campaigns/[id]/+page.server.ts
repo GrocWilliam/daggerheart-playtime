@@ -1,5 +1,6 @@
 import { error, fail } from '@sveltejs/kit';
 import { pickOf } from '$lib/server/srd';
+import { trackerFieldSchema } from '$lib/server/characters';
 import type { Actions, PageServerLoad } from './$types';
 
 type Fetch = typeof fetch;
@@ -14,7 +15,6 @@ async function call(fetchFn: Fetch, method: string, path: string, body?: unknown
 	return { ok: res.ok, status: res.status, data };
 }
 
-const TRACKERS = ['hp', 'stress', 'hope', 'armor'];
 const NUMERIC = ['level', 'evasion', 'majorThreshold', 'severeThreshold', 'maxHp', 'maxStress', 'armorSlots'];
 
 /** Form field to number; empty/non-numeric becomes NaN-like string so the API rejects it. */
@@ -54,9 +54,10 @@ export const actions: Actions = {
 	},
 	tracker: async ({ request, fetch }) => {
 		const form = await request.formData();
-		const tracker = String(form.get('tracker'));
 		const id = String(form.get('characterId'));
-		if (!TRACKERS.includes(tracker)) return fail(400, { error: 'unknown tracker' });
+		const t = trackerFieldSchema.safeParse(form.get('tracker'));
+		if (!t.success) return fail(400, { error: t.error.issues[0].message });
+		const tracker = t.data;
 		const r = await call(
 			fetch,
 			'POST',

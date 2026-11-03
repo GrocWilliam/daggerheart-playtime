@@ -11,7 +11,7 @@ any change that makes it wrong, and add what the next agent would otherwise redi
 - SvelteKit 2 + Svelte 5 (runes), TypeScript, `@sveltejs/adapter-node`. Node 26 (`.nvmrc`, `engines`).
 - Database: PostgreSQL through `pg` when `DATABASE_URL` is set, else PGlite (`PGLITE_DATA_DIR`, default `./data/pglite`;
   `memory://` in tests). One `Db` interface: `query(sql, params) → { rows }`, in `src/lib/server/db.ts`.
-- Validation: Zod 4 schemas + `parse(schema, body)` (`campaigns.ts`) → 400 with the first issue's message.
+- Validation: Zod 4 schemas + `parse(schema, body)` (`campaigns.ts`) → 400 with the first issue's message.  `parse(schema, v, 404)` for route params that 404.
 - Unit tests: Vitest (`*.test.ts` next to the code). No other test or UI framework: don't add one.
 
 ## Layout

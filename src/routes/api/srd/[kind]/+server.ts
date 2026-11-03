@@ -1,9 +1,9 @@
 import { json } from '@sveltejs/kit';
-import { errorResponse } from '$lib/server/campaigns';
-import { isSrdKind, listSrd } from '$lib/server/srd';
+import { api, parse } from '$lib/server/campaigns';
+import { listSrd, srdKindSchema } from '$lib/server/srd';
 import type { RequestHandler } from './$types';
 
-export const GET: RequestHandler = ({ params, locals }) => {
-	if (!isSrdKind(params.kind)) return errorResponse(404, 'unknown SRD kind');
-	return json(listSrd(params.kind, locals.lang));
-};
+export const GET: RequestHandler = api(async ({ params, locals }) => {
+	const kind = parse(srdKindSchema, params.kind, 404);
+	return json(listSrd(kind, locals.lang));
+});

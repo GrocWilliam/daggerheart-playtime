@@ -66,10 +66,10 @@ export const idSchema = z
 export const nameSchema = z.object({ name: strField('name', 1, MAX_NAME) }, { error: 'name must be a string' });
 export type Name = z.infer<typeof nameSchema>;
 
-/** Validates `body` against `schema`; throws ApiError(400, message of the first issue). */
-export function parse<S extends z.ZodType>(schema: S, body: unknown): z.output<S> {
+/** Validates `body` against `schema`; throws ApiError(status (default 400), message of the first issue). */
+export function parse<S extends z.ZodType>(schema: S, body: unknown, status = 400): z.output<S> {
 	const r = schema.safeParse(body);
-	if (!r.success) throw new ApiError(400, r.error.issues[0]?.message ?? 'invalid input');
+	if (!r.success) throw new ApiError(status, r.error.issues[0]?.message ?? 'invalid input');
 	return r.data;
 }
 
