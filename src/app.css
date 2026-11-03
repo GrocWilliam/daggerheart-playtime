@@ -518,13 +518,6 @@ ul.list {
 	margin-bottom: 0;
 }
 
-.list > li > [data-testid='campaign-link'] {
-	display: flex;
-	width: 100%;
-	min-height: 2.75rem;
-	padding: 0 0.75rem;
-}
-
 .list > li.ref-item {
 	padding: 0.5rem 0.75rem;
 }

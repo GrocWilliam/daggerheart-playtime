@@ -18,9 +18,11 @@ description: Build or restyle a page, form, component or layout in daggerheart-p
 
 ## Styles
 
-- All styles live in `src/app.css`: no `<style>` blocks, no inline styles. Tailwind v4 is set up (`@import "tailwindcss";`
+- Layout, home page and `LanguageSwitcher` are styled with Tailwind utilities in the markup (the pattern for migrating the rest);
+  other pages still use `src/app.css`. No `<style>` blocks, no inline styles. Tailwind v4 is set up (`@import "tailwindcss";`
   first, plugin before `sveltekit()` in `vite.config.ts`). Old page rules stay unlayered so they beat preflight; `@layer base`
   restores what preflight resets.
+  Unlayered rules beat utilities: where one still matches (`button { font }`, `ul { padding-left }`), add `!` to the utility (`pl-0!`).
 - Tailwind tokens live in `@theme static` and only reference the palette: `bg surface text muted accent danger calm`
   (`text-calm`, `bg-surface`...; `calm` is `var(--tea\6c)`), fonts `font-display` (Cinzel), `font-body` (EB Garamond).
   Never use Tailwind's default palette (`red-500`...) and never write a colour literal or colour name after a `:` in

@@ -8,9 +8,9 @@
 
 <h2>{t('home.campaigns')}</h2>
 
-<ul class="list">
+<ul class="list mb-3 mt-0 list-none pl-0!">
 	{#each data.campaigns as c (c.id)}
-		<li><a data-testid="campaign-link" href="/campaigns/{c.id}">{c.name}</a></li>
+		<li class="mb-3 rounded-lg border-l-[3px] border-solid border-accent bg-surface last:mb-0"><a class="flex! min-h-11 w-full px-3 py-0" data-testid="campaign-link" href="/campaigns/{c.id}">{c.name}</a></li>
 	{/each}
 </ul>
 

@@ -65,3 +65,4 @@ true like this file: when a change alters a pattern a skill describes, update th
 <!-- One line per trap that cost an attempt: what happened, what to do instead. -->
 - Frozen tests match raw HTML and CSS with regexes: a word or colour name added anywhere can break an older story's
   test. `--teal` is written `var(--tea\6c)` and `Help.svelte` escapes "vulnerable" for that reason.
+- Unlayered rules in `app.css` beat Tailwind utilities (which are layered): a utility that loses needs a trailing `!` (`aria-pressed:font-bold!`).
