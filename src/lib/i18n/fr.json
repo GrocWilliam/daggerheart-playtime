@@ -87,5 +87,7 @@
 	"section.cards": "Cartes de domaine",
 	"card.level": "Niveau",
 	"card.add": "Ajouter une carte de domaine",
-	"action.addCard": "Ajouter la carte"
+	"action.addCard": "Ajouter la carte",
+	"nav.label": "Principale",
+	"item.actions": "Actions"
 }

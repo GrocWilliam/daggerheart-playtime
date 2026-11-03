@@ -87,5 +87,7 @@
 	"section.cards": "Domain cards",
 	"card.level": "Level",
 	"card.add": "Add a domain card",
-	"action.addCard": "Add card"
+	"action.addCard": "Add card",
+	"nav.label": "Main",
+	"item.actions": "Actions"
 }

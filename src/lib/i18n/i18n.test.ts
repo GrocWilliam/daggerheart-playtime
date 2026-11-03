@@ -50,3 +50,12 @@ describe('character sheet glossary', () => {
 		expect(translate('en', 'condition.clear.hidden')).toBe('Clear hidden');
 	});
 });
+
+describe('navigation keys', () => {
+	it('defines nav.label and item.actions in both languages', () => {
+		expect(translate('en', 'nav.label')).toBe('Main');
+		expect(translate('fr', 'nav.label')).toBe('Principale');
+		expect(translate('en', 'item.actions')).toBe('Actions');
+		expect(translate('fr', 'item.actions')).toBe('Actions');
+	});
+});

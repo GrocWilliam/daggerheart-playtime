@@ -5,14 +5,23 @@
 	import '../app.css';
 	import LanguageSwitcher from '$lib/LanguageSwitcher.svelte';
 	import { translate } from '$lib/i18n';
+	import { page } from '$app/state';
 	import licence from '$lib/srd/LICENSE.md?raw';
 	let { children, data } = $props();
 	const notice = licence.trim().split(/\n\s*\n/)[0].replace(/\s+/g, ' ');
 </script>
 
 <header class="site-header">
+	<nav aria-label={translate(data.lang, 'nav.label')}>
+		<a href="/" data-testid="nav-home" aria-current={page.url.pathname === '/' ? 'page' : undefined}>{translate(data.lang, 'home.title')}</a>
+		<a
+			href="/reference"
+			data-testid="nav-reference"
+			aria-current={page.url.pathname === '/reference' ? 'page' : undefined}
+			>{translate(data.lang, 'nav.reference')}</a
+		>
+	</nav>
 	<LanguageSwitcher lang={data.lang} />
-	<a href="/reference" class="ref-link">{translate(data.lang, 'nav.reference')}</a>
 </header>
 
 {@render children()}
@@ -26,12 +35,23 @@
 		display: flex;
 		flex-wrap: wrap;
 		align-items: center;
+		justify-content: space-between;
 		gap: 0.5rem;
+		border-bottom: 1px solid var(--muted);
+		margin-bottom: 1rem;
 	}
-	.ref-link {
-		display: inline-flex;
+	nav {
+		display: flex;
+		flex-wrap: wrap;
 		align-items: center;
-		min-height: 2.75rem;
-		min-width: 2.75rem;
+		gap: 0.5rem 1rem;
+	}
+	nav a {
+		text-decoration: none;
+		border-bottom: none;
+	}
+	nav a[aria-current='page'] {
+		border-bottom: 2px solid var(--accent);
+		font-weight: 700;
 	}
 </style>
