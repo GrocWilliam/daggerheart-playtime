@@ -1,4 +1,6 @@
+import { eq, sql } from 'drizzle-orm';
 import * as z from 'zod';
+import { characters } from './schema';
 import { OBJECT_ERROR, intField, safeIntField, strField } from './campaigns';
 import { getSrd } from './srd';
 
@@ -12,6 +14,73 @@ const ITEMS_SUBQUERY = (idRef: string) => `(SELECT COALESCE(json_agg(json_build_
 	FROM items i WHERE i.character_id = ${idRef}) AS items`;
 
 export const CHARACTER_COLS = `${BASE_COLS}, ${ITEMS_SUBQUERY('characters.id')}`;
+
+/** Drizzle select shape giving the snake_case row that `characterJson` reads. */
+const characterSelect = {
+	id: characters.id,
+	campaign_id: characters.campaignId,
+	name: characters.name,
+	class: characters.class,
+	level: characters.level,
+	evasion: characters.evasion,
+	major_threshold: characters.majorThreshold,
+	severe_threshold: characters.severeThreshold,
+	hp_marked: characters.hpMarked,
+	hp_max: characters.hpMax,
+	stress_marked: characters.stressMarked,
+	stress_max: characters.stressMax,
+	hope: characters.hope,
+	armor_marked: characters.armorMarked,
+	armor_max: characters.armorMax,
+	vulnerable: characters.vulnerable,
+	restrained: characters.restrained,
+	hidden: characters.hidden,
+	notes: characters.notes,
+	gold_handfuls: characters.goldHandfuls,
+	gold_bags: characters.goldBags,
+	gold_chests: characters.goldChests,
+	subclass: characters.subclass,
+	ancestry: characters.ancestry,
+	community: characters.community,
+	cards: characters.cards,
+	items: sql<unknown>`(SELECT COALESCE(json_agg(json_build_object(
+		'id', i.id, 'name', i.name, 'quantity', i.quantity, 'srdId', i.srd_id) ORDER BY i.created_at, i.id), '[]'::json)
+		FROM items i WHERE i.character_id = ${characters.id})`.as('items')
+};
+
+/** The characters of a campaign, oldest first, as API JSON. */
+export async function campaignCharacters(campaignId: string) {
+	const { getDrizzle } = await import('./db');
+	const db = await getDrizzle();
+	const rows = await db
+		.select(characterSelect)
+		.from(characters)
+		.where(eq(characters.campaignId, campaignId))
+		.orderBy(characters.createdAt, characters.seq);
+	return rows.map(characterJson);
+}
+
+/** Inserts a character into a campaign (which must exist) and returns it as API JSON. */
+export async function insertCharacter(campaignId: string, f: CreateCharacter) {
+	const { getDrizzle } = await import('./db');
+	const db = await getDrizzle();
+	const [row] = await db
+		.insert(characters)
+		.values({
+			campaignId,
+			name: f.name,
+			class: f.class,
+			level: f.level,
+			evasion: f.evasion,
+			majorThreshold: f.majorThreshold,
+			severeThreshold: f.severeThreshold,
+			hpMax: f.maxHp,
+			stressMax: f.maxStress,
+			armorMax: f.armorSlots
+		})
+		.returning(characterSelect);
+	return characterJson(row);
+}
 
 export function characterJson(r: any) {
 	return {

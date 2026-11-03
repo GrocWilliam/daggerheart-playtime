@@ -8,19 +8,19 @@ description: Add or change a JSON API endpoint in daggerheart-playtime (src/rout
 ## Shape of an endpoint
 
 ```ts
-import { getDb } from '$lib/server/db';
-import { ApiError, api, idSchema, json, parse, readJson } from '$lib/server/campaigns';
+import { ApiError, api, idSchema, json, parse, readJson, renameCampaign } from '$lib/server/campaigns';
 import type { RequestHandler } from './$types';
 
-export const POST: RequestHandler = api(async ({ params, request }) => {
+export const PATCH: RequestHandler = api(async ({ params, request }) => {
 	const id = parse(idSchema, params.id); // route params that reach SQL are parsed too
 	const input = parse(thingSchema, await readJson(request)); // schema in src/lib/server/<domain>.ts
-	const db = await getDb();
-	const { rows } = await db.query('UPDATE ... WHERE id = $2 RETURNING ...', [input.x, id]);
-	if (!rows[0]) throw new ApiError(404, 'thing not found');
-	return json(thingJson(rows[0]));
+	return json(await renameCampaign(id, input)); // thin handler: the query lives in the domain module
 });
 ```
+
+Handlers stay thin: they parse, call a domain function in `src/lib/server/<domain>.ts` (which throws
+`ApiError(404, ...)` for a missing row) and return `json(...)`. Campaign routes work this way (`getCampaign`,
+`renameCampaign`, `deleteCampaign`, `adjustFear`, plus `campaignCharacters` / `insertCharacter` in `characters.ts`).
 
 - Always wrap in `api(...)`: it turns `ApiError(status, msg)` into `{"error": msg}` with that status.
 - `readJson` gives 400 `malformed JSON`. Validation is a Zod 4 schema exported from `src/lib/server/<domain>.ts`
@@ -32,8 +32,13 @@ export const POST: RequestHandler = api(async ({ params, request }) => {
   handler returns 404 before validating the body (PATCH character, PUT conditions), keep it.
 - Row → JSON goes through one mapper per resource (`characterJson`, `detail`): camelCase fields, never raw rows.
 - Status codes: 200 with the resource, 201 on create, 204 with no body on delete, 400 invalid input, 404 unknown id.
-- SQL: always `$1` parameters, never string concatenation. One statement with `RETURNING` beats read-then-write;
-  shared column lists and statements are exported constants (`CHARACTER_COLS`, `GOLD_SQL`, `TRACKER_SQL`).
+- Queries: new and migrated code uses `getDrizzle()` and the query builder (`select`, `insert().returning()`,
+  `update().returning()`, `delete()`), `db.transaction` when several statements must be atomic. A parameterized `sql`
+  template is the exception, only for what the builder can't express (e.g. the fear clamp). Never concatenate
+  strings into SQL. One statement with `RETURNING` beats read-then-write.
+- Migrated: `campaigns.ts` and the `api/campaigns/**` routes. Still legacy (`getDb()` + `db.query(sql, [$1...])`
+  and exported constants `CHARACTER_COLS`, `GOLD_SQL`, `TRACKER_SQL`): the `characters` routes and `srd`. Those
+  constants stay until those routes are migrated.
 - Ids are text uuids (`gen_random_uuid()::text`): an unknown or malformed id is a 404, not a 500.
 - Must work on both PGlite and Postgres: plain PostgreSQL only.
 

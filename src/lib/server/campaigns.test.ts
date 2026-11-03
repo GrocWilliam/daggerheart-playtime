@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { ApiError, clampFear, idSchema, nameSchema, parse } from './campaigns';
 
 /** The 400 message `parse` gives for `body`, or null when valid. */
@@ -51,5 +51,44 @@ describe('createCampaign validation', () => {
 	it('rejects an invalid name before touching the database', async () => {
 		const { createCampaign, ApiError } = await import('./campaigns');
 		await expect(createCampaign({ name: '  ' })).rejects.toBeInstanceOf(ApiError);
+	});
+});
+
+describe('campaigns on PGlite', () => {
+	let m: typeof import('./campaigns');
+	beforeAll(async () => {
+		process.env.PGLITE_DATA_DIR = 'memory://';
+		delete process.env.DATABASE_URL;
+		m = await import('./campaigns');
+	});
+	afterAll(async () => {
+		await (await (await import('./db')).getDb()).close?.();
+	});
+
+	it('creates, lists in order, reads, renames', async () => {
+		const a = await m.createCampaign({ name: ' First ' });
+		const b = await m.createCampaign({ name: 'Second' });
+		expect(a).toEqual({ id: expect.any(String), name: 'First', fear: 0 });
+		expect((await m.listCampaigns()).map((c) => c.name)).toEqual(['First', 'Second']);
+		expect(await m.getCampaign(b.id)).toEqual(b);
+		expect(await m.getCampaign('nope')).toBeUndefined();
+		expect((await m.renameCampaign(a.id, 'Renamed'))?.name).toBe('Renamed');
+		expect(await m.renameCampaign('nope', 'x')).toBeUndefined();
+	});
+
+	it('clamps fear at 0 and 12', async () => {
+		const c = await m.createCampaign({ name: 'Fear' });
+		expect(await m.adjustFear(c.id, 5)).toBe(5);
+		expect(await m.adjustFear(c.id, 100)).toBe(12);
+		expect(await m.adjustFear(c.id, -3)).toBe(9);
+		expect(await m.adjustFear(c.id, -100)).toBe(0);
+		expect(await m.adjustFear('nope', 1)).toBeUndefined();
+	});
+
+	it('deletes', async () => {
+		const c = await m.createCampaign({ name: 'Gone' });
+		expect(await m.deleteCampaign(c.id)).toBe(true);
+		expect(await m.deleteCampaign(c.id)).toBe(false);
+		expect(await m.getCampaign(c.id)).toBeUndefined();
 	});
 });
