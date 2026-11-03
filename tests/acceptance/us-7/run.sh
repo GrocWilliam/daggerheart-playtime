@@ -4,10 +4,12 @@ set -uo pipefail
 # starts `node build` on a free port with a temp PGlite dir, runs conditions.test.mjs.
 cd "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/../../.."
 HERE="$PWD/tests/acceptance/us-7"
-[ -d node_modules ] || npm ci
-npm run build || { echo "build failed" >&2; exit 1; }
+if [ -z "${FORGE_PREBUILT:-}" ]; then
+  [ -d node_modules ] || npm ci
+  npm run build || { echo "build failed" >&2; exit 1; }
+fi
 DATA="$(mktemp -d)"; LOG="$(mktemp)"
-PORT_N=$((20000 + RANDOM % 20000))
+PORT_N=$(node -e "const net=require('net');(function t(){const p=10000+Math.floor(Math.random()*22000),s=net.createServer().once('error',t).listen(p,()=>{console.log(p);s.close()})})()")
 BASE="http://localhost:$PORT_N"
 (unset DATABASE_URL; export PORT=$PORT_N PGLITE_DATA_DIR="$DATA"; exec node build) >"$LOG" 2>&1 &
 PID=$!

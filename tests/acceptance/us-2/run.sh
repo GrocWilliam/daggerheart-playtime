@@ -36,7 +36,7 @@ run_check "AC1 make-test"               "$SCRIPT_DIR/ac1_make_test.sh"
 
 # AC2/AC3/AC4/AC6 all run the already-built server with `node build`; build once.
 echo "=== build (npm run build) ==="
-if (cd "$ROOT" && npm run build); then
+if [ -n "${FORGE_PREBUILT:-}" ] || (cd "$ROOT" && npm run build); then
   BUILD_OK=1
 else
   BUILD_OK=0
