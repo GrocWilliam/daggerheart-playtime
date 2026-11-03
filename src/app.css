@@ -166,7 +166,28 @@ form:not(.tracker) {
 	padding: 0.75rem;
 }
 
-/* the inventory table story overrides the card look for forms inside the table */
+/* forms inside tables override the card look */
+table form:not(.tracker) {
+	background-color: transparent;
+	padding: 0;
+	margin: 0;
+	display: flex;
+	flex-wrap: nowrap;
+	align-items: center;
+	gap: 0.5rem;
+}
+
+table {
+	border-collapse: collapse;
+	max-width: 100%;
+}
+
+th,
+td {
+	text-align: left;
+	padding: 0.25rem 0.5rem;
+	overflow-wrap: anywhere;
+}
 
 label > input[type='text'],
 label > input[type='number'],

@@ -149,7 +149,7 @@ test('an item with an srdId shows its helper, a free-text item does not (en + fr
 		const prefix = lang === 'fr' ? 'Aide : ' : 'Help: ';
 		assert.ok(label.startsWith(prefix) && (label.includes(en(e)) || label.includes(nameIn(e, lang))), label);
 		// the free-text item has no helper next to it
-		const lucky = page.locator('li:has([data-testid="item"]):has-text("Lucky coin")');
+		const lucky = page.locator('tr:has([data-testid="item"]):has-text("Lucky coin")');
 		assert.equal(await lucky.locator('details[data-testid="help"]').count(), 0);
 		await ctx.close();
 	}

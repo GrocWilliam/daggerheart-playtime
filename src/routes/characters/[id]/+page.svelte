@@ -148,25 +148,42 @@
 	<label>{t('item.quantity')} <input type="number" name="quantity" min="1" /></label>
 	<button type="submit">{t('action.addItem')}</button>
 </form>
-<ul>
-	{#each c.items as it (it.id)}
-		<li>
-			<span data-testid="item">{it.name} ×{it.quantity}</span>
-			{#if it.srdId && data.itemPicks[it.srdId]}
-				<Help id={it.srdId} name={data.itemPicks[it.srdId].name} lang={data.lang} en={data.itemPicks[it.srdId].en} />
-			{/if}
-			<form method="POST" action="?/setQuantity">
-				<input type="hidden" name="itemId" value={it.id} />
-				<input type="number" name="quantity" min="0" value={it.quantity} required />
-				<button type="submit">{t('action.update')}</button>
-			</form>
-			<form method="POST" action="?/removeItem">
-				<input type="hidden" name="itemId" value={it.id} />
-				<button type="submit">{t('action.remove')}</button>
-			</form>
-		</li>
-	{/each}
-</ul>
+{#if c.items.length > 0}
+	<table data-testid="inventory">
+		<thead>
+			<tr>
+				<th scope="col">{t('item.name')}</th>
+				<th scope="col">{t('item.quantity')}</th>
+				<th scope="col">{t('item.actions')}</th>
+			</tr>
+		</thead>
+		<tbody>
+			{#each c.items as it (it.id)}
+				<tr data-testid="item-row">
+					<td>
+						<span data-testid="item">{it.name} ×{it.quantity}</span>
+						{#if it.srdId && data.itemPicks[it.srdId]}
+							<Help id={it.srdId} name={data.itemPicks[it.srdId].name} lang={data.lang} en={data.itemPicks[it.srdId].en} />
+						{/if}
+					</td>
+					<td>
+						<form method="POST" action="?/setQuantity">
+							<input type="hidden" name="itemId" value={it.id} />
+							<input type="number" name="quantity" min="0" value={it.quantity} required />
+							<button type="submit">{t('action.update')}</button>
+						</form>
+					</td>
+					<td>
+						<form method="POST" action="?/removeItem">
+							<input type="hidden" name="itemId" value={it.id} />
+							<button type="submit">{t('action.remove')}</button>
+						</form>
+					</td>
+				</tr>
+			{/each}
+		</tbody>
+	</table>
+{/if}
 
 <h2>{t('section.cards')}</h2>
 <ul class="cards">
