@@ -56,3 +56,15 @@ describe('form cards and validation', () => {
 		expect(css).toMatch(/\[role='alert'\]\s*\{[^}]*border-left: 3px solid var\(--danger\)/);
 	});
 });
+
+describe('inventory table', () => {
+	it('is full width, collapsed, with muted headers and row dividers', () => {
+		expect(css).toMatch(/table\s*\{[^}]*width: 100%[^}]*border-collapse: collapse/);
+		expect(css).toMatch(/th\s*\{[^}]*color: var\(--muted\)[^}]*border-bottom: 1px solid var\(--accent\)/);
+		expect(css).toMatch(/tbody tr\s*\{[^}]*border-bottom: 1px solid var\(--muted\)/);
+	});
+	it('stacks rows on phones and restores table layout from 600px', () => {
+		expect(css).toMatch(/table,\s*tbody,\s*tr,\s*td\s*\{[^}]*display: block/);
+		expect(css).toContain('@media (min-width: 600px)');
+	});
+});

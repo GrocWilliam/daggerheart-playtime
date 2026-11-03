@@ -178,15 +178,64 @@ table form:not(.tracker) {
 }
 
 table {
+	width: 100%;
 	border-collapse: collapse;
+	position: relative;
+}
+
+table,
+tbody,
+tr,
+td {
+	display: block;
 	max-width: 100%;
 }
 
 th,
 td {
 	text-align: left;
-	padding: 0.25rem 0.5rem;
+	padding: 0.5rem;
+	vertical-align: top;
 	overflow-wrap: anywhere;
+}
+
+th {
+	color: var(--muted);
+	border-bottom: 1px solid var(--accent);
+}
+
+tbody tr {
+	border-bottom: 1px solid var(--muted);
+	background-color: var(--surface);
+	border: 1px solid var(--muted);
+	border-radius: 0.5rem;
+	margin-bottom: 0.75rem;
+}
+
+/* phones: header visually hidden, still exposed to assistive tech */
+thead {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+	clip: rect(0 0 0 0);
+	clip-path: inset(50%);
+	white-space: nowrap;
+}
+
+@media (min-width: 600px) {
+	table { display: table; }
+	thead { display: table-header-group; position: static; width: auto; height: auto; overflow: visible; clip: auto; clip-path: none; white-space: normal; }
+	tbody { display: table-row-group; }
+	tr { display: table-row; }
+	td { display: table-cell; }
+	tbody tr {
+		background-color: transparent;
+		border: 0;
+		border-bottom: 1px solid var(--muted);
+		border-radius: 0;
+		margin-bottom: 0;
+	}
 }
 
 label > input[type='text'],
