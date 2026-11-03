@@ -57,6 +57,13 @@ describe('form cards and validation', () => {
 	});
 });
 
+describe('form-grid', () => {
+	it('is a one column grid, two columns on wide screens', () => {
+		expect(css).toMatch(/\.form-grid\s*\{[^}]*display: grid/);
+		expect(css).toMatch(/repeat\(2, minmax\(0, 1fr\)\)/);
+	});
+});
+
 describe('inventory table', () => {
 	it('is full width, collapsed, with muted headers and row dividers', () => {
 		expect(css).toMatch(/table\s*\{[^}]*width: 100%[^}]*border-collapse: collapse/);

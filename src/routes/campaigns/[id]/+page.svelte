@@ -84,7 +84,7 @@
 </div>
 
 <h2>{t('campaign.add')}</h2>
-<form method="POST" action="?/addCharacter">
+<form method="POST" action="?/addCharacter" class="form-grid">
 	{#each fields as [name, label, type] (name)}
 		<label>{t(label)} <input {type} {name} required /></label>
 	{/each}

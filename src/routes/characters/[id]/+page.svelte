@@ -64,7 +64,7 @@
 </form>
 
 <h2>{t('section.edit')}</h2>
-<form method="POST" action="?/edit">
+<form method="POST" action="?/edit" class="form-grid">
 	{#each fields.slice(0, 1) as [name, label, type, value] (name)}
 		<label>{t(label)} <input {type} {name} {value} required /></label>
 	{/each}
