@@ -1,19 +1,8 @@
-import { eq, sql } from 'drizzle-orm';
+import { and, eq, sql } from 'drizzle-orm';
 import * as z from 'zod';
-import { characters } from './schema';
+import { characters, items } from './schema';
 import { OBJECT_ERROR, intField, safeIntField, strField } from './campaigns';
 import { getSrd } from './srd';
-
-const BASE_COLS = `id, campaign_id, name, class, level, evasion, major_threshold,
-	severe_threshold, hp_marked, hp_max, stress_marked, stress_max, hope, armor_marked, armor_max,
-	vulnerable, restrained, hidden, notes, gold_handfuls, gold_bags, gold_chests,
-	subclass, ancestry, community, cards`;
-
-const ITEMS_SUBQUERY = (idRef: string) => `(SELECT COALESCE(json_agg(json_build_object(
-	'id', i.id, 'name', i.name, 'quantity', i.quantity, 'srdId', i.srd_id) ORDER BY i.created_at, i.id), '[]'::json)
-	FROM items i WHERE i.character_id = ${idRef}) AS items`;
-
-export const CHARACTER_COLS = `${BASE_COLS}, ${ITEMS_SUBQUERY('characters.id')}`;
 
 /** Drizzle select shape giving the snake_case row that `characterJson` reads. */
 const characterSelect = {
@@ -45,7 +34,7 @@ const characterSelect = {
 	cards: characters.cards,
 	items: sql<unknown>`(SELECT COALESCE(json_agg(json_build_object(
 		'id', i.id, 'name', i.name, 'quantity', i.quantity, 'srdId', i.srd_id) ORDER BY i.created_at, i.id), '[]'::json)
-		FROM items i WHERE i.character_id = ${characters.id})`.as('items')
+		FROM items i WHERE i.character_id = ${sql.raw('"characters"."id"')})`.as('items')
 };
 
 /** The characters of a campaign, oldest first, as API JSON. */
@@ -204,19 +193,6 @@ export type Tracker = z.infer<typeof trackerSchema>;
 export const deltaSchema = z.object({ delta: safeIntField('delta') }, { error: 'delta must be an integer' });
 export type Delta = z.infer<typeof deltaSchema>;
 
-// Single atomic UPDATE per tracker ($1 = delta, $2 = id); SET expressions read the old row.
-const NEW_STRESS = 'LEAST(stress_max, GREATEST(0, stress_marked + $1::bigint))';
-export const TRACKER_SQL: Record<Tracker, string> = {
-	hp: 'hp_marked = LEAST(hp_max, GREATEST(0, hp_marked + $1::bigint))::int',
-	hope: 'hope = LEAST(6, GREATEST(0, hope + $1::bigint))::int',
-	armor: 'armor_marked = LEAST(armor_max, GREATEST(0, armor_marked + $1::bigint))::int',
-	stress: `stress_marked = ${NEW_STRESS}::int,
-		hp_marked = LEAST(hp_max, hp_marked + CASE WHEN $1::bigint > 0
-			THEN GREATEST(0, stress_marked + $1::bigint - stress_max) ELSE 0 END)::int,
-		vulnerable = CASE WHEN ${NEW_STRESS} = stress_max THEN true
-			WHEN stress_marked = stress_max THEN false ELSE vulnerable END`
-};
-
 export const damageSchema = z.object(
 	{
 		amount: safeIntField('amount'),
@@ -225,23 +201,6 @@ export const damageSchema = z.object(
 	{ error: 'amount must be an integer' }
 );
 export type Damage = z.infer<typeof damageSchema>;
-
-// Atomic damage: $1 = amount, $2 = useArmor, $3 = id. The CTE locks the row and computes the hit once.
-export const DAMAGE_SQL = `
-WITH old AS (
-	SELECT id, armor_marked < armor_max AND $2::boolean AS armor_used,
-		CASE WHEN $1::bigint <= 0 THEN 0
-			WHEN $1::bigint < major_threshold THEN 1
-			WHEN $1::bigint < severe_threshold THEN 2 ELSE 3 END AS base_hit
-	FROM characters WHERE id = $3 FOR UPDATE
-), calc AS (
-	SELECT id, armor_used, GREATEST(0, base_hit - CASE WHEN armor_used THEN 1 ELSE 0 END) AS hp_hit FROM old
-)
-UPDATE characters c SET
-	hp_marked = LEAST(c.hp_max, GREATEST(0, c.hp_marked + calc.hp_hit))::int,
-	armor_marked = c.armor_marked + CASE WHEN calc.armor_used THEN 1 ELSE 0 END
-FROM calc WHERE c.id = calc.id
-RETURNING ${BASE_COLS.replace(/\b([a-z_]+)\b/g, 'c.$1')}, ${ITEMS_SUBQUERY('c.id')}, calc.hp_hit, calc.armor_used`;
 
 const ITEM_KINDS = ['weapons', 'armors', 'consumables', 'items'] as const;
 
@@ -288,21 +247,6 @@ export function itemJson(r: any) {
 export const goldSchema = z.object({ handfuls: safeIntField('handfuls') }, { error: 'handfuls must be an integer' });
 export type Gold = z.infer<typeof goldSchema>;
 
-// Atomic gold change: $1 = handfuls delta, $2 = id. Locks the row; updates only if the new total is >= 0.
-export const GOLD_SQL = `
-WITH old AS (
-	SELECT id, gold_chests::bigint * 100 + gold_bags::bigint * 10 + gold_handfuls + $1::bigint AS total
-	FROM characters WHERE id = $2 FOR UPDATE
-), upd AS (
-	UPDATE characters c SET
-		gold_chests = (old.total / 100)::int,
-		gold_bags = ((old.total / 10) % 10)::int,
-		gold_handfuls = (old.total % 10)::int
-	FROM old WHERE c.id = old.id AND old.total >= 0
-	RETURNING ${BASE_COLS.replace(/\b([a-z_]+)\b/g, 'c.$1')}, ${ITEMS_SUBQUERY('c.id')}
-)
-SELECT old.total AS gold_total, upd.* FROM old LEFT JOIN upd ON true`;
-
 export const cardIdSchema = z.object(
 	{
 		cardId: z
@@ -312,3 +256,194 @@ export const cardIdSchema = z.object(
 	{ error: OBJECT_ERROR }
 );
 export type CardId = z.infer<typeof cardIdSchema>;
+
+// ---- Database operations. Each is one atomic statement (or a row-locking transaction). ----
+
+async function conn() {
+	const { getDrizzle } = await import('./db');
+	return getDrizzle();
+}
+
+const jsonOf = (rows: any[]) => (rows[0] ? characterJson(rows[0]) : undefined);
+
+/** The character as API JSON, or undefined when it does not exist. */
+export async function getCharacter(id: string) {
+	const db = await conn();
+	return jsonOf(await db.select(characterSelect).from(characters).where(eq(characters.id, id)));
+}
+
+/** Applies the supplied PATCH fields; lowering a max also lowers the marked value. Undefined when not found. */
+export async function patchCharacter(id: string, p: PatchCharacter) {
+	const set: Record<string, unknown> = {};
+	const plain = ['name', 'class', 'level', 'evasion', 'majorThreshold', 'severeThreshold', 'notes', 'subclass', 'ancestry', 'community'] as const;
+	for (const k of plain) if (p[k] !== undefined) set[k] = p[k];
+	if (p.maxHp !== undefined) {
+		set.hpMax = p.maxHp;
+		set.hpMarked = sql`LEAST(${characters.hpMarked}, ${p.maxHp}::int)`;
+	}
+	if (p.maxStress !== undefined) {
+		set.stressMax = p.maxStress;
+		set.stressMarked = sql`LEAST(${characters.stressMarked}, ${p.maxStress}::int)`;
+	}
+	if (p.armorSlots !== undefined) {
+		set.armorMax = p.armorSlots;
+		set.armorMarked = sql`LEAST(${characters.armorMarked}, ${p.armorSlots}::int)`;
+	}
+	if (Object.keys(set).length === 0) return getCharacter(id);
+	const db = await conn();
+	return jsonOf(await db.update(characters).set(set).where(eq(characters.id, id)).returning(characterSelect));
+}
+
+/** Deletes the character; false when it does not exist. */
+export async function deleteCharacter(id: string) {
+	const db = await conn();
+	const rows = await db.delete(characters).where(eq(characters.id, id)).returning({ id: characters.id });
+	return rows.length > 0;
+}
+
+/** Adds `delta` to a tracker, clamped, in one UPDATE (SET expressions read the old row). */
+export async function adjustTracker(id: string, tracker: Tracker, delta: number) {
+	const d = sql`${delta}::bigint`;
+	const c = characters;
+	const clamp = (cur: unknown, max: unknown) => sql`LEAST(${max}, GREATEST(0, ${cur} + ${d}))::int`;
+	let set;
+	if (tracker === 'hp') set = { hpMarked: clamp(c.hpMarked, c.hpMax) };
+	else if (tracker === 'armor') set = { armorMarked: clamp(c.armorMarked, c.armorMax) };
+	else if (tracker === 'hope') set = { hope: clamp(c.hope, sql`6`) };
+	else {
+		const next = sql`LEAST(${c.stressMax}, GREATEST(0, ${c.stressMarked} + ${d}))`;
+		set = {
+			stressMarked: sql`${next}::int`,
+			// Stress overflowing the track marks HP.
+			hpMarked: sql`LEAST(${c.hpMax}, ${c.hpMarked} + CASE WHEN ${d} > 0
+				THEN GREATEST(0, ${c.stressMarked} + ${d} - ${c.stressMax}) ELSE 0 END)::int`,
+			vulnerable: sql`CASE WHEN ${next} = ${c.stressMax} THEN true
+				WHEN ${c.stressMarked} = ${c.stressMax} THEN false ELSE ${c.vulnerable} END`
+		};
+	}
+	const db = await conn();
+	return jsonOf(await db.update(characters).set(set).where(eq(c.id, id)).returning(characterSelect));
+}
+
+/** Takes a hit (armor absorbs one HP when available and wanted). Undefined when not found. */
+export async function applyDamage(id: string, amount: number, useArmor: boolean) {
+	const db = await conn();
+	return db.transaction(async (tx) => {
+		const [cur] = await tx.select().from(characters).where(eq(characters.id, id)).for('update');
+		if (!cur) return undefined;
+		const armorUsed = useArmor && cur.armorMarked < cur.armorMax;
+		const base = amount <= 0 ? 0 : amount < cur.majorThreshold ? 1 : amount < cur.severeThreshold ? 2 : 3;
+		const hpHit = Math.max(0, base - (armorUsed ? 1 : 0));
+		const [row] = await tx
+			.update(characters)
+			.set({
+				hpMarked: Math.min(cur.hpMax, Math.max(0, cur.hpMarked + hpHit)),
+				armorMarked: cur.armorMarked + (armorUsed ? 1 : 0)
+			})
+			.where(eq(characters.id, id))
+			.returning(characterSelect);
+		return { hpHit, armorUsed, character: characterJson(row) };
+	});
+}
+
+/** Adds handfuls (negative to spend), normalised to chests/bags/handfuls. Never goes below zero. */
+export async function adjustGold(id: string, handfuls: number) {
+	const db = await conn();
+	return db.transaction(async (tx) => {
+		const [cur] = await tx.select().from(characters).where(eq(characters.id, id)).for('update');
+		if (!cur) return { status: 'not-found' as const };
+		const total = cur.goldChests * 100 + cur.goldBags * 10 + cur.goldHandfuls + handfuls;
+		if (total < 0) return { status: 'insufficient' as const };
+		const [row] = await tx
+			.update(characters)
+			.set({
+				goldChests: Math.floor(total / 100),
+				goldBags: Math.floor(total / 10) % 10,
+				goldHandfuls: total % 10
+			})
+			.where(eq(characters.id, id))
+			.returning(characterSelect);
+		return { status: 'ok' as const, character: characterJson(row) };
+	});
+}
+
+/** Sets the supplied conditions. Undefined when not found. */
+export async function setConditions(id: string, c: Conditions) {
+	const set = Object.fromEntries(Object.entries(c).filter(([, v]) => v !== undefined));
+	if (Object.keys(set).length === 0) return getCharacter(id);
+	const db = await conn();
+	return jsonOf(await db.update(characters).set(set).where(eq(characters.id, id)).returning(characterSelect));
+}
+
+/** Appends a card unless held (atomic). Undefined when not added: use `getCharacter` to tell why. */
+export async function addCard(id: string, cardId: string) {
+	const db = await conn();
+	const held = sql`jsonb_exists(${characters.cards}, ${cardId}::text)`;
+	return jsonOf(
+		await db
+			.update(characters)
+			.set({ cards: sql`${characters.cards} || to_jsonb(${cardId}::text)` })
+			.where(and(eq(characters.id, id), sql`NOT ${held}`))
+			.returning(characterSelect)
+	);
+}
+
+/** Removes a held card; false when the character does not hold it. */
+export async function removeCard(id: string, cardId: string) {
+	const db = await conn();
+	const rows = await db
+		.update(characters)
+		.set({
+			cards: sql`COALESCE((SELECT jsonb_agg(e ORDER BY n)
+				FROM jsonb_array_elements_text(${characters.cards}) WITH ORDINALITY AS t(e, n)
+				WHERE e <> ${cardId}::text), '[]'::jsonb)`
+		})
+		.where(and(eq(characters.id, id), sql`jsonb_exists(${characters.cards}, ${cardId}::text)`))
+		.returning({ id: characters.id });
+	return rows.length > 0;
+}
+
+const itemCols = { id: items.id, name: items.name, quantity: items.quantity, srd_id: items.srdId };
+
+/** Adds an item, merging by case-insensitive name (atomic upsert). Undefined for an unknown character. */
+export async function addItem(characterId: string, it: ItemCreate) {
+	const db = await conn();
+	if (!(await getCharacter(characterId))) return undefined;
+	// The unique index is on lower(btrim(name)), which onConflictDoUpdate cannot target: insert, else merge.
+	for (let attempt = 0; attempt < 3; attempt++) {
+		const [fresh] = await db
+			.insert(items)
+			.values({ characterId, name: it.name, quantity: it.quantity, srdId: it.srdId })
+			.onConflictDoNothing()
+			.returning(itemCols);
+		if (fresh) return { item: itemJson(fresh), created: true };
+		const [merged] = await db
+			.update(items)
+			.set({
+				quantity: sql`${items.quantity} + ${it.quantity}::int`,
+				srdId: sql`COALESCE(${items.srdId}, ${it.srdId}::text)`
+			})
+			.where(and(eq(items.characterId, characterId), sql`lower(btrim(${items.name})) = lower(btrim(${it.name}::text))`))
+			.returning(itemCols);
+		if (merged) return { item: itemJson(merged), created: false };
+	}
+	throw new Error('item upsert contention');
+}
+
+/** Sets an item's quantity (0 deletes it). Returns the item JSON, null when deleted, undefined when not found. */
+export async function setItemQuantity(id: string, quantity: number) {
+	const db = await conn();
+	if (quantity === 0) {
+		const rows = await db.delete(items).where(eq(items.id, id)).returning({ id: items.id });
+		return rows.length ? null : undefined;
+	}
+	const [row] = await db.update(items).set({ quantity }).where(eq(items.id, id)).returning(itemCols);
+	return row ? itemJson(row) : undefined;
+}
+
+/** Deletes an item; false when it does not exist. */
+export async function deleteItem(id: string) {
+	const db = await conn();
+	const rows = await db.delete(items).where(eq(items.id, id)).returning({ id: items.id });
+	return rows.length > 0;
+}

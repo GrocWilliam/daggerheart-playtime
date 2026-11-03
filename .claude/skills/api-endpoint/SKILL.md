@@ -36,9 +36,10 @@ Handlers stay thin: they parse, call a domain function in `src/lib/server/<domai
   `update().returning()`, `delete()`), `db.transaction` when several statements must be atomic. A parameterized `sql`
   template is the exception, only for what the builder can't express (e.g. the fear clamp). Never concatenate
   strings into SQL. One statement with `RETURNING` beats read-then-write.
-- Migrated: `campaigns.ts` and the `api/campaigns/**` routes. Still legacy (`getDb()` + `db.query(sql, [$1...])`
-  and exported constants `CHARACTER_COLS`, `GOLD_SQL`, `TRACKER_SQL`): the `characters` routes and `srd`. Those
-  constants stay until those routes are migrated.
+- Migrated: `campaigns.ts`, `characters.ts` (characters, trackers, damage, gold, conditions, cards, items) and their
+  routes, which only call exported functions. `db.query` is left only for `/health`.
+- Drizzle traps: `onConflictDoUpdate` cannot target an expression index (insert with `onConflictDoNothing`, then
+  update); a column inside a `sql` subquery renders unqualified, so correlate with `sql.raw('"table"."col"')`.
 - Ids are text uuids (`gen_random_uuid()::text`): an unknown or malformed id is a 404, not a 500.
 - Must work on both PGlite and Postgres: plain PostgreSQL only.
 

@@ -1,7 +1,7 @@
-import { describe, expect, it } from 'vitest';
+import { afterAll, describe, expect, it } from 'vitest';
 import { ApiError, parse } from './campaigns';
 import {
-	TRACKER_SQL, cardIdSchema, characterJson, conditionsSchema, createSchema, damageSchema, deltaSchema,
+	cardIdSchema, characterJson, conditionsSchema, createSchema, damageSchema, deltaSchema,
 	goldSchema, itemCreateSchema, itemQuantitySchema, patchSchema, trackerSchema
 } from './characters';
 
@@ -155,14 +155,19 @@ describe('trackerSchema', () => {
 	});
 });
 
-describe('TRACKER_SQL', () => {
-	it('covers the four trackers', () => {
-		expect(Object.keys(TRACKER_SQL).sort()).toEqual(['armor', 'hope', 'hp', 'stress']);
-	});
+import * as m from './characters';
+import { createCampaign } from './campaigns';
+import { getDb } from './db';
+
+afterAll(async () => {
+	await (await getDb()).close?.();
 });
 
-import { DAMAGE_SQL } from './characters';
-import { getDb } from './db';
+/** A character with hp 6/6 max, stress 6, armor 2, thresholds 5/10, in a fresh campaign. */
+async function make(over: Partial<m.CreateCharacter> = {}) {
+	const camp = await createCampaign({ name: 'c' });
+	return m.insertCharacter(camp.id, { name: 'n', class: 'Guardian', level: 1, evasion: 10, majorThreshold: 5, severeThreshold: 10, maxHp: 6, maxStress: 6, armorSlots: 2, ...over });
+}
 
 describe('damageSchema', () => {
 	it('validates amount and useArmor', () => {
@@ -176,32 +181,121 @@ describe('damageSchema', () => {
 	});
 });
 
-describe('DAMAGE_SQL', () => {
-	async function make(hp: number, armor: number) {
-		const db = await getDb();
-		const c = await db.query(`INSERT INTO campaigns (name) VALUES ('c') RETURNING id`);
-		const r = await db.query(
-			`INSERT INTO characters (campaign_id, name, class, evasion, major_threshold, severe_threshold,
-				hp_marked, hp_max, armor_marked, armor_max) VALUES ($1,'n','k',10,5,10,$2,10,$3,2) RETURNING id`,
-			[c.rows[0].id, hp, armor]
-		);
-		return { db, id: r.rows[0].id as string };
-	}
-	it('applies armor and reduces the hit', async () => {
-		const { db, id } = await make(0, 0);
-		const { rows } = await db.query(DAMAGE_SQL, [7, true, id]);
-		expect([rows[0].hp_hit, rows[0].armor_used, rows[0].hp_marked, rows[0].armor_marked]).toEqual([1, true, 1, 1]);
+describe('characters on PGlite', () => {
+	it('creates, reads, lists and deletes', async () => {
+		const c = await make();
+		expect(c).toMatchObject({ name: 'n', hp: { marked: 0, max: 6 }, hope: 2, items: [], cards: [], down: false });
+		expect(await m.getCharacter(c.id)).toEqual(c);
+		expect((await m.campaignCharacters(c.campaignId)).map((x) => x.id)).toEqual([c.id]);
+		expect(await m.getCharacter('nope')).toBeUndefined();
+		expect(await m.deleteCharacter(c.id)).toBe(true);
+		expect(await m.deleteCharacter(c.id)).toBe(false);
 	});
-	it('ignores armor when full, and clamps hp', async () => {
-		const { db, id } = await make(9, 2);
-		const { rows } = await db.query(DAMAGE_SQL, [20, true, id]);
-		expect([rows[0].hp_hit, rows[0].armor_used, rows[0].hp_marked, rows[0].armor_marked]).toEqual([3, false, 10, 2]);
+
+	it('patches fields and lowers marked values with the maxes', async () => {
+		const c = await make();
+		await m.adjustTracker(c.id, 'hp', 5);
+		await m.adjustTracker(c.id, 'armor', 2);
+		await m.adjustTracker(c.id, 'stress', 4);
+		const p = (await m.patchCharacter(c.id, { name: 'X', notes: 'hi', maxHp: 3, maxStress: 2, armorSlots: 1 }))!;
+		expect(p).toMatchObject({ name: 'X', notes: 'hi', hp: { marked: 3, max: 3 }, stress: { marked: 2, max: 2 }, armor: { marked: 1, max: 1 } });
+		const q = (await m.patchCharacter(c.id, { maxHp: 8 }))!;
+		expect(q.hp).toEqual({ marked: 3, max: 8 });
+		expect(await m.patchCharacter(c.id, {})).toEqual(q);
+		expect(await m.patchCharacter('nope', { name: 'y' })).toBeUndefined();
+		expect(await m.patchCharacter('nope', {})).toBeUndefined();
 	});
-	it('does nothing for non-positive amounts and unknown ids', async () => {
-		const { db, id } = await make(2, 0);
-		const { rows } = await db.query(DAMAGE_SQL, [-5, true, id]);
-		expect([rows[0].hp_hit, rows[0].hp_marked]).toEqual([0, 2]);
-		expect((await db.query(DAMAGE_SQL, [5, false, 'nope'])).rows).toHaveLength(0);
+
+	it('clamps hp, armor and hope at both bounds', async () => {
+		const c = await make();
+		for (const [t, key, max] of [['hp', 'hp', 6], ['armor', 'armor', 2]] as const) {
+			expect((await m.adjustTracker(c.id, t, 100))![key]).toEqual({ marked: max, max });
+			expect((await m.adjustTracker(c.id, t, -100))![key]).toEqual({ marked: 0, max });
+		}
+		expect((await m.adjustTracker(c.id, 'hope', 100))!.hope).toBe(6);
+		expect((await m.adjustTracker(c.id, 'hope', -100))!.hope).toBe(0);
+		expect(await m.adjustTracker('nope', 'hp', 1)).toBeUndefined();
+	});
+
+	it('stress clamps, overflows into hp and toggles vulnerable', async () => {
+		const c = await make();
+		expect((await m.adjustTracker(c.id, 'stress', -3))!.stress.marked).toBe(0);
+		const full = (await m.adjustTracker(c.id, 'stress', 8))!;
+		expect(full.stress.marked).toBe(6);
+		expect(full.hp.marked).toBe(2);
+		expect(full.conditions.vulnerable).toBe(true);
+		const more = (await m.adjustTracker(c.id, 'stress', 100))!;
+		expect(more.hp.marked).toBe(6);
+		const less = (await m.adjustTracker(c.id, 'stress', -1))!;
+		expect([less.stress.marked, less.conditions.vulnerable]).toEqual([5, false]);
+	});
+
+	it('damage with and without armor', async () => {
+		const c = await make();
+		const a = (await m.applyDamage(c.id, 7, true))!;
+		expect([a.hpHit, a.armorUsed, a.character.hp.marked, a.character.armor.marked]).toEqual([1, true, 1, 1]);
+		const b = (await m.applyDamage(c.id, 7, false))!;
+		expect([b.hpHit, b.armorUsed, b.character.hp.marked, b.character.armor.marked]).toEqual([2, false, 3, 1]);
+		const d = (await m.applyDamage(c.id, 20, true))!;
+		expect([d.hpHit, d.armorUsed, d.character.armor.marked]).toEqual([2, true, 2]);
+		const e = (await m.applyDamage(c.id, 20, true))!;
+		expect([e.hpHit, e.armorUsed, e.character.hp.marked, e.character.down]).toEqual([3, false, 6, true]);
+		const z = (await m.applyDamage(c.id, -5, false))!;
+		expect([z.hpHit, z.character.hp.marked]).toEqual([0, 6]);
+		expect(await m.applyDamage('nope', 5, false)).toBeUndefined();
+	});
+
+	it('gold normalizes and never goes below zero', async () => {
+		const c = await make();
+		const ok = async (n: number) => {
+			const r = await m.adjustGold(c.id, n);
+			if (r.status !== 'ok') throw new Error(r.status);
+			return r.character.gold;
+		};
+		expect(await ok(5)).toEqual({ handfuls: 5, bags: 0, chests: 0 });
+		expect(await ok(105)).toEqual({ handfuls: 0, bags: 1, chests: 1 });
+		expect(await ok(-1)).toEqual({ handfuls: 9, bags: 0, chests: 1 });
+		expect((await m.adjustGold(c.id, -109)).status).toBe('ok');
+		expect((await m.adjustGold(c.id, -1)).status).toBe('insufficient');
+		expect((await m.getCharacter(c.id))!.gold).toEqual({ handfuls: 0, bags: 0, chests: 0 });
+		expect((await m.adjustGold('nope', 1)).status).toBe('not-found');
+	});
+
+	it('sets conditions', async () => {
+		const c = await make();
+		const r = (await m.setConditions(c.id, { hidden: true, restrained: false }))!;
+		expect(r.conditions).toEqual({ vulnerable: false, restrained: false, hidden: true });
+		expect((await m.setConditions(c.id, {}))!.conditions.hidden).toBe(true);
+		expect(await m.setConditions('nope', { hidden: true })).toBeUndefined();
+	});
+
+	it('adds and removes cards', async () => {
+		const { listSrd } = await import('./srd');
+		const [x, y, z] = listSrd('domain-cards', 'en').slice(0, 3).map((e) => e.id);
+		const c = await make();
+		for (const id of [x, y, z]) await m.addCard(c.id, id);
+		expect(await m.addCard(c.id, y)).toBeUndefined();
+		expect(await m.addCard('nope', y)).toBeUndefined();
+		expect((await m.getCharacter(c.id))!.cards).toEqual([x, y, z]);
+		expect(await m.removeCard(c.id, y)).toBe(true);
+		expect(await m.removeCard(c.id, y)).toBe(false);
+		expect((await m.getCharacter(c.id))!.cards).toEqual([x, z]);
+	});
+
+	it('merges items by name and returns them in the character', async () => {
+		const c = await make();
+		const a = (await m.addItem(c.id, { name: 'Rope', quantity: 1, srdId: null }))!;
+		expect(a.created).toBe(true);
+		const b = (await m.addItem(c.id, { name: ' rope', quantity: 2, srdId: null }))!;
+		expect([b.created, b.item.quantity, b.item.id]).toEqual([false, 3, a.item.id]);
+		expect(await m.addItem('nope', { name: 'x', quantity: 1, srdId: null })).toBeUndefined();
+		expect((await m.getCharacter(c.id))!.items).toEqual([a.item.id && { id: a.item.id, name: 'Rope', quantity: 3, srdId: null }]);
+		expect(await m.setItemQuantity(a.item.id, 7)).toMatchObject({ quantity: 7 });
+		expect(await m.setItemQuantity(a.item.id, 0)).toBeNull();
+		expect(await m.setItemQuantity(a.item.id, 1)).toBeUndefined();
+		const d = (await m.addItem(c.id, { name: 'Gem', quantity: 1, srdId: null }))!;
+		expect(await m.deleteItem(d.item.id)).toBe(true);
+		expect(await m.deleteItem(d.item.id)).toBe(false);
 	});
 });
 
@@ -237,43 +331,12 @@ describe('items', () => {
 	});
 });
 
-import { GOLD_SQL } from './characters';
-
 describe('goldSchema', () => {
 	it('accepts integers only', () => {
 		expect(parse(goldSchema, { handfuls: -4 })).toEqual({ handfuls: -4 });
 		for (const b of [{ handfuls: 'two' }, { handfuls: 1.5 }, {}, null]) {
 			expect(msg(goldSchema, b)).toBe('handfuls must be an integer');
 		}
-	});
-});
-
-describe('GOLD_SQL', () => {
-	async function make(h: number, b: number, c: number) {
-		const db = await getDb();
-		const camp = await db.query(`INSERT INTO campaigns (name) VALUES ('c') RETURNING id`);
-		const r = await db.query(
-			`INSERT INTO characters (campaign_id, name, class, evasion, major_threshold, severe_threshold,
-				hp_max, armor_max, gold_handfuls, gold_bags, gold_chests) VALUES ($1,'n','k',10,5,10,10,2,$2,$3,$4) RETURNING id`,
-			[camp.rows[0].id, h, b, c]
-		);
-		return { db, id: r.rows[0].id as string };
-	}
-	it('normalizes', async () => {
-		const { db, id } = await make(5, 9, 0);
-		const { rows } = await db.query(GOLD_SQL, [5, id]);
-		expect([rows[0].gold_handfuls, rows[0].gold_bags, rows[0].gold_chests]).toEqual([0, 0, 1]);
-	});
-	it('refuses overspending without changing anything', async () => {
-		const { db, id } = await make(2, 0, 0);
-		const { rows } = await db.query(GOLD_SQL, [-5, id]);
-		expect(Number(rows[0].gold_total)).toBe(-3);
-		const cur = await db.query('SELECT gold_handfuls FROM characters WHERE id = $1', [id]);
-		expect(cur.rows[0].gold_handfuls).toBe(2);
-	});
-	it('returns no rows for unknown ids', async () => {
-		const { db } = await make(0, 0, 0);
-		expect((await db.query(GOLD_SQL, [1, 'nope'])).rows).toHaveLength(0);
 	});
 });
 
