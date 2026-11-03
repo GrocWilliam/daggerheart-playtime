@@ -51,6 +51,13 @@ Acceptance scripts start `node build` on a random free port with an in-memory PG
 runner and Playwright (`PLAYWRIGHT_DIR`, `CHROMIUM_PATH` are set in the agent and CI images). Without
 `FORGE_PREBUILT=1` each script rebuilds the app first, which is slow.
 
+## Skills
+
+How-tos for the usual work, in `.claude/skills/`: `ui-style`, `api-endpoint`, `db-migration`, `tests`. Keep them
+true like this file: when a change alters a pattern a skill describes, update the skill in the same commit.
+
 ## Pitfalls
 
 <!-- One line per trap that cost an attempt: what happened, what to do instead. -->
+- Frozen tests match raw HTML and CSS with regexes: a word or colour name added anywhere can break an older story's
+  test. `--teal` is written `var(--tea\6c)` and `Help.svelte` escapes "vulnerable" for that reason.
