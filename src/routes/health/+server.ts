@@ -1,9 +1,9 @@
 import { json } from '@sveltejs/kit';
-import { getDb } from '$lib/server/db';
+import { getDrizzle } from '$lib/server/db';
+import { appInfo } from '$lib/server/schema';
 import type { RequestHandler } from './$types';
 
 export const GET: RequestHandler = async () => {
-	const db = await getDb();
-	await db.query('SELECT 1');
+	await (await getDrizzle()).select().from(appInfo).limit(1);
 	return json({ status: 'ok' });
 };

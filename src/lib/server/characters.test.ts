@@ -297,6 +297,15 @@ describe('characters on PGlite', () => {
 		expect(await m.deleteItem(d.item.id)).toBe(true);
 		expect(await m.deleteItem(d.item.id)).toBe(false);
 	});
+
+	it('cascades character deletion to its items', async () => {
+		const c = await make();
+		const a = (await m.addItem(c.id, { name: 'Rope', quantity: 1, srdId: null }))!;
+		const b = (await m.addItem(c.id, { name: 'Gem', quantity: 2, srdId: null }))!;
+		expect(await m.deleteCharacter(c.id)).toBe(true);
+		expect(await m.deleteItem(a.item.id)).toBe(false);
+		expect(await m.setItemQuantity(b.item.id, 5)).toBeUndefined();
+	});
 });
 
 import { itemJson } from './characters';
