@@ -11,13 +11,14 @@ any change that makes it wrong, and add what the next agent would otherwise redi
 - SvelteKit 2 + Svelte 5 (runes), TypeScript, `@sveltejs/adapter-node`. Node 26 (`.nvmrc`, `engines`).
 - Database: PostgreSQL through `pg` when `DATABASE_URL` is set, else PGlite (`PGLITE_DATA_DIR`, default `./data/pglite`;
   `memory://` in tests). One `Db` interface: `query(sql, params) → { rows }`, in `src/lib/server/db.ts`.
+- Validation: Zod 4 schemas + `parse(schema, body)` (`campaigns.ts`) → 400 with the first issue's message.
 - Unit tests: Vitest (`*.test.ts` next to the code). No other test or UI framework: don't add one.
 
 ## Layout
 
 | Path | What |
 |---|---|
-| `src/lib/server/*.ts` | Domain logic and SQL: `campaigns.ts`, `characters.ts`, `srd.ts`. Validation lives here. |
+| `src/lib/server/*.ts` | Domain logic and SQL: `campaigns.ts`, `characters.ts`, `srd.ts`. Zod input schemas live here. |
 | `src/routes/api/**/+server.ts` | JSON API. Handlers are wrapped in `api(...)` and throw `ApiError(status, msg)` → `{"error": msg}`. |
 | `src/routes/**/+page.server.ts` | Pages: `load` + form `actions` that call the JSON API through `fetch`, not the DB directly. |
 | `src/lib/*.svelte` | Shared components (`Pips`, `Help`, `Chosen`, `LanguageSwitcher`). |

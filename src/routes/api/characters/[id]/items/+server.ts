@@ -1,13 +1,14 @@
 import { getDb } from '$lib/server/db';
-import { ApiError, api, json, readJson } from '$lib/server/campaigns';
-import { itemJson, parseItemCreate } from '$lib/server/characters';
+import { ApiError, api, idSchema, json, parse, readJson } from '$lib/server/campaigns';
+import { itemJson, itemCreateSchema } from '$lib/server/characters';
 import type { RequestHandler } from './$types';
 
 export const POST: RequestHandler = api(async ({ params, request }) => {
+	const id = parse(idSchema, params.id);
 	const body = await readJson(request);
 	const db = await getDb();
-	const { name, quantity, srdId } = parseItemCreate(body);
-	const c = await db.query('SELECT id FROM characters WHERE id = $1', [params.id]);
+	const { name, quantity, srdId } = parse(itemCreateSchema, body);
+	const c = await db.query('SELECT id FROM characters WHERE id = $1', [id]);
 	if (!c.rows[0]) throw new ApiError(404, 'character not found');
 	// Atomic upsert on the unique (character, lower(trim(name))) index; xmax = 0 only for fresh inserts.
 	const { rows } = await db.query(
@@ -16,7 +17,7 @@ export const POST: RequestHandler = api(async ({ params, request }) => {
 		DO UPDATE SET quantity = items.quantity + EXCLUDED.quantity,
 			srd_id = COALESCE(items.srd_id, EXCLUDED.srd_id)
 		RETURNING id, name, quantity, srd_id, (xmax = 0) AS inserted`,
-		[params.id, name, quantity, srdId]
+		[id, name, quantity, srdId]
 	);
 	return json(itemJson(rows[0]), { status: rows[0].inserted ? 201 : 200 });
 });

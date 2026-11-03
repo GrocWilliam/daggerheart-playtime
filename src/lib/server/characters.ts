@@ -1,4 +1,5 @@
-import { ApiError } from './campaigns';
+import * as z from 'zod';
+import { OBJECT_ERROR, intField, safeIntField, strField } from './campaigns';
 import { getSrd } from './srd';
 
 const BASE_COLS = `id, campaign_id, name, class, level, evasion, major_threshold,
@@ -38,149 +39,97 @@ export function characterJson(r: any) {
 	};
 }
 
-function str(v: unknown, field: string, min: number, max: number): string {
-	if (typeof v !== 'string') throw new ApiError(400, `${field} must be a string`);
-	const t = v.trim();
-	if (t.length < min || t.length > max) {
-		throw new ApiError(400, `${field} must be ${min} to ${max} characters`);
-	}
-	return t;
+const THRESHOLDS_ERROR = 'thresholds must satisfy 1 <= majorThreshold < severeThreshold <= 100';
+const thresholdsOk = (major: number, severe: number) => major >= 1 && major < severe && severe <= 100;
+
+type SrdKind = 'subclasses' | 'ancestries' | 'communities';
+
+/** An SRD id of `kind`, or null. */
+function srdId(field: string, kind: SrdKind) {
+	return z.custom<string | null>((v) => v === null || (typeof v === 'string' && !!getSrd(kind, v, 'en')), {
+		error: `${field} must be an SRD ${kind} id or null`
+	});
 }
 
-function int(v: unknown, field: string, min: number, max: number): number {
-	if (typeof v !== 'number' || !Number.isInteger(v) || v < min || v > max) {
-		throw new ApiError(400, `${field} must be an integer from ${min} to ${max}`);
-	}
-	return v;
-}
+export const createSchema = z
+	.object(
+		{
+			name: strField('name', 1, 100),
+			class: strField('class', 1, 50),
+			level: intField('level', 1, 10).default(1),
+			evasion: intField('evasion', 0, 30),
+			majorThreshold: intField('majorThreshold', 1, 100),
+			severeThreshold: intField('severeThreshold', 1, 100),
+			maxHp: intField('maxHp', 1, 12),
+			maxStress: intField('maxStress', 1, 12).default(6),
+			armorSlots: intField('armorSlots', 0, 12)
+		},
+		{ error: OBJECT_ERROR }
+	)
+	.refine((f) => thresholdsOk(f.majorThreshold, f.severeThreshold), { error: THRESHOLDS_ERROR });
+export type CreateCharacter = z.infer<typeof createSchema>;
 
-export interface CharacterFields {
-	name: string;
-	class: string;
-	level: number;
-	evasion: number;
-	majorThreshold: number;
-	severeThreshold: number;
-	maxHp: number;
-	maxStress: number;
-	armorSlots: number;
-	notes: string;
-	subclass: string | null;
-	ancestry: string | null;
-	community: string | null;
-}
+const patchFields = z.object(
+	{
+		name: strField('name', 1, 100).optional(),
+		class: strField('class', 1, 50).optional(),
+		level: intField('level', 1, 10).optional(),
+		evasion: intField('evasion', 0, 30).optional(),
+		majorThreshold: intField('majorThreshold', 1, 100).optional(),
+		severeThreshold: intField('severeThreshold', 1, 100).optional(),
+		maxHp: intField('maxHp', 1, 12).optional(),
+		maxStress: intField('maxStress', 1, 12).optional(),
+		armorSlots: intField('armorSlots', 0, 12).optional(),
+		notes: z
+			.string({ error: 'notes must be a string of up to 5000 characters' })
+			.max(5000, { error: 'notes must be a string of up to 5000 characters' })
+			.optional(),
+		subclass: srdId('subclass', 'subclasses').optional(),
+		ancestry: srdId('ancestry', 'ancestries').optional(),
+		community: srdId('community', 'communities').optional()
+	},
+	{ error: OBJECT_ERROR }
+);
 
-const SRD_FIELDS = [
-	['subclass', 'subclasses'],
-	['ancestry', 'ancestries'],
-	['community', 'communities']
-] as const;
-
-function srdId(v: unknown, field: string, kind: (typeof SRD_FIELDS)[number][1]): string | null {
-	if (v === null) return null;
-	if (typeof v !== 'string' || !getSrd(kind, v, 'en')) {
-		throw new ApiError(400, `${field} must be an SRD ${kind} id or null`);
-	}
-	return v;
-}
-
-function checkThresholds(major: number, severe: number) {
-	if (!(major >= 1 && major < severe && severe <= 100)) {
-		throw new ApiError(400, 'thresholds must satisfy 1 <= majorThreshold < severeThreshold <= 100');
-	}
-}
-
-function asObject(body: unknown): Record<string, unknown> {
-	if (!body || typeof body !== 'object' || Array.isArray(body)) {
-		throw new ApiError(400, 'body must be a JSON object');
-	}
-	return body as Record<string, unknown>;
-}
-
-export function parseCreate(body: unknown): CharacterFields {
-	const b = asObject(body);
-	const f: CharacterFields = {
-		name: str(b.name, 'name', 1, 100),
-		class: str(b.class, 'class', 1, 50),
-		level: b.level === undefined ? 1 : int(b.level, 'level', 1, 10),
-		evasion: int(b.evasion, 'evasion', 0, 30),
-		majorThreshold: int(b.majorThreshold, 'majorThreshold', 1, 100),
-		severeThreshold: int(b.severeThreshold, 'severeThreshold', 1, 100),
-		maxHp: int(b.maxHp, 'maxHp', 1, 12),
-		maxStress: b.maxStress === undefined ? 6 : int(b.maxStress, 'maxStress', 1, 12),
-		armorSlots: int(b.armorSlots, 'armorSlots', 0, 12),
-		notes: '',
-		subclass: null,
-		ancestry: null,
-		community: null
-	};
-	checkThresholds(f.majorThreshold, f.severeThreshold);
-	return f;
-}
-
-/** Validates a PATCH body; returns only supplied fields. `current` supplies the other threshold. */
-export function parsePatch(
-	body: unknown,
-	current: { majorThreshold: number; severeThreshold: number; class?: string }
-): Partial<CharacterFields> {
-	const b = asObject(body);
-	const p: Partial<CharacterFields> = {};
-	if (b.name !== undefined) p.name = str(b.name, 'name', 1, 100);
-	if (b.class !== undefined) p.class = str(b.class, 'class', 1, 50);
-	if (b.level !== undefined) p.level = int(b.level, 'level', 1, 10);
-	if (b.evasion !== undefined) p.evasion = int(b.evasion, 'evasion', 0, 30);
-	if (b.majorThreshold !== undefined) p.majorThreshold = int(b.majorThreshold, 'majorThreshold', 1, 100);
-	if (b.severeThreshold !== undefined) p.severeThreshold = int(b.severeThreshold, 'severeThreshold', 1, 100);
-	if (b.maxHp !== undefined) p.maxHp = int(b.maxHp, 'maxHp', 1, 12);
-	if (b.maxStress !== undefined) p.maxStress = int(b.maxStress, 'maxStress', 1, 12);
-	if (b.armorSlots !== undefined) p.armorSlots = int(b.armorSlots, 'armorSlots', 0, 12);
-	if (b.notes !== undefined) {
-		if (typeof b.notes !== 'string' || b.notes.length > 5000) {
-			throw new ApiError(400, 'notes must be a string of up to 5000 characters');
+/** PATCH body schema; returns only supplied fields. `current` supplies the other threshold and the class. */
+export function patchSchema(current: { majorThreshold: number; severeThreshold: number; class?: string }) {
+	return patchFields.superRefine((p, ctx) => {
+		if (p.subclass) {
+			const cls = (p.class ?? current.class ?? '').toUpperCase();
+			if (getSrd('subclasses', p.subclass, 'en')?.class !== cls) {
+				ctx.addIssue({ code: 'custom', message: "subclass must belong to the character's class" });
+				return;
+			}
 		}
-		p.notes = b.notes;
-	}
-	for (const [field, kind] of SRD_FIELDS) {
-		if (b[field] !== undefined) p[field] = srdId(b[field], field, kind);
-	}
-	if (p.subclass) {
-		const cls = (p.class ?? current.class ?? '').toUpperCase();
-		if (getSrd('subclasses', p.subclass, 'en')?.class !== cls) {
-			throw new ApiError(400, "subclass must belong to the character's class");
+		if (p.majorThreshold !== undefined || p.severeThreshold !== undefined) {
+			const ok = thresholdsOk(
+				p.majorThreshold ?? current.majorThreshold,
+				p.severeThreshold ?? current.severeThreshold
+			);
+			if (!ok) ctx.addIssue({ code: 'custom', message: THRESHOLDS_ERROR });
 		}
-	}
-	if (p.majorThreshold !== undefined || p.severeThreshold !== undefined) {
-		checkThresholds(
-			p.majorThreshold ?? current.majorThreshold,
-			p.severeThreshold ?? current.severeThreshold
-		);
-	}
-	return p;
+	});
 }
+export type PatchCharacter = z.infer<typeof patchFields>;
 
 export const CONDITION_KEYS = ['vulnerable', 'restrained', 'hidden'] as const;
 
-/** Validates a conditions body; returns only the supplied boolean fields. */
-export function parseConditions(body: unknown): Partial<Record<(typeof CONDITION_KEYS)[number], boolean>> {
-	const b = asObject(body);
-	const out: Partial<Record<(typeof CONDITION_KEYS)[number], boolean>> = {};
-	for (const k of CONDITION_KEYS) {
-		if (b[k] === undefined) continue;
-		if (typeof b[k] !== 'boolean') throw new ApiError(400, `${k} must be a boolean`);
-		out[k] = b[k] as boolean;
-	}
-	return out;
-}
+/** Conditions body; keeps only the supplied boolean fields. */
+export const conditionsSchema = z.object(
+	Object.fromEntries(
+		CONDITION_KEYS.map((k) => [k, z.boolean({ error: `${k} must be a boolean` }).optional()])
+	) as Record<(typeof CONDITION_KEYS)[number], z.ZodOptional<z.ZodBoolean>>,
+	{ error: OBJECT_ERROR }
+);
+export type Conditions = z.infer<typeof conditionsSchema>;
 
-export type Tracker = 'hp' | 'stress' | 'hope' | 'armor';
+export const TRACKERS = ['hp', 'stress', 'hope', 'armor'] as const;
+/** The `[tracker]` route param. */
+export const trackerSchema = z.enum(TRACKERS);
+export type Tracker = z.infer<typeof trackerSchema>;
 
-export function parseDelta(body: unknown): number {
-	const d = (body as { delta?: unknown } | null)?.delta;
-	if (typeof d !== 'number' || !Number.isSafeInteger(d)) {
-		throw new ApiError(400, 'delta must be an integer');
-	}
-	return d;
-}
+export const deltaSchema = z.object({ delta: safeIntField('delta') }, { error: 'delta must be an integer' });
+export type Delta = z.infer<typeof deltaSchema>;
 
 // Single atomic UPDATE per tracker ($1 = delta, $2 = id); SET expressions read the old row.
 const NEW_STRESS = 'LEAST(stress_max, GREATEST(0, stress_marked + $1::bigint))';
@@ -195,14 +144,14 @@ export const TRACKER_SQL: Record<Tracker, string> = {
 			WHEN stress_marked = stress_max THEN false ELSE vulnerable END`
 };
 
-export function parseDamage(body: unknown): { amount: number; useArmor: boolean } {
-	const b = body as { amount?: unknown; useArmor?: unknown } | null;
-	if (typeof b?.amount !== 'number' || !Number.isSafeInteger(b.amount)) {
-		throw new ApiError(400, 'amount must be an integer');
-	}
-	if (typeof b.useArmor !== 'boolean') throw new ApiError(400, 'useArmor must be a boolean');
-	return { amount: b.amount, useArmor: b.useArmor };
-}
+export const damageSchema = z.object(
+	{
+		amount: safeIntField('amount'),
+		useArmor: z.boolean({ error: 'useArmor must be a boolean' })
+	},
+	{ error: 'amount must be an integer' }
+);
+export type Damage = z.infer<typeof damageSchema>;
 
 // Atomic damage: $1 = amount, $2 = useArmor, $3 = id. The CTE locks the row and computes the hit once.
 export const DAMAGE_SQL = `
@@ -223,36 +172,48 @@ RETURNING ${BASE_COLS.replace(/\b([a-z_]+)\b/g, 'c.$1')}, ${ITEMS_SUBQUERY('c.id
 
 const ITEM_KINDS = ['weapons', 'armors', 'consumables', 'items'] as const;
 
-export function parseItemCreate(body: unknown): { name: string; quantity: number; srdId: string | null } {
-	const b = asObject(body);
-	const quantity = b.quantity === undefined ? 1 : int(b.quantity, 'quantity', 1, 1_000_000);
-	if (b.srdId !== undefined && b.srdId !== null) {
-		const id = b.srdId;
-		const found =
-			typeof id === 'string'
-				? ITEM_KINDS.map((k) => getSrd(k, id, 'en')).find((e) => e)
-				: undefined;
-		if (!found) throw new ApiError(400, 'srdId must be an SRD weapon, armor, consumable or item id');
-		return { name: found.nameLocalized, quantity, srdId: found.id };
-	}
-	return { name: str(b.name, 'name', 1, 100), quantity, srdId: null };
-}
+const SRD_ITEM_ERROR = 'srdId must be an SRD weapon, armor, consumable or item id';
 
-export function parseItemQuantity(body: unknown): number {
-	return int(asObject(body).quantity, 'quantity', 0, 1_000_000);
-}
+export const itemCreateSchema = z
+	.object(
+		{
+			quantity: intField('quantity', 1, 1_000_000).default(1),
+			srdId: z
+				.custom<string | null>(
+					(v) => v === null || (typeof v === 'string' && ITEM_KINDS.some((k) => getSrd(k, v, 'en'))),
+					{ error: SRD_ITEM_ERROR }
+				)
+				.optional(),
+			name: z.unknown().optional()
+		},
+		{ error: OBJECT_ERROR }
+	)
+	.transform((b, ctx): { name: string; quantity: number; srdId: string | null } => {
+		if (typeof b.srdId === 'string') {
+			const found = ITEM_KINDS.map((k) => getSrd(k, b.srdId as string, 'en')).find((e) => e)!;
+			return { name: found.nameLocalized, quantity: b.quantity, srdId: found.id };
+		}
+		const name = strField('name', 1, 100).safeParse(b.name);
+		if (!name.success) {
+			ctx.issues.push({ code: 'custom', message: name.error.issues[0].message, input: b.name });
+			return z.NEVER;
+		}
+		return { name: name.data, quantity: b.quantity, srdId: null };
+	});
+export type ItemCreate = z.infer<typeof itemCreateSchema>;
+
+export const itemQuantitySchema = z.object(
+	{ quantity: intField('quantity', 0, 1_000_000) },
+	{ error: OBJECT_ERROR }
+);
+export type ItemQuantity = z.infer<typeof itemQuantitySchema>;
 
 export function itemJson(r: any) {
 	return { id: r.id, name: r.name, quantity: r.quantity, srdId: r.srd_id ?? null };
 }
 
-export function parseGold(body: unknown): number {
-	const h = (body as { handfuls?: unknown } | null)?.handfuls;
-	if (typeof h !== 'number' || !Number.isSafeInteger(h)) {
-		throw new ApiError(400, 'handfuls must be an integer');
-	}
-	return h;
-}
+export const goldSchema = z.object({ handfuls: safeIntField('handfuls') }, { error: 'handfuls must be an integer' });
+export type Gold = z.infer<typeof goldSchema>;
 
 // Atomic gold change: $1 = handfuls delta, $2 = id. Locks the row; updates only if the new total is >= 0.
 export const GOLD_SQL = `
@@ -269,10 +230,12 @@ WITH old AS (
 )
 SELECT old.total AS gold_total, upd.* FROM old LEFT JOIN upd ON true`;
 
-export function parseCardId(body: unknown): string {
-	const id = asObject(body).cardId;
-	if (typeof id !== 'string' || !getSrd('domain-cards', id, 'en')) {
-		throw new ApiError(400, 'cardId must be an SRD domain card id');
-	}
-	return id;
-}
+export const cardIdSchema = z.object(
+	{
+		cardId: z
+			.string({ error: 'cardId must be an SRD domain card id' })
+			.refine((id) => !!getSrd('domain-cards', id, 'en'), { error: 'cardId must be an SRD domain card id' })
+	},
+	{ error: OBJECT_ERROR }
+);
+export type CardId = z.infer<typeof cardIdSchema>;

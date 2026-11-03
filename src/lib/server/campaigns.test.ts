@@ -1,14 +1,42 @@
 import { describe, expect, it } from 'vitest';
-import { clampFear, parseName } from './campaigns';
+import { ApiError, clampFear, idSchema, nameSchema, parse } from './campaigns';
 
-describe('parseName', () => {
-	it('trims', () => expect(parseName({ name: '  A  ' })).toBe('A'));
-	it('rejects empty, blank, missing, long', () => {
-		for (const b of [{ name: '' }, { name: '  ' }, {}, null, { name: 'x'.repeat(101) }]) {
-			expect(() => parseName(b)).toThrow();
+/** The 400 message `parse` gives for `body`, or null when valid. */
+function msg(schema: Parameters<typeof parse>[0], body: unknown): string | null {
+	try {
+		parse(schema, body);
+		return null;
+	} catch (e) {
+		if (e instanceof ApiError && e.status === 400) return e.message;
+		throw e;
+	}
+}
+
+describe('nameSchema', () => {
+	it('trims', () => expect(parse(nameSchema, { name: '  A  ' })).toEqual({ name: 'A' }));
+	it('boundaries 1, 100 and 101', () => {
+		expect(msg(nameSchema, { name: 'x' })).toBeNull();
+		expect(msg(nameSchema, { name: 'x'.repeat(100) })).toBeNull();
+		expect(msg(nameSchema, { name: 'x'.repeat(101) })).toBe('name must be 1 to 100 characters');
+	});
+	it('rejects empty and blank', () => {
+		for (const name of ['', '  ']) expect(msg(nameSchema, { name })).toBe('name must be 1 to 100 characters');
+	});
+	it('rejects non-strings and non-objects', () => {
+		for (const b of [{}, null, [], 'x', { name: 3 }, { name: null }]) {
+			expect(msg(nameSchema, b)).toBe('name must be a string');
 		}
 	});
-	it('accepts 100 chars', () => expect(parseName({ name: 'x'.repeat(100) })).toHaveLength(100));
+});
+
+describe('idSchema', () => {
+	it('accepts any non-empty string without NUL', () => {
+		expect(msg(idSchema, 'nope')).toBeNull();
+		expect(msg(idSchema, crypto.randomUUID())).toBeNull();
+	});
+	it('rejects empty, NUL and non-strings', () => {
+		for (const v of ['', 'a\0b', 5, undefined]) expect(msg(idSchema, v)).toBe('invalid id');
+	});
 });
 
 describe('clampFear', () => {

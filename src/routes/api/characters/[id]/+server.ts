@@ -1,27 +1,29 @@
 import { getDb } from '$lib/server/db';
-import { ApiError, api, json, readJson } from '$lib/server/campaigns';
-import { CHARACTER_COLS, characterJson, parsePatch } from '$lib/server/characters';
+import { ApiError, api, idSchema, json, parse, readJson } from '$lib/server/campaigns';
+import { CHARACTER_COLS, characterJson, patchSchema } from '$lib/server/characters';
 import type { RequestHandler } from './$types';
 
 export const GET: RequestHandler = api(async ({ params }) => {
+	const id = parse(idSchema, params.id);
 	const db = await getDb();
 	const { rows } = await db.query(`SELECT ${CHARACTER_COLS} FROM characters WHERE id = $1`, [
-		params.id
+		id
 	]);
 	if (!rows[0]) throw new ApiError(404, 'character not found');
 	return json(characterJson(rows[0]));
 });
 
 export const PATCH: RequestHandler = api(async ({ params, request }) => {
+	const id = parse(idSchema, params.id);
 	const body = await readJson(request);
 	const db = await getDb();
-	const cur = await db.query(`SELECT ${CHARACTER_COLS} FROM characters WHERE id = $1`, [params.id]);
+	const cur = await db.query(`SELECT ${CHARACTER_COLS} FROM characters WHERE id = $1`, [id]);
 	if (!cur.rows[0]) throw new ApiError(404, 'character not found');
-	const p = parsePatch(body, {
+	const p = parse(patchSchema({
 		majorThreshold: cur.rows[0].major_threshold,
 		severeThreshold: cur.rows[0].severe_threshold,
 		class: cur.rows[0].class
-	});
+	}), body);
 	const cols: Record<string, [string, unknown]> = {
 		name: ['name', p.name],
 		class: ['class', p.class],
@@ -52,7 +54,7 @@ export const PATCH: RequestHandler = api(async ({ params, request }) => {
 		if (marked[col]) sets.push(`${marked[col]} = LEAST(${marked[col]}, $${vals.length})`);
 	}
 	if (sets.length === 0) return json(characterJson(cur.rows[0]));
-	vals.push(params.id);
+	vals.push(id);
 	const { rows } = await db.query(
 		`UPDATE characters SET ${sets.join(', ')} WHERE id = $${vals.length} RETURNING ${CHARACTER_COLS}`,
 		vals
@@ -61,8 +63,9 @@ export const PATCH: RequestHandler = api(async ({ params, request }) => {
 });
 
 export const DELETE: RequestHandler = api(async ({ params }) => {
+	const id = parse(idSchema, params.id);
 	const db = await getDb();
-	const { rows } = await db.query('DELETE FROM characters WHERE id = $1 RETURNING id', [params.id]);
+	const { rows } = await db.query('DELETE FROM characters WHERE id = $1 RETURNING id', [id]);
 	if (!rows[0]) throw new ApiError(404, 'character not found');
 	return new Response(null, { status: 204 });
 });
