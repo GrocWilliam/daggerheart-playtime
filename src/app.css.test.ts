@@ -46,3 +46,13 @@ describe('pips', () => {
 		expect(css).toMatch(/\[data-testid='hp-pips'\][^{]*\{\s*--pip: var\(--danger\)/);
 	});
 });
+
+describe('form cards and validation', () => {
+	it('styles non-tracker forms as surface cards', () => {
+		expect(css).toMatch(/form:not\(\.tracker\)\s*\{[^}]*var\(--surface\)[^}]*border-radius: 0\.5rem[^}]*padding: 0\.75rem/);
+	});
+	it('marks user-invalid controls and alerts with --danger', () => {
+		expect(css).toMatch(/input:user-invalid[^{]*\{[^}]*border-color: var\(--danger\)/);
+		expect(css).toMatch(/\[role='alert'\]\s*\{[^}]*border-left: 3px solid var\(--danger\)/);
+	});
+});

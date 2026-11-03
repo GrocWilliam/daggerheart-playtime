@@ -160,7 +160,48 @@ button {
 	border-radius: 0.25rem;
 }
 
-form:not(.tracker) { background-color: var(--surface); padding: 0.5rem; }
+form:not(.tracker) {
+	background-color: var(--surface);
+	border-radius: 0.5rem;
+	padding: 0.75rem;
+}
+
+/* the inventory table story overrides the card look for forms inside the table */
+
+label > input[type='text'],
+label > input[type='number'],
+label > input[type='search'],
+label > select {
+	display: block;
+	margin-top: 0.25rem;
+	width: 100%;
+	max-width: 100%;
+}
+
+label > textarea {
+	display: block;
+	margin-top: 0.25rem;
+}
+
+@media (min-width: 768px) {
+	label > input[type='text'],
+	label > input[type='number'],
+	label > input[type='search'],
+	label > select {
+		max-width: 24rem;
+	}
+}
+
+input:user-invalid,
+select:user-invalid,
+textarea:user-invalid {
+	border-color: var(--danger);
+}
+
+[role='alert'] {
+	border-left: 3px solid var(--danger);
+	padding-left: 0.5rem;
+}
 
 /* --tea\6c is --teal; escaped so the palette scan does not read it as a colour name */
 :focus-visible {
