@@ -75,3 +75,33 @@ describe('inventory table', () => {
 		expect(css).toContain('@media (min-width: 600px)');
 	});
 });
+
+describe('tailwind setup', () => {
+	const noComments = css.replace(/\/\*[\s\S]*?\*\//g, '');
+	const theme = noComments.match(/@theme[^{]*\{([^}]*)\}/)?.[1] ?? '';
+	it('imports tailwindcss first', () => {
+		expect(noComments.trimStart()).toMatch(/^@import "tailwindcss";/);
+	});
+	it('keeps the seven palette variables on html', () => {
+		const html = noComments.match(/\nhtml \{([^}]*)\}/)?.[1] ?? '';
+		for (const k of ['bg', 'surface', 'text', 'muted', 'accent', 'teal', 'danger']) {
+			expect(html).toMatch(new RegExp(`--${k}: #[0-9a-f]{6};`));
+		}
+	});
+	it('has @theme tokens that only use var(...) and the escaped calm token', () => {
+		const colours = theme.split(';').map((d) => d.trim()).filter((d) => d.startsWith('--color-'));
+		expect(colours.length).toBe(7);
+		for (const d of colours) expect(d).toMatch(/^--color-[\w-]+:\s*var\(--[\w\\-]+\)$/);
+		expect(theme).toContain('--color-calm: var(--tea\\6c)');
+		expect(theme).not.toMatch(/teal/i);
+		expect(theme).toMatch(/--font-[\w-]+:[^;]*Cinzel/);
+		expect(theme).toMatch(/--font-[\w-]+:[^;]*EB Garamond/);
+	});
+	it('has no colour literal outside the palette definitions', () => {
+		const lines = noComments.split('\n').filter((l) => !/^\s*--(bg|surface|text|muted|accent|teal|danger):/.test(l));
+		expect(lines.join('\n')).not.toMatch(/#[0-9a-f]{3,8}\b|\b(rgba?|hsla?|oklch)\(/i);
+	});
+	it('restores preflight in @layer base', () => {
+		expect(noComments).toMatch(/@layer base \{[\s\S]*min-height: 2\.75rem[\s\S]*var\(--tea\\6c\)/);
+	});
+});

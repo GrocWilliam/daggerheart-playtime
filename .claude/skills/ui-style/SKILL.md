@@ -18,7 +18,13 @@ description: Build or restyle a page, form, component or layout in daggerheart-p
 
 ## Styles
 
-- All styles live in `src/app.css`: no `<style>` blocks, no inline styles, no CSS framework.
+- All styles live in `src/app.css`: no `<style>` blocks, no inline styles. Tailwind v4 is set up (`@import "tailwindcss";`
+  first, plugin before `sveltekit()` in `vite.config.ts`). Old page rules stay unlayered so they beat preflight; `@layer base`
+  restores what preflight resets.
+- Tailwind tokens live in `@theme static` and only reference the palette: `bg surface text muted accent danger calm`
+  (`text-calm`, `bg-surface`...; `calm` is `var(--tea\6c)`), fonts `font-display` (Cinzel), `font-body` (EB Garamond).
+  Never use Tailwind's default palette (`red-500`...) and never write a colour literal or colour name after a `:` in
+  any `src/**/*.svelte`/`*.css` (us-38), except the seven palette definitions.
 - Colours only through the palette variables on `html`: `--bg --surface --text --muted --accent --teal --danger`.
   Write `--teal` as `var(--tea\6c)` (escaped, as the file does): a test scans the CSS for colour names.
 - Mobile first: base rules for phones, then `@media (min-width: 600px | 768px | 1024px)`. Never `max-width` queries

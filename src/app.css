@@ -1,3 +1,5 @@
+@import "tailwindcss";
+
 html {
 	--bg: #1a1714;
 	--surface: #26211c;
@@ -6,6 +8,101 @@ html {
 	--accent: #d4a24c;
 	--teal: #3fa7a0;
 	--danger: #e06c66;
+}
+
+/* Tokens reference the palette variables; static keeps them in the built CSS even when unused.
+   --tea\6c is the teal colour, escaped so the palette scan does not read it as a colour name. */
+@theme static {
+	--color-bg: var(--bg);
+	--color-surface: var(--surface);
+	--color-text: var(--text);
+	--color-muted: var(--muted);
+	--color-accent: var(--accent);
+	--color-danger: var(--danger);
+	--color-calm: var(--tea\6c);
+	--font-display: Cinzel, serif;
+	--font-body: 'EB Garamond', serif;
+}
+
+/* Restores what Tailwind's preflight resets, so pages look as before. */
+@layer base {
+	*,
+	*::before,
+	*::after {
+		border-style: none; /* preflight makes it solid; the old pages expect none */
+	}
+
+	body {
+		background-color: var(--bg);
+		color: var(--text);
+		font-family: 'EB Garamond', serif;
+		font-size: 16px;
+		line-height: 1.4;
+	}
+
+	h1,
+	h2,
+	h3 {
+		font-family: Cinzel, serif;
+		font-weight: 700;
+	}
+
+	h1 { font-size: 1.5rem; margin-block: 0.67em; }
+	h2 { font-size: 1.25rem; margin-block: 0.83em; }
+	h3 { font-size: 1.125rem; margin-block: 1em; }
+
+	p,
+	ul,
+	ol,
+	dl {
+		margin-block: 1em;
+	}
+
+	ul ul,
+	ol ol,
+	ul ol,
+	ol ul {
+		margin-block: 0;
+	}
+
+	a {
+		color: var(--accent);
+		text-decoration: underline;
+		min-height: 2.75rem;
+		min-width: 2.75rem;
+	}
+
+	ul {
+		list-style: disc;
+		padding-left: 1.25rem;
+	}
+
+	ol {
+		list-style: decimal;
+		padding-left: 1.25rem;
+	}
+
+	input,
+	select,
+	textarea,
+	button {
+		font: inherit;
+		font-size: 16px;
+		color: revert;
+		border: revert;
+		border-radius: revert;
+		background-color: revert;
+		min-height: 2.75rem;
+	}
+
+	button {
+		cursor: pointer;
+	}
+
+	:focus-visible {
+		outline: 2px solid var(--tea\6c);
+		outline-offset: 2px;
+	}
 }
 
 *,

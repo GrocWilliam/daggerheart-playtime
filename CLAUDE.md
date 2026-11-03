@@ -13,6 +13,7 @@ any change that makes it wrong, and add what the next agent would otherwise redi
   `memory://` in tests). Connection and migrations in `src/lib/server/db.ts`.
 - All queries use `getDrizzle()` (Drizzle query builder); `sql` templates only for what the builder can't express.
   `getDb().query` stays exported for the legacy migrator and tests only: application code never calls it.
+- Styling: Tailwind v4 (`@tailwindcss/vite`, tokens in `@theme static` in `src/app.css`); see `ui-style` skill.
 - Validation: Zod 4 schemas + `parse(schema, body)` (`campaigns.ts`) → 400 with the first issue's message.  `parse(schema, v, 404)` for route params that 404.
 - Unit tests: Vitest (`*.test.ts` next to the code). No other test or UI framework: don't add one.
 
