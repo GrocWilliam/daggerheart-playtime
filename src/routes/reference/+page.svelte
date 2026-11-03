@@ -26,7 +26,7 @@
 	{#if kinds.includes(s.kind) && (s.items.length > 0 || !data.q)}
 		<section data-testid="ref-{s.kind}">
 			<h2>{t(`reference.kind.${s.kind}`)}</h2>
-			<ul class="ref-list">
+			<ul class="ref-list list">
 				{#each s.items as item (item.id)}
 					<li data-testid="ref-item" class="ref-item">
 						<span class="ref-name">{item.name}</span>
