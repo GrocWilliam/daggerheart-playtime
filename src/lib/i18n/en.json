@@ -55,6 +55,7 @@
 	"gold.handfuls": "handfuls",
 	"gold.adjust": "Handfuls (negative to spend)",
 	"item.name": "Name",
+	"item.fromSrd": "from the SRD",
 	"item.quantity": "Quantity",
 	"condition.set.vulnerable": "Set vulnerable",
 	"condition.clear.vulnerable": "Clear vulnerable",

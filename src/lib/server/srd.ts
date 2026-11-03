@@ -246,3 +246,25 @@ export function cardGroups(className: string, lang: Lang): { domain: string; lab
 		return { domain, label: cards[0].domainName, cards };
 	});
 }
+
+const ITEM_PICK_KINDS = ['weapons', 'armors', 'consumables', 'items'] as const;
+
+/** Weapons, armors, consumables and items as pick-list groups (kind = SRD kind). */
+export function itemGroups(lang: Lang): { kind: SrdKind; picks: Pick[] }[] {
+	return ITEM_PICK_KINDS.map((kind) => ({ kind, picks: pickList(kind, lang) }));
+}
+
+/** Helper data of held SRD items, by SRD id; unknown ids are skipped. */
+export function itemPicks(ids: string[], lang: Lang): Record<string, Pick> {
+	const out: Record<string, Pick> = {};
+	for (const id of ids) {
+		for (const kind of ITEM_PICK_KINDS) {
+			const p = pickOf(kind, id, lang);
+			if (p) {
+				out[id] = p;
+				break;
+			}
+		}
+	}
+	return out;
+}

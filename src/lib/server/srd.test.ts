@@ -28,3 +28,17 @@ describe('srd', () => {
 			for (const { id, name } of listSrd(k, 'fr')) expect(name.trim(), id).not.toBe('');
 	});
 });
+
+describe('item pick-lists', () => {
+	it('groups weapons, armors, consumables and items', async () => {
+		const { itemGroups } = await import('./srd');
+		expect(itemGroups('en').map((g) => g.kind)).toEqual(['weapons', 'armors', 'consumables', 'items']);
+		expect(itemGroups('en').reduce((n, g) => n + g.picks.length, 0)).toBe(346);
+	});
+	it('resolves held items to helper data, skipping unknown ids', async () => {
+		const { itemGroups, itemPicks } = await import('./srd');
+		const id = itemGroups('en')[0].picks[0].id;
+		const r = itemPicks([id, 'nope'], 'en');
+		expect(Object.keys(r)).toEqual([id]);
+	});
+});

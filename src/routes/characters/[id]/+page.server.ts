@@ -1,5 +1,5 @@
 import { error, fail } from '@sveltejs/kit';
-import { pickList, pickOf, subclassesOf, getSrd, cardsByIds, cardGroups } from '$lib/server/srd';
+import { pickList, pickOf, subclassesOf, getSrd, cardsByIds, cardGroups, itemGroups, itemPicks } from '$lib/server/srd';
 import type { Actions, PageServerLoad } from './$types';
 
 type Fetch = typeof fetch;
@@ -47,6 +47,11 @@ export const load: PageServerLoad = async ({ params, fetch, locals }) => {
 		},
 		cards: cardsByIds(Array.isArray(ch.cards) ? ch.cards : [], lang),
 		cardGroups: cardGroups(String(ch.class), lang),
+		itemGroups: itemGroups(lang),
+		itemPicks: itemPicks(
+			(Array.isArray(ch.items) ? ch.items : []).flatMap((i: { srdId?: string | null }) => (i.srdId ? [i.srdId] : [])),
+			lang
+		),
 		chosen: {
 			subclass: pickOf('subclasses', ch.subclass, lang),
 			ancestry: pickOf('ancestries', ch.ancestry, lang),
@@ -117,7 +122,9 @@ export const actions: Actions = {
 	},
 	addItem: async ({ request, params, fetch }) => {
 		const form = await request.formData();
-		const body: Record<string, unknown> = { name: form.get('name') ?? '' };
+		const srdId = form.get('srdId');
+		const body: Record<string, unknown> =
+			typeof srdId === 'string' && srdId !== '' ? { srdId } : { name: form.get('name') ?? '' };
 		const q = form.get('quantity');
 		if (typeof q === 'string' && q.trim() !== '') body.quantity = num(q);
 		const r = await call(fetch, 'POST', `/api/characters/${enc(params.id)}/items`, body);

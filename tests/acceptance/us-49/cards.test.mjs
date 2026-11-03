@@ -47,8 +47,8 @@ async function open(lang, path, { js = false, viewport } = {}) {
 	return { ctx, page };
 }
 // The add form is the one holding the select grouped by domain.
-const addSelect = (page) => page.locator('select:has(optgroup)');
-const addForm = (page) => page.locator('form:has(select:has(optgroup))');
+const addSelect = (page) => page.locator('select[name="cardId"]:has(optgroup)');
+const addForm = (page) => page.locator('form:has(select[name="cardId"]:has(optgroup))');
 const pick = [CARDS[7], CARDS[100], CARDS[150]];
 
 test('no card held: the sheet lists no card', async () => {

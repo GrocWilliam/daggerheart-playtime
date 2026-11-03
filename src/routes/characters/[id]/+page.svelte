@@ -131,7 +131,20 @@
 
 <h2>{t('section.inventory')}</h2>
 <form method="POST" action="?/addItem">
-	<label>{t('item.name')} <input type="text" name="name" required maxlength="100" /></label>
+	<label>{t('item.name')} <input type="text" name="name" maxlength="100" /></label>
+	<label>
+		{t('item.fromSrd')}
+		<select name="srdId">
+			<option value=""></option>
+			{#each data.itemGroups as g (g.kind)}
+				<optgroup label={t(`reference.kind.${g.kind}`)}>
+					{#each g.picks as p (p.id)}
+						<option value={p.id}>{p.name}</option>
+					{/each}
+				</optgroup>
+			{/each}
+		</select>
+	</label>
 	<label>{t('item.quantity')} <input type="number" name="quantity" min="1" /></label>
 	<button type="submit">{t('action.addItem')}</button>
 </form>
@@ -139,6 +152,9 @@
 	{#each c.items as it (it.id)}
 		<li>
 			<span data-testid="item">{it.name} ×{it.quantity}</span>
+			{#if it.srdId && data.itemPicks[it.srdId]}
+				<Help id={it.srdId} name={data.itemPicks[it.srdId].name} lang={data.lang} en={data.itemPicks[it.srdId].en} />
+			{/if}
 			<form method="POST" action="?/setQuantity">
 				<input type="hidden" name="itemId" value={it.id} />
 				<input type="number" name="quantity" min="0" value={it.quantity} required />

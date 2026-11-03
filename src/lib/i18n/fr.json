@@ -55,6 +55,7 @@
 	"gold.handfuls": "poignées",
 	"gold.adjust": "Poignées (négatif pour dépenser)",
 	"item.name": "Nom",
+	"item.fromSrd": "du SRD",
 	"item.quantity": "Quantité",
 	"condition.set.vulnerable": "Rendre vulnérable",
 	"condition.clear.vulnerable": "Retirer vulnérable",
