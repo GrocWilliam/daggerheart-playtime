@@ -17,13 +17,15 @@
 		['maxStress', 'field.maxStress', 'number', c.stress.max],
 		['armorSlots', 'field.armorSlots', 'number', c.armor.max]
 	]);
+	// Tracker value colours (hp danger, hope calm); the others keep the text colour.
+	const valColour: Record<string, string> = { hp: 'text-danger', hope: 'text-calm' };
 	const conditions = ['vulnerable', 'restrained', 'hidden'];
 </script>
 
 <p><a href="/campaigns/{c.campaignId}">{t('character.back')}</a></p>
 <h1>
 	<span data-testid="character-name">{c.name}</span>
-	{#if c.hp.marked === c.hp.max}<span data-testid="down">{t('badge.down')}</span>{/if}
+	{#if c.hp.marked === c.hp.max}<span class="inline-block rounded-[999px] px-[0.6rem] text-[0.875rem] text-bg bg-danger" data-testid="down">{t('badge.down')}</span>{/if}
 </h1>
 <p class="muted">{c.class}, {t('character.level')} {c.level} <Help id="level" name={t('character.level')} lang={data.lang} /></p>
 <Chosen chosen={data.chosen} lang={data.lang} />
@@ -31,12 +33,17 @@
 {#if form?.error}<p role="alert">{form.error}</p>{/if}
 
 {#each [['hp', 'tracker.hp'], ['stress', 'tracker.stress'], ['hope', 'tracker.hope'], ['armor', 'tracker.armor']] as [key, label] (key)}
-	<form class="tracker" method="POST" action="?/tracker">
+	<form
+		class="mb-3 flex flex-nowrap items-center gap-2 rounded-none! bg-transparent! p-0!"
+		class:tracker={true}
+		method="POST"
+		action="?/tracker"
+	>
 		<input type="hidden" name="tracker" value={key} />
 		{t(label)}:
 		<Help id={key} name={t(label)} lang={data.lang} />
 		<button type="submit" name="delta" value="-1">{t('action.decrease')}</button>
-		<span data-testid={key}
+		<span class="min-w-[2ch] text-center {valColour[key]}" data-testid={key}
 			>{typeof c[key] === 'number' ? c[key] : `${c[key].marked}/${c[key].max}`}</span
 		>
 		<button type="submit" name="delta" value="1">{t('action.increase')}</button>
@@ -47,14 +54,14 @@
 		<Pips name={key} max={c[key].max} filled={c[key].marked} />
 	{/if}
 {/each}
-<ul class="stats">
+<ul class="mt-0 mb-3 list-none pl-0!" class:stats={true}>
 	<li>{t('stat.evasion')}: <Help id="evasion" name={t('stat.evasion')} lang={data.lang} /> <span data-testid="evasion">{c.evasion}</span></li>
 	<li>{t('stat.thresholds')}: <Help id="thresholds" name={t('stat.thresholds')} lang={data.lang} /> <span data-testid="thresholds">{c.majorThreshold}/{c.severeThreshold}</span></li>
 </ul>
 <div>
-	{#if c.conditions.vulnerable}<span data-testid="condition-vulnerable">{t('badge.vulnerable')}</span><Help id="vulnerable" name={t('badge.vulnerable')} lang={data.lang} />{/if}
-	{#if c.conditions.restrained}<span data-testid="condition-restrained">{t('badge.restrained')}</span><Help id="restrained" name={t('badge.restrained')} lang={data.lang} />{/if}
-	{#if c.conditions.hidden}<span data-testid="condition-hidden">{t('badge.hidden')}</span><Help id="hidden" name={t('badge.hidden')} lang={data.lang} />{/if}
+	{#if c.conditions.vulnerable}<span class="inline-block rounded-[999px] px-[0.6rem] text-[0.875rem] text-bg bg-danger" data-testid="condition-vulnerable">{t('badge.vulnerable')}</span><Help id="vulnerable" name={t('badge.vulnerable')} lang={data.lang} />{/if}
+	{#if c.conditions.restrained}<span class="inline-block rounded-[999px] px-[0.6rem] text-[0.875rem] text-bg bg-accent" data-testid="condition-restrained">{t('badge.restrained')}</span><Help id="restrained" name={t('badge.restrained')} lang={data.lang} />{/if}
+	{#if c.conditions.hidden}<span class="inline-block rounded-[999px] px-[0.6rem] text-[0.875rem] text-bg bg-calm" data-testid="condition-hidden">{t('badge.hidden')}</span><Help id="hidden" name={t('badge.hidden')} lang={data.lang} />{/if}
 </div>
 
 <form method="POST" action="?/damage">
@@ -64,7 +71,7 @@
 </form>
 
 <h2>{t('section.edit')}</h2>
-<form method="POST" action="?/edit" class="form-grid">
+<form method="POST" action="?/edit" class="grid grid-cols-[minmax(0,1fr)] gap-x-4 *:min-w-0 md:grid-cols-[repeat(2,minmax(0,1fr))]" class:form-grid={true}>
 	{#each fields.slice(0, 1) as [name, label, type, value] (name)}
 		<label>{t(label)} <input {type} {name} {value} required /></label>
 	{/each}
@@ -102,7 +109,7 @@
 	{#each fields.slice(1) as [name, label, type, value] (name)}
 		<label>{t(label)} <input {type} {name} {value} required /></label>
 	{/each}
-	<button type="submit">{t('action.save')}</button>
+	<button type="submit" class="[justify-self:start] md:col-start-1">{t('action.save')}</button>
 </form>
 
 <h2>{t('section.conditions')}</h2>
@@ -186,10 +193,10 @@
 {/if}
 
 <h2>{t('section.cards')}</h2>
-<ul class="cards">
+<ul class="list-none pl-0!">
 	{#each data.cards as card (card.id)}
-		<li data-testid="card">
-			<span class="card-name">{card.name}</span>
+		<li class="[overflow-wrap:anywhere]" data-testid="card">
+			<span>{card.name}</span>
 			<span class="muted">{card.domainName}, {t('card.level')} {card.level}</span>
 			<Help id={card.id} name={card.name} lang={data.lang} en={card.en} />
 			<form method="POST" action="?/removeCard">
@@ -214,13 +221,3 @@
 	</label>
 	<button type="submit">{t('action.addCard')}</button>
 </form>
-
-<style>
-	.cards {
-		list-style: none;
-		padding: 0;
-	}
-	.cards li {
-		overflow-wrap: anywhere;
-	}
-</style>

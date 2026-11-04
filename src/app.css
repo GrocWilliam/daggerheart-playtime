@@ -257,14 +257,14 @@ button {
 	border-radius: 0.25rem;
 }
 
-form:not(.tracker) {
+form {
 	background-color: var(--surface);
 	border-radius: 0.5rem;
 	padding: 0.75rem;
 }
 
 /* forms inside tables override the card look */
-table form:not(.tracker) {
+table form {
 	background-color: transparent;
 	padding: 0;
 	margin: 0;
@@ -376,37 +376,10 @@ textarea:user-invalid {
 	outline-offset: 2px;
 }
 
-[data-testid='hp'] { color: var(--danger); }
-[data-testid='hope'] { color: var(--tea\6c); }
-
-[data-testid^='condition-'],
-[data-testid='down'] {
-	display: inline-block;
-	border-radius: 999px;
-	padding: 0 0.6rem;
-	color: var(--bg);
-	font-size: 0.875rem;
-}
-[data-testid='condition-vulnerable'], [data-testid='down'] { background-color: var(--danger); }
-[data-testid='condition-restrained'] { background-color: var(--accent); }
-[data-testid='condition-hidden'] { background-color: var(--tea\6c); }
-
 @media (min-width: 1024px) {
 	body {
 		max-width: 72rem;
 	}
-}
-
-.tracker {
-	display: flex;
-	flex-wrap: nowrap;
-	align-items: center;
-	gap: 0.5rem;
-}
-
-.tracker > span {
-	min-width: 2ch;
-	text-align: center;
 }
 
 .help {
@@ -449,12 +422,6 @@ textarea:user-invalid {
 	margin: 0.25rem 0;
 }
 
-.stats {
-	list-style: none;
-	padding: 0;
-	margin: 0 0 0.75rem;
-}
-
 ul.list {
 	list-style-type: none;
 	padding-left: 0;
@@ -474,28 +441,4 @@ ul.list {
 
 .list > li.ref-item {
 	padding: 0.5rem 0.75rem;
-}
-
-.form-grid {
-	display: grid;
-	grid-template-columns: minmax(0, 1fr);
-	column-gap: 1rem;
-}
-
-.form-grid > label {
-	min-width: 0;
-}
-
-.form-grid > button {
-	justify-self: start;
-}
-
-@media (min-width: 768px) {
-	.form-grid {
-		grid-template-columns: repeat(2, minmax(0, 1fr));
-	}
-
-	.form-grid > button {
-		grid-column: 1;
-	}
 }

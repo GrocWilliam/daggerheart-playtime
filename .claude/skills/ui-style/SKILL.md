@@ -18,7 +18,7 @@ description: Build or restyle a page, form, component or layout in daggerheart-p
 
 ## Styles
 
-- Layout, home page and `LanguageSwitcher` are styled with Tailwind utilities in the markup (the pattern for migrating the rest);
+- Layout, home page, campaign page, character sheet, `Chosen`, `Pips` and `LanguageSwitcher` are styled with Tailwind utilities in the markup (the pattern for migrating the rest);
   other pages still use `src/app.css`. No `<style>` blocks, no inline styles. Tailwind v4 is set up (`@import "tailwindcss";`
   first, plugin before `sveltekit()` in `vite.config.ts`). Old page rules stay unlayered so they beat preflight; `@layer base`
   restores what preflight resets.

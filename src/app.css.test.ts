@@ -35,26 +35,20 @@ describe('campaign page moved to Tailwind utilities', () => {
 	});
 });
 
-describe('trackers', () => {
-	it('keeps controls on one centred, non-wrapping line', () => {
-		expect(css).toMatch(/\.tracker\s*\{[^}]*display: flex[^}]*flex-wrap: nowrap[^}]*align-items: center/);
+describe('character sheet moved to Tailwind utilities', () => {
+	it('no longer has the tracker, stats, form-grid, badge or testid colour rules', () => {
+		expect(css).not.toMatch(/\.(tracker|stats|form-grid)\b/);
+		expect(css).not.toMatch(/data-testid='(hp|hope|down)'|data-testid\^='condition-'/);
 	});
 });
 
 describe('form cards and validation', () => {
-	it('styles non-tracker forms as surface cards', () => {
-		expect(css).toMatch(/form:not\(\.tracker\)\s*\{[^}]*var\(--surface\)[^}]*border-radius: 0\.5rem[^}]*padding: 0\.75rem/);
+	it('styles forms as surface cards', () => {
+		expect(css).toMatch(/(?<![\w-])form\s*\{[^}]*var\(--surface\)[^}]*border-radius: 0\.5rem[^}]*padding: 0\.75rem/);
 	});
 	it('marks user-invalid controls and alerts with --danger', () => {
 		expect(css).toMatch(/input:user-invalid[^{]*\{[^}]*border-color: var\(--danger\)/);
 		expect(css).toMatch(/\[role='alert'\]\s*\{[^}]*border-left: 3px solid var\(--danger\)/);
-	});
-});
-
-describe('form-grid', () => {
-	it('is a one column grid, two columns on wide screens', () => {
-		expect(css).toMatch(/\.form-grid\s*\{[^}]*display: grid/);
-		expect(css).toMatch(/repeat\(2, minmax\(0, 1fr\)\)/);
 	});
 });
 

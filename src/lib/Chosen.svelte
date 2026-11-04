@@ -12,10 +12,10 @@
 	} = $props();
 </script>
 
-<ul class="chosen">
+<ul class="mt-0 mb-3 list-none p-0!">
 	{#each ['subclass', 'ancestry', 'community'] as k (k)}
 		{#if chosen[k]}
-			<li>
+			<li class="[overflow-wrap:anywhere]">
 				<span class="muted">{translate(lang, `field.${k}`)}:</span>
 				<span data-testid={k}>{chosen[k].name}</span>
 				<Help id={chosen[k].id} name={chosen[k].name} {lang} en={chosen[k].en} />
@@ -23,14 +23,3 @@
 		{/if}
 	{/each}
 </ul>
-
-<style>
-	.chosen {
-		list-style: none;
-		padding: 0;
-		margin: 0 0 0.75rem;
-	}
-	.chosen li {
-		overflow-wrap: anywhere;
-	}
-</style>
