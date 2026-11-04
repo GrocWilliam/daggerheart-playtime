@@ -93,6 +93,9 @@
 		{t('field.subclass')}
 		<select name="subclass">
 			<option value="" selected={!c.subclass}>{t('option.none')}</option>
+			{#if c.subclass && !data.picks.subclasses.some((p: { id: string }) => p.id === c.subclass)}
+				<option value={c.subclass} selected>{c.subclass}</option>
+			{/if}
 			{#each data.picks.subclasses as p (p.id)}
 				<option value={p.id} selected={p.id === c.subclass}>{p.name}</option>
 			{/each}
@@ -103,6 +106,9 @@
 			{t(`field.${k}`)}
 			<select name={k}>
 				<option value="" selected={!c[k]}>{t('option.none')}</option>
+				{#if c[k] && !list.some((p: { id: string }) => p.id === c[k])}
+					<option value={c[k]} selected>{c[k]}</option>
+				{/if}
 				{#each list as p (p.id)}
 					<option value={p.id} selected={p.id === c[k]}>{p.name}</option>
 				{/each}

@@ -91,9 +91,19 @@ export const actions: Actions = {
 			class: form.get('class') ?? ''
 		};
 		for (const k of NUMERIC) body[k] = num(form.get(k));
-		for (const k of ['subclass', 'ancestry', 'community']) {
+		const KINDS = { subclass: 'subclasses', ancestry: 'ancestries', community: 'communities' } as const;
+		let stored: Record<string, unknown> | null | undefined;
+		for (const k of Object.keys(KINDS) as (keyof typeof KINDS)[]) {
 			const v = form.get(k);
-			if (v !== null) body[k] = typeof v === 'string' && v !== '' ? v : null;
+			if (v === null) continue;
+			if (typeof v === 'string' && v !== '') {
+				// a legacy (non-SRD) value the character already has stays as it is: the API only accepts SRD ids
+				if (!getSrd(KINDS[k], v, 'en')) {
+					stored ??= (await call(fetch, 'GET', `/api/characters/${enc(params.id)}`)).data ?? null;
+					if (stored?.[k] === v) continue;
+				}
+				body[k] = v;
+			} else body[k] = null;
 		}
 		// a subclass belongs to one class: drop it when the class changed
 		if (typeof body.subclass === 'string') {
