@@ -44,3 +44,12 @@ describe('domain card pick-lists', () => {
 		expect(cardsByIds(['nope', ...ids.reverse()], 'fr').map((c) => c.id)).toEqual(ids);
 	});
 });
+
+describe('idByName', () => {
+	it('maps English names to ids, null otherwise', async () => {
+		const { idByName } = await import('./srd');
+		expect(idByName('ancestries', 'Clank')).toBe('core_ancestry_clank');
+		expect(idByName('ancestries', '')).toBeNull();
+		expect(idByName('communities', 'Nope')).toBeNull();
+	});
+});

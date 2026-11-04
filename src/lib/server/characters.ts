@@ -65,7 +65,9 @@ export async function insertCharacter(campaignId: string, f: CreateCharacter) {
 			severeThreshold: f.severeThreshold,
 			hpMax: f.maxHp,
 			stressMax: f.maxStress,
-			armorMax: f.armorSlots
+			armorMax: f.armorSlots,
+			ancestry: f.ancestry ?? null,
+			community: f.community ?? null
 		})
 		.returning(characterSelect);
 	return characterJson(row);
@@ -120,7 +122,9 @@ export const createSchema = z
 			severeThreshold: intField('severeThreshold', 1, 100),
 			maxHp: intField('maxHp', 1, 12),
 			maxStress: intField('maxStress', 1, 12).default(6),
-			armorSlots: intField('armorSlots', 0, 12)
+			armorSlots: intField('armorSlots', 0, 12),
+			ancestry: srdId('ancestry', 'ancestries').optional(),
+			community: srdId('community', 'communities').optional()
 		},
 		{ error: OBJECT_ERROR }
 	)

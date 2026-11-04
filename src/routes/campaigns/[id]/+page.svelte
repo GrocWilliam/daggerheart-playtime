@@ -11,7 +11,6 @@
 	const c = $derived(data.campaign);
 	const fields = [
 		['name', 'field.name', 'text'],
-		['class', 'field.class', 'text'],
 		['level', 'field.level', 'number'],
 		['evasion', 'field.evasion', 'number'],
 		['majorThreshold', 'field.majorThreshold', 'number'],
@@ -94,6 +93,19 @@
 	class:form-grid={true}>
 	{#each fields as [name, label, type] (name)}
 		<label class="min-w-0">{t(label)} <input {type} {name} required /></label>
+		{#if name === 'name'}
+			{#each ['class', 'ancestry', 'community'] as k (k)}
+				<label class="min-w-0">
+					{t(`field.${k}`)}
+					<select name={k} required={k === 'class'}>
+						{#if k !== 'class'}<option value="">{t('option.none')}</option>{/if}
+						{#each data.picks[k] as o (o.value)}
+							<option value={o.value}>{o.label}</option>
+						{/each}
+					</select>
+				</label>
+			{/each}
+		{/if}
 	{/each}
 	<button type="submit" class="justify-self-start md:col-start-1">{t('campaign.add')}</button>
 </form>

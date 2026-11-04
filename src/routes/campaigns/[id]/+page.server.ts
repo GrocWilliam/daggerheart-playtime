@@ -1,5 +1,5 @@
 import { error, fail } from '@sveltejs/kit';
-import { pickOf } from '$lib/server/srd';
+import { idByName, pickList, pickOf } from '$lib/server/srd';
 import { trackerFieldSchema } from '$lib/server/characters';
 import type { Actions, PageServerLoad } from './$types';
 
@@ -47,7 +47,15 @@ export const load: PageServerLoad = async ({ params, fetch, locals }) => {
 			community: pickOf('communities', ch.community, lang)
 		};
 	}
-	return { campaign: r.data, chosen };
+	const en = (kind: 'classes' | 'ancestries' | 'communities') => pickList(kind, 'en');
+	const options = (kind: 'classes' | 'ancestries' | 'communities') =>
+		pickList(kind, lang).map((p, i) => ({ value: en(kind)[i].name, label: p.name }));
+	const picks = {
+		class: options('classes'),
+		ancestry: options('ancestries'),
+		community: options('communities')
+	};
+	return { campaign: r.data, chosen, picks };
 };
 
 export const actions: Actions = {
@@ -87,6 +95,10 @@ export const actions: Actions = {
 			name: form.get('name') ?? '',
 			class: form.get('class') ?? ''
 		};
+		for (const k of ['ancestry', 'community'] as const) {
+			const id = idByName(k === 'ancestry' ? 'ancestries' : 'communities', String(form.get(k) ?? ''));
+			if (id) body[k] = id;
+		}
 		for (const k of NUMERIC) body[k] = num(form.get(k));
 		const r = await call(fetch, 'POST', `/api/campaigns/${encodeURIComponent(params.id)}/characters`, body);
 		return r.ok ? { ok: true } : failure(r);

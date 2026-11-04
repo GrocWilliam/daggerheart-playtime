@@ -207,6 +207,11 @@ export function pickList(kind: SrdKind, lang: Lang): Pick[] {
 	return data.get(kind)!.map((d) => toPick(kind, d, lang));
 }
 
+/** The id of the entry with this English name (e.g. "Clank"); null when empty or unknown. */
+export function idByName(kind: SrdKind, name: string | null | undefined): string | null {
+	return data.get(kind)!.find((d) => d.name === name)?.element.id ?? null;
+}
+
 /** The subclasses of a class given by its English name (e.g. "Ranger"); [] for unknown classes. */
 export function subclassesOf(className: string, lang: Lang): Pick[] {
 	const cls = className.toUpperCase();
