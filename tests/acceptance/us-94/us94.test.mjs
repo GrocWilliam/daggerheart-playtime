@@ -24,7 +24,7 @@ test('config, schema, baseline migration and Docker files are in place', () => {
 	assert.match(cfg, /\.\/drizzle/);
 	assert.match(cfg, /schema\.ts/);
 	const journal = JSON.parse(read('drizzle/meta/_journal.json'));
-	assert.equal(journal.entries.length, 1);
+	assert.ok(journal.entries.length >= 1, 'journal has the baseline');
 	assert.match(journal.entries[0].tag, /baseline/);
 	assert.equal(read(`drizzle/${journal.entries[0].tag}.sql`).trim(), 'SELECT 1;');
 	assert.ok(fs.readdirSync(path.join(ROOT, 'drizzle/meta')).some((f) => /snapshot\.json$/.test(f)));
@@ -47,6 +47,9 @@ test('Drizzle schema matches the real database (columns, nullability, indexes, F
 	for (const f of fs.readdirSync(dir).filter((f) => f.endsWith('.sql')).sort()) {
 		await pg.exec(fs.readFileSync(path.join(dir, f), 'utf8'));
 	}
+	// Drizzle migrations added after the baseline (the baseline itself is SELECT 1).
+	const journal = JSON.parse(read('drizzle/meta/_journal.json'));
+	for (const e of journal.entries.slice(1)) await pg.exec(read(`drizzle/${e.tag}.sql`));
 	const dbTables = (
 		await pg.query(
 			`SELECT table_name FROM information_schema.tables WHERE table_schema='public' AND table_name <> 'schema_migrations'`
