@@ -12,7 +12,9 @@ description: Build or restyle a page, form, component or layout in daggerheart-p
 - An action returns `{ ok: true }` or `failure(r)` (`fail(status, { error })`); the page shows `form.error` in
   `<p role="alert">`. Forms are plain `<form method="POST" action="?/name">`: no client-side JS is needed.
 - Svelte 5 runes only: `let { data, form } = $props()`, `$derived`, `$state`. No `export let`, no stores.
-- Text: `const t = (key) => translate(data.lang, key)`. Every new key goes in **both** `src/lib/i18n/en.json` and
+- Text: `const t = (key, params?) => translate(data.lang, key, params)` (`{name}` placeholders; `key.one`/`key.other`
+  plurals when `params.count` is a number) and `const n = (v) => formatNumber(data.lang, v)`. Gold, quantities and
+  counts shown to users always go through `n(...)`. Every new key goes in **both** `src/lib/i18n/en.json` and
   `fr.json` (`i18n.test.ts` fails otherwise). Never hard-code UI text.
 - Reuse the components in `src/lib/`: `Pips` (tracker dots), `Help` (the "?" glossary helper), `Chosen`, `LanguageSwitcher`.
 

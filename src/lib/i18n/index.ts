@@ -23,7 +23,33 @@ export function resolveLang(cookie: string | undefined | null, acceptLanguage: s
 	return 'en';
 }
 
-/** Translates a key, falling back to English and then to the key itself. */
-export function translate(lang: Lang, key: string): string {
-	return dictionaries[lang][key] ?? dictionaries.en[key] ?? key;
+export type Params = Record<string, string | number>;
+
+/** Formats a number for a language (`fr` groups thousands with U+202F). */
+export function formatNumber(lang: Lang, n: number): string {
+	return new Intl.NumberFormat(lang).format(n);
+}
+
+function lookup(lang: Lang, key: string, count: number | undefined): string | undefined {
+	const d = dictionaries[lang];
+	if (count !== undefined) {
+		const cat = new Intl.PluralRules(lang).select(count);
+		return d[`${key}.${cat}`] ?? d[`${key}.other`] ?? d[key];
+	}
+	return d[key];
+}
+
+/**
+ * Translates a key. `{name}` placeholders come from `params`; when `params.count` is a number,
+ * `key.<plural category>` then `key.other` are tried before `key`. Falls back to English, then the key.
+ */
+export function translate(lang: Lang, key: string, params?: Params): string {
+	const count = typeof params?.count === 'number' ? params.count : undefined;
+	const text = lookup(lang, key, count) ?? lookup('en', key, count) ?? key;
+	if (!params) return text;
+	return text.replace(/\{(\w+)\}/g, (m, name: string) => {
+		const v = params[name];
+		if (v === undefined) return m;
+		return typeof v === 'number' ? formatNumber(lang, v) : String(v);
+	});
 }

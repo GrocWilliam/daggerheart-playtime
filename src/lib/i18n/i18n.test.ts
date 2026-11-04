@@ -1,7 +1,7 @@
-import { describe, expect, it } from 'vitest';
+import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import en from './en.json';
 import fr from './fr.json';
-import { resolveLang, translate } from './index';
+import { formatNumber, resolveLang, translate } from './index';
 
 describe('dictionaries', () => {
 	it('have the same keys and no empty value', () => {
@@ -57,5 +57,44 @@ describe('navigation keys', () => {
 		expect(translate('fr', 'nav.label')).toBe('Principale');
 		expect(translate('en', 'item.actions')).toBe('Actions');
 		expect(translate('fr', 'item.actions')).toBe('Actions');
+	});
+});
+
+describe('translate params and formatNumber', () => {
+	const cat = { en, fr } as Record<string, Record<string, string>>;
+	beforeAll(() => {
+		cat.en['t.greet'] = 'Hi {name}';
+		cat.en['t.items.one'] = '{count} item';
+		cat.en['t.items.other'] = '{count} items';
+		cat.fr['t.items.one'] = '{count} objet';
+		cat.fr['t.items.other'] = '{count} objets';
+		cat.en['t.only'] = 'English only';
+	});
+	afterAll(() => {
+		for (const k of ['t.greet', 't.items.one', 't.items.other', 't.only']) delete cat.en[k];
+		delete cat.fr['t.items.one'];
+		delete cat.fr['t.items.other'];
+	});
+	it('substitutes placeholders', () => {
+		expect(translate('en', 't.greet', { name: 'A' })).toBe('Hi A');
+		expect(translate('en', 't.greet', {})).toBe('Hi {name}');
+	});
+	it('picks plural entries, French 0 being one', () => {
+		expect(translate('en', 't.items', { count: 1 })).toBe('1 item');
+		expect(translate('en', 't.items', { count: 2 })).toBe('2 items');
+		expect(translate('fr', 't.items', { count: 1 })).toBe('1 objet');
+		expect(translate('fr', 't.items', { count: 2 })).toBe('2 objets');
+		expect(translate('fr', 't.items', { count: 0 })).toBe('0 objet');
+	});
+	it('falls back to English then the key', () => {
+		expect(translate('fr', 't.only')).toBe('English only');
+		expect(translate('fr', 't.missing')).toBe('t.missing');
+	});
+	it('replaces placeholders and leaves unknown ones', () => {
+		expect(translate('en', 'nope {x}', { y: 1 })).toBe('nope {x}');
+	});
+	it('formats numbers per language', () => {
+		expect(formatNumber('en', 1234567)).toBe('1,234,567');
+		expect(formatNumber('fr', 1234)).toBe('1 234');
 	});
 });

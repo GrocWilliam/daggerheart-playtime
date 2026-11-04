@@ -1,11 +1,12 @@
 <script lang="ts">
-	import { translate } from '$lib/i18n';
+	import { translate, formatNumber } from '$lib/i18n';
 	import Pips from '$lib/Pips.svelte';
 
 	import Help from '$lib/Help.svelte';
 	import Chosen from '$lib/Chosen.svelte';
 	let { data, form } = $props();
-	const t = (key: string) => translate(data.lang, key);
+	const t = (key: string, params?: Record<string, string | number>) => translate(data.lang, key, params);
+	const n = (v: number) => formatNumber(data.lang, v);
 	const c = $derived(data.character);
 	const fields = $derived([
 		['name', 'field.name', 'text', c.name],
@@ -130,7 +131,7 @@
 
 <h2>{t('section.gold')}</h2>
 <Help id="gold" name={t('section.gold')} lang={data.lang} />
-<p data-testid="gold">{c.gold.chests} {t('gold.chests')}, {c.gold.bags} {t('gold.bags')}, {c.gold.handfuls} {t('gold.handfuls')}</p>
+<p data-testid="gold">{n(c.gold.chests)} {t('gold.chests')}, {n(c.gold.bags)} {t('gold.bags')}, {n(c.gold.handfuls)} {t('gold.handfuls')}</p>
 <form method="POST" action="?/gold">
 	<label>{t('gold.adjust')} <input type="number" name="handfuls" step="1" required /></label>
 	<button type="submit">{t('action.updateGold')}</button>
@@ -168,7 +169,7 @@
 			{#each c.items as it (it.id)}
 				<tr data-testid="item-row">
 					<td>
-						<span data-testid="item">{it.name} ×{it.quantity}</span>
+						<span data-testid="item">{it.name} ×{n(it.quantity)}</span>
 						{#if it.srdId && data.itemPicks[it.srdId]}
 							<Help id={it.srdId} name={data.itemPicks[it.srdId].name} lang={data.lang} en={data.itemPicks[it.srdId].en} />
 						{/if}
