@@ -6,7 +6,7 @@ set -uo pipefail
 #  - schema.ts matches the real database (columns, nullability, indexes, FK ON DELETE)
 #  - baseline migration is `SELECT 1;`, config/journal/Dockerfile/.dockerignore in place
 #  - `npx drizzle-kit generate` reports no schema changes
-#  - restart on same PGLITE_DATA_DIR keeps data, /health 200, __drizzle_migrations has one row
+#  - restart on same PGLITE_DATA_DIR keeps data, /health 200, __drizzle_migrations has one row per journal entry
 #  - in-memory start returns /health 200
 #  - us-2's getDb().query('SELECT 1 as one') still passes
 # (The unit-test criteria and `make test`/`make build` are checked by CI itself.)

@@ -132,7 +132,7 @@ const stop = (child) =>
 		setTimeout(() => child.kill('SIGKILL'), 5000);
 	});
 
-test('restart on the same PGLITE_DATA_DIR keeps data and /health is 200; one drizzle migration row', async () => {
+test('restart on the same PGLITE_DATA_DIR keeps data and /health is 200; one drizzle migration row per journal entry', async () => {
 	const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'us94-'));
 	try {
 		let s = await start({ PGLITE_DATA_DIR: dir });
@@ -154,7 +154,7 @@ test('restart on the same PGLITE_DATA_DIR keeps data and /health is 200; one dri
 		const { PGlite } = require('@electric-sql/pglite');
 		const pg = new PGlite(dir);
 		const rows = (await pg.query('SELECT * FROM drizzle.__drizzle_migrations')).rows;
-		assert.equal(rows.length, 1);
+		assert.equal(rows.length, JSON.parse(read('drizzle/meta/_journal.json')).entries.length);
 		const t = (await pg.query(`SELECT table_name FROM information_schema.tables WHERE table_schema='public'`)).rows.map((x) => x.table_name);
 		for (const n of ['campaigns', 'schema_migrations']) assert.ok(t.includes(n), n);
 		await pg.close();
