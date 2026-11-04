@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { getSrd, listSrd, SRD_KINDS, srdIdSchema, srdKindSchema, srdSearchSchema } from './srd';
+import { domainsOfClass, getSrd, listSrd, SRD_KINDS, srdIdSchema, srdKindSchema, srdSearchSchema } from './srd';
 
 const COUNTS = [9, 18, 18, 9, 9, 189, 192, 34, 60, 60, 14];
 
@@ -77,5 +77,22 @@ describe('srdSearchSchema', () => {
 		expect(srdSearchSchema.parse({ kind: 'nope', q: 'a' })).toEqual({ kind: undefined, q: 'a' });
 		expect(srdSearchSchema.parse({})).toEqual({ kind: undefined, q: '' });
 		expect(srdSearchSchema.parse({ kind: undefined, q: 5 })).toEqual({ kind: undefined, q: '' });
+	});
+});
+
+describe('domainsOfClass', () => {
+	it('returns the two domains of an SRD class, case-insensitively', () => {
+		expect(domainsOfClass('Guardian', 'en').map((d) => d.id)).toEqual(['VALOR', 'BLADE']);
+		expect(domainsOfClass('guardian', 'en')).toHaveLength(2);
+		expect(domainsOfClass('Guardian', 'en')[0]).toMatchObject({ name: 'Valor' });
+		expect(domainsOfClass('Guardian', 'en')[0].help).not.toBe('');
+	});
+	it('returns [] for a non-SRD class', () => {
+		expect(domainsOfClass('Homebrew', 'en')).toEqual([]);
+	});
+	it('uses French names and help', () => {
+		const d = domainsOfClass('Guardian', 'fr');
+		expect(d.map((x) => x.name)).toEqual(['Bravoure', 'Lame']);
+		expect(d[1].help).toBe('Maîtrise des armes et prouesse martiale.');
 	});
 });

@@ -1,5 +1,5 @@
 import { error, fail } from '@sveltejs/kit';
-import { pickList, pickOf, subclassesOf, getSrd, cardsByIds, cardGroups, itemGroups, itemPicks } from '$lib/server/srd';
+import { pickList, pickOf, subclassesOf, getSrd, cardsByIds, cardGroups, domainsOfClass, itemGroups, itemPicks } from '$lib/server/srd';
 import { TRAITS, conditionFieldSchema, trackerFieldSchema } from '$lib/server/characters';
 import type { Actions, PageServerLoad } from './$types';
 
@@ -50,6 +50,7 @@ export const load: PageServerLoad = async ({ params, fetch, locals }) => {
 			ancestries: pickList('ancestries', lang),
 			communities: pickList('communities', lang)
 		},
+		domains: domainsOfClass(String(ch.class), lang),
 		cards: cardsByIds(Array.isArray(ch.cards) ? ch.cards : [], lang),
 		cardGroups: cardGroups(String(ch.class), lang),
 		itemGroups: itemGroups(lang),

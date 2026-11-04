@@ -111,6 +111,9 @@ export function getSrd(kind: SrdKind, id: string, lang: Lang): (SrdElement & { n
 	return d ? { ...d.element, nameLocalized: localize(d.element.id, d.name, lang) } : null;
 }
 
+const domainsHelp: Record<string, { en: string; fr: string }> = Object.fromEntries(
+	(JSON.parse(readSrdFile('domains.json')) as { id: string; en: string; fr: string }[]).map((d) => [d.id, d])
+);
 const domainsEn: Record<string, string> = Object.fromEntries(
 	(JSON.parse(readSrdFile('domains.json')) as { id: string; en: string }[]).map((d) => [d.id, d.en])
 );
@@ -245,6 +248,19 @@ export function cardsByIds(ids: string[], lang: Lang): CardPick[] {
 	return ids.flatMap((id) => {
 		const d = all.find((x) => x.element.id === id);
 		return d ? [toCardPick(d, lang)] : [];
+	});
+}
+
+/** Domains of an SRD class (by English name, any case): raw ids ("BLADE"), localized name and help text. `[]` for other classes. */
+export function domainsOfClass(className: string, lang: Lang): { id: string; name: string; help: string }[] {
+	const cls = data.get('classes')!.find((c) => c.element.name === String(className ?? '').toUpperCase());
+	return ((cls?.element.domains as string[] | undefined) ?? []).map((id) => {
+		const domId = `core_domain_${id.toLowerCase()}`;
+		return {
+			id,
+			name: localize(domId, id.charAt(0) + id.slice(1).toLowerCase(), lang),
+			help: domainsHelp[domId]?.[lang] ?? ''
+		};
 	});
 }
 

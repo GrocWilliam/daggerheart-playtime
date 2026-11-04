@@ -2,7 +2,7 @@ import { and, eq, sql } from 'drizzle-orm';
 import * as z from 'zod';
 import { characters, items } from './schema';
 import { OBJECT_ERROR, intField, safeIntField, strField } from './campaigns';
-import { getSrd } from './srd';
+import { domainsOfClass, getSrd } from './srd';
 
 /** Drizzle select shape giving the snake_case row that `characterJson` reads. */
 const characterSelect = {
@@ -86,6 +86,7 @@ export function characterJson(r: any) {
 		campaignId: r.campaign_id,
 		name: r.name,
 		class: r.class,
+		domains: domainsOfClass(r.class, 'en').map((d) => d.id),
 		level: r.level,
 		evasion: r.evasion,
 		majorThreshold: r.major_threshold,

@@ -33,6 +33,13 @@
 	{#if c.hp.marked === c.hp.max}<span class="inline-block rounded-[999px] px-[0.6rem] text-[0.875rem] text-bg bg-danger" data-testid="down">{t('badge.down')}</span>{/if}
 </h1>
 <p class="muted">{c.class}, {t('character.level')} {c.level} <Help id="level" name={t('character.level')} lang={data.lang} /></p>
+{#if data.domains.length}
+	<ul class="mt-0 mb-3 flex list-none flex-wrap gap-x-4 pl-0!">
+		{#each data.domains as d (d.id)}
+			<li data-testid="domain">{d.name} <Help id={d.id} name={d.name} text={d.help} lang={data.lang} /></li>
+		{/each}
+	</ul>
+{/if}
 <Chosen chosen={data.chosen} lang={data.lang} />
 
 {#if form?.error}<p role="alert">{t(form.error)}</p>{/if}
