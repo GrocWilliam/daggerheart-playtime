@@ -4,6 +4,16 @@ import { describe, it, expect } from 'vitest';
 const css = readFileSync(new URL('./app.css', import.meta.url), 'utf8');
 const html = readFileSync(new URL('./app.html', import.meta.url), 'utf8');
 
+describe('size budget', () => {
+	it('stays under 150 lines (import, palette, theme, base and the few rules utilities cannot express)', () => {
+		expect(css.replace(/\n$/, '').split('\n').length).toBeLessThan(150);
+	});
+	it('has no leftover reference/help rules, only the details marker', () => {
+		expect(css).not.toMatch(/\.(help|ref-list|ref-item|list)\b|ul\.list/);
+		expect(css).toContain('::-webkit-details-marker');
+	});
+});
+
 describe('mobile base', () => {
 	it('declares the viewport meta tag', () => {
 		expect(html).toContain('<meta name="viewport" content="width=device-width, initial-scale=1" />');
@@ -20,7 +30,7 @@ describe('mobile base', () => {
 describe('touch targets', () => {
 	it('sizes links, inputs and checkbox labels to 2.75rem (44px)', () => {
 		expect(css).toMatch(/\ba\s*\{[^}]*min-height: 2\.75rem/);
-		expect(css).toMatch(/textarea\s*\{[^}]*min-height: 2\.75rem/);
+		expect(css).toMatch(/textarea,\s*button\s*\{[^}]*min-height: 2\.75rem/);
 		expect(css).toMatch(/label:has\(input\[type='checkbox'\]\)\s*\{[^}]*min-height: 2\.75rem/);
 	});
 });

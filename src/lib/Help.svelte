@@ -23,16 +23,16 @@
 			.replace(/([Vv])(ulnerable)/g, (_m, a, b) => `&#${a.charCodeAt(0)};${b}`);
 </script>
 
-<details data-testid="help" data-help={id} class="help">
-	<summary aria-label="{translate(lang, 'help.label')} {name}">?</summary>
-	<span class="help-body">
+<details data-testid="help" data-help={id} class="inline-block align-middle open:min-w-0 open:shrink">
+	<summary class="inline-flex min-h-11 min-w-11 cursor-pointer list-none items-center justify-center font-bold" aria-label="{translate(lang, 'help.label')} {name}">?</summary>
+	<span class="block border-l-3 border-muted px-2 py-1">
 		<strong>{name}</strong>
 		{#if en}
-			<span lang="en" class="help-text">
-				{#each en as line, i (i)}<span class="help-line">{line}</span>{/each}
+			<span lang="en" class="block">
+				{#each en as line, i (i)}<span class="my-1 block">{line}</span>{/each}
 			</span>
 		{:else if term}
-			<span class="help-line">{@html safe(term[lang])}</span>
+			<span class="my-1 block">{@html safe(term[lang])}</span>
 		{/if}
 	</span>
 </details>

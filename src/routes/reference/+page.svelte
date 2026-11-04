@@ -8,7 +8,7 @@
 
 <h1>{t('reference.title')}</h1>
 
-<form method="GET" action="/reference">
+<form method="GET" action="/reference" class="flex flex-wrap gap-2 p-2!">
 	<label>
 		{t('reference.kind')}
 		<select name="kind">
@@ -26,10 +26,10 @@
 	{#if kinds.includes(s.kind) && (s.items.length > 0 || !data.q)}
 		<section data-testid="ref-{s.kind}">
 			<h2>{t(`reference.kind.${s.kind}`)}</h2>
-			<ul class="ref-list list">
+			<ul class="mt-0 mb-3 list-none pl-0" class:list={true}>
 				{#each s.items as item (item.id)}
-					<li data-testid="ref-item" class="ref-item">
-						<span class="ref-name">{item.name}</span>
+					<li data-testid="ref-item" class="mb-3 flex flex-wrap items-center gap-2 rounded-lg border-l-3 border-accent bg-surface px-3 py-2 wrap-anywhere last:mb-0">
+						<span>{item.name}</span>
 						<Help id={item.id} name={item.name} lang={data.lang} en={item.en} />
 					</li>
 				{/each}
@@ -37,28 +37,3 @@
 		</section>
 	{/if}
 {/each}
-
-<style>
-	.ref-list {
-		list-style: none;
-		padding: 0;
-	}
-	.ref-item {
-		display: flex;
-		flex-wrap: wrap;
-		align-items: center;
-		gap: 0.5rem;
-		overflow-wrap: anywhere;
-	}
-	form {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 0.5rem;
-		padding: 0.5rem;
-	}
-	select,
-	input,
-	button {
-		min-height: 2.75rem;
-	}
-</style>

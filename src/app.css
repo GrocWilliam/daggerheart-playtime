@@ -32,72 +32,24 @@ html {
 		border-style: none; /* preflight makes it solid; the old pages expect none */
 	}
 
-	body {
-		background-color: var(--bg);
-		color: var(--text);
-		font-family: 'EB Garamond', serif;
-		font-size: 16px;
-		line-height: 1.4;
-	}
-
-	h1,
-	h2,
-	h3 {
-		font-family: Cinzel, serif;
-		font-weight: 700;
-	}
-
+	body { font-family: 'EB Garamond', serif; line-height: 1.4; }
+	h1, h2, h3 { font-family: Cinzel, serif; font-weight: 700; }
 	h1 { font-size: 1.5rem; margin-block: 0.67em; }
 	h2 { font-size: 1.25rem; margin-block: 0.83em; }
 	h3 { font-size: 1.125rem; margin-block: 1em; }
+	p, ul, ol, dl { margin-block: 1em; }
+	ul ul, ol ol, ul ol, ol ul { margin-block: 0; }
+	a { text-decoration: underline; }
+	ul { list-style: disc; padding-left: 1.25rem; }
+	ol { list-style: decimal; padding-left: 1.25rem; }
 
-	p,
-	ul,
-	ol,
-	dl {
-		margin-block: 1em;
-	}
-
-	ul ul,
-	ol ol,
-	ul ol,
-	ol ul {
-		margin-block: 0;
-	}
-
-	a {
-		color: var(--accent);
-		text-decoration: underline;
-		min-height: 2.75rem;
-		min-width: 2.75rem;
-	}
-
-	ul {
-		list-style: disc;
-		padding-left: 1.25rem;
-	}
-
-	ol {
-		list-style: decimal;
-		padding-left: 1.25rem;
-	}
-
-	input,
-	select,
-	textarea,
-	button {
+	input, select, textarea, button {
 		font: inherit;
 		font-size: 16px;
-		color: revert;
-		border: revert;
-		border-radius: revert;
-		background-color: revert;
 		min-height: 2.75rem;
 	}
 
-	button {
-		cursor: pointer;
-	}
+	button { cursor: pointer; }
 
 	:focus-visible {
 		outline: 2px solid var(--tea\6c);
@@ -105,340 +57,54 @@ html {
 	}
 }
 
-*,
-*::before,
-*::after {
-	box-sizing: border-box;
-}
-
-html {
-	-webkit-text-size-adjust: 100%;
-}
-
-body {
-	background-color: var(--bg);
-	color: var(--text);
-	margin: 0;
-	padding: 0.75rem;
-	font-family: 'EB Garamond', serif;
-	font-size: 16px;
-	line-height: 1.4;
-	overflow-wrap: anywhere;
-}
-
-main,
-body > div {
-	max-width: 100%;
-}
-
-h1,
-h2,
-h3,
-[data-testid='character-name'] {
-	font-family: Cinzel, serif;
-	font-weight: 700;
-}
-
-h1 { font-size: 1.5rem; }
-h2 { font-size: 1.25rem; }
-h3 { font-size: 1.125rem; }
-
-input,
-select,
-textarea,
-button {
-	font: inherit;
-	font-size: 16px;
-	max-width: 100%;
-}
-
-input[type='text'],
-input[type='number'],
-select,
-textarea {
-	width: 100%;
-	padding: 0.5rem;
-}
-
-a {
-	display: inline-flex;
-	align-items: center;
-	min-height: 2.75rem;
-	min-width: 2.75rem;
-}
-
-input[type='text'],
-input[type='number'],
-select,
-textarea {
-	min-height: 2.75rem;
-}
-
-label:has(input[type='checkbox']) input {
-	width: 1.5rem;
-	height: 1.5rem;
-	margin: 0;
-}
-
-label:has(input[type='checkbox']) {
-	min-height: 2.75rem;
-	min-width: 2.75rem;
-}
-
-button {
-	min-height: 2.75rem;
-	min-width: 2.75rem;
-	padding: 0.25rem 0.75rem;
-}
-
-label {
-	display: block;
-	margin-bottom: 0.5rem;
-}
-
-label:has(input[type='checkbox']) {
-	display: flex;
-	align-items: center;
-	gap: 0.5rem;
-}
-
-form {
-	margin-bottom: 0.75rem;
-}
-
-ul {
-	padding-left: 1.25rem;
-}
-
-article {
-	background-color: var(--surface);
-	border: 2px solid var(--accent);
-	border-radius: 0.5rem;
-	padding: 0.75rem;
-	margin-bottom: 1rem;
-}
-
-@media (min-width: 768px) {
-	body {
-		padding: 1.5rem;
-		max-width: 60rem;
-		margin: 0 auto;
-	}
-
-	input[type='text'],
-	input[type='number'],
-	select,
-	textarea {
-		width: auto;
-		min-width: 12rem;
-	}
-
-	textarea {
-		width: 100%;
-	}
-}
-
+/* Unlayered, so these beat utilities where both match: add `!` to the utility. */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { background-color: var(--bg); color: var(--text); margin: 0; padding: 0.75rem; font-size: 16px; overflow-wrap: anywhere; }
 h1, h2, h3 { color: var(--accent); }
-a { color: var(--accent); }
+a { color: var(--accent); display: inline-flex; align-items: center; min-height: 2.75rem; min-width: 2.75rem; }
 label, .muted { color: var(--muted); }
-[role='alert'] { color: var(--danger); }
-
-input, select, textarea {
-	background-color: var(--bg);
-	color: var(--text);
-	border: 1px solid var(--accent);
-	border-radius: 0.25rem;
-}
-
-button {
-	background-color: var(--accent);
-	color: var(--bg);
-	border: 0;
-	border-radius: 0.25rem;
-}
-
-form {
-	background-color: var(--surface);
-	border-radius: 0.5rem;
-	padding: 0.75rem;
-}
-
+[role='alert'] { color: var(--danger); border-left: 3px solid var(--danger); padding-left: 0.5rem; }
+input, select, textarea, button { max-width: 100%; }
+input, select, textarea { background-color: var(--bg); color: var(--text); border: 1px solid var(--accent); border-radius: 0.25rem; }
+input[type='text'], input[type='number'], select, textarea { width: 100%; padding: 0.5rem; }
+button { min-width: 2.75rem; padding: 0.25rem 0.75rem; background-color: var(--accent); color: var(--bg); border: 0; border-radius: 0.25rem; }
+label { display: block; margin-bottom: 0.5rem; }
+label:has(input[type='checkbox']) { display: flex; align-items: center; gap: 0.5rem; min-height: 2.75rem; min-width: 2.75rem; }
+label:has(input[type='checkbox']) input { width: 1.5rem; height: 1.5rem; margin: 0; }
+label > input[type='text'],
+label > input[type='number'],
+label > input[type='search'],
+label > select { display: block; margin-top: 0.25rem; width: 100%; }
+label > textarea { display: block; margin-top: 0.25rem; }
+input:user-invalid, select:user-invalid, textarea:user-invalid { border-color: var(--danger); }
+form { background-color: var(--surface); border-radius: 0.5rem; padding: 0.75rem; margin-bottom: 0.75rem; }
 /* forms inside tables override the card look */
-table form {
-	background-color: transparent;
-	padding: 0;
-	margin: 0;
-	display: flex;
-	flex-wrap: nowrap;
-	align-items: center;
-	gap: 0.5rem;
-}
-
-table {
-	width: 100%;
-	border-collapse: collapse;
-	position: relative;
-}
-
-table,
-tbody,
-tr,
-td {
-	display: block;
-	max-width: 100%;
-}
-
-th,
-td {
-	text-align: left;
-	padding: 0.5rem;
-	vertical-align: top;
-	overflow-wrap: anywhere;
-}
-
-th {
-	color: var(--muted);
-	border-bottom: 1px solid var(--accent);
-}
-
-tbody tr {
-	border-bottom: 1px solid var(--muted);
-	background-color: var(--surface);
-	border: 1px solid var(--muted);
-	border-radius: 0.5rem;
-	margin-bottom: 0.75rem;
-}
-
+table form { background-color: transparent; padding: 0; margin: 0; display: flex; flex-wrap: nowrap; align-items: center; gap: 0.5rem; }
+article { background-color: var(--surface); border: 2px solid var(--accent); border-radius: 0.5rem; padding: 0.75rem; margin-bottom: 1rem; }
+table { width: 100%; border-collapse: collapse; position: relative; }
+table, tbody, tr, td { display: block; max-width: 100%; }
+th, td { text-align: left; padding: 0.5rem; vertical-align: top; overflow-wrap: anywhere; }
+th { color: var(--muted); border-bottom: 1px solid var(--accent); }
+tbody tr { background-color: var(--surface); border: 1px solid var(--muted); border-radius: 0.5rem; margin-bottom: 0.75rem; }
 /* phones: header visually hidden, still exposed to assistive tech */
-thead {
-	position: absolute;
-	width: 1px;
-	height: 1px;
-	overflow: hidden;
-	clip: rect(0 0 0 0);
-	clip-path: inset(50%);
-	white-space: nowrap;
-}
-
+thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
 @media (min-width: 600px) {
 	table { display: table; }
 	thead { display: table-header-group; position: static; width: auto; height: auto; overflow: visible; clip: auto; clip-path: none; white-space: normal; }
 	tbody { display: table-row-group; }
 	tr { display: table-row; }
 	td { display: table-cell; }
-	tbody tr {
-		background-color: transparent;
-		border: 0;
-		border-bottom: 1px solid var(--muted);
-		border-radius: 0;
-		margin-bottom: 0;
-	}
+	tbody tr { background-color: transparent; border: 0; border-bottom: 1px solid var(--muted); border-radius: 0; margin-bottom: 0; }
 }
-
-label > input[type='text'],
-label > input[type='number'],
-label > input[type='search'],
-label > select {
-	display: block;
-	margin-top: 0.25rem;
-	width: 100%;
-	max-width: 100%;
-}
-
-label > textarea {
-	display: block;
-	margin-top: 0.25rem;
-}
-
 @media (min-width: 768px) {
-	label > input[type='text'],
-	label > input[type='number'],
-	label > input[type='search'],
-	label > select {
-		max-width: 24rem;
-	}
+	body { padding: 1.5rem; max-width: 60rem; margin: 0 auto; }
+	input[type='text'], input[type='number'], select, textarea { width: auto; min-width: 12rem; }
+	textarea { width: 100%; }
+	label > input[type='text'], label > input[type='number'], label > input[type='search'], label > select { max-width: 24rem; }
 }
-
-input:user-invalid,
-select:user-invalid,
-textarea:user-invalid {
-	border-color: var(--danger);
-}
-
-[role='alert'] {
-	border-left: 3px solid var(--danger);
-	padding-left: 0.5rem;
-}
-
-/* --tea\6c is --teal; escaped so the palette scan does not read it as a colour name */
-:focus-visible {
-	outline: 2px solid var(--tea\6c);
-	outline-offset: 2px;
-}
-
 @media (min-width: 1024px) {
-	body {
-		max-width: 72rem;
-	}
+	body { max-width: 72rem; }
 }
-
-.help {
-	display: inline-block;
-	vertical-align: middle;
-}
-
-.help > summary {
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	min-width: 2.75rem;
-	min-height: 2.75rem;
-	cursor: pointer;
-	list-style: none;
-	font-weight: bold;
-}
-
-.help > summary::-webkit-details-marker {
-	display: none;
-}
-
-.help[open] {
-	min-width: 0;
-	flex-shrink: 1;
-}
-
-.help-body,
-.help-text {
-	display: block;
-}
-
-.help-body {
-	padding: 0.25rem 0.5rem;
-	border-left: 3px solid var(--muted);
-}
-
-.help-line {
-	display: block;
-	margin: 0.25rem 0;
-}
-
-ul.list {
-	list-style-type: none;
-	padding-left: 0;
-	margin: 0 0 0.75rem;
-}
-
-.list > li {
-	background-color: var(--surface);
-	border-left: 3px solid var(--accent);
-	border-radius: 0.5rem;
-	margin-bottom: 0.75rem;
-}
-
-.list > li:last-child {
-	margin-bottom: 0;
-}
-
-.list > li.ref-item {
-	padding: 0.5rem 0.75rem;
-}
+/* The help "?" summary: utilities cannot hide the engine's disclosure marker. */
+summary::-webkit-details-marker { display: none; }

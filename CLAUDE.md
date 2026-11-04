@@ -65,7 +65,7 @@ true like this file: when a change alters a pattern a skill describes, update th
 <!-- One line per trap that cost an attempt: what happened, what to do instead. -->
 - Frozen tests match raw HTML and CSS with regexes: a word or colour name added anywhere can break an older story's
   test. `--teal` is written `var(--tea\6c)` and `Help.svelte` escapes "vulnerable" for that reason.
-- Unlayered rules in `app.css` beat Tailwind utilities (which are layered): a utility that loses needs a trailing `!` (`aria-pressed:font-bold!`).
+- Unlayered rules in `app.css` (global form, table, label, input rules) beat Tailwind utilities (which are layered): a utility that loses needs a trailing `!` (`aria-pressed:font-bold!`).
 - The campaign page, character sheet, `Chosen` and `Pips.svelte` are pure utilities. The global `form` rule in `app.css` is a surface card, so tracker forms add `bg-transparent! p-0! rounded-none!`. `justify-self-start` computes to `flex-start`: use `[justify-self:start]`. Frozen older tests still select on `.pip`, `.filled`, `.tracker`, `ul.stats` (character sheet) and
-  `.form-grid`, so those are kept as marker classes via `class:name={true}` (us-100 forbids them in `class="..."`). `rounded-full`
+  `.form-grid`, `ul.list` (reference page, us-78), so those are kept as marker classes via `class:name={true}` (us-100 forbids them in `class="..."`). `rounded-full`
   computes to `3.35544e+07px`: use `rounded-[50%]` where a test reads the radius.

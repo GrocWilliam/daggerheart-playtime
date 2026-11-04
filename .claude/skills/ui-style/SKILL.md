@@ -18,11 +18,11 @@ description: Build or restyle a page, form, component or layout in daggerheart-p
 
 ## Styles
 
-- Layout, home page, campaign page, character sheet, `Chosen`, `Pips` and `LanguageSwitcher` are styled with Tailwind utilities in the markup (the pattern for migrating the rest);
-  other pages still use `src/app.css`. No `<style>` blocks, no inline styles. Tailwind v4 is set up (`@import "tailwindcss";`
-  first, plugin before `sveltekit()` in `vite.config.ts`). Old page rules stay unlayered so they beat preflight; `@layer base`
-  restores what preflight resets.
-  Unlayered rules beat utilities: where one still matches (`button { font }`, `ul { padding-left }`), add `!` to the utility (`pl-0!`).
+- Every page and component is styled with Tailwind utilities in the markup. No `<style>` blocks, no inline styles
+  (`style=`). Tailwind v4 is set up (`@import "tailwindcss";` first, plugin before `sveltekit()` in `vite.config.ts`).
+- `src/app.css` (under 150 lines, asserted by `app.css.test.ts`) holds only the import, palette, `@theme`, `@layer base`
+  (restores what preflight resets) and global element rules (forms, tables, labels) plus the details marker rule. Do not add page
+  rules there. Those element rules are unlayered and beat utilities: where one matches, add `!` to the utility (`p-2!`, `pl-0!`).
 - Tailwind tokens live in `@theme static` and only reference the palette: `bg surface text muted accent danger calm`
   (`text-calm`, `bg-surface`...; `calm` is `var(--tea\6c)`), fonts `font-display` (Cinzel), `font-body` (EB Garamond).
   Never use Tailwind's default palette (`red-500`...) and never write a colour literal or colour name after a `:` in
