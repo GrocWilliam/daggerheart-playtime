@@ -1,6 +1,8 @@
 import { fail, redirect } from '@sveltejs/kit';
-import { ApiError, createCampaign, listCampaigns } from '$lib/server/campaigns';
-import type { Actions, PageServerLoad } from './$types';
+import { ApiError } from '$lib/server/errors';
+import { createCampaign, listCampaigns } from '$lib/server/features/campaigns';
+type Actions = import('./$types').Actions;
+type PageServerLoad = import('./$types').PageServerLoad;
 
 export const load: PageServerLoad = async () => ({ campaigns: await listCampaigns() });
 

@@ -1,8 +1,8 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
-import en from './i18n/en.json';
-import fr from './i18n/fr.json';
-import glossary from './srd/glossary.json';
+import en from '$lib/i18n/en.json';
+import fr from '$lib/i18n/fr.json';
+import glossary from '$lib/srd/glossary.json';
 
 describe('help', () => {
 	it('has a help label in both languages', () => {

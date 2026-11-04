@@ -20,12 +20,15 @@ the one that matches your change. This file lists only where we differ or add to
 
 | Path | What |
 |---|---|
-| `src/lib/server/*.ts` | Domain logic and queries: `campaigns.ts`, `characters.ts`, `srd.ts`. Zod input schemas live here. |
+| `src/lib/server/features/*.ts` | Domain logic and queries (`campaigns.ts`, `characters.ts`, `srd.ts`, `language.ts`), their Zod schemas with the inferred types, and colocated tests. |
+| `src/lib/server/errors.ts` | `ApiError`, `errorResponse`, `api()`, `parse`, `readJson`. |
+| `src/lib/utils/validation.ts` | Shared Zod field helpers: `strField`, `intField`, `safeIntField`, `OBJECT_ERROR`, `idSchema`. |
+| `src/app.test.ts` | Tests `src/app.css` (palette). |
 | `src/lib/server/schema.ts` | The Drizzle schema. `drizzle.config.ts` points drizzle-kit at it; output goes to `drizzle/`. |
 | `src/lib/server/db.ts` | Connection (`getDb`, `getDrizzle`) and startup migrations. |
 | `src/routes/api/**/+server.ts` | JSON API. Handlers are wrapped in `api(...)` and throw `ApiError(status, msg)` → `{"error": msg}`. |
 | `src/routes/**/+page.server.ts` | Pages: `load` + form `actions` that call the JSON API through `fetch`, not the DB directly. |
-| `src/lib/*.svelte` | Shared components (`Pips`, `Help`, `Chosen`, `LanguageSwitcher`). `Help` takes either a glossary `id` or a `text` prop (a catalog string, e.g. `trait.help.*`). |
+| `src/lib/components/*.svelte` | Shared components (`Pips`, `Help`, `Chosen`, `LanguageSwitcher`). `Help` takes either a glossary `id` or a `text` prop (a catalog string, e.g. `trait.help.*`). |
 | `src/lib/i18n/{en,fr}.json` | Every UI string, by key. `src/lib/i18n/index.ts` has the helpers; pages get `data.lang`. |
 | `src/lib/srd/` | SRD data (JSON) and its licence; `fr.json` holds the French names. |
 | `src/app.css` | Tailwind import, palette variables, `@theme static` tokens, `@layer base` and global element rules only. |
@@ -36,8 +39,15 @@ the one that matches your change. This file lists only where we differ or add to
 
 ## Conventions
 
+### Code organisation
+- A feature never imports another feature's helpers: shared code goes to `src/lib/server/errors.ts` or `src/lib/utils/`. A feature may call another for domain data (e.g. `characters.ts` calling `getSrd` from `srd.ts`).
+- `src/lib/utils/` is pure: it imports nothing from `$lib/server`, `node:*`, `drizzle-orm` or `@sveltejs/kit`.
+- Types stay beside the Zod schema they are inferred from. No catch-all types file.
+- `src/lib` has only folders at its root.
+- Handlers import `json` from `@sveltejs/kit`, not from a feature.
+
 ### Validation (zod)
-- Zod 4 schemas live in `src/lib/server/<domain>.ts`; handlers call `parse(schema, body)` (`campaigns.ts`) → 400 with the
+- Zod 4 schemas live in `src/lib/server/<domain>.ts`; handlers call `parse(schema, body)` (`src/lib/server/errors.ts`) → 400 with the
   first issue's message; `parse(schema, v, 404)` for route params that 404. The response is `{"error": msg}` only.
 - Exact-messages rule: the message in the schema is the API contract (`strField`, `intField`, `safeIntField` build fields
   with the project's messages). Schemas that depend on a row are factories. Unit-test each message without a database.

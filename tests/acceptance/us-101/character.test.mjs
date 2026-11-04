@@ -9,7 +9,7 @@ const BASE = process.env.BASE_URL;
 const read = (p) => readFileSync(join(ROOT, p), 'utf8');
 const stripComments = (s) => s.replace(/\/\*[\s\S]*?\*\//g, '');
 const PAGE = 'src/routes/characters/[id]/+page.svelte';
-const FILES = [PAGE, 'src/lib/Chosen.svelte'];
+const FILES = [PAGE, 'src/lib/components/Chosen.svelte'];
 
 test('app.css no longer has the .tracker, .stats, .form-grid and .chosen rules', () => {
 	const css = stripComments(read('src/app.css'));
@@ -36,7 +36,7 @@ test('character page and Chosen use utilities: no <style>, no style=, no old cla
 	for (const id of ['character-name', 'down', 'evasion', 'thresholds', 'condition-vulnerable', 'condition-restrained', 'condition-hidden', 'notes', 'gold', 'inventory', 'item-row', 'item', 'card'])
 		assert.ok(src.includes(`data-testid="${id}"`), `data-testid ${id} kept`);
 	assert.ok(src.includes('data-testid={key}'), 'tracker testid kept');
-	assert.ok(read('src/lib/Chosen.svelte').includes('data-testid={k}'), 'chosen testid kept');
+	assert.ok(read('src/lib/components/Chosen.svelte').includes('data-testid={k}'), 'chosen testid kept');
 });
 
 function walk(dir, out = []) {

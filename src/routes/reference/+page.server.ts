@@ -1,5 +1,5 @@
-import { searchSrd, srdSearchSchema } from '$lib/server/srd';
-import type { PageServerLoad } from './$types';
+import { searchSrd, srdSearchSchema } from '$lib/server/features/srd';
+type PageServerLoad = import('./$types').PageServerLoad;
 
 export const load: PageServerLoad = ({ url, locals }) => {
 	const { kind, q } = srdSearchSchema.parse({

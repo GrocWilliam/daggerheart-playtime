@@ -15,7 +15,7 @@ const send = (m, p, body, raw) =>
 const mk = async (name) => (await (await send('POST', '/api/campaigns', { name })).json());
 
 test('campaigns.ts holds no raw SQL outside sql template fragments', () => {
-	const lines = fs.readFileSync(path.join(ROOT, 'src/lib/server/campaigns.ts'), 'utf8').split('\n');
+	const lines = fs.readFileSync(path.join(ROOT, 'src/lib/server/features/campaigns.ts'), 'utf8').split('\n');
 	const bad = lines.filter((l) => /SELECT|INSERT|UPDATE|DELETE/.test(l) && !/\bsql\b|sql`/.test(l));
 	assert.deepEqual(bad, []);
 	const src = lines.join('\n');
@@ -40,14 +40,14 @@ test('campaign API handlers use the Drizzle builder, not db.query', () => {
 });
 
 test('campaigns.test.ts runs on PGlite and covers list, create, read, fear clamping at 0 and 12, delete', () => {
-	const file = path.join(ROOT, 'src/lib/server/campaigns.test.ts');
+	const file = path.join(ROOT, 'src/lib/server/features/campaigns.test.ts');
 	const t = fs.readFileSync(file, 'utf8');
 	assert.match(t, /listCampaigns|list/i);
 	assert.match(t, /createCampaign|create/i);
 	assert.match(t, /\b12\b/);
 	assert.match(t, /delete/i);
 	assert.match(t, /memory:\/\/|pglite/i);
-	execSync('npx vitest run src/lib/server/campaigns.test.ts', { cwd: ROOT, stdio: 'pipe' });
+	execSync('npx vitest run src/lib/server/features/campaigns.test.ts', { cwd: ROOT, stdio: 'pipe' });
 });
 
 test('endpoints: create returns 201 with exactly id, name, fear; list keeps creation order', async () => {

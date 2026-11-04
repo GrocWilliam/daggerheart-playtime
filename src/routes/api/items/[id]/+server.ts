@@ -1,6 +1,8 @@
-import { ApiError, api, idSchema, json, parse, readJson } from '$lib/server/campaigns';
-import { deleteItem, itemQuantitySchema, setItemQuantity } from '$lib/server/characters';
-import type { RequestHandler } from './$types';
+import { json } from '@sveltejs/kit';
+import { ApiError, api, parse, readJson } from '$lib/server/errors';
+import { idSchema } from '$lib/utils/validation';
+import { deleteItem, itemQuantitySchema, setItemQuantity } from '$lib/server/features/characters';
+type RequestHandler = import('./$types').RequestHandler;
 
 export const PATCH: RequestHandler = api(async ({ params, request }) => {
 	const id = parse(idSchema, params.id);

@@ -1,7 +1,8 @@
 import { error, fail } from '@sveltejs/kit';
-import { pickList, pickOf, subclassesOf, getSrd, cardsByIds, cardGroups, domainsOfClass, itemGroups, itemPicks } from '$lib/server/srd';
-import { TRAITS, conditionFieldSchema, trackerFieldSchema } from '$lib/server/characters';
-import type { Actions, PageServerLoad } from './$types';
+import { pickList, pickOf, subclassesOf, getSrd, cardsByIds, cardGroups, domainsOfClass, itemGroups, itemPicks } from '$lib/server/features/srd';
+import { TRAITS, conditionFieldSchema, trackerFieldSchema } from '$lib/server/features/characters';
+type Actions = import('./$types').Actions;
+type PageServerLoad = import('./$types').PageServerLoad;
 
 type Fetch = typeof fetch;
 

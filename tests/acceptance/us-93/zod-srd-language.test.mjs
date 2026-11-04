@@ -19,7 +19,7 @@ function walk(dir, out = []) {
 }
 
 test('schemas: srd.ts exports Zod schemas and the manual isSrdKind check is gone', () => {
-	const srd = fs.readFileSync(path.join(ROOT, 'src/lib/server/srd.ts'), 'utf8');
+	const srd = fs.readFileSync(path.join(ROOT, 'src/lib/server/features/srd.ts'), 'utf8');
 	assert.match(srd, /from 'zod(\/v4)?'/);
 	assert.match(srd, /export const \w+\s*=\s*z\./);
 	assert.doesNotMatch(srd, /export function isSrdKind/);

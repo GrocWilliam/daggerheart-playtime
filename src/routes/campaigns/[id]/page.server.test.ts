@@ -12,7 +12,7 @@ describe('campaign page server', () => {
 	});
 
 	it('load returns the campaign', async () => {
-		const r = await load({ params: { id: 'x' }, fetch: reply(200, { id: 'x', fear: 1 }) } as never);
+		const r = (await load({ params: { id: 'x' }, fetch: reply(200, { id: 'x', fear: 1 }) } as never)) as unknown as { picks: Record<string, { value: string; label: string }[]> };
 		expect(r).toMatchObject({ campaign: { id: 'x', fear: 1 }, chosen: {} });
 		expect(r.picks.class).toHaveLength(9);
 		expect(r.picks.class[0]).toEqual({ value: 'Bard', label: 'Bard' });

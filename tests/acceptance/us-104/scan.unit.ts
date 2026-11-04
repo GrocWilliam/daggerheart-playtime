@@ -12,7 +12,7 @@ function walk(dir: string): string[] {
 		return statSync(p).isDirectory() ? walk(p) : [p];
 	});
 }
-const files = [...walk(path.join(ROOT, 'src/routes')), ...readdirSync(path.join(ROOT, 'src/lib')).map((f) => path.join(ROOT, 'src/lib', f))].filter((f) => f.endsWith('.svelte'));
+const files = [...walk(path.join(ROOT, 'src/routes')), ...readdirSync(path.join(ROOT, 'src/lib/components')).map((f) => path.join(ROOT, 'src/lib/components', f))].filter((f) => f.endsWith('.svelte'));
 const ATTRS = ['aria-label', 'title', 'placeholder', 'alt'];
 const hasLetters = (s: string) => /\p{L}/u.test(s);
 

@@ -1,5 +1,7 @@
-import { api, createCampaign, json, listCampaigns, readJson } from '$lib/server/campaigns';
-import type { RequestHandler } from './$types';
+import { json } from '@sveltejs/kit';
+import { api, readJson } from '$lib/server/errors';
+import { createCampaign, listCampaigns } from '$lib/server/features/campaigns';
+type RequestHandler = import('./$types').RequestHandler;
 
 export const GET: RequestHandler = api(async () => json(await listCampaigns()));
 

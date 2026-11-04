@@ -1,9 +1,6 @@
 import { afterAll, describe, expect, it } from 'vitest';
-import { ApiError, parse } from './campaigns';
-import {
-	cardIdSchema, characterJson, conditionsSchema, createSchema, damageSchema, deltaSchema,
-	goldSchema, itemCreateSchema, itemQuantitySchema, patchSchema, trackerSchema
-} from './characters';
+import { ApiError, parse } from '../errors';
+import { cardIdSchema, characterJson, conditionsSchema, createSchema, damageSchema, deltaSchema, goldSchema, itemCreateSchema, itemQuantitySchema, patchSchema, trackerSchema } from './characters';
 
 /** The 400 message `parse` gives for `body`, or null when valid. */
 function msg(schema: Parameters<typeof parse>[0], body: unknown): string | null {
@@ -157,7 +154,7 @@ describe('trackerSchema', () => {
 
 import * as m from './characters';
 import { createCampaign } from './campaigns';
-import { getDb } from './db';
+import { getDb } from '../db';
 
 afterAll(async () => {
 	await (await getDb()).close?.();

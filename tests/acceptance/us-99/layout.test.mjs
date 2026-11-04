@@ -8,7 +8,7 @@ const ROOT = process.env.ROOT;
 const BASE = process.env.BASE_URL;
 const read = (p) => readFileSync(join(ROOT, p), 'utf8');
 const stripComments = (s) => s.replace(/\/\*[\s\S]*?\*\//g, '');
-const FILES = ['src/routes/+layout.svelte', 'src/routes/+page.svelte', 'src/lib/LanguageSwitcher.svelte'];
+const FILES = ['src/routes/+layout.svelte', 'src/routes/+page.svelte', 'src/lib/components/LanguageSwitcher.svelte'];
 
 test('app.css has none of the old selectors for the layout, switcher and home page', () => {
 	const css = stripComments(read('src/app.css'));
@@ -32,7 +32,7 @@ test('layout, home page and language switcher use utilities: no <style> block, n
 			assert.ok(!/-(white|black|teal|gray|red|blue|green)-\d{2,3}$/.test(c), `${f}: default palette ${c}`);
 		}
 	}
-	const sw = read('src/lib/LanguageSwitcher.svelte') + read('src/routes/+layout.svelte') + read('src/routes/+page.svelte');
+	const sw = read('src/lib/components/LanguageSwitcher.svelte') + read('src/routes/+layout.svelte') + read('src/routes/+page.svelte');
 	for (const id of ['nav-home', 'nav-reference', 'srd-licence', 'language-switcher', 'lang-en', 'lang-fr', 'campaign-link'])
 		assert.ok(sw.includes(`data-testid="${id}"`) || sw.includes(`data-testid='${id}'`), `data-testid ${id} kept`);
 });

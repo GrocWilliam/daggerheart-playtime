@@ -1,7 +1,7 @@
 import { and, eq, sql } from 'drizzle-orm';
 import * as z from 'zod';
-import { characters, items } from './schema';
-import { OBJECT_ERROR, intField, safeIntField, strField } from './campaigns';
+import { characters, items } from '../schema';
+import { OBJECT_ERROR, intField, safeIntField, strField } from '../../utils/validation';
 import { domainsOfClass, getSrd } from './srd';
 
 /** Drizzle select shape giving the snake_case row that `characterJson` reads. */
@@ -45,7 +45,7 @@ const characterSelect = {
 
 /** The characters of a campaign, oldest first, as API JSON. */
 export async function campaignCharacters(campaignId: string) {
-	const { getDrizzle } = await import('./db');
+	const { getDrizzle } = await import('../db');
 	const db = await getDrizzle();
 	const rows = await db
 		.select(characterSelect)
@@ -57,7 +57,7 @@ export async function campaignCharacters(campaignId: string) {
 
 /** Inserts a character into a campaign (which must exist) and returns it as API JSON. */
 export async function insertCharacter(campaignId: string, f: CreateCharacter) {
-	const { getDrizzle } = await import('./db');
+	const { getDrizzle } = await import('../db');
 	const db = await getDrizzle();
 	const [row] = await db
 		.insert(characters)
@@ -292,7 +292,7 @@ export type CardId = z.infer<typeof cardIdSchema>;
 // ---- Database operations. Each is one atomic statement (or a row-locking transaction). ----
 
 async function conn() {
-	const { getDrizzle } = await import('./db');
+	const { getDrizzle } = await import('../db');
 	return getDrizzle();
 }
 

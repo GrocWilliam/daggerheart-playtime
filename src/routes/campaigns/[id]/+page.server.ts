@@ -1,7 +1,8 @@
 import { error, fail } from '@sveltejs/kit';
-import { idByName, pickList, pickOf } from '$lib/server/srd';
-import { trackerFieldSchema } from '$lib/server/characters';
-import type { Actions, PageServerLoad } from './$types';
+import { idByName, pickList, pickOf } from '$lib/server/features/srd';
+import { trackerFieldSchema } from '$lib/server/features/characters';
+type Actions = import('./$types').Actions;
+type PageServerLoad = import('./$types').PageServerLoad;
 
 type Fetch = typeof fetch;
 

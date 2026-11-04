@@ -2,10 +2,10 @@
 	// Tracker value colours (hp danger, hope calm); the others keep the text colour.
 	const valColour: Record<string, string> = { hp: 'text-danger', hope: 'text-calm' };
 	import { translate } from '$lib/i18n';
-	import Pips from '$lib/Pips.svelte';
+	import Pips from '$lib/components/Pips.svelte';
 
-	import Help from '$lib/Help.svelte';
-	import Chosen from '$lib/Chosen.svelte';
+	import Help from '$lib/components/Help.svelte';
+	import Chosen from '$lib/components/Chosen.svelte';
 	let { data, form } = $props();
 	const t = (key: string) => translate(data.lang, key);
 	const c = $derived(data.campaign);
@@ -46,7 +46,7 @@
 			{#if ch.hp.marked === ch.hp.max}<span class="inline-block rounded-[999px] px-[0.6rem] text-[0.875rem] text-bg bg-danger" data-testid="down">{t('badge.down')}</span>{/if}
 		</h3>
 		<p class="muted">{ch.class}, {t('character.level')} {ch.level} <Help id="level" name={t('character.level')} lang={data.lang} /></p>
-		<Chosen chosen={data.chosen[ch.id]} lang={data.lang} />
+		<Chosen chosen={(data.chosen as Record<string, never>)[ch.id]} lang={data.lang} />
 		{#each [['hp', 'tracker.hp'], ['stress', 'tracker.stress'], ['hope', 'tracker.hope'], ['armor', 'tracker.armor']] as [key, label] (key)}
 			<form class="mb-3 flex flex-nowrap items-center gap-2 rounded-none! bg-transparent! p-0!"
 				class:tracker={true} method="POST" action="?/tracker">
@@ -99,7 +99,7 @@
 					{t(`field.${k}`)}
 					<select name={k} required={k === 'class'}>
 						{#if k !== 'class'}<option value="">{t('option.none')}</option>{/if}
-						{#each data.picks[k] as o (o.value)}
+						{#each data.picks[k as 'class' | 'ancestry' | 'community'] as o (o.value)}
 							<option value={o.value}>{o.label}</option>
 						{/each}
 					</select>

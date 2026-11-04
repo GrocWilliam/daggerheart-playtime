@@ -1,5 +1,7 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { ApiError, clampFear, idSchema, nameSchema, parse } from './campaigns';
+import { ApiError, parse } from '../errors';
+import { idSchema } from '../../utils/validation';
+import { clampFear, nameSchema } from './campaigns';
 
 /** The 400 message `parse` gives for `body`, or null when valid. */
 function msg(schema: Parameters<typeof parse>[0], body: unknown): string | null {
@@ -49,7 +51,7 @@ describe('clampFear', () => {
 
 describe('createCampaign validation', () => {
 	it('rejects an invalid name before touching the database', async () => {
-		const { createCampaign, ApiError } = await import('./campaigns');
+		const { createCampaign } = await import('./campaigns');
 		await expect(createCampaign({ name: '  ' })).rejects.toBeInstanceOf(ApiError);
 	});
 });
@@ -62,7 +64,7 @@ describe('campaigns on PGlite', () => {
 		m = await import('./campaigns');
 	});
 	afterAll(async () => {
-		await (await (await import('./db')).getDb()).close?.();
+		await (await (await import('../db')).getDb()).close?.();
 	});
 
 	it('creates, lists in order, reads, renames', async () => {

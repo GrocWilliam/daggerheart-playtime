@@ -48,7 +48,7 @@ test('no <style> block and no style= attribute in any .svelte file', () => {
 });
 
 test('reference page and Help use utilities, no old classes, theme tokens only; testids and escaped word kept', () => {
-	for (const f of ['src/routes/reference/+page.svelte', 'src/lib/Help.svelte']) {
+	for (const f of ['src/routes/reference/+page.svelte', 'src/lib/components/Help.svelte']) {
 		const src = read(f);
 		const classes = [...src.matchAll(/class(?::[\w-]+)?\s*=\s*(?:"([^"]*)"|\{`([^`]*)`\})/g)].map((m) => m[1] ?? m[2]).join(' ');
 		assert.ok(/\b(flex|gap-\d|p[xy]?-\d|min-h-\S+|min-w-\S+|list-none|border\S*)/.test(classes), `${f} has no utility classes`);
@@ -60,7 +60,7 @@ test('reference page and Help use utilities, no old classes, theme tokens only; 
 	}
 	const page = read('src/routes/reference/+page.svelte');
 	for (const id of ['ref-item', 'ref-{s.kind}']) assert.ok(page.includes(`data-testid="${id}"`), `testid ${id} kept`);
-	const help = read('src/lib/Help.svelte');
+	const help = read('src/lib/components/Help.svelte');
 	assert.ok(help.includes('data-testid="help"') && help.includes('data-help={id}'), 'Help testids kept');
 	assert.ok(/\(\[Vv\]\)\(ulnerable\)/.test(help) && /&#\$\{/.test(help), 'Help keeps the escaped word');
 });

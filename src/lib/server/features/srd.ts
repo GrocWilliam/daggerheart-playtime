@@ -38,7 +38,7 @@ const FILES: Record<Exclude<SrdKind, 'domains'>, string> = {
 // and relative to the working directory (the repo root) in the built server.
 function readSrdFile(file: string): string {
 	const candidates = [
-		new URL(`../srd/${file}`, import.meta.url),
+		new URL(`../../srd/${file}`, import.meta.url),
 		new URL(`file://${process.cwd()}/src/lib/srd/${file}`)
 	];
 	for (const url of candidates) {

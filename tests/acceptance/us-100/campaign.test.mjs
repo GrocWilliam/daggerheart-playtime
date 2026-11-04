@@ -9,7 +9,7 @@ const BASE = process.env.BASE_URL;
 const read = (p) => readFileSync(join(ROOT, p), 'utf8');
 const stripComments = (s) => s.replace(/\/\*[\s\S]*?\*\//g, '');
 const PAGE = 'src/routes/campaigns/[id]/+page.svelte';
-const FILES = [PAGE, 'src/lib/Pips.svelte'];
+const FILES = [PAGE, 'src/lib/components/Pips.svelte'];
 
 test('app.css no longer has the .party rules', () => {
 	assert.ok(!/\.party\b/.test(stripComments(read('src/app.css'))));
@@ -32,7 +32,7 @@ test('campaign page and Pips use utilities: no <style>, no style=, no old classe
 	const src = read(PAGE);
 	for (const id of ['campaign-name', 'fear', 'character-card', 'character-name', 'down', 'hp', 'stress', 'hope', 'armor', 'evasion', 'thresholds', 'condition-vulnerable', 'condition-restrained', 'condition-hidden'])
 		assert.ok(src.includes(`data-testid="${id}"`) || src.includes(`data-testid={${id}}`) || (['hp', 'stress', 'hope', 'armor'].includes(id) && src.includes('data-testid={key}')), `data-testid ${id} kept`);
-	assert.ok(read('src/lib/Pips.svelte').includes('data-testid="{name}-pips"'));
+	assert.ok(read('src/lib/components/Pips.svelte').includes('data-testid="{name}-pips"'));
 });
 
 function walk(dir, out = []) {

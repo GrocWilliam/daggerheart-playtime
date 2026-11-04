@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { langSchema, resolveLang } from '$lib/i18n';
-import { parse } from './campaigns';
+import { parse } from '../errors';
 import { languageBodySchema } from './language';
 
 const MSG = 'lang must be "en" or "fr"';

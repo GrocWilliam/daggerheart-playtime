@@ -3,7 +3,7 @@
 	import '@fontsource/eb-garamond/400.css';
 	import '@fontsource/eb-garamond/700.css';
 	import '../app.css';
-	import LanguageSwitcher from '$lib/LanguageSwitcher.svelte';
+	import LanguageSwitcher from '$lib/components/LanguageSwitcher.svelte';
 	import { translate } from '$lib/i18n';
 	import { page } from '$app/state';
 	import licence from '$lib/srd/LICENSE.md?raw';

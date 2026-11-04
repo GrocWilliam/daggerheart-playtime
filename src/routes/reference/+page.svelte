@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { translate } from '$lib/i18n';
-	import Help from '$lib/Help.svelte';
+	import Help from '$lib/components/Help.svelte';
 	let { data } = $props();
 	const t = (key: string) => translate(data.lang, key);
 	const kinds = $derived(data.sections.map((s: { kind: string }) => s.kind));

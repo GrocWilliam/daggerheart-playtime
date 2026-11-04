@@ -1,18 +1,9 @@
-import { campaignCharacters } from '$lib/server/characters';
-import {
-	ApiError,
-	api,
-	deleteCampaign,
-	detail,
-	getCampaign,
-	idSchema,
-	json,
-	nameSchema,
-	parse,
-	readJson,
-	renameCampaign
-} from '$lib/server/campaigns';
-import type { RequestHandler } from './$types';
+import { campaignCharacters } from '$lib/server/features/characters';
+import { json } from '@sveltejs/kit';
+import { ApiError, api, parse, readJson } from '$lib/server/errors';
+import { idSchema } from '$lib/utils/validation';
+import { deleteCampaign, detail, getCampaign, nameSchema, renameCampaign } from '$lib/server/features/campaigns';
+type RequestHandler = import('./$types').RequestHandler;
 
 export const GET: RequestHandler = api(async ({ params }) => {
 	const id = parse(idSchema, params.id);

@@ -1,7 +1,7 @@
 import { json } from '@sveltejs/kit';
-import { api, errorResponse, parse } from '$lib/server/campaigns';
-import { getSrd, srdIdSchema, srdKindSchema } from '$lib/server/srd';
-import type { RequestHandler } from './$types';
+import { api, errorResponse, parse } from '$lib/server/errors';
+import { getSrd, srdIdSchema, srdKindSchema } from '$lib/server/features/srd';
+type RequestHandler = import('./$types').RequestHandler;
 
 export const GET: RequestHandler = api(async ({ params, locals }) => {
 	const kind = parse(srdKindSchema, params.kind, 404);

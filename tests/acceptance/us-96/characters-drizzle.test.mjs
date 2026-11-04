@@ -42,7 +42,7 @@ const CHAR_ROUTES = () => {
 };
 
 test('no raw SQL strings remain in characters.ts', () => {
-	const src = fs.readFileSync(path.join(ROOT, 'src/lib/server/characters.ts'), 'utf8');
+	const src = fs.readFileSync(path.join(ROOT, 'src/lib/server/features/characters.ts'), 'utf8');
 	for (const name of ['TRACKER_SQL', 'DAMAGE_SQL', 'GOLD_SQL', 'BASE_COLS', 'ITEMS_SUBQUERY', 'CHARACTER_COLS'])
 		assert.doesNotMatch(src, new RegExp(name), name);
 	assert.doesNotMatch(src, /\.query\(/);
@@ -73,12 +73,12 @@ test('character API handlers use the Drizzle builder, not db.query nor SQL const
 });
 
 test('characters.test.ts runs on in-memory PGlite and covers create, patch, trackers at bounds, damage, gold floor, conditions, cards', () => {
-	const t = fs.readFileSync(path.join(ROOT, 'src/lib/server/characters.test.ts'), 'utf8');
+	const t = fs.readFileSync(path.join(ROOT, 'src/lib/server/features/characters.test.ts'), 'utf8');
 	assert.match(t, /memory:\/\/|getDrizzle|getDb/); // vitest setup uses PGlite in memory
 	assert.doesNotMatch(t, /\b(TRACKER_SQL|DAMAGE_SQL|GOLD_SQL)\b/);
 	for (const re of [/create|insert/i, /patch|update/i, /\bhp\b/, /stress/, /hope/, /armor/, /damage/i, /gold/i, /condition/i, /card/i, /\b6\b/, /\b0\b/])
 		assert.match(t, re, String(re));
-	execSync('npx vitest run src/lib/server/characters.test.ts', { cwd: ROOT, stdio: 'pipe' });
+	execSync('npx vitest run src/lib/server/features/characters.test.ts', { cwd: ROOT, stdio: 'pipe' });
 });
 
 test('endpoints: create, read, list in campaign, JSON shape', async () => {

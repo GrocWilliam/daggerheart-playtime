@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { createSchema, patchSchema } from '../../../src/lib/server/characters';
+import { createSchema, patchSchema } from '../../../src/lib/server/features/characters';
 
 const base = { name: 'Rook', class: 'Guardian', evasion: 10, majorThreshold: 5, severeThreshold: 10, maxHp: 6, armorSlots: 3 };
 const patch = (b: unknown) => patchSchema({ majorThreshold: 5, severeThreshold: 10, class: 'Guardian' }).safeParse(b);

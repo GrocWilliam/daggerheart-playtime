@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { translate, formatNumber } from '$lib/i18n';
-	import Pips from '$lib/Pips.svelte';
+	import Pips from '$lib/components/Pips.svelte';
 
-	import Help from '$lib/Help.svelte';
-	import Chosen from '$lib/Chosen.svelte';
+	import Help from '$lib/components/Help.svelte';
+	import Chosen from '$lib/components/Chosen.svelte';
 	let { data, form } = $props();
 	const t = (key: string, params?: Record<string, string | number>) => translate(data.lang, key, params);
 	const n = (v: number) => formatNumber(data.lang, v);
@@ -116,7 +116,7 @@
 			{/each}
 		</select>
 	</label>
-	{#each [['ancestry', data.picks.ancestries], ['community', data.picks.communities]] as [k, list] (k)}
+	{#each [{ k: 'ancestry' as const, list: data.picks.ancestries }, { k: 'community' as const, list: data.picks.communities }] as { k, list } (k)}
 		<label>
 			{t(`field.${k}`)}
 			<select name={k}>
