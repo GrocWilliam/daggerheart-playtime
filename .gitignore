@@ -3,3 +3,4 @@ build/
 .svelte-kit/
 data/
 *.log
+vite.config.ts.timestamp-*

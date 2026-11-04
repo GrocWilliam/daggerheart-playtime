@@ -94,5 +94,18 @@
 	"error.notFound": "Introuvable.",
 	"error.server": "Une erreur est survenue. Réessayez.",
 	"error.page.notFound": "Page introuvable",
-	"error.page.generic": "Une erreur est survenue"
+	"error.page.generic": "Une erreur est survenue",
+	"trait.agility": "Agilité",
+	"trait.strength": "Puissance",
+	"trait.finesse": "Finesse",
+	"trait.instinct": "Instinct",
+	"trait.presence": "Présence",
+	"trait.knowledge": "Connaissance",
+	"section.traits": "Caractéristiques",
+	"trait.help.agility": "L'Agilité couvre la course, les sauts et les manœuvres souples.",
+	"trait.help.strength": "La Puissance couvre soulever, fracasser et les prouesses physiques.",
+	"trait.help.finesse": "La Finesse couvre le contrôle, la précision et la subtilité.",
+	"trait.help.instinct": "L'Instinct couvre la perception, l'intuition et la lecture d'une situation.",
+	"trait.help.presence": "La Présence couvre le charme, la prestation et la force de caractère.",
+	"trait.help.knowledge": "La Connaissance couvre la mémoire, l'analyse et le savoir acquis."
 }

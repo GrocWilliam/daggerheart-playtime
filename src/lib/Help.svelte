@@ -8,8 +8,9 @@
 		id,
 		name,
 		lang,
-		en = undefined
-	}: { id: string; name: string; lang: 'en' | 'fr'; en?: string[] } = $props();
+		en = undefined,
+		text = undefined
+	}: { id: string; name: string; lang: 'en' | 'fr'; en?: string[]; text?: string } = $props();
 	const term = $derived(
 		(glossary as { id: string; en: string; fr: string }[]).find((g) => g.id === id)
 	);
@@ -31,6 +32,8 @@
 			<span lang="en" class="block">
 				{#each en as line, i (i)}<span class="my-1 block">{line}</span>{/each}
 			</span>
+		{:else if text}
+			<span class="my-1 block">{text}</span>
 		{:else if term}
 			<span class="my-1 block">{@html safe(term[lang])}</span>
 		{/if}

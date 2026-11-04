@@ -32,6 +32,12 @@ const characterSelect = {
 	ancestry: characters.ancestry,
 	community: characters.community,
 	cards: characters.cards,
+	agility: characters.agility,
+	strength: characters.strength,
+	finesse: characters.finesse,
+	instinct: characters.instinct,
+	presence: characters.presence,
+	knowledge: characters.knowledge,
 	items: sql<unknown>`(SELECT COALESCE(json_agg(json_build_object(
 		'id', i.id, 'name', i.name, 'quantity', i.quantity, 'srdId', i.srd_id) ORDER BY i.created_at, i.id), '[]'::json)
 		FROM items i WHERE i.character_id = ${sql.raw('"characters"."id"')})`.as('items')
@@ -67,7 +73,8 @@ export async function insertCharacter(campaignId: string, f: CreateCharacter) {
 			stressMax: f.maxStress,
 			armorMax: f.armorSlots,
 			ancestry: f.ancestry ?? null,
-			community: f.community ?? null
+			community: f.community ?? null,
+			...f.traits
 		})
 		.returning(characterSelect);
 	return characterJson(row);
@@ -94,10 +101,28 @@ export function characterJson(r: any) {
 		ancestry: r.ancestry ?? null,
 		community: r.community ?? null,
 		cards: r.cards ?? [],
+		traits: Object.fromEntries(TRAITS.map((k) => [k, r[k] ?? 0])),
 		items: r.items ?? [],
 		down: r.hp_marked === r.hp_max
 	};
 }
+
+export const TRAITS = ['agility', 'strength', 'finesse', 'instinct', 'presence', 'knowledge'] as const;
+
+/** Optional subset of the six traits; unknown names are rejected, supplied ones kept. */
+export const traitsSchema = z
+	.looseObject(
+		Object.fromEntries(TRAITS.map((k) => [k, intField(k, -5, 5).optional()])) as Record<
+			(typeof TRAITS)[number],
+			z.ZodOptional<z.ZodNumber>
+		>,
+		{ error: 'traits must be an object' }
+	)
+	.superRefine((t, ctx) => {
+		const unknown = Object.keys(t).find((k) => !(TRAITS as readonly string[]).includes(k));
+		if (unknown !== undefined) ctx.addIssue({ code: 'custom', message: `traits has an unknown trait: ${unknown}` });
+	})
+	.transform((t) => Object.fromEntries(TRAITS.flatMap((k) => (t[k] === undefined ? [] : [[k, t[k]]]))) as Partial<Record<(typeof TRAITS)[number], number>>);
 
 const THRESHOLDS_ERROR = 'thresholds must satisfy 1 <= majorThreshold < severeThreshold <= 100';
 const thresholdsOk = (major: number, severe: number) => major >= 1 && major < severe && severe <= 100;
@@ -124,7 +149,8 @@ export const createSchema = z
 			maxStress: intField('maxStress', 1, 12).default(6),
 			armorSlots: intField('armorSlots', 0, 12),
 			ancestry: srdId('ancestry', 'ancestries').optional(),
-			community: srdId('community', 'communities').optional()
+			community: srdId('community', 'communities').optional(),
+			traits: traitsSchema.optional()
 		},
 		{ error: OBJECT_ERROR }
 	)
@@ -148,7 +174,8 @@ const patchFields = z.object(
 			.optional(),
 		subclass: srdId('subclass', 'subclasses').optional(),
 		ancestry: srdId('ancestry', 'ancestries').optional(),
-		community: srdId('community', 'communities').optional()
+		community: srdId('community', 'communities').optional(),
+		traits: traitsSchema.optional()
 	},
 	{ error: OBJECT_ERROR }
 );
@@ -281,6 +308,7 @@ export async function patchCharacter(id: string, p: PatchCharacter) {
 	const set: Record<string, unknown> = {};
 	const plain = ['name', 'class', 'level', 'evasion', 'majorThreshold', 'severeThreshold', 'notes', 'subclass', 'ancestry', 'community'] as const;
 	for (const k of plain) if (p[k] !== undefined) set[k] = p[k];
+	if (p.traits) Object.assign(set, p.traits);
 	if (p.maxHp !== undefined) {
 		set.hpMax = p.maxHp;
 		set.hpMarked = sql`LEAST(${characters.hpMarked}, ${p.maxHp}::int)`;

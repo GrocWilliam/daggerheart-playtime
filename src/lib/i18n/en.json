@@ -94,5 +94,18 @@
 	"error.notFound": "Not found.",
 	"error.server": "Something went wrong. Please try again.",
 	"error.page.notFound": "Page not found",
-	"error.page.generic": "Something went wrong"
+	"error.page.generic": "Something went wrong",
+	"trait.agility": "Agility",
+	"trait.strength": "Strength",
+	"trait.finesse": "Finesse",
+	"trait.instinct": "Instinct",
+	"trait.presence": "Presence",
+	"trait.knowledge": "Knowledge",
+	"section.traits": "Traits",
+	"trait.help.agility": "Agility covers sprinting, leaping and nimble manoeuvres.",
+	"trait.help.strength": "Strength covers lifting, smashing and feats of power.",
+	"trait.help.finesse": "Finesse covers control, precision and subtlety.",
+	"trait.help.instinct": "Instinct covers awareness, intuition and reading a situation.",
+	"trait.help.presence": "Presence covers charm, performance and strength of personality.",
+	"trait.help.knowledge": "Knowledge covers recall, analysis and learned skill."
 }

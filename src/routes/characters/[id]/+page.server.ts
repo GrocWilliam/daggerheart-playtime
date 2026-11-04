@@ -1,6 +1,6 @@
 import { error, fail } from '@sveltejs/kit';
 import { pickList, pickOf, subclassesOf, getSrd, cardsByIds, cardGroups, itemGroups, itemPicks } from '$lib/server/srd';
-import { conditionFieldSchema, trackerFieldSchema } from '$lib/server/characters';
+import { TRAITS, conditionFieldSchema, trackerFieldSchema } from '$lib/server/characters';
 import type { Actions, PageServerLoad } from './$types';
 
 type Fetch = typeof fetch;
@@ -91,6 +91,7 @@ export const actions: Actions = {
 			class: form.get('class') ?? ''
 		};
 		for (const k of NUMERIC) body[k] = num(form.get(k));
+		body.traits = Object.fromEntries(TRAITS.map((k) => [k, num(form.get(`traits.${k}`))]));
 		const KINDS = { subclass: 'subclasses', ancestry: 'ancestries', community: 'communities' } as const;
 		let stored: Record<string, unknown> | null | undefined;
 		for (const k of Object.keys(KINDS) as (keyof typeof KINDS)[]) {

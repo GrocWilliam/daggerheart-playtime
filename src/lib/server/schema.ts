@@ -55,7 +55,13 @@ export const characters = pgTable('characters', {
 	subclass: text('subclass'),
 	ancestry: text('ancestry'),
 	community: text('community'),
-	cards: jsonb('cards').notNull().default(sql`'[]'::jsonb`)
+	cards: jsonb('cards').notNull().default(sql`'[]'::jsonb`),
+	agility: integer('agility').notNull().default(0),
+	strength: integer('strength').notNull().default(0),
+	finesse: integer('finesse').notNull().default(0),
+	instinct: integer('instinct').notNull().default(0),
+	presence: integer('presence').notNull().default(0),
+	knowledge: integer('knowledge').notNull().default(0)
 });
 
 export const items = pgTable(

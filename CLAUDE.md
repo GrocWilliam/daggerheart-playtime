@@ -25,7 +25,7 @@ the one that matches your change. This file lists only where we differ or add to
 | `src/lib/server/db.ts` | Connection (`getDb`, `getDrizzle`) and startup migrations. |
 | `src/routes/api/**/+server.ts` | JSON API. Handlers are wrapped in `api(...)` and throw `ApiError(status, msg)` → `{"error": msg}`. |
 | `src/routes/**/+page.server.ts` | Pages: `load` + form `actions` that call the JSON API through `fetch`, not the DB directly. |
-| `src/lib/*.svelte` | Shared components (`Pips`, `Help`, `Chosen`, `LanguageSwitcher`). |
+| `src/lib/*.svelte` | Shared components (`Pips`, `Help`, `Chosen`, `LanguageSwitcher`). `Help` takes either a glossary `id` or a `text` prop (a catalog string, e.g. `trait.help.*`). |
 | `src/lib/i18n/{en,fr}.json` | Every UI string, by key. `src/lib/i18n/index.ts` has the helpers; pages get `data.lang`. |
 | `src/lib/srd/` | SRD data (JSON) and its licence; `fr.json` holds the French names. |
 | `src/app.css` | Tailwind import, palette variables, `@theme static` tokens, `@layer base` and global element rules only. |
@@ -106,3 +106,5 @@ No project skills: the `stack-*` skills cover the workflow and this file holds t
   use `rounded-[50%]` where a test reads the radius.
 - Frozen older tests still select on `.pip`, `.filled`, `.tracker`, `ul.stats` (character sheet) and `.form-grid`,
   `ul.list` (reference page, us-78): keep them as marker classes via `class:name={true}` (us-100 forbids them in `class="..."`).
+- Acceptance scripts that run `drizzle-kit generate` end with `git clean -fdq drizzle`: commit the migration before running them or it is deleted.
+- us-22 scans the English sheet for any differing `fr.json` value as a whole word, and English SRD names sit in its selects (e.g. "Force of Nature"): a French label like "Force" fails it, so use "Puissance".

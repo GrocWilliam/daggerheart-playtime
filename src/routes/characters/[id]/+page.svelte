@@ -20,6 +20,8 @@
 	]);
 	// Tracker value colours (hp danger, hope calm); the others keep the text colour.
 	const valColour: Record<string, string> = { hp: 'text-danger', hope: 'text-calm' };
+	const traits = ['agility', 'strength', 'finesse', 'instinct', 'presence', 'knowledge'];
+	const signed = (v: number) => (v > 0 ? `+${v}` : `${v}`);
 	const conditions = ['vulnerable', 'restrained', 'hidden'];
 </script>
 
@@ -60,6 +62,12 @@
 <ul class="mt-0 mb-3 list-none pl-0!" class:stats={true}>
 	<li>{t('stat.evasion')}: <Help id="evasion" name={t('stat.evasion')} lang={data.lang} /> <span data-testid="evasion">{c.evasion}</span></li>
 	<li>{t('stat.thresholds')}: <Help id="thresholds" name={t('stat.thresholds')} lang={data.lang} /> <span data-testid="thresholds">{c.majorThreshold}/{c.severeThreshold}</span></li>
+</ul>
+<h2>{t('section.traits')}</h2>
+<ul class="mt-0 mb-3 list-none pl-0!">
+	{#each traits as k (k)}
+		<li>{t(`trait.${k}`)}: <Help id={k} name={t(`trait.${k}`)} text={t(`trait.help.${k}`)} lang={data.lang} /> <span data-testid="trait-{k}">{signed(c.traits[k])}</span></li>
+	{/each}
 </ul>
 <div>
 	{#if c.conditions.vulnerable}<span class="inline-block rounded-[999px] px-[0.6rem] text-[0.875rem] text-bg bg-danger" data-testid="condition-vulnerable">{t('badge.vulnerable')}</span><Help id="vulnerable" name={t('badge.vulnerable')} lang={data.lang} />{/if}
@@ -117,6 +125,12 @@
 	{/each}
 	{#each fields.slice(1) as [name, label, type, value] (name)}
 		<label>{t(label)} <input {type} {name} {value} required /></label>
+	{/each}
+	{#each traits as k (k)}
+		<div>
+			<label>{t(`trait.${k}`)} <input type="number" name="traits.{k}" min="-5" max="5" step="1" value={c.traits[k]} required /></label>
+			<Help id={k} name={t(`trait.${k}`)} text={t(`trait.help.${k}`)} lang={data.lang} />
+		</div>
 	{/each}
 	<button type="submit" class="[justify-self:start] md:col-start-1">{t('action.save')}</button>
 </form>
