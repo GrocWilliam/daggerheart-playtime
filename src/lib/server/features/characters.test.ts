@@ -1,6 +1,6 @@
 import { afterAll, describe, expect, it } from 'vitest';
 import { ApiError, parse } from '../errors';
-import { cardIdSchema, characterJson, conditionsSchema, createSchema, damageSchema, deltaSchema, goldSchema, itemCreateSchema, itemQuantitySchema, patchSchema, trackerSchema } from './characters';
+import { cardIdSchema, characterJson, conditionsSchema, createSchema, damageSchema, deltaSchema, goldSchema, itemCreateSchema, itemQuantitySchema, armorStats, patchSchema, tierOfLevel, trackerSchema } from './characters';
 
 /** The 400 message `parse` gives for `body`, or null when valid. */
 function msg(schema: Parameters<typeof parse>[0], body: unknown): string | null {
@@ -374,5 +374,36 @@ describe('form field schemas', () => {
 		expect(conditionFieldSchema.parse('hidden')).toBe('hidden');
 		expect(conditionFieldSchema.safeParse('burning').error?.issues[0].message).toBe('unknown condition');
 		expect(conditionFieldSchema.safeParse(null).error?.issues[0].message).toBe('unknown condition');
+	});
+});
+
+describe('patchSchema equipped gear', () => {
+	const cur = { majorThreshold: 5, severeThreshold: 10, class: 'Ranger', level: 1 };
+	const schema = patchSchema(cur);
+	it('validates types', () => {
+		expect(msg(schema, { primaryWeapon: 'core_weapon_broadsword' })).toBeNull();
+		expect(msg(schema, { primaryWeapon: null, secondaryWeapon: null, armorId: null })).toBeNull();
+		expect(msg(schema, { primaryWeapon: 'core_weapon_shortsword' })).toBe('primaryWeapon must be a primary weapon');
+		expect(msg(schema, { primaryWeapon: 'nope' })).toBe('primaryWeapon must be a primary weapon');
+		expect(msg(schema, { secondaryWeapon: 'core_weapon_broadsword' })).toBe('secondaryWeapon must be a secondary weapon');
+		expect(msg(schema, { armorId: 'core_weapon_broadsword' })).toBe('armorId must be an armor');
+		expect(msg(schema, { armorId: 'core_armor_gambeson_armor' })).toBeNull();
+	});
+	it('checks the tier', () => {
+		expect(msg(schema, { primaryWeapon: 'core_weapon_improved_broadsword' })).toBe(
+			"primaryWeapon is tier 2, above the character's tier 1"
+		);
+		expect(msg(schema, { primaryWeapon: 'core_weapon_improved_broadsword', level: 2 })).toBeNull();
+		expect(msg(patchSchema({ ...cur, level: 4 }), { primaryWeapon: 'core_weapon_improved_broadsword' })).toBeNull();
+		expect([1, 2, 4, 5, 7, 8, 10].map(tierOfLevel)).toEqual([1, 2, 2, 3, 3, 4, 4]);
+	});
+	it('rejects two-handed primary with a secondary', () => {
+		const msgTwo = 'a two-handed primary weapon leaves no hand for a secondary weapon';
+		expect(msg(patchSchema({ ...cur, secondaryWeapon: 'core_weapon_shortsword' }), { primaryWeapon: 'core_weapon_longsword' })).toBe(msgTwo);
+		expect(msg(patchSchema({ ...cur, primaryWeapon: 'core_weapon_longsword' }), { secondaryWeapon: 'core_weapon_shortsword' })).toBe(msgTwo);
+		expect(msg(patchSchema({ ...cur, primaryWeapon: 'core_weapon_longsword' }), { secondaryWeapon: null })).toBeNull();
+	});
+	it('computes armor stats from the level', () => {
+		expect(armorStats('core_armor_gambeson_armor', 1)).toEqual({ armorMax: 3, majorThreshold: 6, severeThreshold: 12 });
 	});
 });

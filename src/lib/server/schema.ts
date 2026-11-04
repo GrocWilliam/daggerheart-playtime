@@ -61,7 +61,10 @@ export const characters = pgTable('characters', {
 	finesse: integer('finesse').notNull().default(0),
 	instinct: integer('instinct').notNull().default(0),
 	presence: integer('presence').notNull().default(0),
-	knowledge: integer('knowledge').notNull().default(0)
+	knowledge: integer('knowledge').notNull().default(0),
+	primaryWeapon: text('primary_weapon'),
+	secondaryWeapon: text('secondary_weapon'),
+	armorId: text('armor_id')
 });
 
 export const items = pgTable(

@@ -38,6 +38,9 @@ const characterSelect = {
 	instinct: characters.instinct,
 	presence: characters.presence,
 	knowledge: characters.knowledge,
+	primary_weapon: characters.primaryWeapon,
+	secondary_weapon: characters.secondaryWeapon,
+	armor_id: characters.armorId,
 	experiences: sql<unknown>`(SELECT COALESCE(json_agg(json_build_object(
 		'id', e.id, 'name', e.name, 'modifier', e.modifier) ORDER BY e.created_at, e.seq), '[]'::json)
 		FROM experiences e WHERE e.character_id = ${sql.raw('"characters"."id"')})`.as('experiences'),
@@ -106,6 +109,9 @@ export function characterJson(r: any) {
 		community: r.community ?? null,
 		cards: r.cards ?? [],
 		traits: Object.fromEntries(TRAITS.map((k) => [k, r[k] ?? 0])),
+		primaryWeapon: r.primary_weapon ?? null,
+		secondaryWeapon: r.secondary_weapon ?? null,
+		armorId: r.armor_id ?? null,
 		experiences: r.experiences ?? [],
 		items: r.items ?? [],
 		down: r.hp_marked === r.hp_max
@@ -140,6 +146,25 @@ function srdId(field: string, kind: SrdKind) {
 		error: `${field} must be an SRD ${kind} id or null`
 	});
 }
+
+/** Tier of a character level: 1, 2-4, 5-7 and 8-10 map to tiers 1 to 4. */
+export function tierOfLevel(level: number) {
+	return level <= 1 ? 1 : level <= 4 ? 2 : level <= 7 ? 3 : 4;
+}
+
+const PRIMARY_TYPES = ['PRIMARY_PHYSICAL', 'PRIMARY_MAGIC'];
+
+function gearField(error: string, ok: (e: Record<string, any>) => boolean) {
+	return z.custom<string | null>(
+		(v) => {
+			if (v === null) return true;
+			const e = typeof v === 'string' ? getSrd('weapons', v, 'en') ?? getSrd('armors', v, 'en') : null;
+			return !!e && ok(e);
+		},
+		{ error }
+	);
+}
+const isWeapon = (types: string[]) => (e: Record<string, any>) => types.includes(e.type);
 
 export const createSchema = z
 	.object(
@@ -180,13 +205,33 @@ const patchFields = z.object(
 		subclass: srdId('subclass', 'subclasses').optional(),
 		ancestry: srdId('ancestry', 'ancestries').optional(),
 		community: srdId('community', 'communities').optional(),
-		traits: traitsSchema.optional()
+		traits: traitsSchema.optional(),
+		primaryWeapon: gearField('primaryWeapon must be a primary weapon', isWeapon(PRIMARY_TYPES)).optional(),
+		secondaryWeapon: gearField('secondaryWeapon must be a secondary weapon', isWeapon(['SECONDARY'])).optional(),
+		armorId: gearField('armorId must be an armor', (e) => e.baseScore !== undefined).optional()
 	},
 	{ error: OBJECT_ERROR }
 );
 
+/** Base armor thresholds plus the level, as set by equipping the armor. */
+export function armorStats(armorId: string, level: number) {
+	const a = getSrd('armors', armorId, 'en')!;
+	return {
+		armorMax: a.baseScore as number,
+		majorThreshold: (a.baseMajorThreshold as number) + level,
+		severeThreshold: (a.baseSevereThreshold as number) + level
+	};
+}
+
 /** PATCH body schema; returns only supplied fields. `current` supplies the other threshold and the class. */
-export function patchSchema(current: { majorThreshold: number; severeThreshold: number; class?: string }) {
+export function patchSchema(current: {
+	majorThreshold: number;
+	severeThreshold: number;
+	class?: string;
+	level?: number;
+	primaryWeapon?: string | null;
+	secondaryWeapon?: string | null;
+}) {
 	return patchFields.superRefine((p, ctx) => {
 		if (p.subclass) {
 			const cls = (p.class ?? current.class ?? '').toUpperCase();
@@ -195,11 +240,27 @@ export function patchSchema(current: { majorThreshold: number; severeThreshold: 
 				return;
 			}
 		}
+		const level = p.level ?? current.level ?? 1;
+		const tier = tierOfLevel(level);
+		for (const [field, kind] of [['primaryWeapon', 'weapons'], ['secondaryWeapon', 'weapons'], ['armorId', 'armors']] as const) {
+			const id = p[field];
+			const gearTier = id ? (getSrd(kind, id, 'en')?.tier as number) : 0;
+			if (gearTier > tier) {
+				ctx.addIssue({ code: 'custom', message: `${field} is tier ${gearTier}, above the character's tier ${tier}` });
+				return;
+			}
+		}
+		const primary = p.primaryWeapon !== undefined ? p.primaryWeapon : (current.primaryWeapon ?? null);
+		const secondary = p.secondaryWeapon !== undefined ? p.secondaryWeapon : (current.secondaryWeapon ?? null);
+		if (primary && secondary && getSrd('weapons', primary, 'en')?.burden === 'TWO_HANDED') {
+			ctx.addIssue({ code: 'custom', message: 'a two-handed primary weapon leaves no hand for a secondary weapon' });
+			return;
+		}
+		const auto = p.armorId ? armorStats(p.armorId, level) : null;
+		const major = p.majorThreshold ?? auto?.majorThreshold;
+		const severe = p.severeThreshold ?? auto?.severeThreshold;
 		if (p.majorThreshold !== undefined || p.severeThreshold !== undefined) {
-			const ok = thresholdsOk(
-				p.majorThreshold ?? current.majorThreshold,
-				p.severeThreshold ?? current.severeThreshold
-			);
+			const ok = thresholdsOk(major ?? current.majorThreshold, severe ?? current.severeThreshold);
 			if (!ok) ctx.addIssue({ code: 'custom', message: THRESHOLDS_ERROR });
 		}
 	});
@@ -327,8 +388,19 @@ export async function getCharacter(id: string) {
 /** Applies the supplied PATCH fields; lowering a max also lowers the marked value. Undefined when not found. */
 export async function patchCharacter(id: string, p: PatchCharacter) {
 	const set: Record<string, unknown> = {};
-	const plain = ['name', 'class', 'level', 'evasion', 'majorThreshold', 'severeThreshold', 'notes', 'subclass', 'ancestry', 'community'] as const;
+	const plain = ['name', 'class', 'level', 'evasion', 'majorThreshold', 'severeThreshold', 'notes', 'subclass', 'ancestry', 'community', 'primaryWeapon', 'secondaryWeapon', 'armorId'] as const;
 	for (const k of plain) if (p[k] !== undefined) set[k] = p[k];
+	if (p.armorId) {
+		const level = p.level ?? (await getCharacter(id))?.level;
+		if (level === undefined) return undefined;
+		const a = armorStats(p.armorId, level);
+		set.majorThreshold = p.majorThreshold ?? a.majorThreshold;
+		set.severeThreshold = p.severeThreshold ?? a.severeThreshold;
+		if (p.armorSlots === undefined) {
+			set.armorMax = a.armorMax;
+			set.armorMarked = sql`LEAST(${characters.armorMarked}, ${a.armorMax}::int)`;
+		}
+	}
 	if (p.traits) Object.assign(set, p.traits);
 	if (p.maxHp !== undefined) {
 		set.hpMax = p.maxHp;
