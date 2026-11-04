@@ -15,6 +15,13 @@
       "when": 1793806306790,
       "tag": "0001_character_traits",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1793831372338,
+      "tag": "0002_character_experiences",
+      "breakpoints": true
     }
   ]
 }

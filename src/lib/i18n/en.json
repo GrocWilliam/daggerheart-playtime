@@ -107,5 +107,9 @@
 	"trait.help.finesse": "Finesse covers control, precision and subtlety.",
 	"trait.help.instinct": "Instinct covers awareness, intuition and reading a situation.",
 	"trait.help.presence": "Presence covers charm, performance and strength of personality.",
-	"trait.help.knowledge": "Knowledge covers recall, analysis and learned skill."
+	"trait.help.knowledge": "Knowledge covers recall, analysis and learned skill.",
+	"section.experiences": "Experiences",
+	"experience.name": "Experience",
+	"experience.modifier": "Bonus",
+	"action.addExperience": "Add experience"
 }

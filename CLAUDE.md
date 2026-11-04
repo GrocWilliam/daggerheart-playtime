@@ -20,7 +20,7 @@ the one that matches your change. This file lists only where we differ or add to
 
 | Path | What |
 |---|---|
-| `src/lib/server/features/*.ts` | Domain logic and queries (`campaigns.ts`, `characters.ts`, `srd.ts`, `language.ts`), their Zod schemas with the inferred types, and colocated tests. |
+| `src/lib/server/features/*.ts` | Domain logic and queries (`campaigns.ts`, `characters.ts` (incl. traits, items, experiences), `srd.ts`, `language.ts`), their Zod schemas with the inferred types, and colocated tests. |
 | `src/lib/server/errors.ts` | `ApiError`, `errorResponse`, `api()`, `parse`, `readJson`. |
 | `src/lib/utils/validation.ts` | Shared Zod field helpers: `strField`, `intField`, `safeIntField`, `OBJECT_ERROR`, `idSchema`. |
 | `src/app.test.ts` | Tests `src/app.css` (palette). |
@@ -118,3 +118,5 @@ No project skills: the `stack-*` skills cover the workflow and this file holds t
   `ul.list` (reference page, us-78): keep them as marker classes via `class:name={true}` (us-100 forbids them in `class="..."`).
 - Acceptance scripts that run `drizzle-kit generate` end with `git clean -fdq drizzle`: commit the migration before running them or it is deleted.
 - us-22 scans the English sheet for any differing `fr.json` value as a whole word, and English SRD names sit in its selects (e.g. "Force of Nature"): a French label like "Force" fails it, so use "Puissance".
+- Never run acceptance scripts (they `git clean drizzle`) before committing a fresh `drizzle/` migration, and do not `pkill -f` anything matching your own shell command.
+- us-22 whole-word scan: an English label equal to a different French value fails (en "Modifier" vs fr `section.edit`); use "Bonus" for experience.modifier.

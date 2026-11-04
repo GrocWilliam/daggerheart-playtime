@@ -166,6 +166,29 @@
 	<button type="submit">{t('action.updateGold')}</button>
 </form>
 
+<h2>{t('section.experiences')}</h2>
+<form method="POST" action="?/addExperience">
+	<label>{t('experience.name')} <input type="text" name="name" maxlength="100" required /></label>
+	<label>{t('experience.modifier')} <input type="number" name="modifier" min="1" max="5" step="1" value="2" required /></label>
+	<button type="submit">{t('action.addExperience')}</button>
+</form>
+<ul class="list-none pl-0!">
+	{#each c.experiences as ex (ex.id)}
+		<li data-testid="experience">
+			<span>{ex.name} +{ex.modifier}</span>
+			<form method="POST" action="?/setExperience">
+				<input type="hidden" name="expId" value={ex.id} />
+				<input type="number" name="modifier" min="1" max="5" step="1" value={ex.modifier} required aria-label={t('experience.modifier')} />
+				<button type="submit">{t('action.update')}</button>
+			</form>
+			<form method="POST" action="?/removeExperience">
+				<input type="hidden" name="expId" value={ex.id} />
+				<button type="submit">{t('action.remove')}</button>
+			</form>
+		</li>
+	{/each}
+</ul>
+
 <h2>{t('section.inventory')}</h2>
 <form method="POST" action="?/addItem">
 	<label>{t('item.name')} <input type="text" name="name" maxlength="100" /></label>

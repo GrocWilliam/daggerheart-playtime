@@ -90,7 +90,7 @@ test('endpoints: create, read, list in campaign, JSON shape', async () => {
 		conditions: { vulnerable: false, restrained: false, hidden: false }, notes: '',
 		gold: { handfuls: 0, bags: 0, chests: 0 }, subclass: null, ancestry: null, community: null,
 		cards: [], items: [], down: false, domains: ['VALOR', 'BLADE'],
-		traits: { agility: 0, strength: 0, finesse: 0, instinct: 0, presence: 0, knowledge: 0 }
+		experiences: [], traits: { agility: 0, strength: 0, finesse: 0, instinct: 0, presence: 0, knowledge: 0 }
 	});
 	const g = await send('GET', `/api/characters/${ch.id}`);
 	assert.equal(g.status, 200);

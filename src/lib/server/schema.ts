@@ -78,3 +78,18 @@ export const items = pgTable(
 	},
 	(t) => [uniqueIndex('items_character_name_uniq').on(t.characterId, sql`lower(btrim(${t.name}))`)]
 );
+
+export const experiences = pgTable(
+	'experiences',
+	{
+		id: text('id').primaryKey().default(sql`gen_random_uuid()::text`),
+		characterId: text('character_id')
+			.notNull()
+			.references(() => characters.id, { onDelete: 'cascade' }),
+		name: text('name').notNull(),
+		modifier: integer('modifier').notNull(),
+		createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+		seq: bigserial('seq', { mode: 'number' })
+	},
+	(t) => [uniqueIndex('experiences_character_name_uniq').on(t.characterId, sql`lower(btrim(${t.name}))`)]
+);

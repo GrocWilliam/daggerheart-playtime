@@ -107,5 +107,9 @@
 	"trait.help.finesse": "La Finesse couvre le contrôle, la précision et la subtilité.",
 	"trait.help.instinct": "L'Instinct couvre la perception, l'intuition et la lecture d'une situation.",
 	"trait.help.presence": "La Présence couvre le charme, la prestation et la force de caractère.",
-	"trait.help.knowledge": "La Connaissance couvre la mémoire, l'analyse et le savoir acquis."
+	"trait.help.knowledge": "La Connaissance couvre la mémoire, l'analyse et le savoir acquis.",
+	"section.experiences": "Expériences",
+	"experience.name": "Expérience",
+	"experience.modifier": "Bonus",
+	"action.addExperience": "Ajouter une expérience"
 }

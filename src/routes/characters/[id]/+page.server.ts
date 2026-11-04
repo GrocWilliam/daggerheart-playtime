@@ -177,5 +177,32 @@ export const actions: Actions = {
 			`/api/characters/${enc(params.id)}/cards/${enc(String(form.get('cardId') ?? ''))}`
 		);
 		return r.ok ? { ok: true } : failure(r);
+	},
+	addExperience: async ({ request, params, fetch }) => {
+		const form = await request.formData();
+		const r = await call(fetch, 'POST', `/api/characters/${enc(params.id)}/experiences`, {
+			name: form.get('name') ?? '',
+			modifier: num(form.get('modifier'))
+		});
+		return r.ok ? { ok: true } : failure(r);
+	},
+	setExperience: async ({ request, params, fetch }) => {
+		const form = await request.formData();
+		const r = await call(
+			fetch,
+			'PATCH',
+			`/api/characters/${enc(params.id)}/experiences/${enc(String(form.get('expId') ?? ''))}`,
+			{ modifier: num(form.get('modifier')) }
+		);
+		return r.ok ? { ok: true } : failure(r);
+	},
+	removeExperience: async ({ request, params, fetch }) => {
+		const form = await request.formData();
+		const r = await call(
+			fetch,
+			'DELETE',
+			`/api/characters/${enc(params.id)}/experiences/${enc(String(form.get('expId') ?? ''))}`
+		);
+		return r.ok ? { ok: true } : failure(r);
 	}
 };

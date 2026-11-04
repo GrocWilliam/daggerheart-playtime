@@ -1,6 +1,6 @@
 import { and, eq, sql } from 'drizzle-orm';
 import * as z from 'zod';
-import { characters, items } from '../schema';
+import { characters, experiences, items } from '../schema';
 import { OBJECT_ERROR, intField, safeIntField, strField } from '../../utils/validation';
 import { domainsOfClass, getSrd } from './srd';
 
@@ -38,6 +38,9 @@ const characterSelect = {
 	instinct: characters.instinct,
 	presence: characters.presence,
 	knowledge: characters.knowledge,
+	experiences: sql<unknown>`(SELECT COALESCE(json_agg(json_build_object(
+		'id', e.id, 'name', e.name, 'modifier', e.modifier) ORDER BY e.created_at, e.seq), '[]'::json)
+		FROM experiences e WHERE e.character_id = ${sql.raw('"characters"."id"')})`.as('experiences'),
 	items: sql<unknown>`(SELECT COALESCE(json_agg(json_build_object(
 		'id', i.id, 'name', i.name, 'quantity', i.quantity, 'srdId', i.srd_id) ORDER BY i.created_at, i.id), '[]'::json)
 		FROM items i WHERE i.character_id = ${sql.raw('"characters"."id"')})`.as('items')
@@ -103,6 +106,7 @@ export function characterJson(r: any) {
 		community: r.community ?? null,
 		cards: r.cards ?? [],
 		traits: Object.fromEntries(TRAITS.map((k) => [k, r[k] ?? 0])),
+		experiences: r.experiences ?? [],
 		items: r.items ?? [],
 		down: r.hp_marked === r.hp_max
 	};
@@ -271,6 +275,22 @@ export const itemQuantitySchema = z.object(
 	{ error: OBJECT_ERROR }
 );
 export type ItemQuantity = z.infer<typeof itemQuantitySchema>;
+
+export const MAX_EXPERIENCES = 10;
+
+const modifierField = intField('modifier', 1, 5);
+
+export const experienceSchema = z.object(
+	{ name: strField('name', 1, 100), modifier: modifierField },
+	{ error: OBJECT_ERROR }
+);
+export type ExperienceCreate = z.infer<typeof experienceSchema>;
+
+export const patchExperienceSchema = z.object(
+	{ name: strField('name', 1, 100).optional(), modifier: modifierField.optional() },
+	{ error: OBJECT_ERROR }
+);
+export type ExperiencePatch = z.infer<typeof patchExperienceSchema>;
 
 export function itemJson(r: any) {
 	return { id: r.id, name: r.name, quantity: r.quantity, srdId: r.srd_id ?? null };
@@ -479,4 +499,64 @@ export async function deleteItem(id: string) {
 	const db = await conn();
 	const rows = await db.delete(items).where(eq(items.id, id)).returning({ id: items.id });
 	return rows.length > 0;
+}
+
+const sameName = (characterId: string, name: string) =>
+	and(eq(experiences.characterId, characterId), sql`lower(btrim(${experiences.name})) = lower(btrim(${name}::text))`);
+
+export type ExperienceResult =
+	| { status: 'ok'; character: ReturnType<typeof characterJson> }
+	| { status: 'not-found' }
+	| { status: 'full' }
+	| { status: 'duplicate' };
+
+/** Adds an experience (at most 10, unique name ignoring case and spaces) under a row lock on the character. */
+export async function addExperience(characterId: string, e: ExperienceCreate): Promise<ExperienceResult> {
+	const db = await conn();
+	return db.transaction(async (tx) => {
+		const [cur] = await tx.select({ id: characters.id }).from(characters).where(eq(characters.id, characterId)).for('update');
+		if (!cur) return { status: 'not-found' };
+		const existing = await tx.select({ id: experiences.id }).from(experiences).where(eq(experiences.characterId, characterId));
+		if (existing.length >= MAX_EXPERIENCES) return { status: 'full' };
+		const [dup] = await tx.select({ id: experiences.id }).from(experiences).where(sameName(characterId, e.name));
+		if (dup) return { status: 'duplicate' };
+		await tx.insert(experiences).values({ characterId, name: e.name, modifier: e.modifier });
+		const [row] = await tx.select(characterSelect).from(characters).where(eq(characters.id, characterId));
+		return { status: 'ok', character: characterJson(row) };
+	});
+}
+
+/** Changes an experience of the character. 'not-found' when the character or experience is missing. */
+export async function patchExperience(characterId: string, expId: string, p: ExperiencePatch): Promise<ExperienceResult> {
+	const db = await conn();
+	return db.transaction(async (tx) => {
+		const [cur] = await tx.select({ id: characters.id }).from(characters).where(eq(characters.id, characterId)).for('update');
+		if (!cur) return { status: 'not-found' };
+		const own = and(eq(experiences.id, expId), eq(experiences.characterId, characterId));
+		const [exp] = await tx.select({ id: experiences.id }).from(experiences).where(own);
+		if (!exp) return { status: 'not-found' };
+		if (p.name !== undefined) {
+			const [dup] = await tx
+				.select({ id: experiences.id })
+				.from(experiences)
+				.where(and(sameName(characterId, p.name), sql`${experiences.id} <> ${expId}`));
+			if (dup) return { status: 'duplicate' };
+		}
+		const set: Record<string, unknown> = {};
+		if (p.name !== undefined) set.name = p.name;
+		if (p.modifier !== undefined) set.modifier = p.modifier;
+		if (Object.keys(set).length > 0) await tx.update(experiences).set(set).where(own);
+		const [row] = await tx.select(characterSelect).from(characters).where(eq(characters.id, characterId));
+		return { status: 'ok', character: characterJson(row) };
+	});
+}
+
+/** Removes an experience of the character; undefined when the character or experience is missing. */
+export async function removeExperience(characterId: string, expId: string) {
+	const db = await conn();
+	const rows = await db
+		.delete(experiences)
+		.where(and(eq(experiences.id, expId), eq(experiences.characterId, characterId)))
+		.returning({ id: experiences.id });
+	return rows.length > 0 ? getCharacter(characterId) : undefined;
 }
