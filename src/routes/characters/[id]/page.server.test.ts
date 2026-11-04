@@ -50,7 +50,7 @@ describe('character page server', () => {
 		const { f } = recorder(400, { error: 'not enough gold' });
 		const r = (await run('gold', { handfuls: '-2' }, f)) as { status: number; data: { error: string } };
 		expect(r.status).toBe(400);
-		expect(r.data.error).toBe('not enough gold');
+		expect(r.data.error).toBe('error.invalid');
 	});
 
 	it('addItem omits an empty quantity', async () => {

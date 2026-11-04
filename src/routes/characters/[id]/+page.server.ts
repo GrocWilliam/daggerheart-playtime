@@ -24,16 +24,22 @@ function num(v: FormDataEntryValue | null): number | string {
 	return Number.isFinite(n) ? n : v;
 }
 
+/** The API's English message never reaches the page: the page translates this catalog key. */
+function errorKey(status: number): string {
+	if (status === 404) return 'error.notFound';
+	return status >= 500 ? 'error.server' : 'error.invalid';
+}
+
 function failure(r: { status: number; data: { error?: string } | null }, extra: object = {}) {
-	return fail(r.status, { error: r.data?.error ?? 'request failed', ...extra });
+	return fail(r.status, { error: errorKey(r.status), ...extra });
 }
 
 const enc = encodeURIComponent;
 
 export const load: PageServerLoad = async ({ params, fetch, locals }) => {
 	const r = await call(fetch, 'GET', `/api/characters/${enc(params.id)}`);
-	if (r.status === 404 || r.status === 400) error(404, 'Character not found');
-	if (!r.ok) error(r.status, 'Could not load character');
+	if (r.status === 404 || r.status === 400) error(404, 'not found');
+	if (!r.ok) error(r.status, 'load failed');
 	const lang = locals?.lang ?? 'en';
 	const ch = r.data;
 	return {
@@ -63,7 +69,7 @@ export const actions: Actions = {
 	tracker: async ({ request, params, fetch }) => {
 		const form = await request.formData();
 		const t = trackerFieldSchema.safeParse(form.get('tracker'));
-		if (!t.success) return fail(400, { error: t.error.issues[0].message });
+		if (!t.success) return fail(400, { error: 'error.invalid' });
 		const tracker = t.data;
 		const r = await call(fetch, 'POST', `/api/characters/${enc(params.id)}/${tracker}`, {
 			delta: Number(form.get('delta'))
@@ -100,7 +106,7 @@ export const actions: Actions = {
 	condition: async ({ request, params, fetch }) => {
 		const form = await request.formData();
 		const c = conditionFieldSchema.safeParse(form.get('condition'));
-		if (!c.success) return fail(400, { error: c.error.issues[0].message });
+		if (!c.success) return fail(400, { error: 'error.invalid' });
 		const key = c.data;
 		const r = await call(fetch, 'PUT', `/api/characters/${enc(params.id)}/conditions`, {
 			[key]: form.get('value') === 'on'

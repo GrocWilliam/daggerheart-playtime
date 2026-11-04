@@ -24,14 +24,20 @@ function num(v: FormDataEntryValue | null): number | string {
 	return Number.isFinite(n) ? n : v;
 }
 
+/** The API's English message never reaches the page: the page translates this catalog key. */
+function errorKey(status: number): string {
+	if (status === 404) return 'error.notFound';
+	return status >= 500 ? 'error.server' : 'error.invalid';
+}
+
 function failure(r: { status: number; data: { error?: string } | null }, extra: object = {}) {
-	return fail(r.status, { error: r.data?.error ?? 'request failed', ...extra });
+	return fail(r.status, { error: errorKey(r.status), ...extra });
 }
 
 export const load: PageServerLoad = async ({ params, fetch, locals }) => {
 	const r = await call(fetch, 'GET', `/api/campaigns/${encodeURIComponent(params.id)}`);
-	if (r.status === 404 || r.status === 400) error(404, 'Campaign not found');
-	if (!r.ok) error(r.status, 'Could not load campaign');
+	if (r.status === 404 || r.status === 400) error(404, 'not found');
+	if (!r.ok) error(r.status, 'load failed');
 	const lang = locals?.lang ?? 'en';
 	const chosen: Record<string, unknown> = {};
 	for (const ch of r.data.characters ?? []) {
@@ -56,7 +62,7 @@ export const actions: Actions = {
 		const form = await request.formData();
 		const id = String(form.get('characterId'));
 		const t = trackerFieldSchema.safeParse(form.get('tracker'));
-		if (!t.success) return fail(400, { error: t.error.issues[0].message });
+		if (!t.success) return fail(400, { error: 'error.invalid' });
 		const tracker = t.data;
 		const r = await call(
 			fetch,

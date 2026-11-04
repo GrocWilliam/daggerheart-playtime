@@ -22,10 +22,12 @@
 	];
 </script>
 
+<svelte:head><title>{c.name} – {t('home.title')}</title></svelte:head>
+
 <p><a href="/">{t('campaign.back')}</a></p>
 <h1 data-testid="campaign-name">{c.name}</h1>
 
-{#if form?.error}<p role="alert">{form.error}</p>{/if}
+{#if form?.error}<p role="alert">{t(form.error)}</p>{/if}
 
 <form method="POST" action="?/fear">
 	{t('campaign.fear')}:

@@ -89,5 +89,10 @@
 	"card.add": "Ajouter une carte de domaine",
 	"action.addCard": "Ajouter la carte",
 	"nav.label": "Principale",
-	"item.actions": "Actions"
+	"item.actions": "Actions",
+	"error.invalid": "Vérifiez les champs et réessayez.",
+	"error.notFound": "Introuvable.",
+	"error.server": "Une erreur est survenue. Réessayez.",
+	"error.page.notFound": "Page introuvable",
+	"error.page.generic": "Une erreur est survenue"
 }

@@ -6,6 +6,8 @@
 	const kinds = $derived(data.sections.map((s: { kind: string }) => s.kind));
 </script>
 
+<svelte:head><title>{t('reference.title')} – {t('home.title')}</title></svelte:head>
+
 <h1>{t('reference.title')}</h1>
 
 <form method="GET" action="/reference" class="flex flex-wrap gap-2 p-2!">

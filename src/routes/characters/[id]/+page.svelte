@@ -23,6 +23,8 @@
 	const conditions = ['vulnerable', 'restrained', 'hidden'];
 </script>
 
+<svelte:head><title>{c.name} – {t('home.title')}</title></svelte:head>
+
 <p><a href="/campaigns/{c.campaignId}">{t('character.back')}</a></p>
 <h1>
 	<span data-testid="character-name">{c.name}</span>
@@ -31,7 +33,7 @@
 <p class="muted">{c.class}, {t('character.level')} {c.level} <Help id="level" name={t('character.level')} lang={data.lang} /></p>
 <Chosen chosen={data.chosen} lang={data.lang} />
 
-{#if form?.error}<p role="alert">{form.error}</p>{/if}
+{#if form?.error}<p role="alert">{t(form.error)}</p>{/if}
 
 {#each [['hp', 'tracker.hp'], ['stress', 'tracker.stress'], ['hope', 'tracker.hope'], ['armor', 'tracker.armor']] as [key, label] (key)}
 	<form

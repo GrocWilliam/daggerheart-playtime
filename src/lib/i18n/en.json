@@ -89,5 +89,10 @@
 	"card.add": "Add a domain card",
 	"action.addCard": "Add card",
 	"nav.label": "Main",
-	"item.actions": "Actions"
+	"item.actions": "Actions",
+	"error.invalid": "Please check the fields and try again.",
+	"error.notFound": "Not found.",
+	"error.server": "Something went wrong. Please try again.",
+	"error.page.notFound": "Page not found",
+	"error.page.generic": "Something went wrong"
 }

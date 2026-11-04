@@ -4,6 +4,8 @@
 	const t = (key: string) => translate(data.lang, key);
 </script>
 
+<svelte:head><title>{t('home.title')}</title></svelte:head>
+
 <h1>{t('home.title')}</h1>
 
 <h2>{t('home.campaigns')}</h2>

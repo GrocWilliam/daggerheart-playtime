@@ -37,6 +37,7 @@ any change that makes it wrong, and add what the next agent would otherwise redi
 - Schema change = edit `src/lib/server/schema.ts` + `npx drizzle-kit generate` (see `db-migration` skill). `migrations/` is frozen legacy.
 - New UI text: add the key to both `en.json` and `fr.json` (`i18n.test.ts` checks they match).
 - `translate(lang, key, params?)` fills `{name}` and picks plurals from `key.one`/`key.other` when `params.count` is a number; show user-facing numbers (gold, quantities) through `formatNumber(lang, n)` (`fr` groups with U+202F: tests must not normalise with `\s`).
+- No hard-coded UI text in `.svelte` files and no unused catalog keys: `src/lib/i18n/hardcoded.test.ts` fails on both. Page form errors are catalog keys (`error.invalid`, `error.notFound`, `error.server`) chosen by status in `+page.server.ts` and shown with `t(form.error)`; the API's English `error` never reaches a page. Load failures use `error(status, ...)` and `src/routes/+error.svelte` translates by status.
 - Form posts must come from the same origin: `hooks.server.ts` rejects cross-site form submissions with 403.
 - Styles go in `src/app.css` with the palette variables (`--bg`, `--surface`, `--text`, `--muted`, `--accent`, `--teal`,
   `--danger`). Touch targets at least 44×44 px, teal focus outline, no sideways scroll on phones, 16px text.
