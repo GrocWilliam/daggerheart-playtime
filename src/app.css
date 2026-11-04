@@ -391,30 +391,9 @@ textarea:user-invalid {
 [data-testid='condition-restrained'] { background-color: var(--accent); }
 [data-testid='condition-hidden'] { background-color: var(--tea\6c); }
 
-.party {
-	display: grid;
-	grid-template-columns: minmax(0, 1fr);
-	gap: 1rem;
-}
-
-.party > article {
-	margin-bottom: 0;
-	min-width: 0;
-}
-
-@media (min-width: 600px) {
-	.party {
-		grid-template-columns: repeat(2, minmax(0, 1fr));
-	}
-}
-
 @media (min-width: 1024px) {
 	body {
 		max-width: 72rem;
-	}
-
-	.party {
-		grid-template-columns: repeat(3, minmax(0, 1fr));
 	}
 }
 
@@ -429,31 +408,6 @@ textarea:user-invalid {
 	min-width: 2ch;
 	text-align: center;
 }
-
-.pips {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 4px;
-	font-size: 16px;
-	margin-bottom: 0.75rem;
-	--pip: var(--muted);
-}
-
-[data-testid='hp-pips'], [data-testid='fear-pips'] { --pip: var(--danger); }
-[data-testid='stress-pips'] { --pip: var(--accent); }
-[data-testid='hope-pips'] { --pip: var(--tea\6c); }
-[data-testid='armor-pips'] { --pip: var(--muted); }
-
-.pip {
-	display: inline-block;
-	width: 12px;
-	height: 12px;
-	border-radius: 50%;
-	background-color: transparent;
-	border: 1px solid var(--pip);
-}
-
-.pip.filled { background-color: var(--pip); }
 
 .help {
 	display: inline-block;

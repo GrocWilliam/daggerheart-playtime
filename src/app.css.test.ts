@@ -25,25 +25,19 @@ describe('touch targets', () => {
 	});
 });
 
-describe('party grid', () => {
-	it('is 1 column by default, 2 from 600px, 3 from 1024px', () => {
-		expect(css).toMatch(/\.party\s*\{[^}]*minmax\(0, 1fr\)/);
-		expect(css).toMatch(/min-width: 600px\)\s*\{\s*\.party\s*\{[^}]*repeat\(2,/);
-		expect(css).toMatch(/min-width: 1024px\)[\s\S]*\.party\s*\{[^}]*repeat\(3,/);
+describe('campaign page moved to Tailwind utilities', () => {
+	it('no longer has .party or pip rules in app.css', () => {
+		expect(css).not.toMatch(/\.party\b/);
+		expect(css).not.toMatch(/\.pips?\b/);
+	});
+	it('keeps the wider body from 1024px', () => {
+		expect(css).toMatch(/min-width: 1024px\)\s*\{\s*body\s*\{\s*max-width: 72rem/);
 	});
 });
 
 describe('trackers', () => {
 	it('keeps controls on one centred, non-wrapping line', () => {
 		expect(css).toMatch(/\.tracker\s*\{[^}]*display: flex[^}]*flex-wrap: nowrap[^}]*align-items: center/);
-	});
-});
-
-describe('pips', () => {
-	it('draws filled and empty pips in the tracker colour', () => {
-		expect(css).toMatch(/\.pip\s*\{[^}]*border: 1px solid var\(--pip\)/);
-		expect(css).toMatch(/\.pip\.filled\s*\{\s*background-color: var\(--pip\)/);
-		expect(css).toMatch(/\[data-testid='hp-pips'\][^{]*\{\s*--pip: var\(--danger\)/);
 	});
 });
 
