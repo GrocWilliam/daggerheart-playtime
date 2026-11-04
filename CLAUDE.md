@@ -8,40 +8,75 @@ any change that makes it wrong, and add what the next agent would otherwise redi
 
 ## Stack
 
+The project follows the forge's `stack-*` skills (`stack-api`, `stack-db`, `stack-i18n`, `stack-tests`, `stack-ui`): read
+the one that matches your change. This file lists only where we differ or add to them.
+
 - SvelteKit 2 + Svelte 5 (runes), TypeScript, `@sveltejs/adapter-node`. Node 26 (`.nvmrc`, `engines`).
 - Database: PostgreSQL through `pg` when `DATABASE_URL` is set, else PGlite (`PGLITE_DATA_DIR`, default `./data/pglite`;
-  `memory://` in tests). Connection and migrations in `src/lib/server/db.ts`.
-- All queries use `getDrizzle()` (Drizzle query builder); `sql` templates only for what the builder can't express.
-  `getDb().query` stays exported for the legacy migrator and tests only: application code never calls it.
-- Styling: Tailwind v4 (`@tailwindcss/vite`, tokens in `@theme static` in `src/app.css`); see `ui-style` skill.
-- Validation: Zod 4 schemas + `parse(schema, body)` (`campaigns.ts`) → 400 with the first issue's message.  `parse(schema, v, 404)` for route params that 404.
+  `memory://` in tests).
 - Unit tests: Vitest (`*.test.ts` next to the code). No other test or UI framework: don't add one.
 
 ## Layout
 
 | Path | What |
 |---|---|
-| `src/lib/server/*.ts` | Domain logic and SQL: `campaigns.ts`, `characters.ts`, `srd.ts`. Zod input schemas live here. |
+| `src/lib/server/*.ts` | Domain logic and queries: `campaigns.ts`, `characters.ts`, `srd.ts`. Zod input schemas live here. |
+| `src/lib/server/schema.ts` | The Drizzle schema. `drizzle.config.ts` points drizzle-kit at it; output goes to `drizzle/`. |
+| `src/lib/server/db.ts` | Connection (`getDb`, `getDrizzle`) and startup migrations. |
 | `src/routes/api/**/+server.ts` | JSON API. Handlers are wrapped in `api(...)` and throw `ApiError(status, msg)` → `{"error": msg}`. |
 | `src/routes/**/+page.server.ts` | Pages: `load` + form `actions` that call the JSON API through `fetch`, not the DB directly. |
 | `src/lib/*.svelte` | Shared components (`Pips`, `Help`, `Chosen`, `LanguageSwitcher`). |
-| `src/lib/i18n/{en,fr}.json` | Every UI string, by key. `translate(lang, key)`; pages get `data.lang`. |
+| `src/lib/i18n/{en,fr}.json` | Every UI string, by key. `src/lib/i18n/index.ts` has the helpers; pages get `data.lang`. |
 | `src/lib/srd/` | SRD data (JSON) and its licence; `fr.json` holds the French names. |
-| `src/app.css` | All global styles and the palette (CSS variables on `html`). |
-| `migrations/NNN_name.sql` | Frozen legacy SQL, applied at startup (`migrate.ts`). Then `drizzle/` (drizzle-kit output, baseline `SELECT 1;`) is applied by Drizzle's migrator in `db.ts`. |
+| `src/app.css` | Tailwind import, palette variables, `@theme static` tokens, `@layer base` and global element rules only. |
+| `migrations/` | Frozen legacy SQL files, applied first at startup. Never add, edit or rename. |
+| `drizzle/` | drizzle-kit output; baseline `0000_baseline.sql` is `SELECT 1;`. |
 | `scripts/postbuild.mjs` | Wraps `build/index.js` so `PORT` defaults to 8080. |
 | `tests/acceptance/us-N/` | Frozen acceptance tests, one folder per story. Never edit them. |
 
 ## Conventions
 
-- Schema change = edit `src/lib/server/schema.ts` + `npx drizzle-kit generate` (see `db-migration` skill). `migrations/` is frozen legacy.
-- New UI text: add the key to both `en.json` and `fr.json` (`i18n.test.ts` checks they match).
-- `translate(lang, key, params?)` fills `{name}` and picks plurals from `key.one`/`key.other` when `params.count` is a number; show user-facing numbers (gold, quantities) through `formatNumber(lang, n)` (`fr` groups with U+202F: tests must not normalise with `\s`).
-- No hard-coded UI text in `.svelte` files and no unused catalog keys: `src/lib/i18n/hardcoded.test.ts` fails on both. Page form errors are catalog keys (`error.invalid`, `error.notFound`, `error.server`) chosen by status in `+page.server.ts` and shown with `t(form.error)`; the API's English `error` never reaches a page. Load failures use `error(status, ...)` and `src/routes/+error.svelte` translates by status.
-- Form posts must come from the same origin: `hooks.server.ts` rejects cross-site form submissions with 403.
-- Styles go in `src/app.css` with the palette variables (`--bg`, `--surface`, `--text`, `--muted`, `--accent`, `--teal`,
-  `--danger`). Touch targets at least 44×44 px, teal focus outline, no sideways scroll on phones, 16px text.
+### Validation (zod)
+- Zod 4 schemas live in `src/lib/server/<domain>.ts`; handlers call `parse(schema, body)` (`campaigns.ts`) → 400 with the
+  first issue's message; `parse(schema, v, 404)` for route params that 404. The response is `{"error": msg}` only.
+- Exact-messages rule: the message in the schema is the API contract (`strField`, `intField`, `safeIntField` build fields
+  with the project's messages). Schemas that depend on a row are factories. Unit-test each message without a database.
+
+### Database (Drizzle)
+- Startup runs two steps in `db.ts`: legacy `migrations/*.sql` through `migrate.ts` (frozen), then `drizzle/` through
+  Drizzle's migrator (path from `process.cwd()`).
+- Every schema change: edit `schema.ts`, run `npx drizzle-kit generate --name short_name`, commit `drizzle/` with it. Never
+  edit an applied file. A new column on an existing table needs a default or is nullable. `drizzle-kit generate` must then
+  report no changes.
+- Queries use `getDrizzle()` and the query builder; `sql` templates only for what the builder can't express. `getDb().query`
+  is for the legacy migrator and tests only. Traps: `onConflictDoUpdate` can't target an expression index; a column in a
+  `sql` subquery renders unqualified, so use `sql.raw('"table"."col"')`.
+
+### Styling (Tailwind v4)
+- Pages and components use utilities in the markup: no `<style>` blocks, no `style=`. Page styles do not go in `app.css`.
+- Tokens are in `@theme static` in `src/app.css` and only reference the palette variables: `bg`, `surface`, `text`,
+  `muted`, `accent`, `calm` (`--color-calm`), `danger`; fonts `font-display`, `font-body`.
+- Colour rule: never Tailwind's default palette (`red-500`) and never a colour literal or colour name after a `:` in
+  `src/**/*.svelte` or `*.css`, except the palette definitions. Mobile first (no `max-width` queries; `app.css.test.ts`).
+- Touch targets at least 44×44 px, teal focus outline, no sideways scroll on phones, 16px text.
 - Stable `data-testid` attributes are what acceptance tests select on: keep existing ones when you restyle.
+
+### i18n
+- `translate(lang, key, params?)` fills `{name}` and picks plurals from `key.one`/`key.other` when `params.count` is a
+  number. Show user-facing numbers (gold, quantities) through `formatNumber(lang, n)` (`fr` groups with U+202F: tests must
+  not normalise with `\s`).
+- New text: add the key to both `en.json` and `fr.json` (`i18n.test.ts`). No hard-coded UI text in `.svelte` files and no
+  unused keys: `src/lib/i18n/hardcoded.test.ts` fails on both.
+- Page form errors are catalog keys (`error.invalid`, `error.notFound`, `error.server`) chosen by status in
+  `+page.server.ts` and shown with `t(form.error)`; the API's English `error` never reaches a page. Load failures use
+  `error(status, ...)` and `src/routes/+error.svelte` translates by status.
+- Form posts must come from the same origin: `hooks.server.ts` rejects cross-site form submissions with 403.
+
+### Where we differ from the `stack-*` skills
+- Legacy `migrations/` stays frozen next to `drizzle/` (two-step startup).
+- Palette lives as CSS variables on `html` in `app.css`, and `@theme static` tokens reference them (colour names are escaped, see Pitfalls).
+- Pages call the JSON API through `fetch` instead of using the DB directly.
+- Acceptance tests use `PLAYWRIGHT_DIR`/`CHROMIUM_PATH`; older ones read `PW_DIR`.
 
 ## Commands
 
@@ -54,20 +89,20 @@ PORT=8080 PGLITE_DATA_DIR=memory:// node build   # run the app; GET /health answ
 ```
 
 Acceptance scripts start `node build` on a random free port with an in-memory PGlite, then drive it with Node's test
-runner and Playwright (`PLAYWRIGHT_DIR`, `CHROMIUM_PATH` are set in the agent and CI images). Without
-`FORGE_PREBUILT=1` each script rebuilds the app first, which is slow.
+runner and Playwright. Without `FORGE_PREBUILT=1` each script rebuilds the app first, which is slow.
 
 ## Skills
 
-How-tos for the usual work, in `.claude/skills/`: `ui-style`, `api-endpoint`, `db-migration`, `tests`. Keep them
-true like this file: when a change alters a pattern a skill describes, update the skill in the same commit.
+No project skills: the `stack-*` skills cover the workflow and this file holds the project specifics.
 
 ## Pitfalls
 
-<!-- One line per trap that cost an attempt: what happened, what to do instead. -->
-- Frozen tests match raw HTML and CSS with regexes: a word or colour name added anywhere can break an older story's
-  test. `--teal` is written `var(--tea\6c)` and `Help.svelte` escapes "vulnerable" for that reason.
-- Unlayered rules in `app.css` (global form, table, label, input rules) beat Tailwind utilities (which are layered): a utility that loses needs a trailing `!` (`aria-pressed:font-bold!`).
-- The campaign page, character sheet, `Chosen` and `Pips.svelte` are pure utilities. The global `form` rule in `app.css` is a surface card, so tracker forms add `bg-transparent! p-0! rounded-none!`. `justify-self-start` computes to `flex-start`: use `[justify-self:start]`. Frozen older tests still select on `.pip`, `.filled`, `.tracker`, `ul.stats` (character sheet) and
-  `.form-grid`, `ul.list` (reference page, us-78), so those are kept as marker classes via `class:name={true}` (us-100 forbids them in `class="..."`). `rounded-full`
-  computes to `3.35544e+07px`: use `rounded-[50%]` where a test reads the radius.
+- us-38 colour scan: frozen tests match raw HTML and CSS with regexes, so a colour name added anywhere can break an older
+  story. `--teal` is written `var(--tea\6c)`, `--color-calm` is `var(--tea\6c)`, and `Help.svelte` escapes "vulnerable".
+- Unlayered rules in `app.css` (global form, table, label, input rules) beat Tailwind utilities (which are layered): a
+  utility that loses needs a trailing `!` (`aria-pressed:font-bold!`, `p-2!`). `app.css` stays under 150 lines.
+- The global `form` rule is a surface card, so tracker forms add `bg-transparent! p-0! rounded-none!`.
+  `justify-self-start` computes to `flex-start`: use `[justify-self:start]`. `rounded-full` computes to `3.35544e+07px`:
+  use `rounded-[50%]` where a test reads the radius.
+- Frozen older tests still select on `.pip`, `.filled`, `.tracker`, `ul.stats` (character sheet) and `.form-grid`,
+  `ul.list` (reference page, us-78): keep them as marker classes via `class:name={true}` (us-100 forbids them in `class="..."`).
