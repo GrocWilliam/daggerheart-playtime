@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Divider from '$lib/components/Divider.svelte';
 	import { translate, formatNumber } from '$lib/i18n';
 	import Pips from '$lib/components/Pips.svelte';
 
@@ -32,6 +33,8 @@
 	<span data-testid="character-name">{c.name}</span>
 	{#if c.hp.marked === c.hp.max}<span class="inline-block rounded-[999px] px-[0.6rem] text-[0.875rem] text-bg bg-danger" data-testid="down">{t('badge.down')}</span>{/if}
 </h1>
+<Divider />
+<p><a data-testid="campaign-run-link" href="/campaigns/{c.campaignId}?step=run">{t('character.runLink')}</a></p>
 <p class="muted">{c.class}, {t('character.level')} {c.level} <Help id="level" name={t('character.level')} lang={data.lang} /></p>
 {#if data.domains.length}
 	<ul class="mt-0 mb-3 flex list-none flex-wrap gap-x-4 pl-0!">

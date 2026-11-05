@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Divider from '$lib/components/Divider.svelte';
 	import { translate } from '$lib/i18n';
 	let { data, form } = $props();
 	const t = (key: string) => translate(data.lang, key);
@@ -7,6 +8,7 @@
 <svelte:head><title>{t('home.title')}</title></svelte:head>
 
 <h1>{t('home.title')}</h1>
+<Divider />
 
 <h2>{t('home.campaigns')}</h2>
 

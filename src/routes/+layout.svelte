@@ -12,6 +12,7 @@
 </script>
 
 <header class="site-header mb-4 flex flex-wrap items-center justify-between gap-2 border-b border-solid border-muted">
+	<svg data-testid="sigil" aria-hidden="true" focusable="false" class="size-8 fill-accent" viewBox="0 0 32 32"><path d="M16 2 L30 16 L16 30 L2 16 Z M16 9 L23 16 L16 23 L9 16 Z" fill-rule="evenodd" /></svg>
 	<nav class="flex flex-wrap items-center gap-x-4 gap-y-2" aria-label={translate(data.lang, 'nav.label')}>
 		<a class="border-none no-underline aria-[current=page]:border-b-2 aria-[current=page]:border-solid aria-[current=page]:border-accent aria-[current=page]:font-bold" href="/" data-testid="nav-home" aria-current={page.url.pathname === '/' ? 'page' : undefined}>{translate(data.lang, 'home.title')}</a>
 		<a

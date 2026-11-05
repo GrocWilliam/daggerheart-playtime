@@ -178,6 +178,8 @@ export async function generateSceneEncounter(campaignId: string, sceneId: string
 	const tier = f.tier ?? defaults.tier;
 	const pool = adversariesByTier(tier, 'en').map(({ id, name, role }) => ({ id, name, role }));
 	const enc = generateEncounter({ partySize, tier, adjustments: f.adjustments, seed: f.seed }, pool);
+	// Big threats last: their feature text often names the minions they lead (keeps name lookups on cards unambiguous).
+	enc.adversaries.sort((a, b) => costOf(a.role, 1, partySize) - costOf(b.role, 1, partySize));
 	await db.update(scenes).set({ encounter: enc }).where(eq(scenes.id, sceneId));
 	return enc;
 }

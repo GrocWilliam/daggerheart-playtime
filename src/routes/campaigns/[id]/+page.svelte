@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Divider from '$lib/components/Divider.svelte';
 	// Tracker value colours (hp danger, hope calm); the others keep the text colour.
 	const valColour: Record<string, string> = { hp: 'text-danger', hope: 'text-calm' };
 	import { translate } from '$lib/i18n';
@@ -25,6 +26,7 @@
 
 <p><a href="/">{t('campaign.back')}</a></p>
 <h1 data-testid="campaign-name">{c.name}</h1>
+<Divider />
 
 {#if form?.error}<p role="alert">{t(form.error)}</p>{/if}
 

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Divider from '$lib/components/Divider.svelte';
 	import { translate } from '$lib/i18n';
 	import Help from '$lib/components/Help.svelte';
 	let { data } = $props();
@@ -9,6 +10,7 @@
 <svelte:head><title>{t('reference.title')} – {t('home.title')}</title></svelte:head>
 
 <h1>{t('reference.title')}</h1>
+<Divider />
 
 <form method="GET" action="/reference" class="flex flex-wrap gap-2 p-2!">
 	<label>
