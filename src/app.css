@@ -1,13 +1,13 @@
 @import "tailwindcss";
 
 html {
-	--bg: #1a1714;
-	--surface: #26211c;
-	--text: #e8dcc0;
-	--muted: #b8a88a;
-	--accent: #d4a24c;
-	--teal: #3fa7a0;
-	--danger: #e06c66;
+	--bg: #0f1a15;
+	--surface: #1a2a22;
+	--text: #efe4c8;
+	--muted: #b9b08f;
+	--accent: #d4a050;
+	--teal: #6cc3b5;
+	--danger: #ee8070;
 }
 
 /* Tokens reference the palette variables; static keeps them in the built CSS even when unused.
@@ -60,8 +60,9 @@ html {
 /* Unlayered, so these beat utilities where both match: add `!` to the utility. */
 *, *::before, *::after { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; }
-body { background-color: var(--bg); color: var(--text); margin: 0; padding: 0.75rem; font-size: 16px; overflow-wrap: anywhere; }
+body { background-color: var(--bg); background-image: radial-gradient(ellipse at top, var(--surface), var(--bg) 70%); background-attachment: fixed; color: var(--text); margin: 0; padding: 0.75rem; font-size: 16px; overflow-wrap: anywhere; }
 h1, h2, h3 { color: var(--accent); }
+h1 { letter-spacing: 0.05em; }
 a { color: var(--accent); display: inline-flex; align-items: center; min-height: 2.75rem; min-width: 2.75rem; }
 label, .muted { color: var(--muted); }
 [role='alert'] { color: var(--danger); border-left: 3px solid var(--danger); padding-left: 0.5rem; }
@@ -78,10 +79,10 @@ label > input[type='search'],
 label > select { display: block; margin-top: 0.25rem; width: 100%; }
 label > textarea { display: block; margin-top: 0.25rem; }
 input:user-invalid, select:user-invalid, textarea:user-invalid { border-color: var(--danger); }
-form { background-color: var(--surface); border-radius: 0.5rem; padding: 0.75rem; margin-bottom: 0.75rem; }
+form { background-color: var(--surface); border: 3px double var(--accent); border-radius: 0.5rem; padding: 0.75rem; margin-bottom: 0.75rem; }
 /* forms inside tables override the card look */
-table form { background-color: transparent; padding: 0; margin: 0; display: flex; flex-wrap: nowrap; align-items: center; gap: 0.5rem; }
-article { background-color: var(--surface); border: 2px solid var(--accent); border-radius: 0.5rem; padding: 0.75rem; margin-bottom: 1rem; }
+table form { background-color: transparent; border: 0; padding: 0; margin: 0; display: flex; flex-wrap: nowrap; align-items: center; gap: 0.5rem; }
+article { background-color: var(--surface); border: 3px double var(--accent); border-radius: 0.5rem; padding: 0.75rem; margin-bottom: 1rem; }
 table { width: 100%; border-collapse: collapse; position: relative; }
 table, tbody, tr, td { display: block; max-width: 100%; }
 th, td { text-align: left; padding: 0.5rem; vertical-align: top; overflow-wrap: anywhere; }

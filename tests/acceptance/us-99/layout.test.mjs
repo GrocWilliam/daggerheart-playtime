@@ -63,7 +63,7 @@ let browser;
 before(async () => { browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH }); });
 after(async () => { await browser?.close(); });
 
-const ACCENT = 'rgb(212, 162, 76)', MUTED = 'rgb(184, 168, 138)', SURFACE = 'rgb(38, 33, 28)', TEAL = 'rgb(63, 167, 160)';
+const ACCENT = 'rgb(212, 160, 80)', MUTED = 'rgb(185, 176, 143)', SURFACE = 'rgb(26, 42, 34)', TEAL = 'rgb(108, 195, 181)';
 
 for (const [name, w, h] of [['phone', 375, 667], ['desktop', 1280, 800]]) {
 	for (const lang of ['en', 'fr']) {

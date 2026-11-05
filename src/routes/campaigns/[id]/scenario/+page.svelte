@@ -49,20 +49,20 @@
 			</div>
 		{/if}
 		<div class="flex flex-wrap gap-2">
-			<form class="mb-0! bg-transparent! p-0!" method="POST" action="?/move">
+			<form class="mb-0! bg-transparent! border-0! p-0!" method="POST" action="?/move">
 				<input type="hidden" name="sceneId" value={s.id} />
 				<button type="submit" name="position" value={i - 1} disabled={i === 0}>{t('scenario.moveUp')}</button>
 			</form>
-			<form class="mb-0! bg-transparent! p-0!" method="POST" action="?/move">
+			<form class="mb-0! bg-transparent! border-0! p-0!" method="POST" action="?/move">
 				<input type="hidden" name="sceneId" value={s.id} />
 				<button type="submit" name="position" value={i + 1} disabled={i === data.scenes.length - 1}>{t('scenario.moveDown')}</button>
 			</form>
-			<form class="mb-0! bg-transparent! p-0!" method="POST" action="?/status">
+			<form class="mb-0! bg-transparent! border-0! p-0!" method="POST" action="?/status">
 				<input type="hidden" name="sceneId" value={s.id} />
 				{#if s.status !== 'current'}<button type="submit" name="status" value="current">{t('scenario.setCurrent')}</button>{/if}
 				{#if s.status !== 'done'}<button type="submit" name="status" value="done">{t('scenario.markDone')}</button>{/if}
 			</form>
-			<form class="mb-0! bg-transparent! p-0!" method="POST" action="?/delete">
+			<form class="mb-0! bg-transparent! border-0! p-0!" method="POST" action="?/delete">
 				<input type="hidden" name="sceneId" value={s.id} />
 				<button type="submit">{t('scenario.delete')}</button>
 			</form>
@@ -100,7 +100,7 @@
 					<details><summary>{t('loot.features')}</summary><p>{t('loot.noFeatures')}</p></details>
 				{/if}
 				<div class="flex flex-wrap gap-2">
-					<form class="mb-0! bg-transparent! p-0!" method="POST" action="?/give">
+					<form class="mb-0! bg-transparent! border-0! p-0!" method="POST" action="?/give">
 						<input type="hidden" name="sceneId" value={s.id} />
 						<input type="hidden" name="lootId" value={l.id} />
 						<label>{t('loot.giveTo')}
@@ -110,7 +110,7 @@
 						</label>
 						<button type="submit">{t('loot.give')}</button>
 					</form>
-					<form class="mb-0! bg-transparent! p-0!" method="POST" action="?/deleteLoot">
+					<form class="mb-0! bg-transparent! border-0! p-0!" method="POST" action="?/deleteLoot">
 						<input type="hidden" name="sceneId" value={s.id} />
 						<input type="hidden" name="lootId" value={l.id} />
 						<button type="submit">{t('loot.delete')}</button>
@@ -149,7 +149,7 @@
 						<summary>{t('encounter.features')}</summary>
 						{#each a.features as f (f.name)}<p lang="en"><strong>{f.name}</strong>: {f.text}</p>{/each}
 					</details>
-					<form class="mb-0! bg-transparent! p-0!" method="POST" action="?/setCount">
+					<form class="mb-0! bg-transparent! border-0! p-0!" method="POST" action="?/setCount">
 						<input type="hidden" name="sceneId" value={s.id} />
 						<input type="hidden" name="id" value={a.id} />
 						<input name="count" type="number" min="1" value={a.count} required aria-label={translate(data.lang, 'encounter.count', { name: a.name })} />
@@ -162,7 +162,7 @@
 					</form>
 				</div>
 			{/each}
-			<form class="mb-0! bg-transparent! p-0!" method="POST" action="?/deleteEncounter">
+			<form class="mb-0! bg-transparent! border-0! p-0!" method="POST" action="?/deleteEncounter">
 				<input type="hidden" name="sceneId" value={s.id} />
 				<button type="submit">{t('encounter.delete')}</button>
 			</form>

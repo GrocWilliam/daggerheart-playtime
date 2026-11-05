@@ -126,3 +126,4 @@ No project skills: the `stack-*` skills cover the workflow and this file holds t
 - Never run acceptance scripts (they `git clean drizzle`) before committing a fresh `drizzle/` migration, and do not `pkill -f` anything matching your own shell command.
 - us-22 whole-word scan: an English label equal to a different French value fails (en "Modifier" vs fr `section.edit`); use "Bonus" for experience.modifier.
 - us-154: a scene's text must not contain its neighbours' names (tests use case-insensitive `hasText`): the edit form's environment `<option>`s use `label=` attributes with empty bodies, and env features show name + question, not the rules text (it contains "two").
+- Hydration mismatches drop keyboard focus (us-172 Tab test was flaky): never put `<details>`/`Help` or other block elements inside a `<p>`; the parser closes the `<p>` early. Check the browser console for `hydration_mismatch`.

@@ -9,8 +9,8 @@ const BASE = process.env.BASE_URL;
 const VIEWPORTS = [['phone', 375, 667], ['desktop', 1280, 800]];
 const LANGS = ['en', 'fr'];
 const PALETTE = {
-	'--bg': '#1a1714', '--surface': '#26211c', '--text': '#e8dcc0', '--muted': '#b8a88a',
-	'--accent': '#d4a24c', '--teal': '#3fa7a0', '--danger': '#e06c66'
+	'--bg': '#0f1a15', '--surface': '#1a2a22', '--text': '#efe4c8', '--muted': '#b9b08f',
+	'--accent': '#d4a050', '--teal': '#6cc3b5', '--danger': '#ee8070'
 };
 const rgb = (hex) => {
 	const n = parseInt(hex.slice(1), 16);
@@ -103,11 +103,11 @@ test('body has the dark stone background and parchment text', async () => {
 			const c = getComputedStyle(document.body);
 			return [c.backgroundColor, c.color];
 		});
-		assert.deepEqual(s, [rgb('#1a1714'), rgb('#e8dcc0')], id);
+		assert.deepEqual(s, [rgb('#0f1a15'), rgb('#efe4c8')], id);
 	});
 });
 
-test('character-card has surface background and 2px solid accent border', async () => {
+test('character-card has surface background and 3px double accent border', async () => {
 	for (const [vp, w, h] of VIEWPORTS) for (const lang of LANGS)
 		await withPage(campaignPath, w, h, lang, async (page) => {
 			const cards = await page.evaluate(() => [...document.querySelectorAll('[data-testid="character-card"]')].map((e) => {
@@ -117,9 +117,9 @@ test('character-card has surface background and 2px solid accent border', async 
 			}));
 			assert.equal(cards.length, 3);
 			for (const c of cards) {
-				assert.equal(c[0], rgb('#26211c'), `${vp} ${lang}`);
+				assert.equal(c[0], rgb('#1a2a22'), `${vp} ${lang}`);
 				for (let i = 1; i < c.length; i += 3)
-					assert.deepEqual(c.slice(i, i + 3), ['2px', 'solid', rgb('#d4a24c')], `${vp} ${lang}`);
+					assert.deepEqual(c.slice(i, i + 3), ['3px', 'double', rgb('#d4a050')], `${vp} ${lang}`);
 			}
 		});
 });
@@ -129,7 +129,7 @@ test('every button has accent background and bg text colour', async () => {
 		const bs = await page.evaluate(() => [...document.querySelectorAll('button')].map((b) => {
 			const c = getComputedStyle(b); return [c.backgroundColor, c.color];
 		}));
-		for (const b of bs) assert.deepEqual(b, [rgb('#d4a24c'), rgb('#1a1714')], id);
+		for (const b of bs) assert.deepEqual(b, [rgb('#d4a050'), rgb('#0f1a15')], id);
 	});
 });
 
@@ -184,7 +184,7 @@ test('focus: keyboard-focused controls get a 2px+ solid teal outline', async () 
 			});
 			if (!s) continue;
 			checked++;
-			assert.ok(s.w >= 2 && s.style !== 'none' && s.color === rgb('#3fa7a0'), `${id} ${JSON.stringify(s)}`);
+			assert.ok(s.w >= 2 && s.style !== 'none' && s.color === rgb('#6cc3b5'), `${id} ${JSON.stringify(s)}`);
 		}
 		assert.ok(checked > 0, `${id}: nothing focusable reached by Tab`);
 	});
@@ -192,8 +192,8 @@ test('focus: keyboard-focused controls get a 2px+ solid teal outline', async () 
 
 test('badges are pills with the specified colours', async () => {
 	const want = {
-		'condition-vulnerable': '#e06c66', 'condition-restrained': '#d4a24c',
-		'condition-hidden': '#3fa7a0', down: '#e06c66'
+		'condition-vulnerable': '#ee8070', 'condition-restrained': '#d4a050',
+		'condition-hidden': '#6cc3b5', down: '#ee8070'
 	};
 	const targets = [[campaignPath, 'campaign'], [`/characters/${chars[0]}`, 'char0'],
 		[`/characters/${chars[1]}`, 'char1'], [`/characters/${chars[2]}`, 'char2']];
@@ -208,7 +208,7 @@ test('badges are pills with the specified colours', async () => {
 			for (const b of bs) {
 				seen.add(b.id);
 				const r = b.pct ? b.radius / 100 * b.h : b.radius;
-				assert.equal(b.color, rgb('#1a1714'), `${name} ${vp} ${lang} ${b.id} text`);
+				assert.equal(b.color, rgb('#0f1a15'), `${name} ${vp} ${lang} ${b.id} text`);
 				assert.equal(b.bg, rgb(want[b.id]), `${name} ${vp} ${lang} ${b.id} bg`);
 				assert.ok(r >= 8, `${name} ${vp} ${lang} ${b.id} radius ${r}`);
 			}

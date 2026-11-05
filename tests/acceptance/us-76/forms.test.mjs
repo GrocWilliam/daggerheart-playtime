@@ -45,7 +45,7 @@ for (const m of matrix) {
 				return [...document.querySelectorAll('form:not(.tracker)')].filter((f) => !f.closest('table') && f.offsetParent !== null).map((f) => {
 					const s = getComputedStyle(f);
 					return { bg: s.backgroundColor, surface, radius: Math.min(...['TopLeft','TopRight','BottomLeft','BottomRight'].map((c) => parseFloat(s['border' + c + 'Radius']))),
-						pad: Math.min(...['Top','Right','Bottom','Left'].map((c) => parseFloat(s['padding' + c]))), action: f.getAttribute('action') };
+						pad: Math.min(...['Top','Right','Bottom','Left'].map((c) => parseFloat(s['padding' + c]) + parseFloat(s['border' + c + 'Width']))), action: f.getAttribute('action') };
 				});
 			})()`);
 			assert.ok(r.length > 0);

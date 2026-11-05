@@ -61,7 +61,7 @@ let browser;
 before(async () => { browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH }); });
 after(async () => { await browser?.close(); });
 
-const ACCENT = 'rgb(212, 162, 76)', MUTED = 'rgb(184, 168, 138)', SURFACE = 'rgb(38, 33, 28)', TEAL = 'rgb(63, 167, 160)', DANGER = 'rgb(224, 108, 102)', BG = 'rgb(26, 23, 20)';
+const ACCENT = 'rgb(212, 160, 80)', MUTED = 'rgb(185, 176, 143)', SURFACE = 'rgb(26, 42, 34)', TEAL = 'rgb(108, 195, 181)', DANGER = 'rgb(238, 128, 112)', BG = 'rgb(15, 26, 21)';
 const json = { 'content-type': 'application/json' };
 
 async function setup(tag) {
@@ -131,8 +131,8 @@ for (const [name, w, h, cols] of [['phone', 375, 667, 1], ['tablet', 700, 800, 2
 		assert.equal(r.party.rowGap, '16px');
 		assert.equal(r.cols, cols, 'party columns');
 		assert.equal(r.card.backgroundColor, SURFACE);
-		assert.equal(r.card.borderTopWidth, '2px');
-		assert.equal(r.card.borderTopStyle, 'solid');
+		assert.equal(r.card.borderTopWidth, '3px');
+		assert.equal(r.card.borderTopStyle, 'double');
 		assert.equal(r.card.borderTopColor, ACCENT);
 		assert.equal(r.card.borderTopLeftRadius, '8px');
 		assert.equal(r.card.paddingTop, '12px');

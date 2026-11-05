@@ -6,7 +6,7 @@ const { chromium } = createRequire(process.env.PW_DIR + '/')('playwright-core');
 const BASE = process.env.BASE_URL;
 const VIEWPORTS = [['phone', 375, 667], ['desktop', 1280, 800]];
 const LANGS = ['en', 'fr'];
-const HEX = { '--danger': '#e06c66', '--accent': '#d4a24c', '--teal': '#3fa7a0', '--muted': '#b8a88a' };
+const HEX = { '--danger': '#ee8070', '--accent': '#d4a050', '--teal': '#6cc3b5', '--muted': '#b9b08f' };
 const rgb = (hex) => {
 	const n = parseInt(hex.slice(1), 16);
 	return `rgb(${n >> 16}, ${(n >> 8) & 255}, ${n & 255})`;

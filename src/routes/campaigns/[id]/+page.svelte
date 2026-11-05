@@ -47,10 +47,10 @@
 			<a data-testid="character-name" href="/characters/{ch.id}">{ch.name}</a>
 			{#if ch.hp.marked === ch.hp.max}<span class="inline-block rounded-[999px] px-[0.6rem] text-[0.875rem] text-bg bg-danger" data-testid="down">{t('badge.down')}</span>{/if}
 		</h3>
-		<p class="muted">{ch.class}, {t('character.level')} {ch.level} <Help id="level" name={t('character.level')} lang={data.lang} /></p>
+		<div class="muted">{ch.class}, {t('character.level')} {ch.level} <Help id="level" name={t('character.level')} lang={data.lang} /></div>
 		<Chosen chosen={(data.chosen as Record<string, never>)[ch.id]} lang={data.lang} />
 		{#each [['hp', 'tracker.hp'], ['stress', 'tracker.stress'], ['hope', 'tracker.hope'], ['armor', 'tracker.armor']] as [key, label] (key)}
-			<form class="mb-3 flex flex-nowrap items-center gap-2 rounded-none! bg-transparent! p-0!"
+			<form class="mb-3 flex flex-nowrap items-center gap-2 rounded-none! bg-transparent! border-0! p-0!"
 				class:tracker={true} method="POST" action="?/tracker">
 				<input type="hidden" name="characterId" value={ch.id} />
 				<input type="hidden" name="tracker" value={key} />
@@ -91,7 +91,7 @@
 
 <h2>{t('campaign.add')}</h2>
 <!-- `tracker` and `form-grid` stay as marker classes: frozen tests (us-76, us-77) select on them. -->
-<form method="POST" action="?/addCharacter" class="grid grid-cols-1 gap-x-4 md:grid-cols-2"
+<form method="POST" action="?/addCharacter" class="px-[0.5625rem]! grid grid-cols-1 gap-x-4 md:grid-cols-2"
 	class:form-grid={true}>
 	{#each fields as [name, label, type] (name)}
 		<label class="min-w-0">{t(label)} <input {type} {name} required /></label>

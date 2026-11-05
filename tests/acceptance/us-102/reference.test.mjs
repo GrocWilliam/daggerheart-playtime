@@ -90,7 +90,7 @@ let browser;
 before(async () => { browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH }); });
 after(async () => { await browser?.close(); });
 
-const SURFACE = 'rgb(38, 33, 28)', ACCENT = 'rgb(212, 162, 76)', MUTED = 'rgb(184, 168, 138)';
+const SURFACE = 'rgb(26, 42, 34)', ACCENT = 'rgb(212, 160, 80)', MUTED = 'rgb(185, 176, 143)';
 
 for (const [name, w, h] of [['phone', 375, 667], ['desktop', 1280, 800]]) {
 	test(`computed styles unchanged on the reference page and Help at ${name} (${w}px)`, async () => {

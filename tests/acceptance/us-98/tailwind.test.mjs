@@ -40,8 +40,8 @@ test('app.css starts with @import "tailwindcss" and keeps the seven palette vari
 	assert.match(css.trimStart(), /^@import\s+["']tailwindcss["'];/);
 	const html = block(css, /(^|\n)\s*html\s*\{/);
 	const want = {
-		'--bg': '#1a1714', '--surface': '#26211c', '--text': '#e8dcc0', '--muted': '#b8a88a',
-		'--accent': '#d4a24c', '--teal': '#3fa7a0', '--danger': '#e06c66'
+		'--bg': '#0f1a15', '--surface': '#1a2a22', '--text': '#efe4c8', '--muted': '#b9b08f',
+		'--accent': '#d4a050', '--teal': '#6cc3b5', '--danger': '#ee8070'
 	};
 	for (const [k, v] of Object.entries(want)) {
 		assert.match(html, new RegExp(`${k}:\\s*${v}\\s*;`, 'i'), k);
@@ -143,8 +143,8 @@ for (const [name, w, h] of [['phone', 375, 667], ['desktop', 1280, 800]]) {
 					small: small.filter((s) => s.h < 43.5), ctl: small.filter((s) => s.t !== 'A' && s.f < 16)
 				};
 			});
-			assert.equal(r.bg, 'rgb(26, 23, 20)', path);
-			assert.equal(r.color, 'rgb(232, 220, 192)', path);
+			assert.equal(r.bg, 'rgb(15, 26, 21)', path);
+			assert.equal(r.color, 'rgb(239, 228, 200)', path);
 			assert.match(r.font, /EB Garamond/, path);
 			assert.equal(r.fs, '16px', path);
 			if (r.h1) assert.match(r.h1, /Cinzel/, path);
@@ -159,7 +159,7 @@ for (const [name, w, h] of [['phone', 375, 667], ['desktop', 1280, 800]]) {
 			return { w: parseFloat(s.outlineWidth), st: s.outlineStyle, c: s.outlineColor };
 		});
 		assert.ok(o.w >= 2 && o.st !== 'none', 'focus outline visible');
-		assert.equal(o.c, 'rgb(63, 167, 160)');
+		assert.equal(o.c, 'rgb(108, 195, 181)');
 		await ctx.close();
 	});
 }

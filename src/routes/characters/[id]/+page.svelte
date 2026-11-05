@@ -46,7 +46,7 @@
 
 {#each [['hp', 'tracker.hp'], ['stress', 'tracker.stress'], ['hope', 'tracker.hope'], ['armor', 'tracker.armor']] as [key, label] (key)}
 	<form
-		class="mb-3 flex flex-nowrap items-center gap-2 rounded-none! bg-transparent! p-0!"
+		class="mb-3 flex flex-nowrap items-center gap-2 rounded-none! bg-transparent! border-0! p-0!"
 		class:tracker={true}
 		method="POST"
 		action="?/tracker"
@@ -89,7 +89,7 @@
 </form>
 
 <h2>{t('section.edit')}</h2>
-<form method="POST" action="?/edit" class="grid grid-cols-[minmax(0,1fr)] gap-x-4 *:min-w-0 md:grid-cols-[repeat(2,minmax(0,1fr))]" class:form-grid={true}>
+<form method="POST" action="?/edit" class="px-[0.5625rem]! grid grid-cols-[minmax(0,1fr)] gap-x-4 *:min-w-0 md:grid-cols-[repeat(2,minmax(0,1fr))]" class:form-grid={true}>
 	{#each fields.slice(0, 1) as [name, label, type, value] (name)}
 		<label>{t(label)} <input {type} {name} {value} required /></label>
 	{/each}
@@ -153,7 +153,7 @@
 {/each}
 
 <h2>{t('section.notes')}</h2>
-<form method="POST" action="?/notes">
+<form method="POST" action="?/notes" class="px-[0.5625rem]!">
 	<textarea name="notes" data-testid="notes" maxlength="5000" rows="6">{c.notes}</textarea>
 	<button type="submit">{t('action.saveNotes')}</button>
 </form>

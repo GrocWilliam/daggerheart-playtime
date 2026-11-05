@@ -65,7 +65,7 @@ let browser;
 before(async () => { browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH }); });
 after(async () => { await browser?.close(); });
 
-const ACCENT = 'rgb(212, 162, 76)', MUTED = 'rgb(184, 168, 138)', SURFACE = 'rgb(38, 33, 28)', TEAL = 'rgb(63, 167, 160)', DANGER = 'rgb(224, 108, 102)', BG = 'rgb(26, 23, 20)', CLEAR = 'rgba(0, 0, 0, 0)';
+const ACCENT = 'rgb(212, 160, 80)', MUTED = 'rgb(185, 176, 143)', SURFACE = 'rgb(26, 42, 34)', TEAL = 'rgb(108, 195, 181)', DANGER = 'rgb(238, 128, 112)', BG = 'rgb(15, 26, 21)', CLEAR = 'rgba(0, 0, 0, 0)';
 const json = { 'content-type': 'application/json' };
 const post = (path, body, method = 'POST') => fetch(BASE + path, { method, headers: json, body: JSON.stringify(body) });
 

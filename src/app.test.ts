@@ -5,7 +5,7 @@ const css = readFileSync('src/app.css', 'utf8');
 
 it('defines the palette custom properties', () => {
 	for (const [k, v] of Object.entries({
-		bg: '#1a1714', surface: '#26211c', text: '#e8dcc0', muted: '#b8a88a', accent: '#d4a24c', teal: '#3fa7a0', danger: '#e06c66'
+		bg: '#0f1a15', surface: '#1a2a22', text: '#efe4c8', muted: '#b9b08f', accent: '#d4a050', teal: '#6cc3b5', danger: '#ee8070'
 	})) {
 		expect(css).toContain(`--${k}: ${v};`);
 	}
