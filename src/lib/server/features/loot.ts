@@ -1,9 +1,11 @@
 import { and, eq } from 'drizzle-orm';
 import * as z from 'zod';
-import { campaigns, scenes } from '../schema';
+import { campaigns, characters, scenes } from '../schema';
 import { ApiError, parse } from '../errors';
 import { seededRandom } from '../../utils/prng';
 import { listSrd } from './srd';
+import { addItem, getCharacter, itemCreateSchema } from './characters';
+import { idSchema, OBJECT_ERROR } from '../../utils/validation';
 
 export const LOOT_TABLES = ['items', 'consumables'] as const;
 export const RARITIES = ['common', 'uncommon', 'rare', 'legendary'] as const;
@@ -117,4 +119,31 @@ export async function deleteLoot(campaignId: string, sceneId: string, lootId: st
 		if (!loot.some((l) => l.id === lootId)) throw new ApiError(404, 'loot not found');
 		await save(tx, sceneId, loot.filter((l) => l.id !== lootId));
 	});
+}
+
+export const lootGiveSchema = z.object({ characterId: idSchema }, { error: OBJECT_ERROR });
+
+/** Adds the loot item to the character's inventory, marks the entry given and returns the character. */
+export async function giveLoot(campaignId: string, sceneId: string, lootId: string, body: unknown) {
+	const { characterId } = parse(lootGiveSchema, body);
+	const db = await conn();
+	const entry = await db.transaction(async (tx) => {
+		const loot = await lockLoot(tx, campaignId, sceneId);
+		const e = loot.find((l) => l.id === lootId);
+		if (!e) throw new ApiError(404, 'loot not found');
+		return e;
+	});
+	const [c] = await db.select({ campaignId: characters.campaignId }).from(characters).where(eq(characters.id, characterId));
+	if (!c) throw new ApiError(404, 'character not found');
+	if (c.campaignId !== campaignId) throw new ApiError(400, 'character is not in this campaign');
+	await addItem(characterId, parse(itemCreateSchema, { srdId: entry.srdId }));
+	await db.transaction(async (tx) => {
+		const loot = await lockLoot(tx, campaignId, sceneId);
+		const e = loot.find((l) => l.id === lootId);
+		if (e) {
+			e.given = true;
+			await save(tx, sceneId, loot);
+		}
+	});
+	return (await getCharacter(characterId))!;
 }
