@@ -110,3 +110,12 @@ export const scenes = pgTable('scenes', {
 	encounter: jsonb('encounter'),
 	loot: jsonb('loot').notNull().default(sql`'[]'::jsonb`)
 });
+
+export const journalEntries = pgTable('journal_entries', {
+	id: text('id').primaryKey().default(sql`gen_random_uuid()::text`),
+	campaignId: text('campaign_id')
+		.notNull()
+		.references(() => campaigns.id, { onDelete: 'cascade' }),
+	text: text('text').notNull(),
+	createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow()
+});

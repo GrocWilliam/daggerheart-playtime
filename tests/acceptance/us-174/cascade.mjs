@@ -1,0 +1,10 @@
+import { readFileSync } from 'node:fs';
+import assert from 'node:assert/strict';
+import { PGlite } from '@electric-sql/pglite';
+const { gone, kept } = JSON.parse(readFileSync(process.env.STATE_FILE, 'utf8'));
+const db = new PGlite(process.env.DATA_DIR);
+const count = async (id) => Number((await db.query('select count(*)::int as n from journal_entries where campaign_id = $1', [id])).rows[0].n);
+assert.equal(await count(gone), 0, 'entries of the deleted campaign remain');
+assert.equal(await count(kept), 1, 'entries of the other campaign were removed');
+console.log('cascade ok');
+await db.close();
