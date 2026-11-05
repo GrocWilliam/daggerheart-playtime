@@ -36,6 +36,8 @@
 	<button type="submit" name="delta" value="1">{t('action.increase')}</button>
 </form>
 <Pips name="fear" max={12} filled={c.fear} />
+{#if data.currentScene}<p>{t('campaign.currentScene')}: <strong data-testid="current-scene">{data.currentScene}</strong></p>{/if}
+<p><a href="/campaigns/{c.id}/scenario">{t('campaign.scenario')}</a></p>
 
 <h2>{t('campaign.characters')}</h2>
 <div class="grid grid-cols-1 gap-4 min-[600px]:grid-cols-2 min-[1024px]:grid-cols-3">

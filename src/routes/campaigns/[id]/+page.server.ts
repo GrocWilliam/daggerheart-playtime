@@ -56,7 +56,9 @@ export const load: PageServerLoad = async ({ params, fetch, locals }) => {
 		ancestry: options('ancestries'),
 		community: options('communities')
 	};
-	return { campaign: r.data, chosen, picks };
+	const sc = await call(fetch, 'GET', `/api/campaigns/${encodeURIComponent(params.id)}/scenes`);
+	const current = Array.isArray(sc.data) ? sc.data.find((s: { status: string }) => s.status === 'current') : undefined;
+	return { campaign: r.data, chosen, picks, currentScene: (current?.title as string | undefined) ?? null };
 };
 
 export const actions: Actions = {

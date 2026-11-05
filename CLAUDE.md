@@ -30,6 +30,7 @@ the one that matches your change. This file lists only where we differ or add to
 | `src/lib/server/db.ts` | Connection (`getDb`, `getDrizzle`) and startup migrations. |
 | `src/routes/api/**/+server.ts` | JSON API. Handlers are wrapped in `api(...)` and throw `ApiError(status, msg)` → `{"error": msg}`. |
 | `src/routes/**/+page.server.ts` | Pages: `load` + form `actions` that call the JSON API through `fetch`, not the DB directly. |
+| `src/routes/campaigns/[id]/scenario/` | Scenario page: scenes list and forms (add, edit, move, status, delete) over the scenes API; env details come from `getSrd` in English. |
 | `src/lib/components/*.svelte` | Shared components (`Pips`, `Help`, `Chosen`, `LanguageSwitcher`). `Help` takes either a glossary `id` or a `text` prop (a catalog string, e.g. `trait.help.*`). |
 | `src/lib/i18n/{en,fr}.json` | Every UI string, by key. `src/lib/i18n/index.ts` has the helpers; pages get `data.lang`. |
 | `src/lib/srd/` | SRD data (JSON) and its licence; `fr.json` holds the French names. |
@@ -122,3 +123,4 @@ No project skills: the `stack-*` skills cover the workflow and this file holds t
 - us-22 scans the English sheet for any differing `fr.json` value as a whole word, and English SRD names sit in its selects (e.g. "Force of Nature"): a French label like "Force" fails it, so use "Puissance".
 - Never run acceptance scripts (they `git clean drizzle`) before committing a fresh `drizzle/` migration, and do not `pkill -f` anything matching your own shell command.
 - us-22 whole-word scan: an English label equal to a different French value fails (en "Modifier" vs fr `section.edit`); use "Bonus" for experience.modifier.
+- us-154: a scene's text must not contain its neighbours' names (tests use case-insensitive `hasText`): the edit form's environment `<option>`s use `label=` attributes with empty bodies, and env features show name + question, not the rules text (it contains "two").
