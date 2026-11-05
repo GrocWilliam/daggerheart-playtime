@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { budgetFor, costOf, partyDefaults, generateRequestSchema } from './encounters';
+import { budgetFor, costOf, partyDefaults, generateRequestSchema, generateEncounter, type Adjustment } from './encounters';
+import { adversariesByTier } from './srd';
 
 const one = (...roles: string[]) => roles.map((role) => ({ role, count: 1 }));
 
@@ -26,5 +27,25 @@ describe('encounters', () => {
 		expect(m({ adjustments: 'easier' })).toBe('adjustments must be easier, damageBoost or harder');
 		expect(m({ seed: 1.5 })).toBe('seed must be an integer');
 		expect(m({})).toBeUndefined();
+	});
+	it('generator invariants', () => {
+		const combos: Adjustment[][] = [[], ['easier'], ['damageBoost', 'harder'], ['easier', 'damageBoost', 'harder']];
+		for (let p = 1; p <= 8; p++)
+			for (let tier = 1; tier <= 4; tier++) {
+				const pool = adversariesByTier(tier, 'en');
+				for (const adjustments of combos)
+					for (let seed = 1; seed <= 20; seed++) {
+						const e = generateEncounter({ partySize: p, tier, adjustments, seed }, pool);
+						const m = JSON.stringify({ p, tier, adjustments, seed, e });
+						expect(e.spent <= e.budget, m).toBe(true);
+						expect(e.budget - e.spent <= 1, m).toBe(true);
+						if (e.budget >= 4) expect(new Set(e.adversaries.map((a) => a.id)).size >= 2, m).toBe(true);
+						for (const a of e.adversaries) {
+							expect(pool.some((x) => x.id === a.id), m).toBe(true);
+							expect(a.cost, m).toBe(costOf(a.role, a.count, p));
+						}
+						expect(generateEncounter({ partySize: p, tier, adjustments, seed }, pool)).toEqual(e);
+					}
+			}
 	});
 });
