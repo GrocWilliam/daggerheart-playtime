@@ -32,4 +32,24 @@ describe('scenario page server', () => {
 		await (actions.move as never as (e: unknown) => Promise<unknown>)({ request, params: { id: 'x' }, fetch: f });
 		expect(JSON.parse(sent)).toEqual({ position: 2 });
 	});
+
+	it('roll posts the table, rarity and numeric count to the loot API', async () => {
+		let sent: { url: string; body: string } = { url: '', body: '' };
+		const f = (async (u: string, init: RequestInit) => ((sent = { url: u, body: String(init.body) }), new Response('[]', { status: 201 }))) as unknown as typeof fetch;
+		const request = new Request('http://x', { method: 'POST', body: new URLSearchParams({ sceneId: 's1', table: 'items', rarity: 'rare', count: '3' }) });
+		await (actions.roll as never as (e: unknown) => Promise<unknown>)({ request, params: { id: 'c' }, fetch: f });
+		expect(sent.url).toBe('/api/campaigns/c/scenes/s1/loot');
+		expect(JSON.parse(sent.body)).toEqual({ table: 'items', rarity: 'rare', count: 3 });
+	});
+
+	it('load localizes loot names and lists campaign characters', async () => {
+		const item = listSrd('items', 'en')[0];
+		const scenes = [{ id: 's', title: 'T', notes: '', status: 'planned', environmentId: null, loot: [{ id: 'l', table: 'items', srdId: item.id, roll: 1, name: item.name, given: false }] }];
+		const f = (async (u: string) =>
+			new Response(JSON.stringify(u.endsWith('/scenes') ? scenes : { characters: [{ id: 'k', name: 'Zed', class: 'x' }] }))) as unknown as typeof fetch;
+		const r = (await load({ params: { id: 'x' }, fetch: f } as never)) as never as { characters: unknown[]; scenes: { loot: { name: string; roll: number; features: string[] }[] }[] };
+		expect(r.characters).toEqual([{ id: 'k', name: 'Zed' }]);
+		expect(r.scenes[0].loot[0]).toMatchObject({ name: item.name, roll: 1 });
+		expect(r.scenes[0].loot[0].features.length).toBeGreaterThan(0);
+	});
 });

@@ -66,6 +66,57 @@
 				<button type="submit">{t('scenario.delete')}</button>
 			</form>
 		</div>
+		<h4>{t('loot.title')}</h4>
+		<form method="POST" action="?/roll">
+			<input type="hidden" name="sceneId" value={s.id} />
+			<label>{t('loot.table')}
+				<select name="table">
+					<option value="items">{t('loot.table.items')}</option>
+					<option value="consumables">{t('loot.table.consumables')}</option>
+				</select>
+			</label>
+			<label>{t('loot.rarity')}
+				<select name="rarity">
+					{#each ['common', 'uncommon', 'rare', 'legendary'] as r (r)}<option value={r}>{t(`loot.rarity.${r}`)}</option>{/each}
+				</select>
+			</label>
+			<label>{t('loot.count')} <input name="count" type="number" min="1" max="10" value="1" required /></label>
+			<button type="submit">{t('loot.roll')}</button>
+		</form>
+		{#each s.loot as l (l.id)}
+			<div class="mb-2 rounded-[0.5rem] border-2 border-solid border-muted p-3" data-testid="loot-entry" data-given={l.given}>
+				<p>
+					<strong>{l.name}</strong>
+					<span class="text-muted">{t('loot.roll.label')} {l.roll}</span>
+					{#if l.given}<span class="inline-block rounded-[999px] bg-calm px-[0.6rem] text-[0.875rem] text-bg">{t('loot.given')}</span>{/if}
+				</p>
+				{#if l.features.length}
+					<details>
+						<summary>{t('loot.features')}</summary>
+						{#each l.features as f (f)}<p lang="en">{f}</p>{/each}
+					</details>
+				{:else}
+					<details><summary>{t('loot.features')}</summary><p>{t('loot.noFeatures')}</p></details>
+				{/if}
+				<div class="flex flex-wrap gap-2">
+					<form class="mb-0! bg-transparent! p-0!" method="POST" action="?/give">
+						<input type="hidden" name="sceneId" value={s.id} />
+						<input type="hidden" name="lootId" value={l.id} />
+						<label>{t('loot.giveTo')}
+							<select name="characterId" required>
+								{#each data.characters as c (c.id)}<option value={c.id}>{c.name}</option>{/each}
+							</select>
+						</label>
+						<button type="submit">{t('loot.give')}</button>
+					</form>
+					<form class="mb-0! bg-transparent! p-0!" method="POST" action="?/deleteLoot">
+						<input type="hidden" name="sceneId" value={s.id} />
+						<input type="hidden" name="lootId" value={l.id} />
+						<button type="submit">{t('loot.delete')}</button>
+					</form>
+				</div>
+			</div>
+		{/each}
 		<form method="POST" action="?/edit">
 			<input type="hidden" name="sceneId" value={s.id} />
 			<label>{t('scenario.sceneTitle')} <input name="title" value={s.title} required maxlength="100" /></label>
