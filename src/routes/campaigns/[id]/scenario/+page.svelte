@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { translate } from '$lib/i18n';
 	import Help from '$lib/components/Help.svelte';
+	const ADJUSTMENTS = ['easier', 'damageBoost', 'harder'] as const;
 	let { data, form } = $props();
 	const t = (key: string) => translate(data.lang, key);
 	const badge: Record<string, string> = { planned: 'bg-muted', current: 'bg-accent', done: 'bg-calm' };
@@ -117,6 +118,55 @@
 				</div>
 			</div>
 		{/each}
+		<h4>{t('encounter.title')}</h4>
+		<form method="POST" action="?/generate">
+			<input type="hidden" name="sceneId" value={s.id} />
+			<label>{t('encounter.partySize')} <input name="partySize" type="number" min="1" max="8" value={s.encounter?.partySize ?? data.party.partySize} required /></label>
+			<label>{t('encounter.tier')} <input name="tier" type="number" min="1" max="4" value={s.encounter?.tier ?? data.party.tier} required /></label>
+			{#each ADJUSTMENTS as a (a)}
+				<label><input type="checkbox" name="adjustments" value={a} checked={s.encounter?.adjustments.includes(a) ?? false} /> {t(`encounter.adjust.${a}`)}</label>
+			{/each}
+			<button type="submit">{s.encounter ? t('encounter.regenerate') : t('encounter.generate')}</button>
+		</form>
+		{#if s.encounter}
+			{@const enc = s.encounter}
+			<p data-testid="encounter-budget" class="font-bold {enc.over ? 'text-danger' : ''}">
+				{t('encounter.budget')}: {enc.spent} / {enc.budget}
+				{#if enc.over}<span>({t('encounter.over')})</span>{/if}
+			</p>
+			{#each enc.adversaries as a (a.id)}
+				<div class="mb-2 rounded-[0.5rem] border-2 border-solid border-muted p-3" data-testid="encounter-adversary">
+					<p><strong lang="en">{a.name}</strong> ×{a.count} · <span lang="en">{a.role}</span></p>
+					<ul class="list-none pl-0!">
+						<li>{t('encounter.difficulty')}: {a.difficulty}</li>
+						<li>{t('encounter.hp')}: {a.hp}</li>
+						<li>{t('encounter.stress')}: {a.stress}</li>
+						<li>{t('encounter.thresholds')}: {a.thresholds}</li>
+						<li>{t('encounter.attack')}: <span lang="en">{a.attack}</span></li>
+						<li>{t('encounter.damage')}: <span lang="en">{a.damage}</span></li>
+					</ul>
+					<details>
+						<summary>{t('encounter.features')}</summary>
+						{#each a.features as f (f.name)}<p lang="en"><strong>{f.name}</strong>: {f.text}</p>{/each}
+					</details>
+					<form class="mb-0! bg-transparent! p-0!" method="POST" action="?/setCount">
+						<input type="hidden" name="sceneId" value={s.id} />
+						<input type="hidden" name="id" value={a.id} />
+						<input name="count" type="number" min="1" value={a.count} required aria-label={translate(data.lang, 'encounter.count', { name: a.name })} />
+						{#each enc.adversaries.filter((o) => o.id !== a.id) as o (o.id)}
+							<input type="hidden" name="id" value={o.id} />
+							<input type="hidden" name="count" value={o.count} />
+						{/each}
+						<button type="submit">{t('encounter.update')}</button>
+						<button type="submit" formaction="?/removeAdversary" name="remove" value={a.id} formnovalidate>{t('encounter.remove')}</button>
+					</form>
+				</div>
+			{/each}
+			<form class="mb-0! bg-transparent! p-0!" method="POST" action="?/deleteEncounter">
+				<input type="hidden" name="sceneId" value={s.id} />
+				<button type="submit">{t('encounter.delete')}</button>
+			</form>
+		{/if}
 		<form method="POST" action="?/edit">
 			<input type="hidden" name="sceneId" value={s.id} />
 			<label>{t('scenario.sceneTitle')} <input name="title" value={s.title} required maxlength="100" /></label>

@@ -31,7 +31,7 @@ the one that matches your change. This file lists only where we differ or add to
 | `src/lib/server/db.ts` | Connection (`getDb`, `getDrizzle`) and startup migrations. |
 | `src/routes/api/**/+server.ts` | JSON API. Handlers are wrapped in `api(...)` and throw `ApiError(status, msg)` → `{"error": msg}`. |
 | `src/routes/**/+page.server.ts` | Pages: `load` + form `actions` that call the JSON API through `fetch`, not the DB directly. |
-| `src/routes/campaigns/[id]/scenario/` | Scenario page: scenes list and forms (add, edit, move, status, delete, loot roll/give/delete) over the scenes and loot APIs; env details come from `getSrd` in English. |
+| `src/routes/campaigns/[id]/scenario/` | Scenario page: scenes list and forms (add, edit, move, status, delete, loot roll/give/delete, encounter generate/setCount/removeAdversary/deleteEncounter; party defaults from character levels via `partyDefaults`) over the scenes and loot APIs; env details come from `getSrd` in English. |
 | `src/lib/components/*.svelte` | Shared components (`Pips`, `Help`, `Chosen`, `LanguageSwitcher`). `Help` takes either a glossary `id` or a `text` prop (a catalog string, e.g. `trait.help.*`). |
 | `src/lib/i18n/{en,fr}.json` | Every UI string, by key. `src/lib/i18n/index.ts` has the helpers; pages get `data.lang`. |
 | `src/lib/srd/` | SRD data (JSON) and its licence; `fr.json` holds the French names. |

@@ -53,3 +53,31 @@ describe('scenario page server', () => {
 		expect(r.scenes[0].loot[0].features.length).toBeGreaterThan(0);
 	});
 });
+
+describe('scenario page encounter actions', () => {
+	const call = async (name: 'generate' | 'setCount' | 'removeAdversary' | 'deleteEncounter', body: string[][]) => {
+		const sent: { url: string; method: string; body: string }[] = [];
+		const f = (async (u: string, init: RequestInit) => (sent.push({ url: u, method: init.method!, body: String(init.body) }), new Response('{}', { status: 200 }))) as unknown as typeof fetch;
+		const request = new Request('http://x', { method: 'POST', body: new URLSearchParams(body) });
+		await (actions[name] as never as (e: unknown) => Promise<unknown>)({ request, params: { id: 'c' }, fetch: f });
+		return sent[0];
+	};
+
+	it('generate posts numbers and the checked adjustments', async () => {
+		const r = await call('generate', [['sceneId', 's'], ['partySize', '4'], ['tier', '2'], ['adjustments', 'harder'], ['adjustments', 'bogus']]);
+		expect(r.url).toBe('/api/campaigns/c/scenes/s/encounter');
+		expect(JSON.parse(r.body)).toEqual({ partySize: 4, tier: 2, adjustments: ['harder'] });
+	});
+
+	it('setCount sends every adversary, removeAdversary drops the removed one', async () => {
+		const form = [['sceneId', 's'], ['id', 'a'], ['count', '3'], ['id', 'b'], ['count', '2'], ['remove', 'a']];
+		expect(JSON.parse((await call('setCount', form)).body).adversaries).toEqual([{ id: 'a', count: 3 }, { id: 'b', count: 2 }]);
+		const r = await call('removeAdversary', form);
+		expect(r.method).toBe('PATCH');
+		expect(JSON.parse(r.body).adversaries).toEqual([{ id: 'b', count: 2 }]);
+	});
+
+	it('deleteEncounter deletes', async () => {
+		expect((await call('deleteEncounter', [['sceneId', 's']])).method).toBe('DELETE');
+	});
+});

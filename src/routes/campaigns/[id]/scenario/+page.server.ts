@@ -3,6 +3,7 @@ import { getSrd, listSrd } from '$lib/server/features/srd';
 import type { Scene } from '$lib/server/features/scenes';
 import type { LootEntry } from '$lib/server/features/loot';
 import type { Lang } from '$lib/i18n';
+import { partyDefaults, ADJUSTMENTS, type Encounter } from '$lib/server/features/encounters';
 type Actions = import('./$types').Actions;
 type PageServerLoad = import('./$types').PageServerLoad;
 
@@ -35,6 +36,20 @@ function lootView(l: LootEntry, lang: Lang) {
 	return { id: l.id, roll: l.roll, given: l.given, name: el?.nameLocalized ?? l.name, features };
 }
 
+type Feature = { name: string; text: string };
+
+/** An encounter entry with its English SRD stats. */
+function adversaryView(a: { id: string; name: string; role: string; count: number; cost: number }) {
+	const d = (getSrd('adversaries', a.id, 'en') ?? {}) as Record<string, unknown>;
+	const s = (k: string) => String(d[k] ?? '');
+	const features = ((d.feature as Feature[] | undefined) ?? []).map((f) => ({ name: f.name, text: f.text }));
+	return {
+		id: a.id, name: a.name, role: a.role, count: a.count, cost: a.cost,
+		difficulty: s('difficulty'), hp: s('hp'), stress: s('stress'), thresholds: s('thresholds'),
+		attack: s('attack'), damage: s('damage'), features
+	};
+}
+
 const base = (id: string) => `/api/campaigns/${encodeURIComponent(id)}/scenes`;
 const text = (v: FormDataEntryValue | null) => (typeof v === 'string' ? v : '');
 const envOf = (v: FormDataEntryValue | null) => (text(v) === '' ? null : text(v));
@@ -58,14 +73,16 @@ export const load: PageServerLoad = async ({ params, fetch, locals }) => {
 					)
 				}
 			: null;
+		const enc = s.encounter as Encounter | null;
+		const encounter = enc ? { ...enc, over: enc.spent > enc.budget, adversaries: enc.adversaries.map(adversaryView) } : null;
 		const loot = (Array.isArray(s.loot) ? (s.loot as LootEntry[]) : []).map((l) => lootView(l, lang));
-		return { ...s, environment, loot };
+		return { ...s, environment, loot, encounter };
 	});
 	const c = await call(fetch, 'GET', `/api/campaigns/${encodeURIComponent(params.id)}`);
-	const characters = ((c.ok && Array.isArray(c.data?.characters) ? c.data.characters : []) as { id: string; name: string }[]).map(
-		(ch) => ({ id: ch.id, name: ch.name })
-	);
-	return { campaignId: params.id, scenes, characters, environments: listSrd('environments', lang) };
+	const raw = (c.ok && Array.isArray(c.data?.characters) ? c.data.characters : []) as { id: string; name: string; level?: number }[];
+	const characters = raw.map((ch) => ({ id: ch.id, name: ch.name }));
+	const party = partyDefaults(raw.map((ch) => (typeof ch.level === 'number' ? ch.level : 1)));
+	return { campaignId: params.id, scenes, characters, party, environments: listSrd('environments', lang) };
 };
 
 type Event = Parameters<NonNullable<Actions[string]>>[0];
@@ -79,6 +96,8 @@ async function run(
 	const r = await call(fetch, method, path, body);
 	return r.ok ? { ok: true } : fail(r.status, { error: errorKey(r.status) });
 }
+
+const encPath = (e: Event, f: FormData) => `${base(e.params.id)}/${encodeURIComponent(text(f.get('sceneId')))}/encounter`;
 
 export const actions: Actions = {
 	add: async (e) => {
@@ -126,6 +145,27 @@ export const actions: Actions = {
 	deleteLoot: async (e) => {
 		const f = await e.request.formData();
 		return run(e, 'DELETE', `${base(e.params.id)}/${encodeURIComponent(text(f.get('sceneId')))}/loot/${encodeURIComponent(text(f.get('lootId')))}`);
+	},
+	generate: async (e) => {
+		const f = await e.request.formData();
+		const adjustments = ADJUSTMENTS.filter((a) => f.getAll('adjustments').includes(a));
+		const num = (k: string) => (text(f.get(k)) === '' ? undefined : Number(f.get(k)));
+		return run(e, 'POST', `${encPath(e, f)}`, { partySize: num('partySize'), tier: num('tier'), adjustments });
+	},
+	setCount: async (e) => {
+		const f = await e.request.formData();
+		const counts = f.getAll('id').map((id, i) => ({ id: text(id), count: Number(f.getAll('count')[i]) }));
+		return run(e, 'PATCH', encPath(e, f), { adversaries: counts });
+	},
+	removeAdversary: async (e) => {
+		const f = await e.request.formData();
+		const gone = text(f.get('remove'));
+		const counts = f.getAll('id').map((id, i) => ({ id: text(id), count: Number(f.getAll('count')[i]) })).filter((a) => a.id !== gone);
+		return run(e, 'PATCH', encPath(e, f), { adversaries: counts });
+	},
+	deleteEncounter: async (e) => {
+		const f = await e.request.formData();
+		return run(e, 'DELETE', encPath(e, f));
 	},
 	delete: async (e) => {
 		const f = await e.request.formData();
