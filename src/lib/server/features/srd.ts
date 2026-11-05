@@ -298,3 +298,53 @@ export function itemPicks(ids: string[], lang: Lang): Record<string, Pick> {
 	}
 	return out;
 }
+
+export type GearGroup = { tier: number; picks: Pick[] };
+
+function gearGroups(kind: 'weapons' | 'armors', types: string[] | null, tier: number, lang: Lang): GearGroup[] {
+	const rows = data.get(kind)!.filter((d) => (!types || types.includes(String(d.element.type))) && Number(d.element.tier) <= tier);
+	const tiers = [...new Set(rows.map((d) => Number(d.element.tier)))].sort((a, b) => a - b);
+	return tiers.map((t) => ({
+		tier: t,
+		picks: rows.filter((d) => Number(d.element.tier) === t).map((d) => toPick(kind, d, lang))
+	}));
+}
+
+/** Primary or secondary weapons up to `tier`, grouped by their SRD tier field. */
+export function weaponGroups(kind: 'primary' | 'secondary', tier: number, lang: Lang): GearGroup[] {
+	return gearGroups('weapons', kind === 'primary' ? ['PRIMARY_PHYSICAL', 'PRIMARY_MAGIC'] : ['SECONDARY'], tier, lang);
+}
+
+/** Armors up to `tier`, grouped by their SRD tier field. */
+export function armorGroups(tier: number, lang: Lang): GearGroup[] {
+	return gearGroups('armors', null, tier, lang);
+}
+
+export type GearFeature = { name: string; text: string };
+export type GearDetail = {
+	id: string;
+	name: string;
+	trait?: string;
+	range?: string;
+	dice?: string;
+	damageType?: string;
+	burden?: string;
+	major?: number;
+	severe?: number;
+	score?: number;
+	features: GearFeature[];
+};
+
+/** Structured details of a weapon or armor (raw SRD enum values); feature texts are the SRD's English. */
+export function gearDetail(kind: 'weapons' | 'armors', id: string | null | undefined, lang: Lang): GearDetail | null {
+	const e = id ? getSrd(kind, id, lang) : null;
+	if (!e) return null;
+	const features: GearFeature[] = ((e.features as Raw[] | undefined) ?? []).map((f) => ({
+		name: String(f.name?.['en-US'] ?? ''),
+		text: paragraphs(f.description).join(' ')
+	}));
+	const base = { id: e.id, name: e.nameLocalized, features };
+	return kind === 'weapons'
+		? { ...base, trait: e.trait, range: e.range, dice: e.damage?.dice, damageType: e.damage?.type, burden: e.burden }
+		: { ...base, major: e.baseMajorThreshold, severe: e.baseSevereThreshold, score: e.baseScore };
+}

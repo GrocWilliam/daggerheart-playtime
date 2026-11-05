@@ -47,8 +47,8 @@ async function open(lang, path, { js = false, viewport } = {}) {
 	return { ctx, page };
 }
 // The SRD picker is the select grouped in optgroups other than the card select.
-const srdSelect = (page) => page.locator('select:has(optgroup):not([name="cardId"])');
-const srdForm = (page) => page.locator('form:has(select:has(optgroup):not([name="cardId"]))');
+const srdSelect = (page) => page.locator('select[name="srdId"]');
+const srdForm = (page) => page.locator('form:has(select[name="srdId"])');
 
 test('API: {srdId} adds the SRD item named in English (weapon, armor, consumable, item)', async () => {
 	const id = await mk();

@@ -166,6 +166,55 @@
 	<button type="submit">{t('action.updateGold')}</button>
 </form>
 
+<h2>{t('section.equipment')}</h2>
+{#snippet gear(testid: string, g: { name: string; trait?: string; range?: string; dice?: string; damageType?: string; burden?: string; major?: number; severe?: number; score?: number; features: { name: string; text: string }[] })}
+	<div data-testid={testid}>
+		<strong>{g.name}</strong>
+		<ul class="mt-0 mb-3 list-none pl-0!">
+			{#if g.trait}
+				<li>{t('equipment.trait')}: {t(`trait.${g.trait.toLowerCase()}`)}</li>
+				<li>{t('equipment.range')}: {t(`range.${g.range}`)}</li>
+				<li>{t('equipment.damage')}: {g.dice} {t(`damage.${g.damageType}`)}</li>
+				<li>{t('equipment.burden')}: {t(`burden.${g.burden}`)}</li>
+			{:else}
+				<li>{t('equipment.thresholds')}: {g.major}/{g.severe}</li>
+				<li>{t('equipment.score')}: {g.score}</li>
+			{/if}
+			{#each g.features as f (f.name)}
+				<li>{f.name}: {f.text}</li>
+			{/each}
+		</ul>
+	</div>
+{/snippet}
+{#snippet picker(name: string, label: string, groups: { tier: number; picks: { id: string; name: string }[] }[], current: string | null)}
+	<form method="POST" action="?/equip">
+		<label>
+			{t(label)}
+			<select {name}>
+				<option value="" selected={!current}>{t('option.none')}</option>
+				{#each groups as g (g.tier)}
+					<optgroup label={t('equipment.tier', { tier: g.tier })}>
+						{#each g.picks as p (p.id)}
+							<option value={p.id} selected={p.id === current}>{p.name}</option>
+						{/each}
+					</optgroup>
+				{/each}
+			</select>
+		</label>
+		<button type="submit">{t('action.equip')}</button>
+	</form>
+{/snippet}
+{@render picker('primaryWeapon', 'equipment.primary', data.equipment.primary, c.primaryWeapon)}
+{#if data.equipment.primaryWeapon}{@render gear('primary-weapon', data.equipment.primaryWeapon)}{/if}
+{#if data.equipment.secondaryBlocked}
+	<p data-testid="secondary-blocked">{t('equipment.secondaryBlocked')}</p>
+{:else}
+	{@render picker('secondaryWeapon', 'equipment.secondary', data.equipment.secondary, c.secondaryWeapon)}
+{/if}
+{#if data.equipment.secondaryWeapon}{@render gear('secondary-weapon', data.equipment.secondaryWeapon)}{/if}
+{@render picker('armorId', 'equipment.armor', data.equipment.armors, c.armorId)}
+{#if data.equipment.armor}{@render gear('equipped-armor', data.equipment.armor)}{/if}
+
 <h2>{t('section.experiences')}</h2>
 <form method="POST" action="?/addExperience">
 	<label>{t('experience.name')} <input type="text" name="name" maxlength="100" required /></label>

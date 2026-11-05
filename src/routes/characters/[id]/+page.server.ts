@@ -1,6 +1,6 @@
 import { error, fail } from '@sveltejs/kit';
-import { pickList, pickOf, subclassesOf, getSrd, cardsByIds, cardGroups, domainsOfClass, itemGroups, itemPicks } from '$lib/server/features/srd';
-import { TRAITS, conditionFieldSchema, trackerFieldSchema } from '$lib/server/features/characters';
+import { pickList, pickOf, subclassesOf, getSrd, cardsByIds, cardGroups, domainsOfClass, itemGroups, itemPicks, weaponGroups, armorGroups, gearDetail } from '$lib/server/features/srd';
+import { TRAITS, tierOfLevel, conditionFieldSchema, trackerFieldSchema } from '$lib/server/features/characters';
 type Actions = import('./$types').Actions;
 type PageServerLoad = import('./$types').PageServerLoad;
 
@@ -59,6 +59,15 @@ export const load: PageServerLoad = async ({ params, fetch, locals }) => {
 			(Array.isArray(ch.items) ? ch.items : []).flatMap((i: { srdId?: string | null }) => (i.srdId ? [i.srdId] : [])),
 			lang
 		),
+		equipment: {
+			primary: weaponGroups('primary', tierOfLevel(ch.level), lang),
+			secondary: weaponGroups('secondary', tierOfLevel(ch.level), lang),
+			armors: armorGroups(tierOfLevel(ch.level), lang),
+			primaryWeapon: gearDetail('weapons', ch.primaryWeapon, lang),
+			secondaryWeapon: gearDetail('weapons', ch.secondaryWeapon, lang),
+			armor: gearDetail('armors', ch.armorId, lang),
+			secondaryBlocked: gearDetail('weapons', ch.primaryWeapon, 'en')?.burden === 'TWO_HANDED'
+		},
 		chosen: {
 			subclass: pickOf('subclasses', ch.subclass, lang),
 			ancestry: pickOf('ancestries', ch.ancestry, lang),
@@ -176,6 +185,16 @@ export const actions: Actions = {
 			'DELETE',
 			`/api/characters/${enc(params.id)}/cards/${enc(String(form.get('cardId') ?? ''))}`
 		);
+		return r.ok ? { ok: true } : failure(r);
+	},
+	equip: async ({ request, params, fetch }) => {
+		const form = await request.formData();
+		const field = ['primaryWeapon', 'secondaryWeapon', 'armorId'].find((k) => form.has(k));
+		if (!field) return fail(400, { error: 'error.invalid' });
+		const v = form.get(field);
+		const r = await call(fetch, 'PATCH', `/api/characters/${enc(params.id)}`, {
+			[field]: typeof v === 'string' && v !== '' ? v : null
+		});
 		return r.ok ? { ok: true } : failure(r);
 	},
 	addExperience: async ({ request, params, fetch }) => {

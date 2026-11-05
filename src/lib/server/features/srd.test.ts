@@ -96,3 +96,21 @@ describe('domainsOfClass', () => {
 		expect(d[1].help).toBe('Maîtrise des armes et prouesse martiale.');
 	});
 });
+
+import { weaponGroups, armorGroups, gearDetail } from './srd';
+describe('gear helpers', () => {
+	it('filters by tier and groups by the SRD tier field', () => {
+		const g = weaponGroups('primary', 1, 'en');
+		expect(g.map((x) => x.tier)).toEqual([1]);
+		expect(weaponGroups('primary', 2, 'en').map((x) => x.tier)).toEqual([1, 2]);
+		expect(armorGroups(3, 'en').map((x) => x.tier)).toEqual([1, 2, 3]);
+		expect(weaponGroups('secondary', 1, 'en')[0].picks.some((p) => p.id === 'core_weapon_round_shield')).toBe(true);
+		expect(g[0].picks.some((p) => p.id === 'core_weapon_round_shield')).toBe(false);
+	});
+	it('uses French names and exposes details', () => {
+		expect(weaponGroups('primary', 1, 'fr')[0].picks.length).toBeGreaterThan(0);
+		expect(gearDetail('weapons', 'core_weapon_longsword', 'en')?.burden).toBe('TWO_HANDED');
+		expect(gearDetail('armors', 'core_armor_gambeson_armor', 'en')?.score).toBe(3);
+		expect(gearDetail('armors', null, 'en')).toBeNull();
+	});
+});
