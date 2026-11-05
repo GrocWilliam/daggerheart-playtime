@@ -21,6 +21,8 @@ the one that matches your change. This file lists only where we differ or add to
 | Path | What |
 |---|---|
 | `src/lib/server/features/*.ts` | Domain logic and queries (`campaigns.ts`, `characters.ts` (incl. traits, items, experiences), `srd.ts` (incl. adversaries/environments with `adv_`/`env_` ids, `adversariesByTier`; `weaponGroups`/`armorGroups`/`gearDetail` for the equipment section), `scenes.ts` (ordered scenes per campaign, dense `position`, routes under `api/campaigns/[id]/scenes`), `language.ts`), their Zod schemas with the inferred types, and colocated tests. |
+| `src/lib/server/features/loot.ts` | Loot rolling per scene (stored in `scenes.loot`; d12 sums by rarity over SRD `items`/`consumables`), routes under `scenes/[sceneId]/loot`. |
+| `src/lib/utils/prng.ts` | `seededRandom(seed)` shared seeded PRNG. |
 | `src/lib/server/errors.ts` | `ApiError`, `errorResponse`, `api()`, `parse`, `readJson`. |
 | `src/lib/utils/validation.ts` | Shared Zod field helpers: `strField`, `intField`, `safeIntField`, `OBJECT_ERROR`, `idSchema`. |
 | `src/app.test.ts` | Tests `src/app.css` (palette). |
