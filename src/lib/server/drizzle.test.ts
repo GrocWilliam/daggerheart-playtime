@@ -30,13 +30,13 @@ describe('drizzle', () => {
 		);
 		expect(idx).toContain('items_character_name_uniq');
 		const rows = (await db.query('SELECT * FROM drizzle.__drizzle_migrations')).rows;
-		expect(rows).toHaveLength(4);
+		expect(rows).toHaveLength(5);
 	});
 
 	it('schema columns and nullability match the database', async () => {
 		const db = await getDb();
 		const tables = Object.values(schema).filter((v) => is(v, PgTable)).map((t) => getTableConfig(t));
-		expect(tables).toHaveLength(5);
+		expect(tables).toHaveLength(6);
 		for (const t of tables) {
 			const { rows } = await db.query(
 				`SELECT column_name, is_nullable FROM information_schema.columns WHERE table_schema='public' AND table_name=$1`,

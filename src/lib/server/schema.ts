@@ -96,3 +96,17 @@ export const experiences = pgTable(
 	},
 	(t) => [uniqueIndex('experiences_character_name_uniq').on(t.characterId, sql`lower(btrim(${t.name}))`)]
 );
+
+export const scenes = pgTable('scenes', {
+	id: text('id').primaryKey().default(sql`gen_random_uuid()::text`),
+	campaignId: text('campaign_id')
+		.notNull()
+		.references(() => campaigns.id, { onDelete: 'cascade' }),
+	position: integer('position').notNull(),
+	title: text('title').notNull(),
+	notes: text('notes').notNull().default(''),
+	environmentId: text('environment_id'),
+	status: text('status').notNull().default('planned'),
+	encounter: jsonb('encounter'),
+	loot: jsonb('loot').notNull().default(sql`'[]'::jsonb`)
+});
