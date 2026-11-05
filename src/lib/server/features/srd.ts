@@ -13,7 +13,9 @@ export const SRD_KINDS = [
 	'armors',
 	'consumables',
 	'items',
-	'rules'
+	'rules',
+	'adversaries',
+	'environments'
 ] as const;
 export type SrdKind = (typeof SRD_KINDS)[number];
 
@@ -21,7 +23,7 @@ export type SrdKind = (typeof SRD_KINDS)[number];
 type Raw = Record<string, any>;
 export type SrdElement = Raw & { id: string };
 
-const FILES: Record<Exclude<SrdKind, 'domains'>, string> = {
+const FILES: Record<Exclude<SrdKind, 'domains' | 'adversaries' | 'environments'>, string> = {
 	classes: 'classes.json',
 	subclasses: 'subclasses.json',
 	ancestries: 'ancestries.json',
@@ -55,6 +57,30 @@ function readCore(file: string): Raw[] {
 	return JSON.parse(readSrdFile(`core/${file}`));
 }
 
+/** Strips a leading UTF-8 byte order mark. */
+export function stripBom(text: string): string {
+	return text.charCodeAt(0) === 0xfeff ? text.slice(1) : text;
+}
+
+/** `adv_<slug>` / `env_<slug>` id part: lowercase, runs of non-alphanumerics become one '_'. */
+export function slug(name: string): string {
+	return name.toLowerCase().replace(/[^a-z0-9]+/g, '_');
+}
+
+/** Adversary role: the type without its parenthesis ('Horde (3/HP)' -> 'Horde'). */
+export function roleOf(type: string): string {
+	return type.replace(/\s*\(.*$/, '').trim();
+}
+
+function readFlat(file: string, prefix: string, adversary: boolean): { element: SrdElement; name: string }[] {
+	const rows: Raw[] = JSON.parse(stripBom(readSrdFile(file)));
+	return rows.map((r) => {
+		const element: SrdElement = { ...r, id: `${prefix}_${slug(String(r.name))}`, tier: Number(r.tier) };
+		if (adversary) element.role = roleOf(String(r.type));
+		return { element, name: String(r.name) };
+	});
+}
+
 function englishName(kind: SrdKind, e: Raw): string {
 	if (kind === 'classes') {
 		const n = String(e.name);
@@ -70,6 +96,8 @@ for (const [kind, file] of Object.entries(FILES) as [SrdKind, string][]) {
 		readCore(file).map((e) => ({ element: e as SrdElement, name: englishName(kind, e) }))
 	);
 }
+data.set('adversaries', readFlat('adversaries.json', 'adv', true));
+data.set('environments', readFlat('environments.json', 'env', false));
 {
 	const names = [
 		...new Set(readCore('domain-cards.json').map((c) => String(c.domain)))
@@ -130,6 +158,13 @@ function collectText(node: unknown, out: string[]): void {
 }
 
 function englishLines(kind: SrdKind, e: Raw): string[] {
+	if (kind === 'adversaries' || kind === 'environments') {
+		const facts = Object.entries(e)
+			.filter(([k, v]) => !['id', 'name', 'feature'].includes(k) && (typeof v === 'string' || typeof v === 'number') && v !== '')
+			.map(([k, v]) => `${k}: ${v}`);
+		const feats = ((e.feature as Raw[] | undefined) ?? []).map((f) => `${f.name}: ${f.text}`);
+		return [facts.join(' · '), ...feats];
+	}
 	if (kind === 'domains') return [domainsEn[e.id] ?? String(e.name['en-US'])];
 	const facts = Object.entries(e)
 		.filter(([k, v]) => k !== 'id' && k !== 'name' && (typeof v === 'string' || typeof v === 'number'))
@@ -159,6 +194,17 @@ export function searchSrd(kind: SrdKind | undefined, q: string, lang: Lang): { k
 			}))
 	}));
 }
+
+/** Adversaries of a tier (1-4; all if undefined) in file order, with their role. */
+export function adversariesByTier(tier: number | undefined, lang: Lang): { id: string; name: string; tier: number; role: string }[] {
+	return data
+		.get('adversaries')!
+		.filter((d) => tier === undefined || d.element.tier === tier)
+		.map((d) => ({ id: d.element.id, name: localize(d.element.id, d.name, lang), tier: d.element.tier, role: d.element.role }));
+}
+
+export const getAdversary = (id: string, lang: Lang) => getSrd('adversaries', id, lang);
+export const getEnvironment = (id: string, lang: Lang) => getSrd('environments', id, lang);
 
 const upper = (s: unknown) => String(s ?? '');
 const cap = (s: unknown) => upper(s).charAt(0) + upper(s).slice(1).toLowerCase().replace(/_/g, ' ');

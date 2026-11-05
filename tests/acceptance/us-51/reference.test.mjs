@@ -4,7 +4,7 @@ import { createRequire } from 'node:module';
 
 const { chromium } = createRequire(process.env.PW_DIR + '/')('playwright-core');
 const BASE = process.env.BASE_URL;
-const KINDS = ['classes', 'subclasses', 'ancestries', 'communities', 'domains', 'domain-cards', 'weapons', 'armors', 'consumables', 'items', 'rules'];
+const KINDS = ['classes', 'subclasses', 'ancestries', 'communities', 'domains', 'domain-cards', 'weapons', 'armors', 'consumables', 'items', 'rules', 'adversaries', 'environments'];
 let browser, camp, ch;
 
 const api = async (method, path, body) => {

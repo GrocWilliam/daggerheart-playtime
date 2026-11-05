@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { domainsOfClass, getSrd, listSrd, SRD_KINDS, srdIdSchema, srdKindSchema, srdSearchSchema } from './srd';
 
-const COUNTS = [9, 18, 18, 9, 9, 189, 192, 34, 60, 60, 14];
+const COUNTS = [9, 18, 18, 9, 9, 189, 192, 34, 60, 60, 14, 129, 19];
 
 describe('srd', () => {
 	it('lists every kind with the expected count', () => {
@@ -112,5 +112,31 @@ describe('gear helpers', () => {
 		expect(gearDetail('weapons', 'core_weapon_longsword', 'en')?.burden).toBe('TWO_HANDED');
 		expect(gearDetail('armors', 'core_armor_gambeson_armor', 'en')?.score).toBe(3);
 		expect(gearDetail('armors', null, 'en')).toBeNull();
+	});
+});
+
+import { stripBom, slug, roleOf, getAdversary, adversariesByTier } from './srd';
+
+describe('adversaries and environments', () => {
+	it('strips a BOM', () => {
+		expect(stripBom('﻿[1]')).toBe('[1]');
+		expect(stripBom('[1]')).toBe('[1]');
+	});
+	it('builds adv_/env_ slugs', () => {
+		expect(slug('Acid Burrower')).toBe('acid_burrower');
+		expect(slug("Dire Bat's  Nest!")).toBe('dire_bat_s_nest_');
+	});
+	it('derives the role from the type', () => {
+		expect(roleOf('Horde (3/HP)')).toBe('Horde');
+		expect(roleOf('Solo')).toBe('Solo');
+	});
+	it('loads 129 adversaries and 19 environments with numeric tier and role', () => {
+		expect(listSrd('adversaries', 'en')).toHaveLength(129);
+		expect(listSrd('environments', 'fr')).toHaveLength(19);
+		const all = adversariesByTier(undefined, 'en');
+		expect(all.every((a) => [1, 2, 3, 4].includes(a.tier) && /^[A-Z][a-z]+$/.test(a.role))).toBe(true);
+		expect(adversariesByTier(1, 'en').every((a) => a.tier === 1)).toBe(true);
+		expect(getAdversary(all[0].id, 'en')?.nameLocalized).toBe(all[0].name);
+		expect(getAdversary('adv_nope', 'en')).toBeNull();
 	});
 });

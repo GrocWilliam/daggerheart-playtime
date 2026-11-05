@@ -10,7 +10,7 @@ describe('searchSrd', () => {
 	});
 	it('covers every kind without filter and gives English text', () => {
 		const r = searchSrd(undefined, '', 'fr');
-		expect(r).toHaveLength(11);
+		expect(r).toHaveLength(13);
 		for (const s of r) for (const i of s.items) expect(i.en.length).toBeGreaterThan(0);
 	});
 	it('matches nothing for gibberish', () => {

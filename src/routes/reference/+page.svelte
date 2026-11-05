@@ -15,7 +15,7 @@
 		{t('reference.kind')}
 		<select name="kind">
 			<option value="" selected={data.kind === ''}>{t('reference.all')}</option>
-			{#each ['classes', 'subclasses', 'ancestries', 'communities', 'domains', 'domain-cards', 'weapons', 'armors', 'consumables', 'items', 'rules'] as k (k)}
+			{#each ['classes', 'subclasses', 'ancestries', 'communities', 'domains', 'domain-cards', 'weapons', 'armors', 'consumables', 'items', 'rules', 'adversaries', 'environments'] as k (k)}
 				<option value={k} selected={data.kind === k}>{t(`reference.kind.${k}`)}</option>
 			{/each}
 		</select>

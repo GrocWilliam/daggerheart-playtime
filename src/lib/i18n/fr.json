@@ -80,6 +80,8 @@
 	"reference.kind.consumables": "Consommables",
 	"reference.kind.items": "Objets",
 	"reference.kind.rules": "Règles",
+	"reference.kind.adversaries": "Adversaires",
+	"reference.kind.environments": "Environnements",
 	"field.subclass": "Sous-classe",
 	"field.ancestry": "Ascendance",
 	"field.community": "Communauté",
