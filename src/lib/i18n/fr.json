@@ -200,5 +200,10 @@
 	"step.run": "Jouer",
 	"step.label": "Étapes",
 	"campaign.party": "Groupe",
-	"campaign.scenes": "Scènes"
+	"campaign.scenes": "Scènes",
+	"journal.title": "Journal de session",
+	"journal.text": "Entrée du journal",
+	"journal.add": "Ajouter au journal",
+	"journal.delete": "Supprimer",
+	"journal.none": "Aucune entrée dans le journal."
 }

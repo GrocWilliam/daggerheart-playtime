@@ -315,4 +315,24 @@
 
 {@render addForm()}
 </section>
+<section class="mt-4 rounded-[0.5rem] border-2 border-solid border-muted p-3" data-testid="journal">
+<h2>{t('journal.title')}</h2>
+<Divider />
+<form method="POST" action="?/addJournal">
+	<label>{t('journal.text')} <textarea name="text" maxlength="2000"></textarea></label>
+	<button type="submit">{t('journal.add')}</button>
+</form>
+{#each data.journal as j (j.id)}
+	<div class="mb-2 flex flex-wrap items-center gap-2 rounded-[0.5rem] border-2 border-solid border-muted p-3" data-testid="journal-entry">
+		<span class="text-muted">{j.time}</span>
+		<p class="m-0 min-w-0 flex-1 whitespace-pre-line">{j.text}</p>
+		<form class="mb-0! bg-transparent! border-0! p-0!" method="POST" action="?/deleteJournal">
+			<input type="hidden" name="entryId" value={j.id} />
+			<button type="submit">{t('journal.delete')}</button>
+		</form>
+	</div>
+{:else}
+	<p>{t('journal.none')}</p>
+{/each}
+</section>
 {/if}

@@ -122,3 +122,42 @@ describe('scenario redirect', () => {
 		);
 	});
 });
+
+describe('campaign page journal', () => {
+	const act = (name: string, body: Record<string, string>, f: typeof fetch) =>
+		(actions[name] as never as (e: unknown) => Promise<unknown>)({
+			request: new Request('http://x', { method: 'POST', body: new URLSearchParams(body) }),
+			params: { id: 'c' },
+			fetch: f
+		});
+
+	it('load formats the entry time as HH:MM', async () => {
+		const at = new Date(2026, 0, 2, 9, 5).toISOString();
+		const f = (async (u: string) =>
+			new Response(JSON.stringify(u.endsWith('/journal') ? [{ id: 'j', text: 'T', createdAt: at }] : { id: 'c', characters: [] }))) as unknown as typeof fetch;
+		const r = (await load({ params: { id: 'c' }, fetch: f } as never)) as unknown as { journal: unknown };
+		expect(r.journal).toEqual([{ id: 'j', text: 'T', time: '09:05' }]);
+	});
+
+	it('addJournal posts the text and maps errors to catalog keys', async () => {
+		let sent = '';
+		const ok = (async (_u: string, init: RequestInit) => {
+			sent = String(init.body);
+			return new Response('{}', { status: 201 });
+		}) as unknown as typeof fetch;
+		expect(await act('addJournal', { text: 'Found a key' }, ok)).toEqual({ ok: true });
+		expect(JSON.parse(sent)).toEqual({ text: 'Found a key' });
+		expect(await act('addJournal', { text: '' }, reply(400, { error: 'x' }))).toMatchObject({ status: 400, data: { error: 'error.invalid' } });
+	});
+
+	it('deleteJournal deletes by entry id and maps 404', async () => {
+		let url = '';
+		const ok = (async (u: string) => {
+			url = u;
+			return new Response('{}');
+		}) as unknown as typeof fetch;
+		await act('deleteJournal', { entryId: 'e1' }, ok);
+		expect(url).toBe('/api/campaigns/c/journal/e1');
+		expect(await act('deleteJournal', { entryId: 'no' }, reply(404, { error: 'x' }))).toMatchObject({ status: 404, data: { error: 'error.notFound' } });
+	});
+});

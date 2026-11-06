@@ -65,6 +65,7 @@ function adversaryView(a: { id: string; name: string; role: string; count: numbe
 }
 
 const base = (id: string) => `/api/campaigns/${encodeURIComponent(id)}/scenes`;
+const journalBase = (id: string) => `/api/campaigns/${encodeURIComponent(id)}/journal`;
 const text = (v: FormDataEntryValue | null) => (typeof v === 'string' ? v : '');
 const envOf = (v: FormDataEntryValue | null) => (text(v) === '' ? null : text(v));
 
@@ -111,13 +112,19 @@ const scenes = scenesRaw.map((s) => {
 		const loot = (Array.isArray(s.loot) ? (s.loot as LootEntry[]) : []).map((l) => lootView(l, lang));
 		return { ...s, environment, loot, encounter };
 	});
+	const jr = await call(fetch, 'GET', `/api/campaigns/${encodeURIComponent(params.id)}/journal`);
+	const journal = (Array.isArray(jr.data) ? (jr.data as { id: string; text: string; createdAt: string }[]) : []).map((j) => {
+		const d = new Date(j.createdAt);
+		const p = (n: number) => String(n).padStart(2, '0');
+		return { id: j.id, text: j.text, time: `${p(d.getHours())}:${p(d.getMinutes())}` };
+	});
 	const raw = (r.data.characters ?? []) as { id: string; name: string; level?: number }[];
 	const characters = raw.map((ch) => ({ id: ch.id, name: ch.name }));
 	const party = partyDefaults(raw.map((ch) => (typeof ch.level === 'number' ? ch.level : 1)));
 	return {
 		campaign: r.data, chosen, picks, currentScene: (current?.title as string | undefined) ?? null,
 		step: url?.searchParams.get('step') === 'build' ? ('build' as const) : ('run' as const),
-		scenes, characters, party, environments: listSrd('environments', lang)
+		scenes, journal, characters, party, environments: listSrd('environments', lang)
 	};
 };
 
@@ -247,6 +254,14 @@ add: async (e) => {
 	deleteEncounter: async (e) => {
 		const f = await e.request.formData();
 		return run(e, 'DELETE', encPath(e, f));
+	},
+	addJournal: async (e) => {
+		const f = await e.request.formData();
+		return run(e, 'POST', journalBase(e.params.id), { text: text(f.get('text')) });
+	},
+	deleteJournal: async (e) => {
+		const f = await e.request.formData();
+		return run(e, 'DELETE', `${journalBase(e.params.id)}/${encodeURIComponent(text(f.get('entryId')))}`);
 	},
 	delete: async (e) => {
 		const f = await e.request.formData();
