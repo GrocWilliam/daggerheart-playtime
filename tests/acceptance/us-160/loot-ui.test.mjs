@@ -2,6 +2,15 @@ import { test, before, after } from 'node:test';
 import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
 
+// us-178: forms update in place (use:enhance), so there is no navigation to wait for: wait for the POST response, then for the network to settle.
+const afterSubmit = async (p, click) => {
+	if (p.__js === false) { await Promise.all([p.waitForLoadState('load'), click]); return; } // plain POST: full navigation
+	const res = p.waitForResponse((r) => r.request().method() === 'POST');
+	await click;
+	await res;
+	await p.waitForLoadState('networkidle');
+};
+
 const BASE = process.env.BASE_URL;
 const { chromium } = createRequire(process.env.PLAYWRIGHT_DIR + '/')('playwright-core');
 let browser;
@@ -24,6 +33,7 @@ async function open(c, lang = 'en', js = true) {
 	const ctx = await browser.newContext({ javaScriptEnabled: js });
 	await ctx.addCookies([{ name: 'lang', value: lang, url: BASE }]);
 	const p = await ctx.newPage();
+	p.__js = js;
 	p.setDefaultTimeout(4000);
 	await p.goto(`${BASE}/campaigns/${c.id}?step=build`);
 	return p;
@@ -35,7 +45,7 @@ async function roll(p, table, rarity, count) {
 	await sc.locator('select[name=table]').selectOption(table);
 	await sc.locator('select[name=rarity]').selectOption(rarity);
 	await sc.locator('[name=count]').fill(String(count));
-	await Promise.all([p.waitForLoadState('load'), sc.getByRole('button', { name: /roll loot|lancer/i }).click()]);
+	await afterSubmit(p, sc.getByRole('button', { name: /roll loot|lancer/i }).click());
 }
 const strings = (v) => (typeof v === 'string' ? [v] : v && typeof v === 'object' ? Object.values(v).flatMap(strings) : []);
 const norm = (t) => t.replace(/\s+/g, ' ');
@@ -85,7 +95,7 @@ test("'Give to' lists the campaign's characters; giving adds the item and marks 
 	assert.ok(!opts.includes('Foreignxyz'));
 	const loot = (await apiLoot(c, s))[0];
 	await sel.selectOption({ label: 'Quillon' });
-	await Promise.all([p.waitForLoadState('load'), e.getByRole('button', { name: /give/i }).click()]);
+	await afterSubmit(p, e.getByRole('button', { name: /give/i }).click());
 	assert.equal((await apiLoot(c, s))[0].given, true);
 	const q = (await api('GET', `/api/characters/${b.id}`)).json;
 	assert.ok(q.items.some((i) => i.srdId === loot.srdId));
@@ -101,7 +111,7 @@ test('deleting an entry removes it from the page', async () => {
 	await roll(p, 'items', 'common', 2);
 	const before = await apiLoot(c, s);
 	const e = sceneOf(p).locator('[data-testid=loot-entry]').first();
-	await Promise.all([p.waitForLoadState('load'), e.getByRole('button', { name: /delete/i }).click()]);
+	await afterSubmit(p, e.getByRole('button', { name: /delete/i }).click());
 	const after = await apiLoot(c, s);
 	assert.deepEqual(after.map((x) => x.id), [before[1].id]);
 	assert.equal(await sceneOf(p).locator('[data-testid=loot-entry]').count(), 1);

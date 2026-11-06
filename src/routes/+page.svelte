@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { enhance } from '$app/forms';
+	import { busy } from '$lib/forms/busy';
 	import Divider from '$lib/components/Divider.svelte';
 	import { translate } from '$lib/i18n';
 	let { data, form } = $props();
@@ -18,7 +20,7 @@
 	{/each}
 </ul>
 
-<form method="POST">
+<form use:enhance={busy} method="POST">
 	<label>{t('home.name')} <input type="text" name="name" value={form?.name ?? ''} /></label>
 	<button type="submit">{t('home.create')}</button>
 	{#if form?.error}<p role="alert">{t('home.error')}</p>{/if}

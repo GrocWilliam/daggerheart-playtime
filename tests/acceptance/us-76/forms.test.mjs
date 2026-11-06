@@ -2,6 +2,14 @@ import { test, before, after } from 'node:test';
 import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
 
+// us-178: forms update in place (use:enhance), so there is no navigation to wait for: wait for the POST response, then for the network to settle.
+const afterSubmit = async (p, click) => {
+	const res = p.waitForResponse((r) => r.request().method() === 'POST');
+	await click;
+	await res;
+	await p.waitForLoadState('networkidle');
+};
+
 const { chromium } = createRequire(process.env.PW_DIR + '/')('playwright-core');
 const BASE = process.env.BASE_URL;
 let browser, paths;
@@ -139,7 +147,7 @@ for (const m of matrix) {
 		try {
 			if (m.path === 0) {
 				await page.fill('input[name=name]', '   ');
-				await Promise.all([page.waitForLoadState('load'), page.click('form button[type=submit]')]);
+				await afterSubmit(page, page.click('form button[type=submit]'));
 				const alert = page.locator('[role=alert]');
 				assert.equal(await alert.count(), 1);
 				const expected = (await import('node:fs')).readFileSync(`src/lib/i18n/${m.lang}.json`, 'utf8');

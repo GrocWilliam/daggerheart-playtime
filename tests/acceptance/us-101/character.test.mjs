@@ -4,6 +4,14 @@ import { createRequire } from 'node:module';
 import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 
+// us-178: forms update in place (use:enhance), so there is no navigation to wait for: wait for the POST response, then for the network to settle.
+const afterSubmit = async (p, click) => {
+	const res = p.waitForResponse((r) => r.request().method() === 'POST');
+	await click;
+	await res;
+	await p.waitForLoadState('networkidle');
+};
+
 const ROOT = process.env.ROOT;
 const BASE = process.env.BASE_URL;
 const read = (p) => readFileSync(join(ROOT, p), 'utf8');
@@ -287,8 +295,7 @@ test('the sheet still works: tracker, condition and card forms submit and stay v
 	const ctx = await browser.newContext({ viewport: { width: 375, height: 667 } });
 	const page = await ctx.newPage();
 	await page.goto(BASE + `/characters/${id}`);
-	await page.locator('[data-testid=hope]').locator('xpath=..').locator('button[value="-1"]').click();
-	await page.waitForLoadState();
+	await afterSubmit(page, page.locator('[data-testid=hope]').locator('xpath=..').locator('button[value="-1"]').click());
 	assert.ok(await page.locator('[data-testid=item]').isVisible());
 	assert.ok(await page.locator('[data-testid=card]').isVisible());
 	assert.ok(await page.locator('[data-testid=condition-hidden]').isVisible());

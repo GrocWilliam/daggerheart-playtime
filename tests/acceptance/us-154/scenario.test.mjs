@@ -2,6 +2,15 @@ import { test, before, after } from 'node:test';
 import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
 
+// us-178: forms update in place (use:enhance), so there is no navigation to wait for: wait for the POST response, then for the network to settle.
+const afterSubmit = async (p, click) => {
+	if (p.__js === false) { await Promise.all([p.waitForLoadState('load'), click]); return; } // plain POST: full navigation
+	const res = p.waitForResponse((r) => r.request().method() === 'POST');
+	await click;
+	await res;
+	await p.waitForLoadState('networkidle');
+};
+
 const BASE = process.env.BASE_URL;
 const { chromium } = createRequire(process.env.PLAYWRIGHT_DIR + '/')('playwright-core');
 let browser;
@@ -20,13 +29,14 @@ async function open(path, lang = 'en', js = true) {
 	const ctx = await browser.newContext({ javaScriptEnabled: js });
 	await ctx.addCookies([{ name: 'lang', value: lang, url: BASE }]);
 	const p = await ctx.newPage();
+	p.__js = js;
 	await p.goto(BASE + path);
 	return p;
 }
 const sceneTitles = async (p) => p.locator('[data-testid=scene]').evaluateAll((els) => els.map((e) => e.textContent));
 const scene = (p, title) => p.locator('[data-testid=scene]', { hasText: title });
 const click = async (p, title, name) => {
-	await Promise.all([p.waitForLoadState('load'), scene(p, title).getByRole('button', { name }).first().click()]);
+	await afterSubmit(p, scene(p, title).getByRole('button', { name }).first().click());
 };
 
 test('the campaign page links to its build step (scenes live in /campaigns/:id?step=build)', async () => {
@@ -59,7 +69,7 @@ test('without JavaScript the forms add, edit, move, set current, mark done and d
 	await form.locator('input[name=title]').fill('One');
 	await form.locator('[name=notes]').fill('Some notes');
 	await form.locator('select[name=environmentId]').selectOption(envs[0].id);
-	await Promise.all([p.waitForLoadState('load'), form.locator('button[type=submit], button:not([type])').first().click()]);
+	await afterSubmit(p, form.locator('button[type=submit], button:not([type])').first().click());
 	await addScene(c.id, 'Two');
 	assert.deepEqual(await apiTitles(c.id), ['One', 'Two']);
 	const one = (await api('GET', `/api/campaigns/${c.id}/scenes`)).json[0];
@@ -69,7 +79,7 @@ test('without JavaScript the forms add, edit, move, set current, mark done and d
 	await p.goto(BASE + url);
 	const edit = scene(p, 'Two').locator('form', { has: p.locator('input[name=title]') }).first();
 	await edit.locator('input[name=title]').fill('Deux');
-	await Promise.all([p.waitForLoadState('load'), edit.locator('button[type=submit], button:not([type])').first().click()]);
+	await afterSubmit(p, edit.locator('button[type=submit], button:not([type])').first().click());
 	assert.deepEqual(await apiTitles(c.id), ['One', 'Deux']);
 	// move up / down
 	await click(p, 'Deux', /move up/i);

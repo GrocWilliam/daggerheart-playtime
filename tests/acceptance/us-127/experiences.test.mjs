@@ -2,6 +2,14 @@ import { test, before, after } from 'node:test';
 import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
 
+// us-178: forms update in place (use:enhance), so there is no navigation to wait for: wait for the POST response, then for the network to settle.
+const afterSubmit = async (p, click) => {
+	const res = p.waitForResponse((r) => r.request().method() === 'POST');
+	await click;
+	await res;
+	await p.waitForLoadState('networkidle');
+};
+
 const BASE = process.env.BASE_URL;
 const waitFor = async (fn, ok) => {
 	const end = Date.now() + 10000;
@@ -164,7 +172,7 @@ test('add form (modifier defaults to 2), change form and remove button work', as
 	const f = addForm(page).first();
 	assert.equal(await f.locator('[name=modifier]').inputValue(), '2');
 	await f.locator('input[name=name]').fill('Bounty hunter');
-	await Promise.all([page.waitForLoadState('load'), f.locator('button[type=submit], button:not([type])').first().click()]);
+	await afterSubmit(page, f.locator('button[type=submit], button:not([type])').first().click());
 	let g = (await waitFor(() => call('GET', `/api/characters/${ch.id}`), (x) => x.json.experiences.length === 1)).json;
 	assert.deepEqual(g.experiences.map((e) => [e.name, e.modifier]), [['Bounty hunter', 2]]);
 	await page.goto(BASE + `/characters/${ch.id}`);
@@ -172,14 +180,14 @@ test('add form (modifier defaults to 2), change form and remove button work', as
 
 	const chg = items(page).first().locator('form').filter({ has: page.locator('[name=modifier]') });
 	await chg.locator('[name=modifier]').fill('4');
-	await Promise.all([page.waitForLoadState('load'), chg.locator('button[type=submit], button:not([type])').first().click()]);
+	await afterSubmit(page, chg.locator('button[type=submit], button:not([type])').first().click());
 	g = (await waitFor(() => call('GET', `/api/characters/${ch.id}`), (x) => x.json.experiences[0]?.modifier === 4)).json;
 	assert.equal(g.experiences[0].modifier, 4);
 	await page.goto(BASE + `/characters/${ch.id}`);
 	assert.match(norm(await items(page).first().innerText()), /^Bounty hunter \+4/);
 
 	const rm = items(page).first().locator('form').filter({ hasNot: page.locator('[name=modifier]') }).locator('button').first();
-	await Promise.all([page.waitForLoadState('load'), rm.click()]);
+	await afterSubmit(page, rm.click());
 	assert.deepEqual((await waitFor(() => call('GET', `/api/characters/${ch.id}`), (x) => x.json.experiences.length === 0)).json.experiences, []);
 	await page.goto(BASE + `/characters/${ch.id}`);
 	assert.equal(await items(page).count(), 0);
@@ -193,7 +201,7 @@ test('adding a duplicate on the sheet shows a translated error key, not API Engl
 	await page.goto(BASE + `/characters/${ch.id}`);
 	const f = addForm(page).first();
 	await f.locator('input[name=name]').fill('hunter');
-	await Promise.all([page.waitForLoadState('load'), f.locator('button[type=submit], button:not([type])').first().click()]);
+	await afterSubmit(page, f.locator('button[type=submit], button:not([type])').first().click());
 	await page.waitForLoadState('networkidle');
 	assert.doesNotMatch(await page.locator('body').innerText(), /experience already exists/);
 	assert.equal((await call('GET', `/api/characters/${ch.id}`)).json.experiences.length, 1);

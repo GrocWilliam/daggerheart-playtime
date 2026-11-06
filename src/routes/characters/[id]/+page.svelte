@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { enhance } from '$app/forms';
+	import { busy } from '$lib/forms/busy';
 	import Divider from '$lib/components/Divider.svelte';
 	import { translate, formatNumber } from '$lib/i18n';
 	import Pips from '$lib/components/Pips.svelte';
@@ -48,8 +50,7 @@
 {#if form?.error}<p role="alert">{t(form.error)}</p>{/if}
 
 {#each [['hp', 'tracker.hp'], ['stress', 'tracker.stress'], ['hope', 'tracker.hope'], ['armor', 'tracker.armor']] as [key, label] (key)}
-	<form
-		class="mb-3 flex flex-nowrap items-center gap-2 rounded-none! bg-transparent! border-0! p-0!"
+	<form use:enhance={busy} class="mb-3 flex flex-nowrap items-center gap-2 rounded-none! bg-transparent! border-0! p-0!"
 		class:tracker={true}
 		method="POST"
 		action="?/tracker"
@@ -85,14 +86,14 @@
 	{#if c.conditions.hidden}<span class="inline-block rounded-[999px] px-[0.6rem] text-[0.875rem] text-bg bg-calm" data-testid="condition-hidden">{t('badge.hidden')}</span><Help id="hidden" name={t('badge.hidden')} lang={data.lang} />{/if}
 </div>
 
-<form method="POST" action="?/damage">
+<form use:enhance={busy} method="POST" action="?/damage">
 	<label>{t('damage.label')} <input type="number" name="amount" min="0" required /></label>
 	<label><input type="checkbox" name="useArmor" /> {t('damage.useArmor')}</label>
 	<button type="submit">{t('damage.apply')}</button>
 </form>
 
 <h2>{t('section.edit')}</h2>
-<form method="POST" action="?/edit" class="px-[0.5625rem]! grid grid-cols-[minmax(0,1fr)] gap-x-4 *:min-w-0 md:grid-cols-[repeat(2,minmax(0,1fr))]" class:form-grid={true}>
+<form use:enhance={busy} method="POST" action="?/edit" class="px-[0.5625rem]! grid grid-cols-[minmax(0,1fr)] gap-x-4 *:min-w-0 md:grid-cols-[repeat(2,minmax(0,1fr))]" class:form-grid={true}>
 	{#each fields.slice(0, 1) as [name, label, type, value] (name)}
 		<label>{t(label)} <input {type} {name} {value} required /></label>
 	{/each}
@@ -147,7 +148,7 @@
 
 <h2>{t('section.conditions')}</h2>
 {#each conditions as k (k)}
-	<form method="POST" action="?/condition">
+	<form use:enhance={busy} method="POST" action="?/condition">
 		<input type="hidden" name="condition" value={k} />
 		<button type="submit" name="value" value={c.conditions[k] ? 'off' : 'on'}>
 			{t(`condition.${c.conditions[k] ? 'clear' : 'set'}.${k}`)}
@@ -156,7 +157,7 @@
 {/each}
 
 <h2>{t('section.notes')}</h2>
-<form method="POST" action="?/notes" class="px-[0.5625rem]!">
+<form use:enhance={busy} method="POST" action="?/notes" class="px-[0.5625rem]!">
 	<textarea name="notes" data-testid="notes" maxlength="5000" rows="6">{c.notes}</textarea>
 	<button type="submit">{t('action.saveNotes')}</button>
 </form>
@@ -164,7 +165,7 @@
 <h2>{t('section.gold')}</h2>
 <Help id="gold" name={t('section.gold')} lang={data.lang} />
 <p data-testid="gold">{n(c.gold.chests)} {t('gold.chests')}, {n(c.gold.bags)} {t('gold.bags')}, {n(c.gold.handfuls)} {t('gold.handfuls')}</p>
-<form method="POST" action="?/gold">
+<form use:enhance={busy} method="POST" action="?/gold">
 	<label>{t('gold.adjust')} <input type="number" name="handfuls" step="1" required /></label>
 	<button type="submit">{t('action.updateGold')}</button>
 </form>
@@ -190,7 +191,7 @@
 	</div>
 {/snippet}
 {#snippet picker(name: string, label: string, groups: { tier: number; picks: { id: string; name: string }[] }[], current: string | null)}
-	<form method="POST" action="?/equip">
+	<form use:enhance={busy} method="POST" action="?/equip">
 		<label>
 			{t(label)}
 			<select {name}>
@@ -219,7 +220,7 @@
 {#if data.equipment.armor}{@render gear('equipped-armor', data.equipment.armor)}{/if}
 
 <h2>{t('section.experiences')}</h2>
-<form method="POST" action="?/addExperience">
+<form use:enhance={busy} method="POST" action="?/addExperience">
 	<label>{t('experience.name')} <input type="text" name="name" maxlength="100" required /></label>
 	<label>{t('experience.modifier')} <input type="number" name="modifier" min="1" max="5" step="1" value="2" required /></label>
 	<button type="submit">{t('action.addExperience')}</button>
@@ -228,12 +229,12 @@
 	{#each c.experiences as ex (ex.id)}
 		<li data-testid="experience">
 			<span>{ex.name} +{ex.modifier}</span>
-			<form method="POST" action="?/setExperience">
+			<form use:enhance={busy} method="POST" action="?/setExperience">
 				<input type="hidden" name="expId" value={ex.id} />
 				<input type="number" name="modifier" min="1" max="5" step="1" value={ex.modifier} required aria-label={t('experience.modifier')} />
 				<button type="submit">{t('action.update')}</button>
 			</form>
-			<form method="POST" action="?/removeExperience">
+			<form use:enhance={busy} method="POST" action="?/removeExperience">
 				<input type="hidden" name="expId" value={ex.id} />
 				<button type="submit">{t('action.remove')}</button>
 			</form>
@@ -242,7 +243,7 @@
 </ul>
 
 <h2>{t('section.inventory')}</h2>
-<form method="POST" action="?/addItem">
+<form use:enhance={busy} method="POST" action="?/addItem">
 	<label>{t('item.name')} <input type="text" name="name" maxlength="100" /></label>
 	<label>
 		{t('item.fromSrd')}
@@ -279,14 +280,14 @@
 						{/if}
 					</td>
 					<td>
-						<form method="POST" action="?/setQuantity">
+						<form use:enhance={busy} method="POST" action="?/setQuantity">
 							<input type="hidden" name="itemId" value={it.id} />
 							<input type="number" name="quantity" min="0" value={it.quantity} required />
 							<button type="submit">{t('action.update')}</button>
 						</form>
 					</td>
 					<td>
-						<form method="POST" action="?/removeItem">
+						<form use:enhance={busy} method="POST" action="?/removeItem">
 							<input type="hidden" name="itemId" value={it.id} />
 							<button type="submit">{t('action.remove')}</button>
 						</form>
@@ -304,14 +305,14 @@
 			<span>{card.name}</span>
 			<span class="muted">{card.domainName}, {t('card.level')} {card.level}</span>
 			<Help id={card.id} name={card.name} lang={data.lang} en={card.en} />
-			<form method="POST" action="?/removeCard">
+			<form use:enhance={busy} method="POST" action="?/removeCard">
 				<input type="hidden" name="cardId" value={card.id} />
 				<button type="submit">{t('action.remove')}</button>
 			</form>
 		</li>
 	{/each}
 </ul>
-<form method="POST" action="?/addCard">
+<form use:enhance={busy} method="POST" action="?/addCard">
 	<label>
 		{t('card.add')}
 		<select name="cardId" required>

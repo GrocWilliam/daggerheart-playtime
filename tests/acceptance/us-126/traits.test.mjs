@@ -2,6 +2,14 @@ import { test, before, after } from 'node:test';
 import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
 
+// us-178: forms update in place (use:enhance), so there is no navigation to wait for: wait for the POST response, then for the network to settle.
+const afterSubmit = async (p, click) => {
+	const res = p.waitForResponse((r) => r.request().method() === 'POST');
+	await click;
+	await res;
+	await p.waitForLoadState('networkidle');
+};
+
 const BASE = process.env.BASE_URL;
 const ORIGIN = new URL(BASE).origin;
 const NAMES = ['agility', 'strength', 'finesse', 'instinct', 'presence', 'knowledge'];
@@ -97,7 +105,7 @@ test('edit form has six number inputs min -5 max 5 and saves new values', async 
 	}
 	await page.locator('form[action="?/edit"] input[name$="presence"]').fill('3');
 	await page.locator('form[action="?/edit"] input[name$="instinct"]').fill('-2');
-	await Promise.all([page.waitForLoadState('load'), page.locator('form[action="?/edit"] button[type=submit], form[action="?/edit"] button:not([type])').last().click()]);
+	await afterSubmit(page, page.locator('form[action="?/edit"] button[type=submit], form[action="?/edit"] button:not([type])').last().click());
 	const g = await waitFor(() => call('GET', `/api/characters/${r.json.id}`), (x) => x.json.traits && x.json.traits.presence === 3);
 	assert.deepEqual(g.json.traits, { ...ZERO, presence: 3, instinct: -2 });
 	await page.reload();
