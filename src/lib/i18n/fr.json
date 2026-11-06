@@ -211,5 +211,17 @@
 	"journal.text": "Entrée du journal",
 	"journal.add": "Ajouter au journal",
 	"journal.delete": "Supprimer",
-	"journal.none": "Aucune entrée dans le journal."
+	"journal.none": "Aucune entrée dans le journal.",
+	"campaign.newCharacter": "Nouveau personnage",
+	"tunnel.progress": "Étape {n} sur {total}",
+	"tunnel.step.identity": "Identité",
+	"tunnel.step.heritage": "Héritage",
+	"tunnel.step.statistics": "Statistiques",
+	"tunnel.step.review": "Récapitulatif",
+	"tunnel.invalid": "Vérifiez ce champ : {field}.",
+	"tunnel.next": "Suivant",
+	"tunnel.back": "Retour",
+	"tunnel.cancel": "Annuler",
+	"tunnel.edit": "Modifier",
+	"tunnel.create": "Créer le personnage"
 }

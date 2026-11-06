@@ -153,8 +153,7 @@
 		<li>{t('campaign.none')}</li>
 	{/each}
 </ul>
-<h3>{t('campaign.add')}</h3>
-{@render addForm()}
+<p><a href="/campaigns/{encodeURIComponent(c.id)}/characters/new" data-testid="new-character">{t('campaign.newCharacter')}</a></p>
 </div>
 <div class="min-w-0 md:col-span-2" data-testid="build-scenes">
 <h2>{t('campaign.scenes')}</h2>

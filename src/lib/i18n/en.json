@@ -211,5 +211,17 @@
 	"journal.text": "Journal entry",
 	"journal.add": "Add to journal",
 	"journal.delete": "Delete",
-	"journal.none": "No journal entries yet."
+	"journal.none": "No journal entries yet.",
+	"campaign.newCharacter": "New character",
+	"tunnel.progress": "Step {n} of {total}",
+	"tunnel.step.identity": "Identity",
+	"tunnel.step.heritage": "Heritage",
+	"tunnel.step.statistics": "Statistics",
+	"tunnel.step.review": "Review",
+	"tunnel.invalid": "Check this field: {field}.",
+	"tunnel.next": "Next",
+	"tunnel.back": "Back",
+	"tunnel.cancel": "Cancel",
+	"tunnel.edit": "Edit",
+	"tunnel.create": "Create character"
 }

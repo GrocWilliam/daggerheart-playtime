@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { THRESHOLDS_ERROR, createFields, createSchema, thresholdsOk } from '$lib/server/features/characters';
-import { fieldOfMessage, firstInvalid, parseStep, readValues, stepOfField, tunnelHref } from './tunnel';
+import { RANGES, characterBody, fieldOfMessage, firstInvalid, parseStep, readValues, stepOfField, tunnelHref } from './tunnel';
 
 const s1 = { name: 'Ari', class: 'Bard', level: '1' };
 const s3 = { evasion: '10', majorThreshold: '5', severeThreshold: '10', maxHp: '6', maxStress: '6', armorSlots: '3' };
@@ -50,5 +50,22 @@ describe('tunnel', () => {
 		expect(thresholdsOk(5, 10)).toBe(true);
 		expect(thresholdsOk(10, 10)).toBe(false);
 		expect(b.success).toBe(false);
+	});
+	it('RANGES match the API: min and max pass, one beyond fails', () => {
+		for (const [f, [min, max]] of Object.entries(RANGES)) {
+			const one = createFields.pick({ [f]: true } as never);
+			expect(one.safeParse({ [f]: min }).success, `${f} ${min}`).toBe(true);
+			expect(one.safeParse({ [f]: max }).success, `${f} ${max}`).toBe(true);
+			expect(one.safeParse({ [f]: min - 1 }).success, `${f} ${min - 1}`).toBe(false);
+			expect(one.safeParse({ [f]: max + 1 }).success, `${f} ${max + 1}`).toBe(false);
+		}
+	});
+	it('characterBody: SRD names to ids, numbers converted, blanks and junk kept for the API to reject', () => {
+		const b = characterBody({ ...s1, ...s3, ancestry: 'Clank', community: '', level: 'x', maxHp: '' });
+		expect(b).toMatchObject({ name: 'Ari', class: 'Bard', level: 'x', evasion: 10, maxHp: '', armorSlots: 3 });
+		expect(typeof b.ancestry).toBe('string');
+		expect(b.ancestry).not.toBe('Clank');
+		expect('community' in b).toBe(false);
+		expect(characterBody({})).toMatchObject({ name: '', class: '', level: '' });
 	});
 });

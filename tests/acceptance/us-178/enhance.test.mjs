@@ -90,7 +90,8 @@ test('with JS: journal form updates in place', async () => {
 
 test('with JS: add character form updates in place', async () => {
 	const { c } = await setup();
-	const p = await open(`/campaigns/${c.id}?step=build`);
+	// us-197: Build has no inline add-character form any more; the Run step keeps it.
+	const p = await open(`/campaigns/${c.id}?step=run`);
 	await mark(p);
 	const f = p.locator('form[action="?/addCharacter"]');
 	const vals = { name: 'Brindle', level: '1', evasion: '10', majorThreshold: '5', severeThreshold: '10', maxHp: '6', maxStress: '6', armorSlots: '3' };

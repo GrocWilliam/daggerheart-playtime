@@ -12,13 +12,17 @@ function options(html, name) {
 		.filter((o) => o.value !== '');
 }
 
-test('DM screen selects render SRD options: English values, localised labels', async () => {
+// us-197: the DM screen's inline add-character form became the character tunnel, whose selects use the same
+// pickOptions: class on step 1, ancestry and community on step 2.
+test('tunnel selects render SRD options: English values, localised labels', async () => {
 	const cid = (await (await fetch(BASE + '/api/campaigns', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ name: 'Opt' }) })).json()).id;
+	const pageOf = { class: `/campaigns/${cid}/characters/new`, ancestry: `/campaigns/${cid}/characters/new?step=2&name=Opt&class=Bard&level=1` };
+	pageOf.community = pageOf.ancestry;
 	for (const [sel, kind] of [['class', 'classes'], ['ancestry', 'ancestries'], ['community', 'communities']]) {
 		const en = await (await fetch(`${BASE}/api/srd/${kind}`, { headers: { cookie: 'lang=en' } })).json();
 		const fr = await (await fetch(`${BASE}/api/srd/${kind}`, { headers: { cookie: 'lang=fr' } })).json();
 		for (const lang of ['en', 'fr']) {
-			const o = options(await get(`/campaigns/${cid}?step=build`, lang), sel);
+			const o = options(await get(pageOf[sel], lang), sel);
 			assert.deepEqual(o.map((x) => x.value), en.map((x) => x.name), `${sel} values ${lang}`);
 			assert.deepEqual(o.map((x) => x.label), (lang === 'fr' ? fr : en).map((x) => x.name), `${sel} labels ${lang}`);
 		}

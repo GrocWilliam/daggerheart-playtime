@@ -168,15 +168,16 @@ test('Fear + button (plain POST) increases fear by 1, clamped at 12', async () =
 });
 
 test('add-character form creates a new character-card', async () => {
-	const { html } = await page(cid, '?step=build');
-	const f = forms(html).find((x) => /name=["']majorThreshold["']/.test(x.html));
-	assert.ok(f, 'add-character form with majorThreshold input');
+	// us-197: the Build step's inline form became the character tunnel; its step 4 posts every value as hidden inputs.
+	const values = { name: 'Nova', class: 'Wizard', level: 1, evasion: 11, majorThreshold: 4, severeThreshold: 9, maxHp: 5, maxStress: 6, armorSlots: 1 };
+	const url = `${BASE}/campaigns/${cid}/characters/new?${new URLSearchParams({ step: '4', ...values })}`;
+	const html = await (await fetch(url)).text();
+	const f = forms(html).find((x) => /<form\b[^>]*method=["']?post/i.test(x.html));
+	assert.ok(f, 'tunnel step 4 POST form');
 	for (const n of ['name', 'class', 'level', 'evasion', 'majorThreshold', 'severeThreshold', 'maxHp', 'maxStress', 'armorSlots']) {
 		assert.match(f.html, new RegExp(`name=["']${n}["']`), `input ${n}`);
 	}
-	const r = await post(`${BASE}/campaigns/${cid}`, f.html, {
-		fill: { name: 'Nova', class: 'Wizard', level: 1, evasion: 11, majorThreshold: 4, severeThreshold: 9, maxHp: 5, maxStress: 6, armorSlots: 1 }
-	});
+	const r = await post(url, f.html);
 	assert.ok(r.status < 400, `status ${r.status}`);
 	const cs = cards((await page(cid)).html);
 	assert.equal(cs.length, 2);

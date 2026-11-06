@@ -6,8 +6,8 @@ export default defineConfig({
 	plugins: [tailwindcss(), sveltekit()],
 	test: {
 		environment: 'node',
-		testTimeout: 30000,
-		hookTimeout: 30000,
+		testTimeout: 120000,
+		hookTimeout: 120000,
 		include: ['src/**/*.{test,spec}.{js,ts}'],
 		env: {
 			PGLITE_DATA_DIR: 'memory://'

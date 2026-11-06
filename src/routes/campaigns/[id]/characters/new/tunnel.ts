@@ -77,3 +77,35 @@ export function tunnelHref(id: string, step: number, values: TunnelValues, inval
 	if (invalid) q.set('invalid', invalid);
 	return `/campaigns/${encodeURIComponent(id)}/characters/new?${q}`;
 }
+
+/** The API's ranges for the numeric fields, as `[min, max]` (kept in sync with `createFields` by tunnel.test.ts). */
+export const RANGES: Record<string, readonly [number, number]> = {
+	level: [1, 10],
+	evasion: [0, 30],
+	majorThreshold: [1, 100],
+	severeThreshold: [1, 100],
+	maxHp: [1, 12],
+	maxStress: [1, 12],
+	armorSlots: [0, 12]
+};
+
+/** Values shown when a field is absent from the URL. */
+export const DEFAULTS: TunnelValues = { level: '1', maxStress: '6' };
+
+/** Number for the API; blank stays '' and junk stays a string so the API rejects it. */
+function num(v: string | undefined): number | string {
+	if (v === undefined || v.trim() === '') return '';
+	const n = Number(v);
+	return Number.isFinite(n) ? n : v;
+}
+
+/** The `POST /api/campaigns/:id/characters` body: SRD names become ids, numbers are converted. */
+export function characterBody(values: TunnelValues): Record<string, unknown> {
+	const body: Record<string, unknown> = { name: values.name ?? '', class: values.class ?? '' };
+	for (const k of ['ancestry', 'community'] as const) {
+		const id = idByName(k === 'ancestry' ? 'ancestries' : 'communities', values[k] ?? '');
+		if (id) body[k] = id;
+	}
+	for (const k of NUMERIC) body[k] = num(values[k]);
+	return body;
+}

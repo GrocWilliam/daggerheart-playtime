@@ -73,7 +73,8 @@ test('GET ?step=build renders the Build step: party, add-character form, scenes 
 	assert.equal(await members.filter({ hasText: 'Borvik' }).locator(`a[href="/characters/${b.id}"]`).count() >= 1, true);
 	const t = (await first.textContent());
 	assert.ok(t.includes('Guardian') && t.includes('3'), `class and level in ${t}`);
-	assert.equal(await p.locator('[data-testid=build] form[action="?/addCharacter"]').count(), 1);
+	// us-197: the inline add-character form became a link to the character tunnel.
+	assert.equal(await p.locator('[data-testid=build] [data-testid=new-character]').count(), 1);
 	assert.equal(await p.locator('[data-testid=build] [data-testid=scene]', { hasText: 'Gatehouse' }).count(), 1);
 	assert.ok(await p.locator('[data-testid=scene] form').count() >= 1, 'scene forms');
 	assert.ok(await p.locator('[data-testid=build] form[action="?/add"], [data-testid=build] form[action="?/add&step=build"]').count() >= 1, 'add scene form');

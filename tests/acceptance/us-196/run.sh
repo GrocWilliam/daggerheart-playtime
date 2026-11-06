@@ -3,7 +3,7 @@
 # (1) createFields/createSchema/thresholdsOk/THRESHOLDS_ERROR exports and messages: tunnel.unit.ts
 # (2) pickOptions (ancestries fr, classes en, order): tunnel.unit.ts
 # (3) tunnel.ts helpers (TUNNEL_STEPS, parseStep, readValues, firstInvalid, stepOfField, fieldOfMessage, tunnelHref): tunnel.unit.ts
-# (4) DM screen selects unchanged (en/fr): page.test.mjs against `node build` with in-memory PGlite
+# (4) DM screen selects unchanged (en/fr), now read on the us-197 tunnel steps 1-2: page.test.mjs against `node build` with in-memory PGlite
 # (5) make test passes (vitest) and other acceptance tests pass (run by CI)
 set -uo pipefail
 cd "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/../../.."

@@ -117,7 +117,8 @@ for (const [name, w, h, cols] of [['phone', 375, 667, 1], ['tablet', 700, 800, 1
 				scroll: document.documentElement.scrollWidth - document.documentElement.clientWidth
 			};
 		});
-		await page.goto(BASE + `/campaigns/${id}?step=build`);
+		// us-197: Build has no inline add-character form any more; the Run step keeps it.
+		await page.goto(BASE + `/campaigns/${id}?step=run`);
 		const b = await page.evaluate(() => {
 			const cs = (el) => getComputedStyle(el);
 			const pick = (el, props) => Object.fromEntries(props.map((p) => [p, cs(el)[p]]));

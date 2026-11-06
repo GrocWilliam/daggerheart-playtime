@@ -21,16 +21,19 @@ async function api(method, path, body) {
 	const text = await r.text();
 	return { status: r.status, json: text ? JSON.parse(text) : undefined };
 }
-async function open(lang) {
+// us-197: the Build step's inline add-character form became the character tunnel
+// (class on step 1, ancestry and community on step 2), so these tests open the tunnel.
+async function open(lang, step = 1) {
 	const id = (await api('POST', '/api/campaigns', { name: 'Dropdowns' })).json.id;
 	const ctx = await browser.newContext({ javaScriptEnabled: false });
 	await ctx.addCookies([{ name: 'lang', value: lang, url: BASE }]);
 	const page = await ctx.newPage();
-	await page.goto(`${BASE}/campaigns/${id}?step=build`);
+	const q = step === 1 ? '' : `?${new URLSearchParams({ step: String(step), name: 'Selma', class: 'Wizard', level: '1' })}`;
+	await page.goto(`${BASE}/campaigns/${id}/characters/new${q}`);
 	return { ctx, page, id };
 }
 const opts = (sel) => sel.locator('option').evaluateAll((os) => os.map((o) => ({ value: o.value, label: o.textContent.trim() })));
-const form = (page) => page.locator('form[action="?/addCharacter"]');
+const form = (page) => page.locator('form', { has: page.locator('[data-testid=tunnel-next]') });
 
 test('the class select has one option per SRD class, English values; French labels in French', async () => {
 	for (const lang of ['en', 'fr']) {
@@ -53,7 +56,7 @@ test('the class select has one option per SRD class, English values; French labe
 
 test('ancestry and community selects start with an empty None option, then every SRD entry', async () => {
 	for (const lang of ['en', 'fr']) {
-		const { ctx, page } = await open(lang);
+		const { ctx, page } = await open(lang, 2);
 		const f = form(page);
 		for (const [name, list] of [['ancestry', ANCS], ['community', COMS]]) {
 			assert.equal(await f.locator(`input[name=${name}]`).count(), 0);
@@ -74,15 +77,23 @@ test('ancestry and community selects start with an empty None option, then every
 	}
 });
 
-async function fillAndSubmit(page, sel) {
-	const f = form(page);
-	const nums = { level: 1, evasion: 10, majorThreshold: 5, severeThreshold: 10, maxHp: 6, maxStress: 6, armorSlots: 3 };
-	await f.locator('input[name=name]').fill('Selma');
-	for (const [k, v] of Object.entries(nums)) await f.locator(`input[name=${k}]`).fill(String(v));
+async function fillAndSubmit(page, sel, id) {
+	const next = async (n) => Promise.all([page.waitForURL((u) => new URL(u).searchParams.get('step') === String(n)), page.locator('[data-testid=tunnel-next]').click()]);
+	let f = form(page);
+	await f.locator('input[name=name]:not([type=hidden])').fill('Selma');
+	await f.locator('input[name=level]:not([type=hidden])').fill('1');
 	await f.locator('select[name=class]').selectOption(sel.class);
+	await next(2);
+	f = form(page);
 	await f.locator('select[name=ancestry]').selectOption(sel.ancestry);
 	await f.locator('select[name=community]').selectOption(sel.community);
-	await Promise.all([page.waitForLoadState('load'), f.locator('button[type=submit]').click()]);
+	await next(3);
+	f = form(page);
+	const nums = { evasion: 10, majorThreshold: 5, severeThreshold: 10, maxHp: 6, maxStress: 6, armorSlots: 3 };
+	for (const [k, v] of Object.entries(nums)) await f.locator(`input[name=${k}]:not([type=hidden])`).fill(String(v));
+	await next(4);
+	await Promise.all([page.waitForURL(/\/characters\/[^/?]+$/), page.locator('[data-testid=tunnel-create]').click()]);
+	await page.goto(`${BASE}/campaigns/${id}`);
 }
 async function sheet(page, id) {
 	await page.goto(`${BASE}/campaigns/${id}`);
@@ -93,7 +104,7 @@ async function sheet(page, id) {
 
 test('submitting with a chosen class, ancestry and community creates the character; the sheet shows them', async () => {
 	const { ctx, page, id } = await open('en');
-	await fillAndSubmit(page, { class: 'Wizard', ancestry: 'Clank', community: 'Highborne' });
+	await fillAndSubmit(page, { class: 'Wizard', ancestry: 'Clank', community: 'Highborne' }, id);
 	assert.equal(await page.locator('[data-testid=character-card]').count(), 1);
 	await sheet(page, id);
 	assert.ok((await page.locator('body').innerText()).includes('Wizard'));
@@ -107,7 +118,7 @@ test('submitting with a chosen class, ancestry and community creates the charact
 
 test('submitting with None for ancestry and community creates the character with them empty', async () => {
 	const { ctx, page, id } = await open('en');
-	await fillAndSubmit(page, { class: 'Ranger', ancestry: '', community: '' });
+	await fillAndSubmit(page, { class: 'Ranger', ancestry: '', community: '' }, id);
 	assert.equal(await page.locator('[data-testid=character-card]').count(), 1);
 	const ch = (await api('GET', `/api/campaigns/${id}`)).json.characters[0];
 	assert.equal(ch.class, 'Ranger');

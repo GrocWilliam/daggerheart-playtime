@@ -1,10 +1,11 @@
 import { error, fail } from '@sveltejs/kit';
-import { getSrd, idByName, listSrd, pickOptions, pickOf } from '$lib/server/features/srd';
+import { getSrd, listSrd, pickOptions, pickOf } from '$lib/server/features/srd';
 import type { Scene } from '$lib/server/features/scenes';
 import type { LootEntry } from '$lib/server/features/loot';
 import type { Lang } from '$lib/i18n';
 import { partyDefaults, ADJUSTMENTS, type Encounter } from '$lib/server/features/encounters';
 import { trackerFieldSchema } from '$lib/server/features/characters';
+import { characterBody, readValues } from './characters/new/tunnel';
 type Actions = import('./$types').Actions;
 type PageServerLoad = import('./$types').PageServerLoad;
 
@@ -20,7 +21,6 @@ async function call(fetchFn: Fetch, method: string, path: string, body?: unknown
 	return { ok: res.ok, status: res.status, data };
 }
 
-const NUMERIC = ['level', 'evasion', 'majorThreshold', 'severeThreshold', 'maxHp', 'maxStress', 'armorSlots'];
 
 /** Form field to number; empty/non-numeric becomes NaN-like string so the API rejects it. */
 function num(v: FormDataEntryValue | null): number | string {
@@ -172,16 +172,8 @@ export const actions: Actions = {
 		return r.ok ? { ok: true } : failure(r, { damageFor: id });
 	},
 	addCharacter: async ({ request, params, fetch }) => {
-		const form = await request.formData();
-		const body: Record<string, unknown> = {
-			name: form.get('name') ?? '',
-			class: form.get('class') ?? ''
-		};
-		for (const k of ['ancestry', 'community'] as const) {
-			const id = idByName(k === 'ancestry' ? 'ancestries' : 'communities', String(form.get(k) ?? ''));
-			if (id) body[k] = id;
-		}
-		for (const k of NUMERIC) body[k] = num(form.get(k));
+		// Kept for frozen tests that post here; the Build step links to the character tunnel instead.
+		const body = characterBody(readValues(await request.formData()));
 		const r = await call(fetch, 'POST', `/api/campaigns/${encodeURIComponent(params.id)}/characters`, body);
 		return r.ok ? { ok: true } : failure(r);
 	},

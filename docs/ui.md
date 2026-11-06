@@ -5,7 +5,7 @@ The single UI guide that later stories follow. It documents the current UI plus 
 ## Pages and navigation
 - Home `/`: campaign list and creation.
 - DM screen `/campaigns/:id?step=build|run`: `run` is the default.
-- Character tunnel `/campaigns/:id/characters/new?step=1..4` (*planned*).
+- Character tunnel `/campaigns/:id/characters/new?step=1..4`.
 - Character sheet `/characters/:id`.
 - Reference `/reference`.
 
@@ -43,10 +43,10 @@ In `src/lib/components/`:
   - Kinds: `campaign`, `scene`, `item`, `experience`, `card`.
 
 ## Character tunnel
-*Planned.* `/campaigns/:id/characters/new?step=1..4`. Steps 1–3 are GET forms carrying values in the query string; step 4 posts to the `default` action. Errors come back as `?step=N&invalid=<field>`.
+`/campaigns/:id/characters/new?step=1..4`. Steps 1–3 are GET forms carrying values in the query string; step 4 posts to the `default` action. Errors come back as `?step=N&invalid=<field>`.
 1. Identity: name, class, level.
-2. Heritage: ancestry, community, subclass.
-3. Statistics: the six traits, and the starting values that must pass `thresholdsOk`.
+2. Heritage: ancestry, community (subclass *planned*).
+3. Statistics: evasion, thresholds (must pass `thresholdsOk`), max HP, max stress, armor slots (the six traits *planned*).
 4. Review: summary of all values, then Create.
 
 Test ids: `tunnel-progress` (step indicator), `tunnel-next`, `tunnel-back`, `tunnel-cancel`, `tunnel-summary` (step 4), `tunnel-edit-1` to `tunnel-edit-3` (jump back to a step from the review), `tunnel-create`.
