@@ -12,7 +12,7 @@
 # (10) with JS: Next/Back keep window.__marker; (11) with JS: Create lands on the sheet
 # (12) en/fr texts of Next, Back, Cancel, Edit, Create
 # (13) layout rules at 375x812, 768x1024, 1024x768, 1180x820 on steps 1-4
-# (14) POST ?/addCharacter still creates a character
+# (14) (removed by us-198: the ?/addCharacter action is gone)
 # (15) make test: vitest run below; other acceptance tests are run by CI
 set -uo pipefail
 cd "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/../../.."

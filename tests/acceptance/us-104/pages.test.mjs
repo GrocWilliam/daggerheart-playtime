@@ -34,7 +34,6 @@ async function cases() {
 	const { camp, ch } = await setup();
 	const bad = { name: '', class: '', level: '', evasion: '', majorThreshold: '', severeThreshold: '', maxHp: '', maxStress: '', armorSlots: '' };
 	return [
-		{ id: 'campaign add character', url: `/campaigns/${camp.id}?/addCharacter`, fields: bad, apiCall: () => api('POST', `/api/campaigns/${camp.id}/characters`, { name: '' }) },
 		{ id: 'campaign damage', url: `/campaigns/${camp.id}?/damage`, fields: { characterId: ch.id, amount: 'abc' }, apiCall: () => api('POST', `/api/characters/${ch.id}/damage`, { amount: 'abc', useArmor: false }) },
 		{ id: 'character damage', url: `/characters/${ch.id}?/damage`, fields: { amount: 'abc' }, apiCall: () => api('POST', `/api/characters/${ch.id}/damage`, { amount: 'abc', useArmor: false }) },
 		{ id: 'character edit', url: `/characters/${ch.id}?/edit`, fields: bad, apiCall: () => api('PATCH', `/api/characters/${ch.id}`, { name: '' }) },

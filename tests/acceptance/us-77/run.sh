@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -uo pipefail
-# Criteria (US-77): both forms (?/addCharacter on campaign page, ?/edit on character page) have class form-grid;
+# Criteria (US-77): the ?/edit form on the character page (us-198: the ?/addCharacter form was removed) have class form-grid;
 # 1280x800: 2 columns (1st/2nd label same top, different left); 375x667: 1 column (each label top >= previous
 # bottom, no sideways scroll); submit button after all labels in DOM and its left == form content-box left (±1px);
 # controls keep S2 rules (below label text, fill width at 375, <=384 at 1280, textarea fills form); en and fr.

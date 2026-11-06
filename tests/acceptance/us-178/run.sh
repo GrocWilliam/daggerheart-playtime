@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Criteria (tests in enhance.test.mjs):
-# 1 with JS, fear/tracker/damage/add scene/journal/add character forms (DM screen and character page) update in place: marker kept, 1 navigation entry, new value in DOM
+# 1 with JS, fear/tracker/damage/add scene/journalforms (DM screen and character page) update in place: marker kept, 1 navigation entry, new value in DOM
 # 2 slow submit: clicked button aria-busy=true + disabled, both gone afterwards
 # 3 scrollY kept after a submit
 # 4 form error (blank scene title / blank campaign name) shows the same text without reload

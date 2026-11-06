@@ -361,13 +361,3 @@ for (const step of [1, 2, 3, 4]) {
 		});
 	}
 }
-
-// --- old action kept ---------------------------------------------------------
-
-test('POST /campaigns/:id?/addCharacter still creates a character', async () => {
-	const cid = await campaign();
-	const r = await postForm(`/campaigns/${cid}?/addCharacter`, { name: 'Oldway', class: 'Guardian', level: '1', evasion: '10', majorThreshold: '5', severeThreshold: '10', maxHp: '6', maxStress: '6', armorSlots: '3' });
-	assert.ok(r.status < 400, `status ${r.status}`);
-	const cs = (await api('GET', `/api/campaigns/${cid}`)).json.characters;
-	assert.deepEqual(cs.map((c) => c.name), ['Oldway']);
-});

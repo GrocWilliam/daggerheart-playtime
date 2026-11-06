@@ -1,11 +1,10 @@
 import { error, fail } from '@sveltejs/kit';
-import { getSrd, listSrd, pickOptions, pickOf } from '$lib/server/features/srd';
+import { getSrd, listSrd, pickOf } from '$lib/server/features/srd';
 import type { Scene } from '$lib/server/features/scenes';
 import type { LootEntry } from '$lib/server/features/loot';
 import type { Lang } from '$lib/i18n';
 import { partyDefaults, ADJUSTMENTS, type Encounter } from '$lib/server/features/encounters';
 import { trackerFieldSchema } from '$lib/server/features/characters';
-import { characterBody, readValues } from './characters/new/tunnel';
 type Actions = import('./$types').Actions;
 type PageServerLoad = import('./$types').PageServerLoad;
 
@@ -82,11 +81,6 @@ export const load: PageServerLoad = async ({ params, fetch, locals, url }) => {
 			community: pickOf('communities', ch.community, lang)
 		};
 	}
-	const picks = {
-		class: pickOptions('classes', lang),
-		ancestry: pickOptions('ancestries', lang),
-		community: pickOptions('communities', lang)
-	};
 	const sc = await call(fetch, 'GET', base(params.id));
 	const scenesRaw = (Array.isArray(sc.data) ? sc.data : []) as Scene[];
 	const current = scenesRaw.find((s) => s.status === 'current');
@@ -119,7 +113,7 @@ const scenes = scenesRaw.map((s) => {
 	const characters = raw.map((ch) => ({ id: ch.id, name: ch.name }));
 	const party = partyDefaults(raw.map((ch) => (typeof ch.level === 'number' ? ch.level : 1)));
 	return {
-		campaign: r.data, chosen, picks, currentScene: (current?.title as string | undefined) ?? null,
+		campaign: r.data, chosen, currentScene: (current?.title as string | undefined) ?? null,
 		step: url?.searchParams.get('step') === 'build' ? ('build' as const) : ('run' as const),
 		scenes, journal, characters, party, environments: listSrd('environments', lang)
 	};
@@ -170,12 +164,6 @@ export const actions: Actions = {
 			useArmor: form.get('useArmor') !== null
 		});
 		return r.ok ? { ok: true } : failure(r, { damageFor: id });
-	},
-	addCharacter: async ({ request, params, fetch }) => {
-		// Kept for frozen tests that post here; the Build step links to the character tunnel instead.
-		const body = characterBody(readValues(await request.formData()));
-		const r = await call(fetch, 'POST', `/api/campaigns/${encodeURIComponent(params.id)}/characters`, body);
-		return r.ok ? { ok: true } : failure(r);
 	},
 add: async (e) => {
 		const f = await e.request.formData();

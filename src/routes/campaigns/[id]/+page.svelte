@@ -43,41 +43,7 @@
 	const t = (key: string) => translate(data.lang, key);
 	const c = $derived(data.campaign);
 	const cs = $derived(data.scenes.find((x) => x.status === 'current'));
-	const fields = [
-		['name', 'field.name', 'text'],
-		['level', 'field.level', 'number'],
-		['evasion', 'field.evasion', 'number'],
-		['majorThreshold', 'field.majorThreshold', 'number'],
-		['severeThreshold', 'field.severeThreshold', 'number'],
-		['maxHp', 'field.maxHp', 'number'],
-		['maxStress', 'field.maxStress', 'number'],
-		['armorSlots', 'field.armorSlots', 'number']
-	];
 </script>
-
-{#snippet addForm()}
-<!-- `tracker` and `form-grid` stay as marker classes: frozen tests (us-76, us-77) select on them. -->
-<form use:enhance={busy} method="POST" action="?/addCharacter" class="px-[0.5625rem]! grid grid-cols-1 gap-x-4 md:grid-cols-2"
-	class:form-grid={true}>
-	{#each fields as [name, label, type] (name)}
-		<label class="min-w-0">{t(label)} <input {type} {name} required /></label>
-		{#if name === 'name'}
-			{#each ['class', 'ancestry', 'community'] as k (k)}
-				<label class="min-w-0">
-					{t(`field.${k}`)}
-					<select name={k} required={k === 'class'}>
-						{#if k !== 'class'}<option value="">{t('option.none')}</option>{/if}
-						{#each data.picks[k as 'class' | 'ancestry' | 'community'] as o (o.value)}
-							<option value={o.value}>{o.label}</option>
-						{/each}
-					</select>
-				</label>
-			{/each}
-		{/if}
-	{/each}
-	<button type="submit" class="justify-self-start md:col-start-1">{t('campaign.add')}</button>
-</form>
-{/snippet}
 
 {#snippet adversaryStats(a: Adversary)}
 	<p><strong lang="en">{a.name}</strong> ×{a.count} · <span lang="en">{a.role}</span></p>
@@ -400,7 +366,6 @@
 	<p>{t('campaign.none')}</p>
 {/each}
 </div>
-{@render addForm()}
 </div>
 <section class="min-w-0 rounded-[0.5rem] border-2 border-solid border-muted p-3 md:col-span-2 md:row-start-3 lg:col-span-1 lg:col-start-1 lg:row-start-2" data-testid="journal">
 <h2>{t('journal.title')}</h2>

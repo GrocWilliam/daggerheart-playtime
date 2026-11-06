@@ -13,7 +13,6 @@ before(async () => {
 		name: 'Hero', class: 'Guardian', level: 2, evasion: 10, majorThreshold: 5, severeThreshold: 10, maxHp: 6, maxStress: 6, armorSlots: 2
 	}))).json();
 	targets = [
-		{ label: 'add-character', path: `/campaigns/${c.id}`, action: '?/addCharacter' },
 		{ label: 'edit', path: `/characters/${ch.id}`, action: '?/edit' }
 	];
 	browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH });
@@ -60,7 +59,7 @@ const measure = (action) => `(() => {
 
 for (const lang of ['en', 'fr']) {
 	// targets is filled in before(); define tests per static spec instead
-	for (const spec of [{ label: 'add-character', i: 0 }, { label: 'edit', i: 1 }]) {
+	for (const spec of [{ label: 'edit', i: 0 }]) {
 		const T = () => targets[spec.i];
 		const nm = (s) => `${s} [${spec.label} ${lang}]`;
 

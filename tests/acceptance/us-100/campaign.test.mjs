@@ -117,22 +117,6 @@ for (const [name, w, h, cols] of [['phone', 375, 667, 1], ['tablet', 700, 800, 1
 				scroll: document.documentElement.scrollWidth - document.documentElement.clientWidth
 			};
 		});
-		// us-197: Build has no inline add-character form any more; the Run step keeps it.
-		await page.goto(BASE + `/campaigns/${id}?step=run`);
-		const b = await page.evaluate(() => {
-			const cs = (el) => getComputedStyle(el);
-			const pick = (el, props) => Object.fromEntries(props.map((p) => [p, cs(el)[p]]));
-			const rect = (el) => el.getBoundingClientRect();
-			const add = document.querySelectorAll('form[action="?/addCharacter"]')[0];
-			const kids = [...add.children];
-			return {
-				add: pick(add, ['display', 'columnGap', 'backgroundColor', 'paddingTop']),
-				addCols: cs(add).gridTemplateColumns.split(' ').length,
-				addXs: [...new Set(kids.map((k) => Math.round(rect(k).left)))].length,
-				btn: { h: rect(kids.at(-1)).height, left: rect(kids.at(-1)).left, formLeft: rect(add).left },
-				ctl: [...add.querySelectorAll('input')].map((i) => ({ h: rect(i).height, fs: cs(i).fontSize }))
-			};
-		});
 		assert.equal(r.n, 4);
 		assert.equal(r.party.display, 'grid');
 		assert.equal(r.party.columnGap, '16px');
@@ -188,15 +172,6 @@ for (const [name, w, h, cols] of [['phone', 375, 667, 1], ['tablet', 700, 800, 1
 			if (k === 'fear') { assert.equal(p.fill, col, 'fear pips filled'); }
 			if (k === 'armor') { assert.equal(p.fill, null, 'armor 0 marked: all empty'); }
 		}
-		assert.equal(b.add.display, 'grid');
-		assert.equal(b.add.columnGap, '16px');
-		assert.equal(b.add.backgroundColor, SURFACE);
-		assert.equal(b.add.paddingTop, '12px');
-		assert.equal(b.addCols, w >= 768 ? 2 : 1, 'add-character columns');
-		assert.equal(b.addXs, w >= 768 ? 2 : 1, 'add-character fields laid out in columns');
-		assert.equal(b.btn.left, b.btn.formLeft + 12, 'submit sits at the start of the first column');
-		assert.ok(b.btn.h >= 43.5);
-		for (const c of b.ctl) { assert.ok(c.h >= 43.5); assert.equal(c.fs, '16px'); }
 		assert.equal(r.small, 0, 'all targets 44px');
 		assert.ok(r.scroll <= 0, `horizontal scroll by ${r.scroll}`);
 		await ctx.close();
