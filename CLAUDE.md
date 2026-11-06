@@ -3,6 +3,8 @@
 A table companion for the Daggerheart TTRPG: campaigns with a Fear tracker, characters with trackers, conditions, gold
 and inventory, and an SRD reference. English and French. Built by the forge's agents, one user story at a time.
 
+Design docs: [docs/architecture.md](docs/architecture.md) (rules a change must not break) and [docs/ui.md](docs/ui.md) (pages, layout, components, test ids).
+
 This file is the project's memory for those agents. Keep it short, true and current: update it in the same commit as
 any change that makes it wrong, and add what the next agent would otherwise rediscover the hard way.
 
