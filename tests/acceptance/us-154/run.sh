@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Criteria (one test each in scenario.test.mjs; i18n/hardcoded vitest checks here):
-# 1 campaign page links to /campaigns/:id/scenario (en + fr label "Scenario" translated);
+# 1 campaign page has the step-build link (was: link to the scenario page, moved by us-175);
 # 2 scenario page lists scenes in order (data-testid=scene); without JS the forms add, edit, move up/down,
 #   set current, mark done and delete work (JS disabled in Chromium);
 # 3 current scene title in data-testid=current-scene on the campaign page, absent when none current;

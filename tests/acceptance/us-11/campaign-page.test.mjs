@@ -13,8 +13,8 @@ async function api(method, path, body) {
 	const text = await res.text();
 	return { status: res.status, text, json: text ? JSON.parse(text) : undefined };
 }
-const page = async (id) => {
-	const res = await fetch(`${BASE}/campaigns/${id}`);
+const page = async (id, query = '') => {
+	const res = await fetch(`${BASE}/campaigns/${id}${query}`);
 	return { res, html: await res.text() };
 };
 const attr = (tag, name) => new RegExp(`\\b${name}=["']([^"']*)["']`, 'i').exec(tag)?.[1];
@@ -168,7 +168,7 @@ test('Fear + button (plain POST) increases fear by 1, clamped at 12', async () =
 });
 
 test('add-character form creates a new character-card', async () => {
-	const { html } = await page(cid);
+	const { html } = await page(cid, '?step=build');
 	const f = forms(html).find((x) => /name=["']majorThreshold["']/.test(x.html));
 	assert.ok(f, 'add-character form with majorThreshold input');
 	for (const n of ['name', 'class', 'level', 'evasion', 'majorThreshold', 'severeThreshold', 'maxHp', 'maxStress', 'armorSlots']) {

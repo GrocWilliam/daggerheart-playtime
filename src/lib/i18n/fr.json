@@ -138,10 +138,7 @@
 	"damage.PHYSICAL": "physique",
 	"damage.MAGICAL": "magique",
 	"damage.PHYSICAL_OR_MAGICAL": "physique ou magique",
-	"campaign.scenario": "Scénario",
 	"campaign.currentScene": "Scène en cours",
-	"scenario.title": "Scénario",
-	"scenario.back": "← Campagne",
 	"scenario.none": "Aucune scène pour le moment.",
 	"scenario.add": "Ajouter une scène",
 	"scenario.sceneTitle": "Titre de la scène",
@@ -198,5 +195,10 @@
 	"encounter.thresholds": "Seuils",
 	"encounter.attack": "Attaque",
 	"encounter.damage": "Dégâts",
-	"encounter.features": "Particularités"
+	"encounter.features": "Particularités",
+	"step.build": "Préparer",
+	"step.run": "Jouer",
+	"step.label": "Étapes",
+	"campaign.party": "Groupe",
+	"campaign.scenes": "Scènes"
 }

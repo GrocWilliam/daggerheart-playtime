@@ -29,15 +29,12 @@ const click = async (p, title, name) => {
 	await Promise.all([p.waitForLoadState('load'), scene(p, title).getByRole('button', { name }).first().click()]);
 };
 
-test('the campaign page links to /campaigns/:id/scenario', async () => {
+test('the campaign page links to its build step (scenes live in /campaigns/:id?step=build)', async () => {
 	const c = await campaign();
 	for (const lang of ['en', 'fr']) {
 		const p = await open(`/campaigns/${c.id}`, lang);
-		const link = p.locator(`a[href="/campaigns/${c.id}/scenario"]`);
-		assert.equal(await link.count(), 1);
-		const text = (await link.textContent()).trim();
-		if (lang === 'en') assert.equal(text, 'Scenario');
-		else assert.ok(text && text !== 'Scenario', `French label translated, got ${text}`);
+		assert.equal(await p.locator('[data-testid=step-build]').count(), 1);
+		assert.equal(await p.locator('[data-testid=step-build]').getAttribute('href'), '?step=build');
 	}
 });
 
@@ -46,7 +43,7 @@ test('the scenario page lists scenes in order with data-testid=scene', async () 
 	await addScene(c.id, 'Alpha');
 	await addScene(c.id, 'Bravo');
 	await addScene(c.id, 'Charlie');
-	const p = await open(`/campaigns/${c.id}/scenario`);
+	const p = await open(`/campaigns/${c.id}?step=build`);
 	const t = await sceneTitles(p);
 	assert.equal(t.length, 3);
 	assert.ok(t[0].includes('Alpha') && t[1].includes('Bravo') && t[2].includes('Charlie'));
@@ -54,7 +51,7 @@ test('the scenario page lists scenes in order with data-testid=scene', async () 
 
 test('without JavaScript the forms add, edit, move, set current, mark done and delete a scene', async () => {
 	const c = await campaign();
-	const url = `/campaigns/${c.id}/scenario`;
+	const url = `/campaigns/${c.id}?step=build`;
 	const envs = (await api('GET', '/api/srd/environments')).json;
 	let p = await open(url, 'en', false);
 	// add (the form outside any scene)
@@ -119,7 +116,7 @@ test('a scene with an environment shows its name, type, difficulty, impulses and
 	const raw = (await import('node:fs')).readFileSync('src/lib/srd/environments.json', 'utf8').replace(/^﻿/, '');
 	const full = JSON.parse(raw).find((e) => e.name === env.name || e.name?.['en-US'] === env.name) ?? JSON.parse(raw)[0];
 	for (const lang of ['en', 'fr']) {
-		const p = await open(`/campaigns/${c.id}/scenario`, lang);
+		const p = await open(`/campaigns/${c.id}?step=build`, lang);
 		const el = scene(p, 'Grove');
 		const text = (await el.textContent()).replace(/\s+/g, ' ');
 		assert.ok(text.includes(String(full.name)), 'name');
@@ -135,8 +132,8 @@ test('a scene with an environment shows its name, type, difficulty, impulses and
 test('the scenario page works in English and French', async () => {
 	const c = await campaign();
 	await addScene(c.id, 'Alpha');
-	const en = await open(`/campaigns/${c.id}/scenario`, 'en');
-	const fr = await open(`/campaigns/${c.id}/scenario`, 'fr');
+	const en = await open(`/campaigns/${c.id}?step=build`, 'en');
+	const fr = await open(`/campaigns/${c.id}?step=build`, 'fr');
 	assert.equal(await en.locator('html').getAttribute('lang'), 'en');
 	assert.equal(await fr.locator('html').getAttribute('lang'), 'fr');
 	assert.notEqual(await en.locator('main, body').first().innerText(), await fr.locator('main, body').first().innerText());

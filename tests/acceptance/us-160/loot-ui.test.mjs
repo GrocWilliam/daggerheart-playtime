@@ -25,7 +25,7 @@ async function open(c, lang = 'en', js = true) {
 	await ctx.addCookies([{ name: 'lang', value: lang, url: BASE }]);
 	const p = await ctx.newPage();
 	p.setDefaultTimeout(4000);
-	await p.goto(`${BASE}/campaigns/${c.id}/scenario`);
+	await p.goto(`${BASE}/campaigns/${c.id}?step=build`);
 	return p;
 }
 const sceneOf = (p) => p.locator('[data-testid=scene]', { hasText: 'Vaultroom' });

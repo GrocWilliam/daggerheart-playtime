@@ -17,7 +17,7 @@ async function setup(levels = []) {
 	const c = (await api('POST', '/api/campaigns', { name: 'Camp' })).json;
 	for (const [i, level] of levels.entries()) await api('POST', `/api/campaigns/${c.id}/characters`, { ...CH, name: `Hero${i}`, level });
 	const s = (await api('POST', `/api/campaigns/${c.id}/scenes`, { title: 'Ambush' })).json;
-	return { c, s, url: `/campaigns/${c.id}/scenario` };
+	return { c, s, url: `/campaigns/${c.id}?step=build` };
 }
 const stored = async (c, s) => (await api('GET', `/api/campaigns/${c.id}/scenes`)).json.find((x) => x.id === s.id).encounter;
 async function open(path, lang = 'en') {

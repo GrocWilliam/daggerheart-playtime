@@ -10,14 +10,15 @@ export const actions: Actions = {
 	default: async ({ request }) => {
 		const form = await request.formData();
 		const name = form.get('name');
+		let id: string;
 		try {
-			await createCampaign({ name });
+			({ id } = await createCampaign({ name }));
 		} catch (e) {
 			if (e instanceof ApiError) {
 				return fail(e.status, { error: e.message, name: typeof name === 'string' ? name : '' });
 			}
 			throw e;
 		}
-		redirect(303, '/');
+		redirect(303, `/campaigns/${encodeURIComponent(id)}?step=build`);
 	}
 };

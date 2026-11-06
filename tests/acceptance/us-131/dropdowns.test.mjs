@@ -26,7 +26,7 @@ async function open(lang) {
 	const ctx = await browser.newContext({ javaScriptEnabled: false });
 	await ctx.addCookies([{ name: 'lang', value: lang, url: BASE }]);
 	const page = await ctx.newPage();
-	await page.goto(`${BASE}/campaigns/${id}`);
+	await page.goto(`${BASE}/campaigns/${id}?step=build`);
 	return { ctx, page, id };
 }
 const opts = (sel) => sel.locator('option').evaluateAll((os) => os.map((o) => ({ value: o.value, label: o.textContent.trim() })));

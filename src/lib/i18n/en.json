@@ -138,10 +138,7 @@
 	"damage.PHYSICAL": "physical",
 	"damage.MAGICAL": "magical",
 	"damage.PHYSICAL_OR_MAGICAL": "physical or magical",
-	"campaign.scenario": "Scenario",
 	"campaign.currentScene": "Current scene",
-	"scenario.title": "Scenario",
-	"scenario.back": "← Campaign",
 	"scenario.none": "No scenes yet.",
 	"scenario.add": "Add scene",
 	"scenario.sceneTitle": "Scene title",
@@ -198,5 +195,10 @@
 	"encounter.thresholds": "Thresholds",
 	"encounter.attack": "Attack",
 	"encounter.damage": "Damage",
-	"encounter.features": "Features"
+	"encounter.features": "Features",
+	"step.build": "Build",
+	"step.run": "Run",
+	"step.label": "Steps",
+	"campaign.party": "Party",
+	"campaign.scenes": "Scenes"
 }
