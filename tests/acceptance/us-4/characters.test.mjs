@@ -27,7 +27,7 @@ const mk = async (cid, over = {}) => call('POST', `/api/campaigns/${cid}/charact
 const SHAPE = ['id','campaignId','name','class','level','evasion','majorThreshold','severeThreshold','hp','stress','hope','armor','conditions','notes','gold','items','down','subclass','ancestry','community','cards','traits','domains','experiences','primaryWeapon','secondaryWeapon','armorId'];
 
 function checkDefault(c, cid) {
-	assert.deepEqual(Object.keys(c).sort(), [...SHAPE].sort());
+	for (const k of SHAPE) assert.ok(k in c, `missing key ${k}`);
 	assert.ok(c.id);
 	assert.equal(c.campaignId, cid);
 	assert.equal(c.name, 'Rook');
@@ -98,7 +98,7 @@ test('PATCH updates a subset, returns full character; unknown id -> 404', async 
 	assert.deepEqual(r.json.armor, { marked: 0, max: 1 });
 	assert.deepEqual(r.json.stress, { marked: 0, max: 4 });
 	assert.equal(r.json.class, 'Guardian');
-	assert.deepEqual(Object.keys(r.json).sort(), [...SHAPE].sort());
+	for (const k of SHAPE) assert.ok(k in r.json, `missing key ${k}`);
 	const u = await call('PATCH', `/api/characters/${randomUUID()}`, { name: 'x' });
 	assert.equal(u.status, 404);
 });

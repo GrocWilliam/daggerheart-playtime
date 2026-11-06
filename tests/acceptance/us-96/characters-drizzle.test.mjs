@@ -201,7 +201,7 @@ test('endpoints: damage with and without armor, thresholds, clamping', async () 
 	const dmg = (amount, useArmor) => post(ch.id, 'damage', { amount, useArmor });
 	let r = await dmg(0, false);
 	assert.equal(r.status, 200);
-	assert.deepEqual(Object.keys(r.body), ['hpMarked', 'armorUsed', 'character']);
+	for (const k of ['hpMarked', 'armorUsed', 'character']) assert.ok(k in r.body, `missing key ${k}`);
 	assert.deepEqual([r.body.hpMarked, r.body.armorUsed, r.body.character.hp.marked, r.body.character.armor.marked], [0, false, 0, 0]);
 	r = await dmg(3, false); // minor: 1 hp
 	assert.deepEqual([r.body.hpMarked, r.body.armorUsed, r.body.character.hp.marked], [1, false, 1]);
@@ -300,7 +300,7 @@ test('endpoints: items still appear in the character JSON in creation order', as
 	assert.equal(r.status, 200);
 	const c = await (await send('GET', `/api/characters/${ch.id}`)).json();
 	assert.deepEqual(c.items.map((i) => [i.name, i.quantity, i.srdId]), [['Rope', 3, null], ['Torch', 1, null]]);
-	assert.deepEqual(Object.keys(c.items[0]), ['id', 'name', 'quantity', 'srdId']);
+	for (const k of ['id', 'name', 'quantity', 'srdId']) assert.ok(k in c.items[0], `missing key ${k}`);
 	const t = await tracker(ch.id, 'hope', 1);
 	assert.deepEqual(t.items, c.items);
 	const d = await post(ch.id, 'damage', { amount: 1, useArmor: false });

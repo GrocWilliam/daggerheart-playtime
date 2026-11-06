@@ -6,6 +6,12 @@ const BASE = process.env.BASE_URL;
 const ORIGIN = new URL(BASE).origin;
 const NAMES = ['agility', 'strength', 'finesse', 'instinct', 'presence', 'knowledge'];
 const ZERO = { agility: 0, strength: 0, finesse: 0, instinct: 0, presence: 0, knowledge: 0 };
+const waitFor = async (fn, ok) => {
+	const end = Date.now() + 10000;
+	let v;
+	while (Date.now() < end) { v = await fn(); if (ok(v)) return v; await new Promise((r) => setTimeout(r, 100)); }
+	return v;
+};
 const call = async (method, path, body) => {
 	const res = await fetch(BASE + path, { method, headers: { 'content-type': 'application/json' }, body: body === undefined ? undefined : JSON.stringify(body) });
 	const text = await res.text();
@@ -92,8 +98,7 @@ test('edit form has six number inputs min -5 max 5 and saves new values', async 
 	await page.locator('form[action="?/edit"] input[name$="presence"]').fill('3');
 	await page.locator('form[action="?/edit"] input[name$="instinct"]').fill('-2');
 	await Promise.all([page.waitForLoadState('load'), page.locator('form[action="?/edit"] button[type=submit], form[action="?/edit"] button:not([type])').last().click()]);
-	await page.waitForTimeout(500);
-	const g = await call('GET', `/api/characters/${r.json.id}`);
+	const g = await waitFor(() => call('GET', `/api/characters/${r.json.id}`), (x) => x.json.traits && x.json.traits.presence === 3);
 	assert.deepEqual(g.json.traits, { ...ZERO, presence: 3, instinct: -2 });
 	await page.reload();
 	assert.equal((await page.locator('[data-testid=trait-presence]').innerText()).trim(), '+3');

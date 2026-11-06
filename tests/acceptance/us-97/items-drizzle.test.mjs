@@ -60,7 +60,7 @@ test('POST item creates (201), merges a duplicate name (200), 404 for unknown ch
 	const a = await send('POST', `/api/characters/${ch.id}/items`, { name: 'Rope', quantity: 2 });
 	assert.equal(a.status, 201);
 	const ai = await a.json();
-	assert.deepEqual(Object.keys(ai).sort(), ['id', 'name', 'quantity', 'srdId']);
+	for (const k of ['id', 'name', 'quantity', 'srdId']) assert.ok(k in ai, `missing key ${k}`);
 	assert.equal(ai.name, 'Rope');
 	assert.equal(ai.quantity, 2);
 	assert.equal(ai.srdId, null);

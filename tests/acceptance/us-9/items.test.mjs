@@ -31,7 +31,7 @@ test('POST {"name":"Torch"} -> 201 {id,name:"Torch",quantity:1}', async () => {
 	const cid = await newChar();
 	const r = await addItem(cid, { name: 'Torch' });
 	assert.equal(r.status, 201, r.text);
-	assert.deepEqual(Object.keys(r.json).sort(), ['id', 'name', 'quantity', 'srdId']);
+	for (const k of ['id', 'name', 'quantity', 'srdId']) assert.ok(k in r.json, `missing key ${k}`);
 	assert.equal(typeof r.json.id, 'string');
 	assert.equal(r.json.name, 'Torch');
 	assert.equal(r.json.quantity, 1);

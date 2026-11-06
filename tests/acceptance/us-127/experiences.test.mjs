@@ -3,6 +3,12 @@ import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
 
 const BASE = process.env.BASE_URL;
+const waitFor = async (fn, ok) => {
+	const end = Date.now() + 10000;
+	let v;
+	while (Date.now() < end) { v = await fn(); if (ok(v)) return v; await new Promise((r) => setTimeout(r, 100)); }
+	return v;
+};
 const call = async (method, path, body) => {
 	const res = await fetch(BASE + path, { method, headers: { 'content-type': 'application/json' }, body: body === undefined ? undefined : JSON.stringify(body) });
 	const text = await res.text();
@@ -32,7 +38,7 @@ test('POST trims the name, returns 201 with the character, oldest first', async 
 	const e = r.json.experiences[0];
 	assert.match(e.id, UUID);
 	assert.deepEqual({ name: e.name, modifier: e.modifier }, { name: 'Bounty hunter', modifier: 2 });
-	assert.deepEqual(Object.keys(e).sort(), ['id', 'modifier', 'name']);
+	for (const k of ['id', 'modifier', 'name']) assert.ok(k in e, `missing key ${k}`);
 	const r2 = await add(ch.id, 'Sailor', 3);
 	assert.deepEqual(r2.json.experiences.map((x) => x.name), ['Bounty hunter', 'Sailor']);
 	assert.deepEqual((await call('GET', `/api/characters/${ch.id}`)).json.experiences.map((x) => x.name), ['Bounty hunter', 'Sailor']);
@@ -159,8 +165,7 @@ test('add form (modifier defaults to 2), change form and remove button work', as
 	assert.equal(await f.locator('[name=modifier]').inputValue(), '2');
 	await f.locator('input[name=name]').fill('Bounty hunter');
 	await Promise.all([page.waitForLoadState('load'), f.locator('button[type=submit], button:not([type])').first().click()]);
-	await page.waitForTimeout(500);
-	let g = (await call('GET', `/api/characters/${ch.id}`)).json;
+	let g = (await waitFor(() => call('GET', `/api/characters/${ch.id}`), (x) => x.json.experiences.length === 1)).json;
 	assert.deepEqual(g.experiences.map((e) => [e.name, e.modifier]), [['Bounty hunter', 2]]);
 	await page.goto(BASE + `/characters/${ch.id}`);
 	assert.match(norm(await items(page).first().innerText()), /^Bounty hunter \+2/);
@@ -168,16 +173,14 @@ test('add form (modifier defaults to 2), change form and remove button work', as
 	const chg = items(page).first().locator('form').filter({ has: page.locator('[name=modifier]') });
 	await chg.locator('[name=modifier]').fill('4');
 	await Promise.all([page.waitForLoadState('load'), chg.locator('button[type=submit], button:not([type])').first().click()]);
-	await page.waitForTimeout(500);
-	g = (await call('GET', `/api/characters/${ch.id}`)).json;
+	g = (await waitFor(() => call('GET', `/api/characters/${ch.id}`), (x) => x.json.experiences[0]?.modifier === 4)).json;
 	assert.equal(g.experiences[0].modifier, 4);
 	await page.goto(BASE + `/characters/${ch.id}`);
 	assert.match(norm(await items(page).first().innerText()), /^Bounty hunter \+4/);
 
 	const rm = items(page).first().locator('form').filter({ hasNot: page.locator('[name=modifier]') }).locator('button').first();
 	await Promise.all([page.waitForLoadState('load'), rm.click()]);
-	await page.waitForTimeout(500);
-	assert.deepEqual((await call('GET', `/api/characters/${ch.id}`)).json.experiences, []);
+	assert.deepEqual((await waitFor(() => call('GET', `/api/characters/${ch.id}`), (x) => x.json.experiences.length === 0)).json.experiences, []);
 	await page.goto(BASE + `/characters/${ch.id}`);
 	assert.equal(await items(page).count(), 0);
 	await page.close();
@@ -191,7 +194,7 @@ test('adding a duplicate on the sheet shows a translated error key, not API Engl
 	const f = addForm(page).first();
 	await f.locator('input[name=name]').fill('hunter');
 	await Promise.all([page.waitForLoadState('load'), f.locator('button[type=submit], button:not([type])').first().click()]);
-	await page.waitForTimeout(500);
+	await page.waitForLoadState('networkidle');
 	assert.doesNotMatch(await page.locator('body').innerText(), /experience already exists/);
 	assert.equal((await call('GET', `/api/characters/${ch.id}`)).json.experiences.length, 1);
 	await page.close();

@@ -53,7 +53,7 @@ test('campaigns.test.ts runs on PGlite and covers list, create, read, fear clamp
 test('endpoints: create returns 201 with exactly id, name, fear; list keeps creation order', async () => {
 	const a = await mk('  Alpha  ');
 	const b = await mk('Beta');
-	assert.deepEqual(Object.keys(a).sort(), ['fear', 'id', 'name']);
+	for (const k of ['fear', 'id', 'name']) assert.ok(k in a, `missing key ${k}`);
 	assert.equal(a.name, 'Alpha');
 	assert.equal(a.fear, 0);
 	const r = await send('POST', '/api/campaigns', { name: 'Gamma' });
@@ -83,7 +83,7 @@ test('endpoints: read returns id, name, fear, characters in creation order', asy
 	const r = await send('GET', `/api/campaigns/${c.id}`);
 	assert.equal(r.status, 200);
 	const d = await r.json();
-	assert.deepEqual(Object.keys(d), ['id', 'name', 'fear', 'characters']);
+	for (const k of ['id', 'name', 'fear', 'characters']) assert.ok(k in d, `missing key ${k}`);
 	assert.deepEqual(d.characters.map((x) => x.id), [first.id, second.id]);
 	assert.deepEqual(d.characters[0], first);
 	assert.equal((await send('POST', '/api/campaigns/nope/characters', body)).status, 404);

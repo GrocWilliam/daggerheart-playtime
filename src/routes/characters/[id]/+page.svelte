@@ -35,7 +35,7 @@
 </h1>
 <Divider />
 <p><a data-testid="campaign-run-link" href="/campaigns/{c.campaignId}?step=run">{t('character.runLink')}</a></p>
-<p class="muted">{c.class}, {t('character.level')} {c.level} <Help id="level" name={t('character.level')} lang={data.lang} /></p>
+<div class="muted">{c.class}, {t('character.level')} {c.level} <Help id="level" name={t('character.level')} lang={data.lang} /></div>
 {#if data.domains.length}
 	<ul class="mt-0 mb-3 flex list-none flex-wrap gap-x-4 pl-0!">
 		{#each data.domains as d (d.id)}

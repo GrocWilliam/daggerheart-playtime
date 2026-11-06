@@ -50,7 +50,8 @@ test('Generate encounter shows adversaries with their stats and the budget', asy
 	assert.ok((await cards.count()) >= enc.adversaries.length);
 	for (const a of enc.adversaries) {
 		const srd = (await api('GET', `/api/srd/adversaries/${a.id}`)).json;
-		const card = cards.filter({ hasText: a.name }).first();
+		const esc = a.name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+		const card = cards.filter({ hasText: new RegExp('^\\s*' + esc + ' ×') }).first();
 		const text = (await card.textContent()).replace(/\s+/g, ' ');
 		assert.ok(text.includes(a.name), 'name');
 		assert.ok(text.includes(String(a.count)), 'count');
