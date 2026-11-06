@@ -154,3 +154,23 @@ export async function moveScene(campaignId: string, sceneId: string, body: unkno
 		return list.map(toScene);
 	});
 }
+
+/** Marks the current scene done and makes the next one by position current; none when it was the last. */
+export async function nextScene(campaignId: string): Promise<Scene[]> {
+	const db = await conn();
+	return db.transaction(async (tx) => {
+		await lock(tx, campaignId);
+		const list = await ordered(tx, campaignId);
+		const i = list.findIndex((s) => s.status === 'current');
+		if (i >= 0) {
+			await tx.update(scenes).set({ status: 'done' }).where(eq(scenes.id, list[i].id));
+			list[i] = { ...list[i], status: 'done' };
+			const next = list[i + 1];
+			if (next) {
+				await tx.update(scenes).set({ status: 'current' }).where(eq(scenes.id, next.id));
+				list[i + 1] = { ...next, status: 'current' };
+			}
+		}
+		return list.map(toScene);
+	});
+}

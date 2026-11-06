@@ -10,8 +10,37 @@
 	const ADJUSTMENTS = ['easier', 'damageBoost', 'harder'] as const;
 	const badge: Record<string, string> = { planned: 'bg-muted', current: 'bg-accent', done: 'bg-calm' };
 	let { data, form } = $props();
+	import { onMount } from 'svelte';
+	type Scene = (typeof data.scenes)[number];
+	type Adversary = NonNullable<Scene['encounter']>['adversaries'][number];
+	type LootView = Scene['loot'][number];
+	let js = $state(false);
+	onMount(() => (js = true));
+	let notesStatus = $state('');
+	let notesTimer: ReturnType<typeof setTimeout> | undefined;
+	let notesSeq = 0;
+	async function saveNotes(sceneId: string, value: string) {
+		clearTimeout(notesTimer);
+		const seq = ++notesSeq;
+		notesStatus = t('run.notes.saving');
+		try {
+			const res = await fetch(`/api/campaigns/${encodeURIComponent(data.campaign.id)}/scenes/${encodeURIComponent(sceneId)}`, {
+				method: 'PATCH',
+				headers: { 'content-type': 'application/json' },
+				body: JSON.stringify({ notes: value })
+			});
+			if (seq === notesSeq) notesStatus = res.ok ? t('run.notes.saved') : t('error.server');
+		} catch {
+			if (seq === notesSeq) notesStatus = t('error.server');
+		}
+	}
+	function typed(sceneId: string, value: string) {
+		clearTimeout(notesTimer);
+		notesTimer = setTimeout(() => saveNotes(sceneId, value), 800);
+	}
 	const t = (key: string) => translate(data.lang, key);
 	const c = $derived(data.campaign);
+	const cs = $derived(data.scenes.find((x) => x.status === 'current'));
 	const fields = [
 		['name', 'field.name', 'text'],
 		['level', 'field.level', 'number'],
@@ -46,6 +75,51 @@
 	{/each}
 	<button type="submit" class="justify-self-start md:col-start-1">{t('campaign.add')}</button>
 </form>
+{/snippet}
+
+{#snippet adversaryStats(a: Adversary)}
+	<p><strong lang="en">{a.name}</strong> ×{a.count} · <span lang="en">{a.role}</span></p>
+	<ul class="list-none pl-0!">
+		<li>{t('encounter.difficulty')}: {a.difficulty}</li>
+		<li>{t('encounter.hp')}: {a.hp}</li>
+		<li>{t('encounter.stress')}: {a.stress}</li>
+		<li>{t('encounter.thresholds')}: {a.thresholds}</li>
+		<li>{t('encounter.attack')}: <span lang="en">{a.attack}</span></li>
+		<li>{t('encounter.damage')}: <span lang="en">{a.damage}</span></li>
+	</ul>
+	<details>
+		<summary>{t('encounter.features')}</summary>
+		{#each a.features as f (f.name)}<p lang="en"><strong>{f.name}</strong>: {f.text}</p>{/each}
+	</details>
+{/snippet}
+
+{#snippet lootHead(l: LootView)}
+	<p>
+		<strong>{l.name}</strong>
+		<span class="text-muted">{t('loot.roll.label')} {l.roll}</span>
+		{#if l.given}<span class="inline-block rounded-[999px] bg-calm px-[0.6rem] text-[0.875rem] text-bg">{t('loot.given')}</span>{/if}
+	</p>
+	{#if l.features.length}
+		<details>
+			<summary>{t('loot.features')}</summary>
+			{#each l.features as f (f)}<p lang="en">{f}</p>{/each}
+		</details>
+	{:else}
+		<details><summary>{t('loot.features')}</summary><p>{t('loot.noFeatures')}</p></details>
+	{/if}
+{/snippet}
+
+{#snippet giveForm(sceneId: string, lootId: string, suffix: string)}
+		<form class="mb-0! bg-transparent! border-0! p-0!" method="POST" action="?/give{suffix}">
+			<input type="hidden" name="sceneId" value={sceneId} />
+			<input type="hidden" name="lootId" value={lootId} />
+			<label>{t('loot.giveTo')}
+				<select name="characterId" required>
+					{#each data.characters as c (c.id)}<option value={c.id}>{c.name}</option>{/each}
+				</select>
+			</label>
+			<button type="submit">{t('loot.give')}</button>
+		</form>
 {/snippet}
 
 <svelte:head><title>{c.name} – {t('home.title')}</title></svelte:head>
@@ -151,30 +225,9 @@
 		</form>
 		{#each s.loot as l (l.id)}
 			<div class="mb-2 rounded-[0.5rem] border-2 border-solid border-muted p-3" data-testid="loot-entry" data-given={l.given}>
-				<p>
-					<strong>{l.name}</strong>
-					<span class="text-muted">{t('loot.roll.label')} {l.roll}</span>
-					{#if l.given}<span class="inline-block rounded-[999px] bg-calm px-[0.6rem] text-[0.875rem] text-bg">{t('loot.given')}</span>{/if}
-				</p>
-				{#if l.features.length}
-					<details>
-						<summary>{t('loot.features')}</summary>
-						{#each l.features as f (f)}<p lang="en">{f}</p>{/each}
-					</details>
-				{:else}
-					<details><summary>{t('loot.features')}</summary><p>{t('loot.noFeatures')}</p></details>
-				{/if}
+				{@render lootHead(l)}
 				<div class="flex flex-wrap gap-2">
-					<form class="mb-0! bg-transparent! border-0! p-0!" method="POST" action="?/give&step=build">
-						<input type="hidden" name="sceneId" value={s.id} />
-						<input type="hidden" name="lootId" value={l.id} />
-						<label>{t('loot.giveTo')}
-							<select name="characterId" required>
-								{#each data.characters as c (c.id)}<option value={c.id}>{c.name}</option>{/each}
-							</select>
-						</label>
-						<button type="submit">{t('loot.give')}</button>
-					</form>
+					{@render giveForm(s.id, l.id, '&step=build')}
 					<form class="mb-0! bg-transparent! border-0! p-0!" method="POST" action="?/deleteLoot&step=build">
 						<input type="hidden" name="sceneId" value={s.id} />
 						<input type="hidden" name="lootId" value={l.id} />
@@ -201,19 +254,7 @@
 			</p>
 			{#each enc.adversaries as a (a.id)}
 				<div class="mb-2 rounded-[0.5rem] border-2 border-solid border-muted p-3" data-testid="encounter-adversary">
-					<p><strong lang="en">{a.name}</strong> ×{a.count} · <span lang="en">{a.role}</span></p>
-					<ul class="list-none pl-0!">
-						<li>{t('encounter.difficulty')}: {a.difficulty}</li>
-						<li>{t('encounter.hp')}: {a.hp}</li>
-						<li>{t('encounter.stress')}: {a.stress}</li>
-						<li>{t('encounter.thresholds')}: {a.thresholds}</li>
-						<li>{t('encounter.attack')}: <span lang="en">{a.attack}</span></li>
-						<li>{t('encounter.damage')}: <span lang="en">{a.damage}</span></li>
-					</ul>
-					<details>
-						<summary>{t('encounter.features')}</summary>
-						{#each a.features as f (f.name)}<p lang="en"><strong>{f.name}</strong>: {f.text}</p>{/each}
-					</details>
+					{@render adversaryStats(a)}
 					<form class="mb-0! bg-transparent! border-0! p-0!" method="POST" action="?/setCount&step=build">
 						<input type="hidden" name="sceneId" value={s.id} />
 						<input type="hidden" name="id" value={a.id} />
@@ -253,16 +294,57 @@
 </section>
 {:else}
 <section class="rounded-[0.5rem] border-2 border-solid border-muted p-3" data-testid="run">
-<form method="POST" action="?/fear">
+<div class="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)] lg:items-start">
+<div class="min-w-0">
+<section>
+{#if cs}
+<div data-testid="current-scene">
+	<h2>{t('campaign.currentScene')}: {cs.title}</h2>
+	{#if cs.environment}
+		<div><strong lang="en">{cs.environment.name}</strong>
+			<Help id="environment" name={cs.environment.name} lang={data.lang} en={cs.environment.features} /></div>
+	{/if}
+	<form class="mb-4 bg-transparent! border-0! p-0!" method="POST" action="?/nextScene">
+		<button type="submit">{t('run.nextScene')}</button>
+	</form>
+	{#if cs.encounter}
+		{#each cs.encounter.adversaries as a (a.id)}
+			<div class="mb-2 rounded-[0.5rem] border-2 border-solid border-muted p-3" data-testid="encounter-adversary">
+				{@render adversaryStats(a)}
+			</div>
+		{/each}
+	{/if}
+	{#each cs.loot as l (l.id)}
+		<div class="mb-2 rounded-[0.5rem] border-2 border-solid border-muted p-3" data-testid="loot-entry" data-given={l.given}>
+			{@render lootHead(l)}
+			{@render giveForm(cs.id, l.id, '')}
+		</div>
+	{/each}
+	<form class="bg-transparent! border-0! p-0!" method="POST" action="?/edit">
+		<input type="hidden" name="sceneId" value={cs.id} />
+		<label>{t('scenario.notes')}
+			<textarea name="notes" maxlength="5000" data-testid="scene-notes" value={cs.notes}
+				oninput={(e) => typed(cs.id, e.currentTarget.value)}
+				onblur={(e) => js && saveNotes(cs.id, e.currentTarget.value)}></textarea>
+		</label>
+		{#if !js}<button type="submit">{t('run.notes.save')}</button>{/if}
+		<span data-testid="notes-status" role="status">{notesStatus}</span>
+	</form>
+</div>
+{:else}
+	<p>{t('run.noScene')} <a href="?step=build">{t('run.goBuild')}</a></p>
+{/if}
+</section>
+</div>
+<div class="min-w-0">
+<form class="flex flex-wrap items-center gap-2" method="POST" action="?/fear">
 	{t('campaign.fear')}:
 	<Help id="fear" name={t('campaign.fear')} lang={data.lang} />
 	<button type="submit" name="delta" value="-1">{t('action.decrease')}</button>
-	<span data-testid="fear">{c.fear}</span>
+	<span class="order-first min-w-[2ch] text-center" data-testid="fear">{c.fear}</span>
 	<button type="submit" name="delta" value="1">{t('action.increase')}</button>
 </form>
 <Pips name="fear" max={12} filled={c.fear} />
-{#if data.currentScene}<p>{t('campaign.currentScene')}: <strong data-testid="current-scene">{data.currentScene}</strong></p>{/if}
-
 <h2>{t('campaign.characters')}</h2>
 <div class="grid grid-cols-1 gap-4 min-[600px]:grid-cols-2 min-[1024px]:grid-cols-3">
 {#each c.characters as ch (ch.id)}
@@ -311,6 +393,8 @@
 {:else}
 	<p>{t('campaign.none')}</p>
 {/each}
+</div>
+</div>
 </div>
 
 {@render addForm()}

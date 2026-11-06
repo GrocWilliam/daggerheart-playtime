@@ -198,12 +198,14 @@ add: async (e) => {
 	},
 	edit: async (e) => {
 		const f = await e.request.formData();
-		return run(e, 'PATCH', `${base(e.params.id)}/${encodeURIComponent(text(f.get('sceneId')))}`, {
-			title: text(f.get('title')),
-			notes: text(f.get('notes')),
-			environmentId: envOf(f.get('environmentId'))
-		});
+		// Only the fields present in the form change (the Run step posts notes alone).
+		const body: Record<string, unknown> = {};
+		if (f.has('title')) body.title = text(f.get('title'));
+		if (f.has('notes')) body.notes = text(f.get('notes'));
+		if (f.has('environmentId')) body.environmentId = envOf(f.get('environmentId'));
+		return run(e, 'PATCH', `${base(e.params.id)}/${encodeURIComponent(text(f.get('sceneId')))}`, body);
 	},
+	nextScene: async (e) => run(e, 'POST', `${base(e.params.id)}/next`),
 	move: async (e) => {
 		const f = await e.request.formData();
 		const position = Number(f.get('position'));
