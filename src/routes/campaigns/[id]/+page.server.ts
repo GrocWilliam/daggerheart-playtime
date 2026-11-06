@@ -1,5 +1,5 @@
 import { error, fail } from '@sveltejs/kit';
-import { getSrd, idByName, listSrd, pickList, pickOf } from '$lib/server/features/srd';
+import { getSrd, idByName, listSrd, pickOptions, pickOf } from '$lib/server/features/srd';
 import type { Scene } from '$lib/server/features/scenes';
 import type { LootEntry } from '$lib/server/features/loot';
 import type { Lang } from '$lib/i18n';
@@ -82,13 +82,10 @@ export const load: PageServerLoad = async ({ params, fetch, locals, url }) => {
 			community: pickOf('communities', ch.community, lang)
 		};
 	}
-	const en = (kind: 'classes' | 'ancestries' | 'communities') => pickList(kind, 'en');
-	const options = (kind: 'classes' | 'ancestries' | 'communities') =>
-		pickList(kind, lang).map((p, i) => ({ value: en(kind)[i].name, label: p.name }));
 	const picks = {
-		class: options('classes'),
-		ancestry: options('ancestries'),
-		community: options('communities')
+		class: pickOptions('classes', lang),
+		ancestry: pickOptions('ancestries', lang),
+		community: pickOptions('communities', lang)
 	};
 	const sc = await call(fetch, 'GET', base(params.id));
 	const scenesRaw = (Array.isArray(sc.data) ? sc.data : []) as Scene[];

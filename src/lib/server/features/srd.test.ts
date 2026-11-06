@@ -140,3 +140,13 @@ describe('adversaries and environments', () => {
 		expect(getAdversary('adv_nope', 'en')).toBeNull();
 	});
 });
+
+describe('pickOptions', () => {
+	it('uses English values and localised labels in SRD order', async () => {
+		const { pickOptions, idByName, pickOf, pickList } = await import('./srd');
+		const fr = pickOptions('ancestries', 'fr');
+		expect(fr).toHaveLength(pickList('ancestries', 'en').length);
+		for (const o of fr) expect(o.label).toBe(pickOf('ancestries', idByName('ancestries', o.value), 'fr')!.name);
+		for (const o of pickOptions('classes', 'en')) expect(o.value).toBe(o.label);
+	});
+});

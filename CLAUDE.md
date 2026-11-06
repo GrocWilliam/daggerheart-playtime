@@ -26,6 +26,7 @@ the one that matches your change. This file lists only where we differ or add to
 | `src/lib/server/features/encounters.ts` | Encounter rules (`budgetFor`, `costOf`, `partyDefaults`, `generateRequestSchema`), the seeded `generateEncounter(input, pool)` (pure; retries random greedy picks until valid) and the scene storage functions behind `scenes/[sceneId]/encounter` (POST generate, PATCH list with `over`, DELETE); `campaignPartyDefaults` reads character levels from the schema directly. |
 | `src/lib/server/features/journal.ts` | Session journal entries per campaign (`journal_entries`, newest first), routes under `api/campaigns/[id]/journal`; shown in the Run step (`addJournal`/`deleteJournal` actions, `load` formats `HH:MM` server-side). |
 | `src/lib/server/features/loot.ts` | Loot rolling per scene (stored in `scenes.loot`; d12 sums by rarity over SRD `items`/`consumables`), routes under `scenes/[sceneId]/loot` (incl. `[lootId]/give`, which reuses `addItem`). |
+| `src/routes/campaigns/[id]/characters/new/tunnel.ts` | Pure helpers of the character creation tunnel (`TUNNEL_STEPS`, `parseStep`, `readValues`, `firstInvalid`, `tunnelHref`...); built on `createFields` (characters.ts, unrefined) and `pickOptions` (srd.ts, shared with the DM screen `load`). |
 | `src/lib/utils/prng.ts` | `seededRandom(seed)` shared seeded PRNG. |
 | `src/lib/server/errors.ts` | `ApiError`, `errorResponse`, `api()`, `parse`, `readJson`. |
 | `src/lib/utils/validation.ts` | Shared Zod field helpers: `strField`, `intField`, `safeIntField`, `OBJECT_ERROR`, `idSchema`. |
@@ -48,6 +49,7 @@ the one that matches your change. This file lists only where we differ or add to
 ## Conventions
 
 ### Code organisation
+- `tunnel.ts` imports `src/lib` by relative path: the story-196 acceptance vitest config has no `$lib` alias.
 - A feature never imports another feature's helpers: shared code goes to `src/lib/server/errors.ts` or `src/lib/utils/`. A feature may call another for domain data (e.g. `characters.ts` calling `getSrd` from `srd.ts`).
 - `src/lib/utils/` is pure: it imports nothing from `$lib/server`, `node:*`, `drizzle-orm` or `@sveltejs/kit`.
 - Types stay beside the Zod schema they are inferred from. No catch-all types file.

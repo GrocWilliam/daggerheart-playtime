@@ -256,6 +256,12 @@ export function pickList(kind: SrdKind, lang: Lang): Pick[] {
 	return data.get(kind)!.map((d) => toPick(kind, d, lang));
 }
 
+/** Select options: English name as value, localised name as label, in SRD order. */
+export function pickOptions(kind: 'classes' | 'ancestries' | 'communities', lang: Lang): { value: string; label: string }[] {
+	const en = pickList(kind, 'en');
+	return pickList(kind, lang).map((p, i) => ({ value: en[i].name, label: p.name }));
+}
+
 /** The id of the entry with this English name (e.g. "Clank"); null when empty or unknown. */
 export function idByName(kind: SrdKind, name: string | null | undefined): string | null {
 	return data.get(kind)!.find((d) => d.name === name)?.element.id ?? null;

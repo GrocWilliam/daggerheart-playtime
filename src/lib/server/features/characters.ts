@@ -135,8 +135,8 @@ export const traitsSchema = z
 	})
 	.transform((t) => Object.fromEntries(TRAITS.flatMap((k) => (t[k] === undefined ? [] : [[k, t[k]]]))) as Partial<Record<(typeof TRAITS)[number], number>>);
 
-const THRESHOLDS_ERROR = 'thresholds must satisfy 1 <= majorThreshold < severeThreshold <= 100';
-const thresholdsOk = (major: number, severe: number) => major >= 1 && major < severe && severe <= 100;
+export const THRESHOLDS_ERROR = 'thresholds must satisfy 1 <= majorThreshold < severeThreshold <= 100';
+export const thresholdsOk = (major: number, severe: number) => major >= 1 && major < severe && severe <= 100;
 
 type SrdKind = 'subclasses' | 'ancestries' | 'communities';
 
@@ -166,9 +166,8 @@ function gearField(error: string, ok: (e: Record<string, any>) => boolean) {
 }
 const isWeapon = (types: string[]) => (e: Record<string, any>) => types.includes(e.type);
 
-export const createSchema = z
-	.object(
-		{
+export const createFields = z.object(
+	{
 			name: strField('name', 1, 100),
 			class: strField('class', 1, 50),
 			level: intField('level', 1, 10).default(1),
@@ -183,8 +182,10 @@ export const createSchema = z
 			traits: traitsSchema.optional()
 		},
 		{ error: OBJECT_ERROR }
-	)
-	.refine((f) => thresholdsOk(f.majorThreshold, f.severeThreshold), { error: THRESHOLDS_ERROR });
+);
+export const createSchema = createFields.refine((f) => thresholdsOk(f.majorThreshold, f.severeThreshold), {
+	error: THRESHOLDS_ERROR
+});
 export type CreateCharacter = z.infer<typeof createSchema>;
 
 const patchFields = z.object(
