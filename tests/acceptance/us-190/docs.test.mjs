@@ -56,12 +56,13 @@ test('CLAUDE.md links both design docs', () => {
   assert.ok(c.includes('docs/ui.md'));
 });
 
-test('no file under src/ changes', () => {
-  let base = '';
-  for (const ref of ['origin/main', 'main']) {
-    try { base = execSync(`git merge-base HEAD ${ref}`, { cwd: ROOT, stdio: ['ignore', 'pipe', 'ignore'] }).toString().trim(); break; } catch {}
-  }
-  if (!base) return; // no main reference available (shallow CI clone)
-  const out = execSync(`git diff --name-only ${base} -- src`, { cwd: ROOT }).toString().trim();
+test('the #190 commit changes no file under src/', () => {
+  // Limited to the #190 commit: later stories legitimately edit src/.
+  let out = '';
+  try {
+    const sha = execSync(`git log --format=%H --grep='(#190)' -n 1`, { cwd: ROOT, stdio: ['ignore', 'pipe', 'ignore'] }).toString().trim();
+    if (!sha) return; // commit not in this history
+    out = execSync(`git show --name-only --format= ${sha} -- src`, { cwd: ROOT }).toString().trim();
+  } catch { return; }
   assert.equal(out, '');
 });

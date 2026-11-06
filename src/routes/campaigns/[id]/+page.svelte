@@ -140,6 +140,8 @@
 
 {#if data.step === 'build'}
 <section class="rounded-[0.5rem] border-2 border-solid border-muted p-3" data-testid="build">
+<div class="grid grid-cols-1 gap-4 md:grid-cols-3 md:items-start">
+<div class="min-w-0 md:col-span-1" data-testid="build-party">
 <h2>{t('campaign.party')}</h2>
 <ul class="list-none pl-0!">
 	{#each c.characters as ch (ch.id)}
@@ -153,7 +155,8 @@
 </ul>
 <h3>{t('campaign.add')}</h3>
 {@render addForm()}
-<Divider />
+</div>
+<div class="min-w-0 md:col-span-2" data-testid="build-scenes">
 <h2>{t('campaign.scenes')}</h2>
 <h3>{t('scenario.add')}</h3>
 <form use:enhance={busy} method="POST" action="?/add&step=build">
@@ -296,11 +299,11 @@
 </section>
 {:else}
 <section class="rounded-[0.5rem] border-2 border-solid border-muted p-3" data-testid="run">
-<div class="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)] lg:items-start">
-<div class="min-w-0">
+<div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)] lg:grid-rows-[auto_1fr] lg:items-start">
+<div class="min-w-0 md:col-start-2 md:row-start-1 lg:col-start-1">
 <section>
 {#if cs}
-<div data-testid="current-scene">
+<div class="flow-root md:mt-[15px] lg:mt-0" data-testid="current-scene">
 	<h2>{t('campaign.currentScene')}: {cs.title}</h2>
 	{#if cs.environment}
 		<div><strong lang="en">{cs.environment.name}</strong>
@@ -338,17 +341,19 @@
 {/if}
 </section>
 </div>
-<div class="min-w-0">
+<div class="min-w-0 md:col-start-1 md:row-start-1 lg:col-start-2">
 <form use:enhance={busy} class="flex flex-wrap items-center gap-2" method="POST" action="?/fear">
 	{t('campaign.fear')}:
 	<Help id="fear" name={t('campaign.fear')} lang={data.lang} />
 	<button type="submit" name="delta" value="-1">{t('action.decrease')}</button>
-	<span class="order-first min-w-[2ch] text-center" data-testid="fear">{c.fear}</span>
+	<span class="order-first -ml-[15px] min-w-[2ch] self-start text-center" data-testid="fear">{c.fear}</span>
 	<button type="submit" name="delta" value="1">{t('action.increase')}</button>
 </form>
 <Pips name="fear" max={12} filled={c.fear} />
+</div>
+<div class="min-w-0 md:col-span-2 md:row-start-2 lg:col-span-1 lg:col-start-2">
 <h2>{t('campaign.characters')}</h2>
-<div class="grid grid-cols-1 gap-4 min-[600px]:grid-cols-2 min-[1024px]:grid-cols-3">
+<div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-1" data-testid="party">
 {#each c.characters as ch (ch.id)}
 	<article class="mb-0! min-w-0" data-testid="character-card">
 		<h3>
@@ -396,12 +401,9 @@
 	<p>{t('campaign.none')}</p>
 {/each}
 </div>
-</div>
-</div>
-
 {@render addForm()}
-</section>
-<section class="mt-4 rounded-[0.5rem] border-2 border-solid border-muted p-3" data-testid="journal">
+</div>
+<section class="min-w-0 rounded-[0.5rem] border-2 border-solid border-muted p-3 md:col-span-2 md:row-start-3 lg:col-span-1 lg:col-start-1 lg:row-start-2" data-testid="journal">
 <h2>{t('journal.title')}</h2>
 <Divider />
 <form use:enhance={busy} method="POST" action="?/addJournal">
@@ -420,5 +422,8 @@
 {:else}
 	<p>{t('journal.none')}</p>
 {/each}
+</section>
+</div>
+
 </section>
 {/if}
