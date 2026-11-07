@@ -41,6 +41,7 @@ the one that matches your change. This file lists only where we differ or add to
 | `src/lib/components/*.svelte` | Shared components (`Divider` (h1 flourish, `data-testid=divider`), `Pips`, `Help`, `Chosen`, `LanguageSwitcher`, `Modal` (the only dialog: opener `new-<kind>` + `<dialog data-testid=modal-<kind>>`, open on `?new=<kind>` or `form.modal === kind`; the home page's create form and the DM screen's New scene form live in one, and their failures return `fail(400, { error, modal, values })`)). `Help` takes either a glossary `id` or a `text` prop (a catalog string, e.g. `trait.help.*`). |
 | `src/lib/i18n/{en,fr}.json` | Every UI string, by key. `src/lib/i18n/index.ts` has the helpers; pages get `data.lang`. |
 | `src/lib/srd/` | SRD data (JSON) and its licence; `fr.json` holds the French names. |
+| `src/lib/srd/fr/TERMS.md` | French SRD terminology; translation stories extend it. |
 | `src/app.css` | Tailwind import, palette variables, `@theme static` tokens, `@layer base` and global element rules only. |
 | `migrations/` | Frozen legacy SQL files, applied first at startup. Never add, edit or rename. |
 | `drizzle/` | drizzle-kit output; baseline `0000_baseline.sql` is `SELECT 1;`. |

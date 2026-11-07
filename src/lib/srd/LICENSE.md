@@ -1,3 +1,5 @@
 This product includes materials from the Daggerheart System Reference Document 1.0, © Critical Role, LLC. under the terms of the Darrington Press Community Gaming (DPCGL) License. More information can be found at https://www.daggerheart.com. There are no previous modifications by others.
 
 This product also includes materials from the Daggerheart SRD JSON build at https://github.com/seansbox/daggerheart-srd (commit c84b20b9b7c237d832eda7e64df46440eb983ed1; adversaries.json and environments.json), © Critical Role, LLC. under the terms of the Darrington Press Community Gaming (DPCGL) License. More information can be found at https://www.daggerheart.com. There are no previous modifications by others.
+
+The French translations in src/lib/srd/fr/ are modifications of the SRD made by this project.
