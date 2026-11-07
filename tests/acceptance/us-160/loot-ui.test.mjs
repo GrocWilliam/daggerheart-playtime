@@ -78,7 +78,10 @@ test("consumables table works too", async () => {
 	await roll(p, 'consumables', 'common', 2);
 	const stored = await apiLoot(c, s);
 	assert.equal(stored.length, 2);
-	assert.equal(await sceneOf(p).locator('[data-testid=loot-entry]').count(), 2);
+	// the enhanced form re-renders after invalidation: poll instead of reading the count once
+	const entries = sceneOf(p).locator('[data-testid=loot-entry]');
+	for (let i = 0; i < 50 && (await entries.count()) !== 2; i++) await p.waitForTimeout(100);
+	assert.equal(await entries.count(), 2);
 	assert.ok(stored.every((e) => e.table === 'consumables'));
 });
 

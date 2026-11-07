@@ -63,7 +63,7 @@ test('without JavaScript the forms add, edit, move, set current, mark done and d
 	const c = await campaign();
 	const url = `/campaigns/${c.id}?step=build`;
 	const envs = (await api('GET', '/api/srd/environments')).json;
-	let p = await open(url, 'en', false);
+	let p = await open(url + '&new=scene', 'en', false); // US-194: the add form lives in the New scene modal
 	// add (the form outside any scene)
 	const form = p.locator('form', { has: p.locator('input[name=title]') }).filter({ hasNot: p.locator('[data-testid=scene]') }).first();
 	await form.locator('input[name=title]').fill('One');

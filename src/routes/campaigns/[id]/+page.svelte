@@ -2,6 +2,7 @@
 	import { enhance } from '$app/forms';
 	import { busy } from '$lib/forms/busy';
 	import Divider from '$lib/components/Divider.svelte';
+	import Modal from '$lib/components/Modal.svelte';
 	// Tracker value colours (hp danger, hope calm); the others keep the text colour.
 	const valColour: Record<string, string> = { hp: 'text-danger', hope: 'text-calm' };
 	import { translate } from '$lib/i18n';
@@ -11,7 +12,8 @@
 	import Chosen from '$lib/components/Chosen.svelte';
 	const ADJUSTMENTS = ['easier', 'damageBoost', 'harder'] as const;
 	const badge: Record<string, string> = { planned: 'bg-muted', current: 'bg-accent', done: 'bg-calm' };
-	let { data, form } = $props();
+	let { data, form: rawForm } = $props();
+	const form = $derived(rawForm as { error?: string; modal?: string; values?: Record<string, string> } | null);
 	import { onMount } from 'svelte';
 	type Scene = (typeof data.scenes)[number];
 	type Adversary = NonNullable<Scene['encounter']>['adversaries'][number];
@@ -102,7 +104,7 @@
 	{/each}
 </nav>
 
-{#if form?.error}<p role="alert">{t(form.error)}</p>{/if}
+{#if form?.error && form.modal !== 'scene'}<p role="alert">{t(form.error)}</p>{/if}
 
 {#if data.step === 'build'}
 <section class="rounded-[0.5rem] border-2 border-solid border-muted p-3" data-testid="build">
@@ -123,19 +125,21 @@
 </div>
 <div class="min-w-0 md:col-span-2" data-testid="build-scenes">
 <h2>{t('campaign.scenes')}</h2>
-<h3>{t('scenario.add')}</h3>
+<Modal kind="scene" title={t('scenario.new')} lang={data.lang}>
+{#if form?.modal === 'scene' && form.error}<p role="alert">{t(form.error)}</p>{/if}
 <form use:enhance={busy} method="POST" action="?/add&step=build">
-	<label>{t('scenario.sceneTitle')} <input name="title" required maxlength="100" /></label>
-	<label>{t('scenario.notes')} <textarea name="notes" maxlength="5000"></textarea></label>
+	<label>{t('scenario.sceneTitle')} <input name="title" value={form?.values?.title ?? ''} required maxlength="100" /></label>
+	<label>{t('scenario.notes')} <textarea name="notes" maxlength="5000">{form?.values?.notes ?? ''}</textarea></label>
 	<label>
 		{t('scenario.environment')}
 		<select name="environmentId">
 			<option value="">{t('scenario.noEnvironment')}</option>
-			{#each data.environments as o (o.id)}<option value={o.id}>{o.name}</option>{/each}
+			{#each data.environments as o (o.id)}<option value={o.id} selected={form?.values?.environmentId === o.id}>{o.name}</option>{/each}
 		</select>
 	</label>
 	<button type="submit">{t('scenario.add')}</button>
 </form>
+</Modal>
 
 {#each data.scenes as s, i (s.id)}
 	<article class="mb-4 rounded-[0.5rem] border-2 border-solid p-3 {s.status === 'current' ? 'border-accent' : 'border-muted'}"

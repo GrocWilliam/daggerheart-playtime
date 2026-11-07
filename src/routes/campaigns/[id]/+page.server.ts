@@ -1,4 +1,4 @@
-import { error, fail } from '@sveltejs/kit';
+import { error, fail, redirect } from '@sveltejs/kit';
 import { getSrd, listSrd, pickOf } from '$lib/server/features/srd';
 import type { Scene } from '$lib/server/features/scenes';
 import type { LootEntry } from '$lib/server/features/loot';
@@ -167,11 +167,20 @@ export const actions: Actions = {
 	},
 add: async (e) => {
 		const f = await e.request.formData();
-		return run(e, 'POST', base(e.params.id), {
+		const values = {
 			title: text(f.get('title')),
 			notes: text(f.get('notes')),
+			environmentId: text(f.get('environmentId'))
+		};
+		const r = await call(e.fetch, 'POST', base(e.params.id), {
+			title: values.title,
+			notes: values.notes,
 			environmentId: envOf(f.get('environmentId'))
 		});
+		if (!r.ok) return failure(r, { modal: 'scene', values });
+		// Without JavaScript, land back on the step (enhance requests set this header and get { ok }).
+		if (!e.request.headers.has('x-sveltekit-action')) redirect(303, `/campaigns/${encodeURIComponent(e.params.id)}?step=build`);
+		return { ok: true };
 	},
 	edit: async (e) => {
 		const f = await e.request.formData();

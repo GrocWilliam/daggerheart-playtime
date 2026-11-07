@@ -140,6 +140,7 @@
 	"campaign.currentScene": "Scène en cours",
 	"scenario.none": "Aucune scène pour le moment.",
 	"scenario.add": "Ajouter une scène",
+	"scenario.new": "Nouvelle scène",
 	"scenario.sceneTitle": "Titre de la scène",
 	"scenario.notes": "Notes de la scène",
 	"scenario.environment": "Environnement",

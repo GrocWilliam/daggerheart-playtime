@@ -71,6 +71,7 @@ test('with JS: add scene (build step) updates in place', async () => {
 	const { c } = await setup();
 	const p = await open(`/campaigns/${c.id}?step=build`);
 	await mark(p);
+	await p.locator('[data-testid=new-scene]').click(); // US-194
 	await sceneForm(p).locator('input[name=title]').fill('Moonlit Bridge');
 	await sceneForm(p).locator('button[type=submit]').click();
 	await p.locator('[data-testid=scene]', { hasText: 'Moonlit Bridge' }).waitFor();
@@ -161,6 +162,7 @@ test('a form error (blank scene title) shows the same error text without a reloa
 	const { c } = await setup();
 	const p = await open(`/campaigns/${c.id}?step=build`);
 	await mark(p);
+	await p.locator('[data-testid=new-scene]').click(); // US-194
 	await sceneForm(p).evaluate((f) => { f.noValidate = true; });
 	await sceneForm(p).locator('input[name=title]').fill('   ');
 	await sceneForm(p).locator('button[type=submit]').click();
@@ -203,7 +205,7 @@ test('without JavaScript the same forms still work as full-page POSTs', async ()
 	await journalForm(p).locator('textarea[name=text]').fill('plain post');
 	await Promise.all([p.waitForNavigation(), journalForm(p).locator('button[type=submit]').click()]);
 	await p.locator('[data-testid=journal-entry]', { hasText: 'plain post' }).waitFor();
-	p = await open(`/campaigns/${c.id}?step=build`, { js: false });
+	p = await open(`/campaigns/${c.id}?step=build&new=scene`, { js: false }); // US-194
 	await sceneForm(p).locator('input[name=title]').fill('Plain Scene');
 	await Promise.all([p.waitForNavigation(), sceneForm(p).locator('button[type=submit]').click()]);
 	await p.locator('[data-testid=scene]', { hasText: 'Plain Scene' }).waitFor();
