@@ -223,6 +223,9 @@
 	"tunnel.cancel": "Cancel",
 	"tunnel.edit": "Edit",
 	"tunnel.create": "Create character",
+	"item.new": "New item",
+	"experience.new": "New experience",
+	"card.new": "New card",
 	"home.new": "New campaign",
 	"modal.cancel": "Cancel"
 }

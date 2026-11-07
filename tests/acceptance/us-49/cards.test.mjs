@@ -147,7 +147,7 @@ test('add form: select of the 189 cards grouped by domain, the class\'s two doma
 test('submitting the add form holds the card: on the sheet with its helper, and in the API', async () => {
 	const id = await mk('Wizard');
 	const c = CARDS.find((x) => x.domain === 'CODEX');
-	const { ctx, page } = await open('en', `/characters/${id}`);
+	const { ctx, page } = await open('en', `/characters/${id}?new=card`); // the add form lives in a modal (us-195)
 	await addSelect(page).selectOption(c.id);
 	await Promise.all([page.waitForNavigation(), addForm(page).locator('button[type="submit"]').click()]);
 	assert.deepEqual(await held(id), [c.id]);

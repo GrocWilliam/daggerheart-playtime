@@ -5,11 +5,16 @@
 	import { translate, formatNumber } from '$lib/i18n';
 	import Pips from '$lib/components/Pips.svelte';
 
+	import Modal from '$lib/components/Modal.svelte';
 	import Help from '$lib/components/Help.svelte';
 	import Chosen from '$lib/components/Chosen.svelte';
 	let { data, form } = $props();
 	const t = (key: string, params?: Record<string, string | number>) => translate(data.lang, key, params);
 	const n = (v: number) => formatNumber(data.lang, v);
+	const valuesOf = (kind: string): Record<string, any> => (form?.modal === kind ? (form?.values ?? {}) : {});
+	const expValues = $derived(valuesOf('experience'));
+	const itemValues = $derived(valuesOf('item'));
+	const cardValues = $derived(valuesOf('card'));
 	const c = $derived(data.character);
 	const fields = $derived([
 		['name', 'field.name', 'text', c.name],
@@ -47,7 +52,7 @@
 {/if}
 <Chosen chosen={data.chosen} lang={data.lang} />
 
-{#if form?.error}<p role="alert">{t(form.error)}</p>{/if}
+{#if form?.error && !form?.modal}<p role="alert">{t(form.error)}</p>{/if}
 
 {#snippet gear(testid: string, g: { name: string; trait?: string; range?: string; dice?: string; damageType?: string; burden?: string; major?: number; severe?: number; score?: number; features: { name: string; text: string }[] })}
 	<div data-testid={testid}>
@@ -173,11 +178,14 @@
 
 <div data-testid="sheet-experiences">
 <h2>{t('section.experiences')}</h2>
+<Modal kind="experience" title={t('experience.new')} lang={data.lang}>
 <form use:enhance={busy} method="POST" action="?/addExperience">
-	<label>{t('experience.name')} <input type="text" name="name" maxlength="100" required /></label>
-	<label>{t('experience.modifier')} <input type="number" name="modifier" min="1" max="5" step="1" value="2" required /></label>
+	<label>{t('experience.name')} <input type="text" name="name" maxlength="100" required value={expValues?.name ?? ''} /></label>
+	<label>{t('experience.modifier')} <input type="number" name="modifier" min="1" max="5" step="1" value={expValues?.modifier ?? '2'} required /></label>
 	<button type="submit">{t('action.addExperience')}</button>
+	{#if form?.modal === 'experience' && form?.error}<p role="alert">{t(form.error)}</p>{/if}
 </form>
+</Modal>
 <ul class="list-none pl-0!">
 	{#each c.experiences as ex (ex.id)}
 		<li data-testid="experience">
@@ -198,24 +206,27 @@
 
 <div data-testid="sheet-inventory" class="md:col-span-2">
 <h2>{t('section.inventory')}</h2>
+<Modal kind="item" title={t('item.new')} lang={data.lang}>
 <form use:enhance={busy} method="POST" action="?/addItem">
-	<label>{t('item.name')} <input type="text" name="name" maxlength="100" /></label>
+	<label>{t('item.name')} <input type="text" name="name" maxlength="100" value={itemValues?.name ?? ''} /></label>
 	<label>
 		{t('item.fromSrd')}
 		<select name="srdId">
-			<option value=""></option>
+			<option value="" selected={!itemValues?.srdId}></option>
 			{#each data.itemGroups as g (g.kind)}
 				<optgroup label={t(`reference.kind.${g.kind}`)}>
 					{#each g.picks as p (p.id)}
-						<option value={p.id}>{p.name}</option>
+						<option value={p.id} selected={itemValues?.srdId === p.id}>{p.name}</option>
 					{/each}
 				</optgroup>
 			{/each}
 		</select>
 	</label>
-	<label>{t('item.quantity')} <input type="number" name="quantity" min="1" /></label>
+	<label>{t('item.quantity')} <input type="number" name="quantity" min="1" value={itemValues?.quantity ?? ''} /></label>
 	<button type="submit">{t('action.addItem')}</button>
+	{#if form?.modal === 'item' && form?.error}<p role="alert">{t(form.error)}</p>{/if}
 </form>
+</Modal>
 {#if c.items.length > 0}
 	<table data-testid="inventory">
 		<thead>
@@ -269,6 +280,7 @@
 		</li>
 	{/each}
 </ul>
+<Modal kind="card" title={t('card.new')} lang={data.lang}>
 <form use:enhance={busy} method="POST" action="?/addCard">
 	<label>
 		{t('card.add')}
@@ -276,14 +288,16 @@
 			{#each data.cardGroups as g (g.domain)}
 				<optgroup label={g.label}>
 					{#each g.cards as card (card.id)}
-						<option value={card.id}>{card.name}</option>
+						<option value={card.id} selected={cardValues?.cardId === card.id}>{card.name}</option>
 					{/each}
 				</optgroup>
 			{/each}
 		</select>
 	</label>
 	<button type="submit">{t('action.addCard')}</button>
+	{#if form?.modal === 'card' && form?.error}<p role="alert">{t(form.error)}</p>{/if}
 </form>
+</Modal>
 </div>
 
 <div data-testid="sheet-notes">

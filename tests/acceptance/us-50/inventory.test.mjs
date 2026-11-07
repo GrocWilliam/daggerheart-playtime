@@ -119,7 +119,7 @@ test('add form: a select "from the SRD" next to the name input, 4 optgroups with
 test('submitting the SRD select alone (no JS) adds the item to the sheet and the API', async () => {
 	const id = await mk();
 	const e = sample.armors;
-	const { ctx, page } = await open('fr', `/characters/${id}`);
+	const { ctx, page } = await open('fr', `/characters/${id}?new=item`);
 	await srdSelect(page).selectOption(e.id);
 	await Promise.all([page.waitForNavigation(), srdForm(page).locator('button[type="submit"]').click()]);
 	const held = await items(id);
@@ -182,7 +182,7 @@ test('375px wide: no horizontal overflow, the SRD select fits the viewport', asy
 	const id = await mk();
 	await addItem(id, { srdId: SRD.weapons[0].id });
 	for (const lang of ['en', 'fr']) {
-		const { ctx, page } = await open(lang, `/characters/${id}`, { viewport: { width: 375, height: 800 } });
+		const { ctx, page } = await open(lang, `/characters/${id}?new=item`, { viewport: { width: 375, height: 800 } });
 		const over = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
 		assert.ok(over <= 0, `overflow ${over}px`);
 		const b = await srdSelect(page).boundingBox();

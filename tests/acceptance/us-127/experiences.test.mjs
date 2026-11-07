@@ -169,6 +169,7 @@ test('add form (modifier defaults to 2), change form and remove button work', as
 	const { ch } = await mk();
 	const page = await browser.newPage();
 	await page.goto(BASE + `/characters/${ch.id}`);
+	await page.locator('[data-testid=new-experience]').click(); // the add form lives in a modal (us-195)
 	const f = addForm(page).first();
 	assert.equal(await f.locator('[name=modifier]').inputValue(), '2');
 	await f.locator('input[name=name]').fill('Bounty hunter');
@@ -199,6 +200,7 @@ test('adding a duplicate on the sheet shows a translated error key, not API Engl
 	await add(ch.id, 'Hunter');
 	const page = await browser.newPage();
 	await page.goto(BASE + `/characters/${ch.id}`);
+	await page.locator('[data-testid=new-experience]').click(); // the add form lives in a modal (us-195)
 	const f = addForm(page).first();
 	await f.locator('input[name=name]').fill('hunter');
 	await afterSubmit(page, f.locator('button[type=submit], button:not([type])').first().click());

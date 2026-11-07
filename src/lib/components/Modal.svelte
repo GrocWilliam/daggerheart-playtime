@@ -8,6 +8,7 @@
 	let { kind, title, lang, children }: { kind: string; title: string; lang: Lang; children: Snippet } = $props();
 
 	let dialog: HTMLDialogElement | undefined = $state();
+	let reopening = false;
 	let opener: HTMLAnchorElement | undefined = $state();
 
 	const href = (u: URL, add: boolean): string => {
@@ -29,7 +30,12 @@
 	}
 	function show() {
 		if (!dialog) return;
-		if (dialog.open) dialog.close();
+		if (dialog.open) {
+			// the server rendered it open (non-modal): reopen as a modal without the close handler leaving the URL
+			reopening = true;
+			dialog.close();
+			setTimeout(() => (reopening = false), 0);
+		}
 		dialog.showModal();
 		focusFirst();
 	}
@@ -46,6 +52,7 @@
 		if (e.target === dialog) dialog?.close();
 	}
 	function onClose() {
+		if (reopening) return;
 		opener?.focus();
 		if (page.url.searchParams.has('new')) {
 			goto(closeHref, { replaceState: true, noScroll: true, keepFocus: true });

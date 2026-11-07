@@ -31,8 +31,11 @@ function errorKey(status: number): string {
 	return status >= 500 ? 'error.server' : 'error.invalid';
 }
 
-function failure(r: { status: number; data: { error?: string } | null }, extra: object = {}) {
-	return fail(r.status, { error: errorKey(r.status), ...extra });
+function failure(
+	r: { status: number; data: { error?: string } | null },
+	extra: { modal?: string; values?: Record<string, string> } = {}
+) {
+	return fail(r.status, { error: errorKey(r.status), modal: extra.modal, values: extra.values });
 }
 
 const enc = encodeURIComponent;
@@ -157,7 +160,10 @@ export const actions: Actions = {
 		const q = form.get('quantity');
 		if (typeof q === 'string' && q.trim() !== '') body.quantity = num(q);
 		const r = await call(fetch, 'POST', `/api/characters/${enc(params.id)}/items`, body);
-		return r.ok ? { ok: true } : failure(r);
+		const str = (k: string) => (typeof form.get(k) === 'string' ? String(form.get(k)) : '');
+		return r.ok
+			? { ok: true }
+			: failure(r, { modal: 'item', values: { name: str('name'), srdId: str('srdId'), quantity: str('quantity') } });
 	},
 	setQuantity: async ({ request, fetch }) => {
 		const form = await request.formData();
@@ -176,7 +182,7 @@ export const actions: Actions = {
 		const r = await call(fetch, 'POST', `/api/characters/${enc(params.id)}/cards`, {
 			cardId: String(form.get('cardId') ?? '')
 		});
-		return r.ok ? { ok: true } : failure(r);
+		return r.ok ? { ok: true } : failure(r, { modal: 'card', values: { cardId: String(form.get('cardId') ?? '') } });
 	},
 	removeCard: async ({ request, params, fetch }) => {
 		const form = await request.formData();
@@ -203,7 +209,10 @@ export const actions: Actions = {
 			name: form.get('name') ?? '',
 			modifier: num(form.get('modifier'))
 		});
-		return r.ok ? { ok: true } : failure(r);
+		const val = (k: string) => (typeof form.get(k) === 'string' ? String(form.get(k)) : '');
+		return r.ok
+			? { ok: true }
+			: failure(r, { modal: 'experience', values: { name: val('name'), modifier: val('modifier') } });
 	},
 	setExperience: async ({ request, params, fetch }) => {
 		const form = await request.formData();
