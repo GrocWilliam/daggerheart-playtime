@@ -9,6 +9,17 @@ const json = (p) => JSON.parse(fs.readFileSync(p, 'utf8'));
 const CARDS = json('src/lib/srd/core/domain-cards.json');
 const CLASSES = json('src/lib/srd/core/classes.json');
 // French names from the overlay files: id -> name, one per `name` entry of src/lib/srd/fr/*.json
+const FRCARDS = json('src/lib/srd/fr/domain-cards.json');
+// Lines as shown in the given language: the French overlay where the card is translated, else English.
+const linesIn = (c, lang) => {
+	const fr = lang === 'fr' ? FRCARDS[c.id] : undefined;
+	if (!fr?.features) return { lang: 'en', ls: lines(c) };
+	const ls = fr.features.flatMap((f) => {
+		const ps = (f.description ?? []).map((x) => x.paragraph).filter(Boolean);
+		return f.name ? [`${f.name}: ${ps[0] ?? ''}`.trim(), ...ps.slice(1)] : ps;
+	});
+	return { lang: 'fr', ls };
+};
 const FR = Object.assign({}, ...fs.readdirSync('src/lib/srd/fr').filter((f) => f.endsWith('.json')).map((f) =>
 	Object.fromEntries(Object.entries(json(`src/lib/srd/fr/${f}`)).filter(([, e]) => e && 'name' in e).map(([id, e]) => [id, e.name]))));
 const cap = (s) => s.charAt(0) + s.slice(1).toLowerCase();
@@ -104,10 +115,11 @@ test('opened card helper: 44x44 target, name, SRD text in a lang="en" block, wit
 			await h.locator('> summary').click();
 			assert.equal(await h.evaluate((d) => d.open), true);
 			assert.ok(norm(await h.textContent()).includes(cardName(c, lang)));
-			const en = h.locator('[lang="en"]');
-			assert.ok((await en.count()) >= 1, 'lang=en block');
+			const exp = linesIn(c, lang);
+			const en = h.locator(`[lang="${exp.lang}"]`);
+			assert.ok((await en.count()) >= 1, `lang=${exp.lang} block`);
 			const txt = norm((await en.allTextContents()).join(' '));
-			const ls = lines(c);
+			const ls = exp.ls;
 			assert.ok(ls.length > 0);
 			for (const l of ls) assert.ok(txt.includes(norm(l)), `${c.id}: ${l.slice(0, 50)}`);
 			await h.locator('> summary').click();

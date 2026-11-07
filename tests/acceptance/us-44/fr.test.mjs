@@ -136,7 +136,14 @@ test('GET /api/srd/<kind>/<id> in French returns the file object unchanged plus 
 			const r = await get(`/api/srd/${kind}/${e.id}`, 'fr');
 			assert.equal(r.status, 200);
 			// us-209: the French name is merged into `name` too (plain string for classes, {"en-US": fr} for core kinds)
-			assert.deepEqual(await r.json(), { ...e, name: typeof e.name === 'string' ? fr[e.id] : { 'en-US': fr[e.id] }, nameLocalized: fr[e.id] });
+			const body = await r.json();
+			const expected = { ...e, name: typeof e.name === 'string' ? fr[e.id] : { 'en-US': fr[e.id] }, nameLocalized: fr[e.id] };
+			// us-218: cards of CODEX, SAGE, MIDNIGHT and BLADE have French features; compare the rest
+			if (kind === 'domain-cards' && ['CODEX', 'SAGE', 'MIDNIGHT', 'BLADE'].includes(String(e.domain).toUpperCase())) {
+				delete body.features;
+				delete expected.features;
+			}
+			assert.deepEqual(body, expected);
 			const en = await (await get(`/api/srd/${kind}/${e.id}`, 'en')).json();
 			assert.deepEqual(en, { ...e, nameLocalized: enName(kind, e) });
 		}

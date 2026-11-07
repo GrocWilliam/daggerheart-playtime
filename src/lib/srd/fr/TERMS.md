@@ -31,3 +31,8 @@ French terminology for every file in this folder; reuse these forms, add a row w
 | Bruiser, Horde, Leader, Minion, Ranged, Skulk, Social, Solo, Standard, Support | Cogneur, Horde, Meneur, Sbire, Tireur, Rôdeur, Social, Solo, Standard, Soutien |
 | Exploration, Social, Traversal, Event (environments) | Exploration, Social, Traversée, Événement |
 | Action / Reaction / Passive (features) | Action / Réaction / Passive |
+| Spellcast Roll / Proficiency | jet de sort / Maîtrise |
+| Loadout / Vault / Recall Cost | équipement / coffre / coût de rappel |
+| Death Move | Dernier souffle |
+| Restrained, Vulnerable, Hidden, Asleep, Silenced, Corroded, Horrified | Entravé, Vulnérable, Caché, Endormi, Réduit au silence, Corrodé, Horrifié |
+| token | jeton |

@@ -3,7 +3,9 @@ import { describe, expect, it } from 'vitest';
 import { frEntries, listSrd, localizedSrd, sameShape, SRD_KINDS, TRANSLATED_FIELDS, type SrdKind } from './srd';
 
 /** Kinds (and ids, by filter) whose translation is complete. Translation stories fill it in. */
-const DONE: Partial<Record<SrdKind, (id: string) => boolean>> = {};
+const DONE: Partial<Record<SrdKind, (id: string) => boolean>> = {
+	'domain-cards': (id) => ['CODEX', 'SAGE', 'MIDNIGHT', 'BLADE'].includes(String(english('domain-cards', id)?.domain)),
+};
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const english = (kind: SrdKind, id: string): Record<string, any> | undefined => localizedSrd(kind, id, 'en')?.element;
