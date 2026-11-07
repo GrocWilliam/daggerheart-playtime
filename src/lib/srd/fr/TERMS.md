@@ -36,3 +36,8 @@ French terminology for every file in this folder; reuse these forms, add a row w
 | Death Move | Dernier souffle |
 | Restrained, Vulnerable, Hidden, Asleep, Silenced, Corroded, Horrified | Entravé, Vulnérable, Caché, Endormi, Réduit au silence, Corrodé, Horrifié |
 | token | jeton |
+| Stunned, Enraptured, On Fire, Cloaked, Invisible | Étourdi, Ravi, En feu, Dissimulé, Invisible |
+| Spellcast trait | trait de lancement de sorts |
+| Fear Pool / Ward Die | réserve de Peur / dé de garde |
+| Tag Team Roll / Tend to Wounds / Help an Ally | jet en tandem / Soigner les blessures / Aider un allié |
+| bag / handful of gold | bourse / poignée d’or |

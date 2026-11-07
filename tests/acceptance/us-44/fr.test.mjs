@@ -138,8 +138,8 @@ test('GET /api/srd/<kind>/<id> in French returns the file object unchanged plus 
 			// us-209: the French name is merged into `name` too (plain string for classes, {"en-US": fr} for core kinds)
 			const body = await r.json();
 			const expected = { ...e, name: typeof e.name === 'string' ? fr[e.id] : { 'en-US': fr[e.id] }, nameLocalized: fr[e.id] };
-			// us-218: cards of CODEX, SAGE, MIDNIGHT and BLADE have French features; compare the rest
-			if (kind === 'domain-cards' && ['CODEX', 'SAGE', 'MIDNIGHT', 'BLADE'].includes(String(e.domain).toUpperCase())) {
+			// us-218, us-219: cards of the nine translated domains have French features; compare the rest
+			if (kind === 'domain-cards' && ['CODEX', 'SAGE', 'MIDNIGHT', 'BLADE', 'ARCANA', 'SPLENDOR', 'GRACE', 'BONE', 'VALOR'].includes(String(e.domain).toUpperCase())) {
 				delete body.features;
 				delete expected.features;
 			}

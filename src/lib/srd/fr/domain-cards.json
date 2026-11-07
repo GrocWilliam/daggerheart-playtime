@@ -12,19 +12,76 @@
 		]
 	},
 	"core_domain_card_adjust_reality": {
-		"name": "Ajuster la réalité"
+		"name": "Ajuster la réalité",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Après un jet fait par vous ou par un allié consentant, vous pouvez dépenser 5 Espoirs pour remplacer le résultat numérique de ce jet par un résultat de votre choix. Ce résultat doit être plausible avec les dés lancés."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_arcana_touched": {
-		"name": "Touché par les Arcanes"
+		"name": "Touché par les Arcanes",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Quand 4 cartes de domaine ou plus de votre équipement viennent du domaine Arcanes, vous obtenez les avantages suivants :"
+					},
+					{
+						"list": [
+							"Bonus de +1 à vos jets de sort",
+							"Une fois par repos, vous pouvez échanger les résultats de votre dé d’Espoir et de votre dé de Peur."
+						]
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_arcane_reflection": {
-		"name": "Reflet arcanique"
+		"name": "Reflet arcanique",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Quand vous devriez subir des dégâts magiques, vous pouvez dépenser autant d’Espoirs que vous voulez pour lancer autant de d6. Si l’un d’eux fait 6, l’attaque est renvoyée vers le lanceur, qui subit les dégâts à votre place."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_armorer": {
-		"name": "Armurier"
+		"name": "Armurier",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Tant que vous portez une armure, obtenez un bonus de +1 à votre score d’armure."
+					},
+					{
+						"paragraph": "Pendant un repos, quand vous choisissez de réparer votre armure comme action de temps libre, vos alliés effacent eux aussi un emplacement d’armure."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_astral_projection": {
-		"name": "Projection astrale"
+		"name": "Projection astrale",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Une fois par repos long, cochez un Stress pour créer une copie projetée de vous-même qui peut apparaître n’importe où vous êtes déjà allé."
+					},
+					{
+						"paragraph": "Vous pouvez voir et entendre à travers la projection comme si c’était vous et agir sur le monde comme si vous y étiez. Une créature qui examine la projection peut deviner qu’elle est d’origine magique. Cet effet dure jusqu’à votre prochain repos ou jusqu’à ce que votre projection subisse des dégâts."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_banish": {
 		"name": "Bannir",
@@ -42,7 +99,24 @@
 		]
 	},
 	"core_domain_card_bare_bones": {
-		"name": "Os nus"
+		"name": "Os nus",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Quand vous choisissez de ne pas équiper d’armure, votre score d’armure de base est de 3 + votre Puissance et vous utilisez comme seuils de dégâts de base :"
+					},
+					{
+						"list": [
+							"Palier 1 : 9/19",
+							"Palier 2 : 11/24",
+							"Palier 3 : 13/31",
+							"Palier 4 : 15/38"
+						]
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_battle_cry": {
 		"name": "Cri de guerre",
@@ -99,19 +173,73 @@
 		]
 	},
 	"core_domain_card_blink_out": {
-		"name": "Disparition"
+		"name": "Disparition",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Faites un jet de sort (12). En cas de réussite, dépensez un Espoir pour vous téléporter en un autre point que vous voyez à portée Loin. Si des créatures consentantes se trouvent à portée Très proche, dépensez un Espoir de plus par créature pour les emmener avec vous."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_body_basher": {
-		"name": "Fracasseur"
+		"name": "Fracasseur",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Vous mettez toute la force de votre corps dans un combat. Quand vous réussissez une attaque avec une arme de portée de Mêlée, obtenez un bonus à votre jet de dégâts égal à votre Puissance."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_bold_presence": {
-		"name": "Présence audacieuse"
+		"name": "Présence audacieuse",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Quand vous faites un jet de Présence, vous pouvez dépenser un Espoir pour ajouter votre Puissance au jet."
+					},
+					{
+						"paragraph": "De plus, une fois par repos, quand vous devriez subir un état, vous pouvez décrire comment votre présence audacieuse vous aide dans la situation et éviter de subir cet état."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_bolt_beacon": {
-		"name": "Balise de foudre"
+		"name": "Balise de foudre",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Faites un jet de sort contre une cible à portée Loin. En cas de réussite, dépensez un Espoir pour lancer vers elle un trait de lumière scintillante qui inflige d8+2 dégâts magiques en utilisant votre Maîtrise. La cible devient temporairement Vulnérable et brille d’un vif éclat jusqu’à ce que cet état soit levé."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_bone_touched": {
-		"name": "Touché par l’Os"
+		"name": "Touché par l’Os",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Quand 4 cartes de domaine ou plus de votre équipement viennent du domaine Os, vous obtenez les avantages suivants :"
+					},
+					{
+						"list": [
+							"Bonus de +1 à l’Agilité",
+							"Une fois par repos, vous pouvez dépenser 3 Espoirs pour qu’une attaque qui a réussi contre vous échoue à la place."
+						]
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_book_of_ava": {
 		"name": "Livre d’Ava",
@@ -443,16 +571,52 @@
 		]
 	},
 	"core_domain_card_boost": {
-		"name": "Coup de pouce"
+		"name": "Coup de pouce",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Cochez un Stress pour prendre appui sur un allié consentant à portée Proche, vous projeter dans les airs et porter une attaque aérienne contre une cible à portée Loin. Vous avez l’avantage à l’attaque, ajoutez un d10 au jet de dégâts et terminez votre déplacement à portée de Mêlée de la cible."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_brace": {
-		"name": "Se préparer"
+		"name": "Se préparer",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Quand vous cochez un emplacement d’armure pour réduire des dégâts subis, vous pouvez cocher un Stress pour cocher un emplacement d’armure supplémentaire."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_breaking_blow": {
-		"name": "Coup brisant"
+		"name": "Coup brisant",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Quand vous réussissez une attaque, vous pouvez cocher un Stress pour que la prochaine attaque réussie contre cette même cible inflige 2d12 dégâts supplémentaires."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_chain_lightning": {
-		"name": "Éclair en chaîne"
+		"name": "Éclair en chaîne",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Cochez 2 Stress pour faire un jet de sort et déchaîner la foudre sur toutes les cibles à portée Proche. Les cibles contre lesquelles vous réussissez doivent faire un jet de réaction dont la Difficulté est égale au résultat de votre jet de sort. Les cibles qui échouent subissent 2d8+4 dégâts magiques. Les adversaires supplémentaires qui n’ont pas encore été ciblés par Éclair en chaîne et se trouvent à portée Proche des cibles précédentes ayant subi des dégâts doivent aussi faire le jet de réaction. Les cibles qui échouent subissent 2d8+4 dégâts magiques. La chaîne se poursuit jusqu’à ce qu’il n’y ait plus d’adversaire à portée."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_champions_edge": {
 		"name": "Avantage du champion",
@@ -492,10 +656,31 @@
 		]
 	},
 	"core_domain_card_cinder_grasp": {
-		"name": "Étreinte de cendres"
+		"name": "Étreinte de cendres",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Faites un jet de sort contre une cible à portée de Mêlée. En cas de réussite, la cible s’embrase instantanément, subit 1d20+3 dégâts magiques et est temporairement En feu."
+					},
+					{
+						"paragraph": "Quand une créature agit alors qu’elle est En feu, elle subit 2d6 dégâts magiques supplémentaires si elle est toujours En feu à la fin de son action."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_cloaking_blast": {
-		"name": "Explosion occultante"
+		"name": "Explosion occultante",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Quand vous réussissez un jet de sort pour lancer un autre sort, vous pouvez dépenser un Espoir pour devenir Dissimulé. Tant que vous êtes Dissimulé, vous restez invisible si vous êtes immobile quand un adversaire se déplace à un endroit d’où il vous verrait normalement. Quand vous entrez dans le champ de vision d’un adversaire, vous y déplacez ou faites une attaque, vous n’êtes plus Dissimulé."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_codex_touched": {
 		"name": "Touché par le Codex",
@@ -516,7 +701,16 @@
 		]
 	},
 	"core_domain_card_confusing_aura": {
-		"name": "Aura de confusion"
+		"name": "Aura de confusion",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Faites un jet de sort (14). Une fois par repos long, en cas de réussite, vous créez sur votre corps une couche d’illusion qui empêche de discerner précisément où vous êtes. Cochez autant de Stress que vous voulez pour créer autant de couches supplémentaires. Quand un adversaire vous attaque, lancez autant de d6 qu’il y a de couches actives. Si l’un d’eux fait 5 ou plus, une couche de l’aura est détruite et l’attaque échoue. Si tous les résultats sont de 4 ou moins, vous subissez les dégâts et ce sort prend fin."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_conjure_swarm": {
 		"name": "Invocation d’essaim",
@@ -546,7 +740,16 @@
 		]
 	},
 	"core_domain_card_copycat": {
-		"name": "Copieur"
+		"name": "Copieur",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Une fois par repos long, cette carte peut imiter les effets d’une autre carte de domaine de niveau 8 ou moins dans l’équipement d’un autre joueur. Dépensez un nombre d’Espoirs égal à la moitié du niveau de la carte pour accéder à l’effet. Il dure jusqu’à votre prochain repos ou jusqu’à ce que le joueur place la carte dans son coffre."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_corrosive_projectile": {
 		"name": "Projectile corrosif",
@@ -561,13 +764,40 @@
 		]
 	},
 	"core_domain_card_counterspell": {
-		"name": "Contresort"
+		"name": "Contresort",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Vous pouvez interrompre un effet magique en cours en faisant un jet de réaction avec votre trait de lancement de sorts. En cas de réussite, l’effet s’arrête, ses conséquences sont évitées et cette carte est placée dans votre coffre."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_critical_inspiration": {
-		"name": "Inspiration critique"
+		"name": "Inspiration critique",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Une fois par repos, quand vous réussissez une attaque de façon critique, tous les alliés à portée Très proche peuvent effacer un Stress ou gagner un Espoir."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_cruel_precision": {
-		"name": "Précision cruelle"
+		"name": "Précision cruelle",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Quand vous réussissez une attaque avec une arme, obtenez un bonus à votre jet de dégâts égal à votre Finesse ou à votre Agilité."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_dark_whispers": {
 		"name": "Murmures sombres",
@@ -624,13 +854,46 @@
 		]
 	},
 	"core_domain_card_deathrun": {
-		"name": "Course mortelle"
+		"name": "Course mortelle",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Dépensez 3 Espoirs pour courir en ligne droite à travers le champ de bataille jusqu’à un point à portée Loin, en attaquant tous les adversaires à portée de votre arme le long de ce chemin. Choisissez l’ordre dans lequel vous infligez des dégâts aux cibles contre lesquelles vous avez réussi. Pour la première, lancez les dégâts de votre arme avec un bonus de +1 à votre Maîtrise. Retirez ensuite un dé de votre jet de dégâts et infligez les dégâts restants à la cible suivante. Continuez à retirer un dé pour chaque cible suivante jusqu’à ce qu’il ne reste plus de dés de dégâts ni d’adversaires."
+					},
+					{
+						"paragraph": "Vous ne pouvez pas cibler le même adversaire plus d’une fois par attaque."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_deft_deceiver": {
-		"name": "Trompeur habile"
+		"name": "Trompeur habile",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Dépensez un Espoir pour avoir l’avantage à un jet visant à tromper quelqu’un ou à lui faire croire un mensonge que vous lui racontez."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_deft_maneuvers": {
-		"name": "Manœuvres habiles"
+		"name": "Manœuvres habiles",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Une fois par repos, cochez un Stress pour foncer n’importe où à portée Loin sans faire de jet d’Agilité pour y arriver."
+					},
+					{
+						"paragraph": "Si vous terminez ce déplacement à portée de Mêlée d’un adversaire et l’attaquez immédiatement, obtenez un bonus de +1 au jet d’attaque."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_disintegration_wave": {
 		"name": "Onde de désintégration",
@@ -645,10 +908,31 @@
 		]
 	},
 	"core_domain_card_divination": {
-		"name": "Divination"
+		"name": "Divination",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Une fois par repos long, dépensez 3 Espoirs pour tendre la main vers les forces de l’au-delà et poser une question « oui ou non » sur un événement, une personne, un lieu ou une situation du futur proche. Un instant, le présent s’efface et vous voyez la réponse devant vous."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_earthquake": {
-		"name": "Tremblement de terre"
+		"name": "Tremblement de terre",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Faites un jet de sort (16). Une fois par repos, en cas de réussite, toutes les cibles à portée Très loin qui ne volent pas doivent faire un jet de réaction (18). Les cibles qui échouent subissent 3d10+8 dégâts physiques et deviennent temporairement Vulnérables. Les cibles qui réussissent subissent la moitié des dégâts."
+					},
+					{
+						"paragraph": "De plus, quand vous réussissez le jet de sort, tout le terrain à portée Très loin devient difficile à traverser et les structures situées dans cette zone peuvent être endommagées ou s’effondrer."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_eclipse": {
 		"name": "Éclipse",
@@ -669,16 +953,52 @@
 		]
 	},
 	"core_domain_card_encore": {
-		"name": "Rappel"
+		"name": "Rappel",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Quand un allié à portée Proche inflige des dégâts à un adversaire, vous pouvez faire un jet de sort contre cette même cible. En cas de réussite, vous infligez à la cible les mêmes dégâts que ceux infligés par votre allié. Si votre jet de sort réussit avec Peur, placez cette carte dans votre coffre."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_endless_charisma": {
-		"name": "Charisme infini"
+		"name": "Charisme infini",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Après un jet d’action pour persuader, mentir ou s’attirer des faveurs, vous pouvez dépenser un Espoir pour relancer le dé d’Espoir ou le dé de Peur."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_enrapture": {
-		"name": "Ravissement"
+		"name": "Ravissement",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Faites un jet de sort contre une cible à portée Proche. En cas de réussite, elle est temporairement Ravie. Tant qu’une cible est Ravie, son attention est rivée sur vous, son champ de vision se réduit et tout bruit autre que votre voix s’efface. Une fois par repos, en cas de réussite, vous pouvez cocher un Stress pour forcer la cible Ravie à cocher elle aussi un Stress."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_falling_sky": {
-		"name": "Chute du ciel"
+		"name": "Chute du ciel",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Faites un jet de sort contre tous les adversaires à portée Loin. Cochez autant de Stress que vous voulez pour faire pleuvoir des éclats d’arcane du ciel. Les cibles contre lesquelles vous réussissez subissent 1d20+2 dégâts magiques par Stress coché."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_fane_of_the_wilds": {
 		"name": "Sanctuaire des terres sauvages",
@@ -702,16 +1022,52 @@
 		]
 	},
 	"core_domain_card_ferocity": {
-		"name": "Férocité"
+		"name": "Férocité",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Quand vous forcez un adversaire à cocher 1 Point de vie ou plus, vous pouvez dépenser 2 Espoirs pour augmenter votre Évasion du nombre de Points de vie qu’il a cochés. Ce bonus dure jusqu’à la fin de la prochaine attaque portée contre vous."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_final_words": {
-		"name": "Dernières paroles"
+		"name": "Dernières paroles",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Vous pouvez insuffler un instant de vie à un cadavre pour lui parler. Faites un jet de sort (13). En cas de réussite avec Espoir, le cadavre répond à trois questions au plus. En cas de réussite avec Peur, il répond à une question. Le cadavre répond sincèrement, mais il ne peut pas révéler ce qu’il ignorait de son vivant. En cas d’échec, ou quand le cadavre a fini de répondre à vos questions, le corps tombe en poussière."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_flight": {
-		"name": "Vol"
+		"name": "Vol",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Faites un jet de sort (15). En cas de réussite, placez sur cette carte un nombre de jetons égal à votre Agilité (minimum 1). Quand vous faites un jet d’action en vol, dépensez un jeton de cette carte. Une fois résolue l’action qui dépense le dernier jeton, vous redescendez au sol, juste en dessous de vous."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_floating_eye": {
-		"name": "Œil flottant"
+		"name": "Œil flottant",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Dépensez un Espoir pour créer une petite orbe flottante que vous pouvez déplacer n’importe où à portée Très loin. Tant que ce sort est actif, vous voyez à travers l’orbe comme si vous regardiez depuis sa position. Vous pouvez passer librement de vos propres sens à la vision à travers l’orbe. Si l’orbe subit des dégâts ou sort de la portée, le sort prend fin."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_forager": {
 		"name": "Cueilleur",
@@ -758,7 +1114,19 @@
 		]
 	},
 	"core_domain_card_forceful_push": {
-		"name": "Poussée puissante"
+		"name": "Poussée puissante",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Attaquez une cible à portée de Mêlée avec votre arme principale. En cas de réussite, vous infligez des dégâts et la repoussez à portée Proche. En cas de réussite avec Espoir, ajoutez un d6 à votre jet de dégâts."
+					},
+					{
+						"paragraph": "De plus, vous pouvez dépenser un Espoir pour la rendre temporairement Vulnérable."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_forest_sprites": {
 		"name": "Esprits de la forêt",
@@ -809,7 +1177,16 @@
 		]
 	},
 	"core_domain_card_full_surge": {
-		"name": "Déferlement total"
+		"name": "Déferlement total",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Une fois par repos long, cochez 3 Stress pour pousser votre corps à ses limites. Obtenez un bonus de +2 à tous vos traits de personnage jusqu’à votre prochain repos."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_get_back_up": {
 		"name": "Se relever",
@@ -871,7 +1248,16 @@
 		]
 	},
 	"core_domain_card_goad_them_on": {
-		"name": "Les provoquer"
+		"name": "Les provoquer",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Décrivez comment vous raillez une cible à portée Proche, puis faites un jet de Présence contre elle. En cas de réussite, la cible doit cocher un Stress et, la prochaine fois que le MJ met le projecteur sur elle, elle doit vous cibler avec une attaque, qu’elle fait avec désavantage."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_gore_and_glory": {
 		"name": "Sang et gloire",
@@ -889,10 +1275,34 @@
 		]
 	},
 	"core_domain_card_grace_touched": {
-		"name": "Touché par la Grâce"
+		"name": "Touché par la Grâce",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Quand 4 cartes de domaine ou plus de votre équipement viennent du domaine Grâce, vous obtenez les avantages suivants :"
+					},
+					{
+						"list": [
+							"Vous pouvez cocher un emplacement d’armure au lieu de cocher un Stress.",
+							"Quand vous devriez forcer une cible à cocher un certain nombre de Points de vie, vous pouvez choisir de la forcer à cocher autant de Stress à la place."
+						]
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_ground_pound": {
-		"name": "Frappe au sol"
+		"name": "Frappe au sol",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Dépensez 2 Espoirs pour frapper le sol là où vous vous tenez et faites un jet de Puissance contre toutes les cibles à portée Très proche. Les cibles contre lesquelles vous réussissez sont projetées à portée Loin et doivent faire un jet de réaction (17). Les cibles qui échouent subissent 4d10+8 dégâts. Les cibles qui réussissent subissent la moitié des dégâts."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_healing_field": {
 		"name": "Champ de soins",
@@ -910,13 +1320,43 @@
 		]
 	},
 	"core_domain_card_healing_hands": {
-		"name": "Mains guérisseuses"
+		"name": "Mains guérisseuses",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Faites un jet de sort (13) en ciblant une créature autre que vous à portée de Mêlée. En cas de réussite, cochez un Stress pour effacer 2 Points de vie ou 2 Stress sur la cible. En cas d’échec, cochez un Stress pour effacer un Point de vie ou un Stress sur la cible. Vous ne pouvez pas soigner à nouveau la même cible avant votre prochain repos long."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_healing_strike": {
-		"name": "Frappe guérisseuse"
+		"name": "Frappe guérisseuse",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Quand vous infligez des dégâts à un adversaire, vous pouvez dépenser 2 Espoirs pour effacer un Point de vie à un allié à portée Proche."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_hold_the_line": {
-		"name": "Tenir la ligne"
+		"name": "Tenir la ligne",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Décrivez la posture défensive que vous adoptez et dépensez un Espoir. Si un adversaire s’approche à portée Très proche, il est attiré à portée de Mêlée et Entravé."
+					},
+					{
+						"paragraph": "Cet état dure jusqu’à ce que vous bougiez ou ratiez un jet avec Peur, ou que le MJ dépense 2 Peurs à son tour pour le lever."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_hush": {
 		"name": "Silence",
@@ -934,37 +1374,163 @@
 		]
 	},
 	"core_domain_card_hypnotic_shimmer": {
-		"name": "Scintillement hypnotique"
+		"name": "Scintillement hypnotique",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Faites un jet de sort contre tous les adversaires devant vous à portée Proche. Une fois par repos, en cas de réussite, créez une illusion de lumières et de couleurs clignotantes qui Étourdit temporairement les cibles contre lesquelles vous réussissez et les force à cocher un Stress. Tant qu’elles sont Étourdies, elles ne peuvent pas utiliser de réactions ni entreprendre d’autres actions jusqu’à ce qu’elles lèvent cet état."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_i_am_your_shield": {
-		"name": "Je suis ton bouclier"
+		"name": "Je suis ton bouclier",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Quand un allié à portée Très proche devrait subir des dégâts, vous pouvez cocher un Stress pour vous interposer et devenir la cible de l’attaque à sa place. Quand vous subissez des dégâts de cette attaque, vous pouvez cocher autant d’emplacements d’armure que vous voulez."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_i_see_it_coming": {
-		"name": "Je le vois venir"
+		"name": "Je le vois venir",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Quand vous êtes la cible d’une attaque faite depuis au-delà de la portée de Mêlée, vous pouvez cocher un Stress pour lancer un d4 et obtenir un bonus à votre Évasion égal au résultat contre cette attaque."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_inevitable": {
-		"name": "Inévitable"
+		"name": "Inévitable",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Quand vous ratez un jet d’action, votre prochain jet d’action a l’avantage."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_inspirational_words": {
-		"name": "Paroles inspirantes"
+		"name": "Paroles inspirantes",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Votre parole est imprégnée de pouvoir. Après un repos long, placez sur cette carte un nombre de jetons égal à votre Présence. Quand vous parlez à un allié, vous pouvez dépenser un jeton de cette carte pour lui accorder un avantage parmi les suivants :"
+					},
+					{
+						"list": [
+							"Votre allié efface un Stress.",
+							"Votre allié efface un Point de vie.",
+							"Votre allié gagne un Espoir."
+						]
+					},
+					{
+						"paragraph": "Quand vous faites un repos long, retirez tous les jetons non dépensés."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_invigoration": {
-		"name": "Revigoration"
+		"name": "Revigoration",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Quand vous ou un allié à portée Proche avez utilisé un effet soumis à une limite d’utilisation (comme une fois par repos ou une fois par session), vous pouvez dépenser autant d’Espoirs que vous voulez et lancer autant de d6. Si l’un d’eux fait 6, l’effet peut être utilisé à nouveau."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_invisibility": {
-		"name": "Invisibilité"
+		"name": "Invisibilité",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Faites un jet de sort (10). En cas de réussite, cochez un Stress et choisissez vous-même ou un allié à portée de Mêlée pour devenir Invisible. Une créature Invisible ne peut être vue que par des moyens magiques et les jets d’attaque contre elle se font avec désavantage. Placez sur cette carte un nombre de jetons égal à votre trait de lancement de sorts. Quand la créature Invisible agit, dépensez un jeton de cette carte. Une fois résolue l’action qui dépense le dernier jeton, l’effet prend fin."
+					},
+					{
+						"paragraph": "Vous ne pouvez maintenir Invisibilité que sur une seule créature à la fois."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_know_thy_enemy": {
-		"name": "Connais ton ennemi"
+		"name": "Connais ton ennemi",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Quand vous observez une créature, vous pouvez faire un jet d’Instinct contre elle. En cas de réussite, dépensez un Espoir et demandez au MJ un ensemble d’informations sur la cible parmi les suivants :"
+					},
+					{
+						"list": [
+							"Ses Points de vie et son Stress non cochés.",
+							"Sa Difficulté et ses seuils de dégâts.",
+							"Ses tactiques et ses dés de dégâts d’attaque standard.",
+							"Ses effets et ses Expériences."
+						]
+					},
+					{
+						"paragraph": "De plus, en cas de réussite, vous pouvez cocher un Stress pour retirer une Peur de la réserve de Peur du MJ."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_lead_by_example": {
-		"name": "Montrer l’exemple"
+		"name": "Montrer l’exemple",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Quand vous infligez des dégâts à un adversaire, vous pouvez cocher un Stress et décrire comment vous encouragez vos alliés. Le prochain PJ qui attaque cet adversaire peut effacer un Stress ou gagner un Espoir."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_lean_on_me": {
-		"name": "Compte sur moi"
+		"name": "Compte sur moi",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Une fois par repos long, quand vous consolez ou inspirez un allié qui a raté un jet d’action, vous pouvez tous deux effacer 2 Stress."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_life_ward": {
-		"name": "Protection de vie"
+		"name": "Protection de vie",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Dépensez 3 Espoirs et choisissez un allié à portée Proche. Il est marqué d’un sceau de protection lumineux. Quand cet allié devrait faire un Dernier souffle, il efface un Point de vie à la place."
+					},
+					{
+						"paragraph": "Cet effet prend fin quand il sauve la cible d’un Dernier souffle, quand vous lancez Protection de vie sur une autre cible ou quand vous faites un repos long."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_manifest_wall": {
 		"name": "Manifestation de mur",
@@ -994,13 +1560,43 @@
 		]
 	},
 	"core_domain_card_mass_enrapture": {
-		"name": "Ravissement de masse"
+		"name": "Ravissement de masse",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Faites un jet de sort contre toutes les cibles à portée Loin. Les cibles contre lesquelles vous réussissez sont temporairement Ravies. Tant qu’une cible est Ravie, son attention est rivée sur vous, son champ de vision se réduit et tout bruit autre que votre voix s’efface. Cochez un Stress pour forcer toutes les cibles Ravies à cocher un Stress, ce qui met fin à ce sort."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_master_of_the_craft": {
-		"name": "Maître du métier"
+		"name": "Maître du métier",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Obtenez un bonus permanent de +2 à deux de vos Expériences ou un bonus permanent de +3 à l’une de vos Expériences. Placez ensuite définitivement cette carte dans votre coffre."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_mending_touch": {
-		"name": "Toucher réparateur"
+		"name": "Toucher réparateur",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Vous posez les mains sur une créature et canalisez une magie de soin pour refermer ses blessures. Quand vous pouvez prendre quelques minutes pour vous concentrer sur la cible que vous aidez, vous pouvez dépenser 2 Espoirs pour effacer un Point de vie ou un Stress sur elle."
+					},
+					{
+						"paragraph": "Une fois par repos long, quand vous consacrez ce temps de soin à apprendre quelque chose de nouveau sur elle ou à lui révéler quelque chose sur vous, vous pouvez effacer 2 Points de vie ou 2 Stress sur elle à la place."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_midnight_spirit": {
 		"name": "Esprit de minuit",
@@ -1066,7 +1662,16 @@
 		]
 	},
 	"core_domain_card_never_upstaged": {
-		"name": "Jamais éclipsé"
+		"name": "Jamais éclipsé",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Quand vous cochez 1 Point de vie ou plus à cause d’une attaque, vous pouvez cocher un Stress pour placer sur cette carte un nombre de jetons égal au nombre de Points de vie cochés. À votre prochaine attaque réussie, obtenez un bonus de +5 à votre jet de dégâts par jeton présent sur cette carte, puis retirez tous les jetons."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_night_terror": {
 		"name": "Terreur nocturne",
@@ -1093,10 +1698,31 @@
 		]
 	},
 	"core_domain_card_notorious": {
-		"name": "Notoire"
+		"name": "Notoire",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Les gens savent qui vous êtes et ce que vous avez fait, et ils vous traitent différemment à cause de cela. Quand vous jouez de votre notoriété pour obtenir ce que vous voulez, vous pouvez cocher un Stress avant de lancer les dés pour obtenir un bonus de +10 au résultat. Vos repas et vos boissons sont toujours gratuits où que vous alliez, et tout ce que vous achetez coûte une bourse d’or de moins (jusqu’à un minimum d’une poignée)."
+					},
+					{
+						"paragraph": "Cette carte ne compte pas dans le maximum de 5 cartes de domaine de votre équipement et ne peut pas être placée dans votre coffre."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_on_the_brink": {
-		"name": "Au bord du gouffre"
+		"name": "Au bord du gouffre",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Quand il vous reste 2 Points de vie non cochés ou moins, vous ne subissez pas de dégâts mineurs."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_onslaught": {
 		"name": "Assaut",
@@ -1114,7 +1740,19 @@
 		]
 	},
 	"core_domain_card_overwhelming_aura": {
-		"name": "Aura écrasante"
+		"name": "Aura écrasante",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Faites un jet de sort (15) pour renforcer magiquement votre aura. En cas de réussite, dépensez 2 Espoirs pour que votre Présence soit égale à votre trait de lancement de sorts jusqu’à votre prochain repos long."
+					},
+					{
+						"paragraph": "Tant que ce sort est actif, un adversaire doit cocher un Stress quand il vous cible avec une attaque."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_phantom_retreat": {
 		"name": "Retraite fantôme",
@@ -1153,10 +1791,28 @@
 		]
 	},
 	"core_domain_card_premonition": {
-		"name": "Prémonition"
+		"name": "Prémonition",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Vous pouvez canaliser l’énergie arcanique pour avoir des visions de l’avenir. Une fois par repos long, juste après que le MJ a annoncé les conséquences d’un jet que vous avez fait, vous pouvez annuler cette action et ses conséquences comme si elles n’avaient jamais eu lieu et faire une autre action à la place."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_preservation_blast": {
-		"name": "Explosion de préservation"
+		"name": "Explosion de préservation",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Faites un jet de sort contre toutes les cibles à portée de Mêlée. Les cibles contre lesquelles vous réussissez sont repoussées à portée Loin et subissent d8+3 dégâts magiques en utilisant votre trait de lancement de sorts."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_rage_up": {
 		"name": "Montée de rage",
@@ -1189,7 +1845,16 @@
 		]
 	},
 	"core_domain_card_rapid_riposte": {
-		"name": "Riposte rapide"
+		"name": "Riposte rapide",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Quand une attaque portée contre vous depuis la portée de Mêlée échoue, vous pouvez cocher un Stress et saisir l’occasion d’infliger à l’attaquant les dégâts de l’une de vos armes actives."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_reapers_strike": {
 		"name": "Frappe du faucheur",
@@ -1204,7 +1869,16 @@
 		]
 	},
 	"core_domain_card_reassurance": {
-		"name": "Réconfort"
+		"name": "Réconfort",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Une fois par repos, après qu’un allié a tenté un jet d’action mais avant que les conséquences n’aient lieu, vous pouvez lui offrir votre aide ou des paroles de soutien. Votre allié peut alors relancer ses dés."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_reckless": {
 		"name": "Téméraire",
@@ -1219,10 +1893,28 @@
 		]
 	},
 	"core_domain_card_recovery": {
-		"name": "Récupération"
+		"name": "Récupération",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Pendant un repos court, vous pouvez choisir à la place une action de temps libre de repos long. Vous pouvez dépenser un Espoir pour laisser un allié faire de même."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_redirect": {
-		"name": "Redirection"
+		"name": "Redirection",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Quand une attaque portée contre vous depuis au-delà de la portée de Mêlée échoue, lancez autant de d6 que votre Maîtrise. Si l’un d’eux fait 6, vous pouvez cocher un Stress pour rediriger l’attaque et blesser à la place un adversaire à portée Très proche."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_rejuvenation_barrier": {
 		"name": "Barrière de rajeunissement",
@@ -1240,22 +1932,94 @@
 		]
 	},
 	"core_domain_card_restoration": {
-		"name": "Restauration"
+		"name": "Restauration",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Après un repos long, placez sur cette carte un nombre de jetons égal à votre trait de lancement de sorts. Touchez une créature et dépensez autant de jetons que vous voulez pour effacer 2 Points de vie ou 2 Stress par jeton dépensé."
+					},
+					{
+						"paragraph": "Vous pouvez aussi dépenser un jeton de cette carte en touchant une créature pour lever l’état Vulnérable ou guérir un mal physique ou magique (le MJ peut exiger des jetons supplémentaires selon la gravité du mal)."
+					},
+					{
+						"paragraph": "Quand vous faites un repos long, retirez tous les jetons non dépensés."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_resurrection": {
-		"name": "Résurrection"
+		"name": "Résurrection",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Faites un jet de sort (20). En cas de réussite, ramenez à pleine force une créature morte depuis 100 ans au plus. Lancez ensuite un d6. Sur un résultat de 5 ou moins, placez définitivement cette carte dans votre coffre."
+					},
+					{
+						"paragraph": "En cas d’échec, vous ne pouvez pas lancer à nouveau Résurrection pendant une semaine."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_rift_walker": {
-		"name": "Marcheur de failles"
+		"name": "Marcheur de failles",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Faites un jet de sort (15). En cas de réussite, vous placez une marque arcanique sur le sol à l’endroit où vous vous trouvez. La prochaine fois que vous lancez Marcheur de failles avec succès, une faille s’ouvre dans l’espace et offre un passage sûr vers l’endroit exact où la marque a été placée. Cette faille reste ouverte jusqu’à ce que vous décidiez de la fermer ou que vous lanciez un autre sort."
+					},
+					{
+						"paragraph": "Vous pouvez mettre fin au sort à tout moment pour lancer à nouveau Marcheur de failles et placer la marque ailleurs."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_rise_up": {
-		"name": "Se redresser"
+		"name": "Se redresser",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Obtenez un bonus à votre seuil grave égal à votre Maîtrise."
+					},
+					{
+						"paragraph": "Quand vous cochez 1 Point de vie ou plus à cause d’une attaque, effacez un Stress."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_rousing_strike": {
-		"name": "Frappe stimulante"
+		"name": "Frappe stimulante",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Une fois par repos, quand vous réussissez une attaque de façon critique, vous et tous les alliés qui peuvent vous voir ou vous entendre pouvez effacer un Point de vie ou 1d4 Stress."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_rune_ward": {
-		"name": "Garde runique"
+		"name": "Garde runique",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Vous possédez une babiole très personnelle qui peut être imprégnée de magie protectrice et portée comme talisman par vous ou un allié. Décrivez ce que c’est et pourquoi elle compte pour vous. Le porteur du talisman peut dépenser un Espoir pour réduire des dégâts subis de 1d8."
+					},
+					{
+						"paragraph": "Si le résultat du dé de garde est 8, le pouvoir du talisman prend fin après avoir réduit les dégâts ce tour-ci. Il peut être rechargé gratuitement à votre prochain repos."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_safe_haven": {
 		"name": "Havre de paix",
@@ -1291,7 +2055,16 @@
 		]
 	},
 	"core_domain_card_salvation_beam": {
-		"name": "Rayon de salut"
+		"name": "Rayon de salut",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Faites un jet de sort (16). En cas de réussite, cochez autant de Stress que vous voulez pour cibler une ligne d’alliés à portée Loin. Vous pouvez effacer sur les cibles un nombre de Points de vie égal au nombre de Stress cochés, répartis comme vous le souhaitez entre elles."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_scramble": {
 		"name": "Ruée",
@@ -1306,10 +2079,28 @@
 		]
 	},
 	"core_domain_card_second_wind": {
-		"name": "Second souffle"
+		"name": "Second souffle",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Une fois par repos, quand vous réussissez une attaque contre un adversaire, vous pouvez effacer 3 Stress ou un Point de vie. En cas de réussite avec Espoir, vous effacez aussi 3 Stress ou un Point de vie à un allié à portée Proche de vous."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_sensory_projection": {
-		"name": "Projection sensorielle"
+		"name": "Projection sensorielle",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Une fois par repos, faites un jet de sort (15). En cas de réussite, plongez dans une vision qui vous permet de voir et d’entendre clairement n’importe quel endroit où vous êtes déjà allé, comme si vous y étiez à cet instant. Vous pouvez vous déplacer librement dans cette vision, sans être limité par les lois physiques ni les obstacles d’un corps matériel. Ce sort ne peut être détecté ni par des moyens ordinaires ni par des moyens magiques. Vous quittez cette vision si vous subissez des dégâts ou lancez un autre sort."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_shadowbind": {
 		"name": "Lien d’ombre",
@@ -1336,16 +2127,58 @@
 		]
 	},
 	"core_domain_card_shape_material": {
-		"name": "Façonner la matière"
+		"name": "Façonner la matière",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Dépensez un Espoir pour façonner une portion de matière naturelle que vous touchez (comme la pierre, la glace ou le bois) selon vos besoins. La zone de matière ne peut pas être plus grande que vous. Par exemple, vous pouvez former un outil rudimentaire ou créer une porte."
+					},
+					{
+						"paragraph": "Vous ne pouvez affecter la matière qu’à portée Proche de l’endroit où vous la touchez."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_share_the_burden": {
-		"name": "Partager le fardeau"
+		"name": "Partager le fardeau",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Une fois par repos, prenez sur vous le Stress d’une créature consentante à portée de Mêlée. La cible décrit les connaissances intimes ou les émotions qui s’échappent télépathiquement de son esprit à cet instant entre vous. Transférez sur vous autant de ses Stress cochés que vous voulez, puis gagnez un Espoir par Stress transféré."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_shield_aura": {
-		"name": "Aura protectrice"
+		"name": "Aura protectrice",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Cochez un Stress pour lancer une aura protectrice sur une cible à portée Très proche. Quand la cible coche un emplacement d’armure, elle réduit la gravité de l’attaque d’un seuil supplémentaire. Si ce sort fait qu’une créature qui devait subir des dégâts ne coche finalement aucun Point de vie, l’effet prend fin."
+					},
+					{
+						"paragraph": "Vous ne pouvez maintenir Aura protectrice que sur une seule créature à la fois."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_shrug_it_off": {
-		"name": "Encaisser"
+		"name": "Encaisser",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Quand vous devriez subir des dégâts, vous pouvez cocher un Stress pour réduire leur gravité d’un seuil. Dans ce cas, lancez un d6. Sur un résultat de 3 ou moins, placez cette carte dans votre coffre."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_sigil_of_retribution": {
 		"name": "Sceau de rétribution",
@@ -1360,13 +2193,40 @@
 		]
 	},
 	"core_domain_card_signature_move": {
-		"name": "Coup signature"
+		"name": "Coup signature",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Nommez et décrivez votre coup de combat signature. Une fois par repos, quand vous réalisez ce coup signature dans le cadre d’une action, vous pouvez lancer un d20 comme dé d’Espoir. En cas de réussite, effacez un Stress."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_smite": {
-		"name": "Châtiment"
+		"name": "Châtiment",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Une fois par repos, dépensez 3 Espoirs pour charger votre puissant châtiment. À votre prochaine attaque réussie avec une arme, doublez le résultat de votre jet de dégâts. Cette attaque inflige des dégâts magiques quel que soit le type de dégâts de l’arme."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_soothing_speech": {
-		"name": "Discours apaisant"
+		"name": "Discours apaisant",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Pendant un repos court, quand vous prenez le temps de réconforter un autre personnage en lui appliquant l’action de temps libre Soigner les blessures, il efface un Point de vie supplémentaire. Dans ce cas, vous effacez aussi 2 Points de vie."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_specter_of_the_dark": {
 		"name": "Spectre des ténèbres",
@@ -1396,10 +2256,34 @@
 		]
 	},
 	"core_domain_card_splendor_touched": {
-		"name": "Touché par la Splendeur"
+		"name": "Touché par la Splendeur",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Quand 4 cartes de domaine ou plus de votre équipement viennent du domaine Splendeur, vous obtenez les avantages suivants :"
+					},
+					{
+						"list": [
+							"Bonus de +3 à votre seuil de dégâts graves",
+							"Une fois par repos long, quand des dégâts subis vous obligeraient à cocher un certain nombre de Points de vie, vous pouvez choisir de cocher autant de Stress ou de dépenser autant d’Espoirs à la place."
+						]
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_splintering_strike": {
-		"name": "Frappe éclatante"
+		"name": "Frappe éclatante",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Dépensez un Espoir et attaquez tous les adversaires à portée de votre arme. Une fois par repos long, en cas de réussite contre une ou plusieurs cibles, lancez les dégâts de votre arme et répartissez-les comme vous le souhaitez entre les cibles contre lesquelles vous avez réussi. Avant d’infliger des dégâts à chaque cible, lancez un dé de dégâts supplémentaire et ajoutez son résultat aux dégâts que vous lui infligez."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_stealth_expertise": {
 		"name": "Expertise de discrétion",
@@ -1417,22 +2301,92 @@
 		]
 	},
 	"core_domain_card_strategic_approach": {
-		"name": "Approche stratégique"
+		"name": "Approche stratégique",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Après un repos long, placez sur cette carte un nombre de jetons égal à votre Connaissance (minimum 1). La première fois que vous vous déplacez à portée Proche d’un adversaire et l’attaquez, vous pouvez dépenser un jeton pour choisir l’une des options suivantes :"
+					},
+					{
+						"list": [
+							"Vous faites l’attaque avec avantage.",
+							"Vous effacez un Stress à un allié à portée de Mêlée de l’adversaire.",
+							"Vous ajoutez un d8 à votre jet de dégâts."
+						]
+					},
+					{
+						"paragraph": "Quand vous faites un repos long, retirez tous les jetons non dépensés."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_stunning_sunlight": {
-		"name": "Lumière du soleil étourdissante"
+		"name": "Lumière du soleil étourdissante",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Faites un jet de sort pour déchaîner de puissants rayons de soleil brûlants contre tous les adversaires devant vous à portée Loin. En cas de réussite, dépensez autant d’Espoirs que vous voulez et forcez autant de cibles contre lesquelles vous avez réussi à faire un jet de réaction (14)."
+					},
+					{
+						"paragraph": "Les cibles qui réussissent subissent 3d20+3 dégâts magiques. Les cibles qui échouent subissent 4d20+5 dégâts magiques et sont temporairement Étourdies. Tant qu’elles sont Étourdies, elles ne peuvent pas utiliser de réactions ni entreprendre d’autres actions jusqu’à ce qu’elles lèvent cet état."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_support_tank": {
-		"name": "Tank de soutien"
+		"name": "Tank de soutien",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Quand un allié à portée Proche rate un jet, vous pouvez dépenser 2 Espoirs pour lui permettre de relancer son dé d’Espoir ou son dé de Peur."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_swift_step": {
-		"name": "Pas rapide"
+		"name": "Pas rapide",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Quand une attaque portée contre vous échoue, effacez un Stress. Si vous ne pouvez pas effacer de Stress, gagnez un Espoir."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_tactician": {
-		"name": "Tacticien"
+		"name": "Tacticien",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Quand vous Aidez un allié, il peut dépenser un Espoir pour ajouter l’une de vos Expériences à son jet, en plus de votre dé d’avantage."
+					},
+					{
+						"paragraph": "Quand vous faites un jet en tandem, vous pouvez lancer un d20 comme dé d’Espoir."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_telekinesis": {
-		"name": "Télékinésie"
+		"name": "Télékinésie",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Faites un jet de sort contre une cible à portée Loin. En cas de réussite, vous pouvez la déplacer par la pensée n’importe où à portée Loin de sa position d’origine. Vous pouvez lancer la cible soulevée comme une attaque en faisant un jet de sort supplémentaire contre la seconde cible que vous voulez attaquer. En cas de réussite, infligez d12+4 dégâts physiques à la seconde cible en utilisant votre Maîtrise. Ce sort prend alors fin."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_teleport": {
 		"name": "Téléportation",
@@ -1458,7 +2412,16 @@
 		]
 	},
 	"core_domain_card_tell_no_lies": {
-		"name": "Pas de mensonges"
+		"name": "Pas de mensonges",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Faites un jet de sort contre une cible à portée Très proche. En cas de réussite, elle ne peut pas vous mentir tant qu’elle reste à portée Proche, mais elle n’est pas obligée de parler. Si vous lui posez une question et qu’elle refuse de répondre, elle doit cocher un Stress et l’effet prend fin. La cible ignore en général que ce sort a été lancé sur elle jusqu’à ce qu’il la pousse à dire la vérité."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_tempest": {
 		"name": "Tempête",
@@ -1495,10 +2458,31 @@
 		]
 	},
 	"core_domain_card_thought_delver": {
-		"name": "Fouilleur de pensées"
+		"name": "Fouilleur de pensées",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Vous pouvez jeter un œil dans l’esprit des autres. Dépensez un Espoir pour lire les pensées superficielles et vagues d’une cible à portée Loin. Faites un jet de sort contre la cible pour fouiller ses pensées plus profondes et plus cachées."
+					},
+					{
+						"paragraph": "Sur un jet avec Peur, la cible peut, à la discrétion du MJ, s’apercevoir que vous lisez ses pensées."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_through_your_eyes": {
-		"name": "À travers tes yeux"
+		"name": "À travers tes yeux",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Choisissez une cible à portée Très loin. Vous pouvez voir par ses yeux et entendre par ses oreilles. Vous pouvez passer librement de vos propres sens à ceux de la cible jusqu’à ce que vous lanciez un autre sort ou jusqu’à votre prochain repos."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_towering_stalk": {
 		"name": "Tige colossale",
@@ -1528,7 +2512,16 @@
 		]
 	},
 	"core_domain_card_troublemaker": {
-		"name": "Fauteur de troubles"
+		"name": "Fauteur de troubles",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Quand vous raillez ou provoquez une cible à portée Loin, faites un jet de Présence contre elle. Une fois par repos, en cas de réussite, lancez autant de d4 que votre Maîtrise. La cible doit cocher un nombre de Stress égal au plus haut résultat obtenu."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_twilight_toll": {
 		"name": "Tribut du crépuscule",
@@ -1546,7 +2539,16 @@
 		]
 	},
 	"core_domain_card_unbreakable": {
-		"name": "Incassable"
+		"name": "Incassable",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Quand vous cochez votre dernier Point de vie, au lieu de faire un Dernier souffle, vous pouvez lancer un d6 et effacer un nombre de Points de vie égal au résultat. Placez ensuite cette carte dans votre coffre."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_uncanny_disguise": {
 		"name": "Déguisement troublant",
@@ -1564,16 +2566,64 @@
 		]
 	},
 	"core_domain_card_unleash_chaos": {
-		"name": "Déchaîner le chaos"
+		"name": "Déchaîner le chaos",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Au début d’une session, placez sur cette carte un nombre de jetons égal à votre trait de lancement de sorts."
+					},
+					{
+						"paragraph": "Faites un jet de sort contre une cible à portée Loin et dépensez autant de jetons que vous voulez pour canaliser l’énergie brute qui est en vous et la déchaîner contre elle. En cas de réussite, lancez autant de d10 que de jetons dépensés et infligez ce total en dégâts magiques à la cible. Cochez un Stress pour regarnir cette carte de jetons (jusqu’à votre trait de lancement de sorts)."
+					},
+					{
+						"paragraph": "À la fin de chaque session, retirez tous les jetons non dépensés."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_untouchable": {
-		"name": "Intouchable"
+		"name": "Intouchable",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Obtenez un bonus à votre Évasion égal à la moitié de votre Agilité."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_unyielding_armor": {
-		"name": "Armure inflexible"
+		"name": "Armure inflexible",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Quand vous devriez cocher un emplacement d’armure, lancez autant de d6 que votre Maîtrise. Si l’un d’eux fait 6, réduisez la gravité d’un seuil sans cocher d’emplacement d’armure."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_valor_touched": {
-		"name": "Touché par la Bravoure"
+		"name": "Touché par la Bravoure",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Quand 4 cartes de domaine ou plus de votre équipement viennent du domaine Bravoure, vous obtenez les avantages suivants :"
+					},
+					{
+						"list": [
+							"Bonus de +1 à votre score d’armure",
+							"Quand vous cochez 1 Point de vie ou plus sans cocher d’emplacement d’armure, effacez un emplacement d’armure."
+						]
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_vanishing_dodge": {
 		"name": "Esquive évanescente",
@@ -1652,10 +2702,31 @@
 		]
 	},
 	"core_domain_card_voice_of_reason": {
-		"name": "Voix de la raison"
+		"name": "Voix de la raison",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Vous parlez avec une force et une autorité incomparables. Vous avez l’avantage aux jets d’action pour désamorcer des situations violentes ou convaincre quelqu’un de vous suivre."
+					},
+					{
+						"paragraph": "De plus, vous vous enhardissez dans les moments difficiles. Quand tous vos emplacements de Stress sont cochés, vous obtenez un bonus de +1 à votre Maîtrise pour les jets de dégâts."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_wall_walk": {
-		"name": "Marche sur les murs"
+		"name": "Marche sur les murs",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Dépensez un Espoir pour permettre à une créature que vous pouvez toucher de grimper sur les murs et les plafonds aussi aisément qu’elle marche sur le sol. Cela dure jusqu’à la fin de la scène ou jusqu’à ce que vous lanciez à nouveau Marche sur les murs."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_whirlwind": {
 		"name": "Tourbillon",
@@ -1697,12 +2768,42 @@
 		]
 	},
 	"core_domain_card_words_of_discord": {
-		"name": "Mots de discorde"
+		"name": "Mots de discorde",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Soufflez des mots de discorde à un adversaire à portée de Mêlée et faites un jet de sort (13). En cas de réussite, la cible doit cocher un Stress et attaquer un autre adversaire plutôt que vous ou vos alliés."
+					},
+					{
+						"paragraph": "Une fois cette attaque terminée, la cible comprend ce qui s’est passé. La prochaine fois que vous lancez Mots de discorde sur elle, vous subissez un malus de -5 au jet de sort."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_wrangle": {
-		"name": "Maîtriser"
+		"name": "Maîtriser",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Faites un jet d’Agilité contre toutes les cibles à portée Proche. Dépensez un Espoir pour déplacer les cibles contre lesquelles vous réussissez, ainsi que tous les alliés consentants à portée Proche, vers un autre point à portée Proche."
+					}
+				]
+			}
+		]
 	},
 	"core_domain_card_zone_of_protection": {
-		"name": "Zone de protection"
+		"name": "Zone de protection",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Faites un jet de sort (16). Une fois par repos long, en cas de réussite, choisissez un point à portée Loin et créez-y une zone de protection visible pour tous les alliés à portée Très proche de ce point. Placez alors sur cette carte un d6 avec la valeur 1 vers le haut. Quand un allié dans cette zone subit des dégâts, il les réduit de la valeur du dé. Vous augmentez ensuite la valeur du dé de un. Quand la valeur du dé dépasserait 6, cet effet prend fin."
+					}
+				]
+			}
+		]
 	}
 }
