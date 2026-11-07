@@ -23,6 +23,9 @@
 		if (!SELECTS.has(f)) return v;
 		return data.picks[f as PickKey].find((o) => o.value === v)?.label ?? v;
 	};
+	/** Language of a picked SRD label; none (the page's) for free text. */
+	const shownLang = (f: string) =>
+		SELECTS.has(f) ? data.picks[f as PickKey].find((o) => o.value === (data.values[f] ?? ''))?.lang : undefined;
 	const invalidText = $derived(
 		data.invalid === null ? null : data.invalid === 'review' ? t('error.invalid') : t('tunnel.invalid', { field: t(`field.${data.invalid}`) })
 	);
@@ -63,7 +66,7 @@
 					<select name={f} required={f === 'class'}>
 						{#if f !== 'class'}<option value="">{t('option.none')}</option>{/if}
 						{#each data.picks[f as PickKey] as o (o.value)}
-							<option value={o.value} selected={o.value === valueOf(f)}>{o.label}</option>
+							<option value={o.value} lang={o.lang} selected={o.value === valueOf(f)}>{o.label}</option>
 						{/each}
 					</select>
 				{:else if f === 'name'}
@@ -93,7 +96,7 @@
 				<dl class="m-0 grid grid-cols-[auto_1fr] gap-x-4 gap-y-1">
 					{#each s.fields as f (f)}
 						<dt class="text-muted">{t(`field.${f}`)}</dt>
-						<dd class="m-0">{shown(f) || t('option.none')}</dd>
+						<dd class="m-0"><span lang={shownLang(f)}>{shown(f) || t('option.none')}</span></dd>
 					{/each}
 				</dl>
 			</section>

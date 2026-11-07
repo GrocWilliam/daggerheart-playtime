@@ -1,6 +1,8 @@
 import { readFileSync } from 'node:fs';
 import * as z from 'zod';
 import type { Lang } from '$lib/i18n';
+// Relative: acceptance vitest configs import this file without the $lib alias.
+import { translate } from '../../i18n';
 
 export const SRD_KINDS = [
 	'classes',
@@ -141,8 +143,8 @@ export const TRANSLATED_FIELDS: Record<SrdKind, readonly string[]> = {
 	environments: ['name', 'description', 'impulses', 'potential_adversaries', 'feature']
 };
 
-/** A line of SRD text and the language it is in. */
-export type Line = { text: string; lang: Lang };
+/** A line of SRD text and the language it is in; `label` (a catalog string, in the page language) precedes it. */
+export type Line = { text: string; lang: Lang; label?: string };
 
 /** French overlays (`src/lib/srd/fr/<kind>.json`): id -> partial translated fields. */
 const frData = new Map<SrdKind, Record<string, Raw>>(
@@ -242,50 +244,17 @@ export function getSrd(kind: SrdKind, id: string, lang: Lang): (SrdElement & { n
 	return localizedSrd(kind, id, lang)?.element ?? null;
 }
 
-/** Localized name of a domain by id (`core_domain_blade`); `fallback` when unknown. */
-function domainName(domId: string, fallback: string, lang: Lang): string {
+/** Localized name of a domain by id (`core_domain_blade`) and its language; `fallback` (English) when unknown. */
+function domainName(domId: string, fallback: string, lang: Lang): { name: string; nameLang: Lang } {
 	const d = byId.get('domains')!.get(domId);
-	return d ? localName('domains', d, lang).name : fallback;
+	return d ? localName('domains', d, lang) : { name: fallback, nameLang: 'en' };
 }
 
 const domainsHelp: Record<string, { en: string; fr: string }> = Object.fromEntries(
 	(JSON.parse(readSrdFile('domains.json')) as { id: string; en: string; fr: string }[]).map((d) => [d.id, d])
 );
-const domainsEn: Record<string, string> = Object.fromEntries(
-	(JSON.parse(readSrdFile('domains.json')) as { id: string; en: string }[]).map((d) => [d.id, d.en])
-);
 
-// Collects the English SRD text of an element (descriptions, features), in order.
-function collectText(node: unknown, out: string[]): void {
-	if (Array.isArray(node)) node.forEach((n) => collectText(n, out));
-	else if (node && typeof node === 'object') {
-		for (const [k, v] of Object.entries(node as Raw)) {
-			if (k === 'en-US' && typeof v === 'string') out.push(v);
-			else collectText(v, out);
-		}
-	}
-}
-
-function englishLines(kind: SrdKind, e: Raw): string[] {
-	if (kind === 'adversaries' || kind === 'environments') {
-		const facts = Object.entries(e)
-			.filter(([k, v]) => !['id', 'name', 'feature'].includes(k) && (typeof v === 'string' || typeof v === 'number') && v !== '')
-			.map(([k, v]) => `${k}: ${v}`);
-		const feats = ((e.feature as Raw[] | undefined) ?? []).map((f) => `${f.name}: ${f.text}`);
-		return [facts.join(' · '), ...feats];
-	}
-	if (kind === 'domains') return [domainsEn[e.id] ?? String(e.name['en-US'])];
-	const facts = Object.entries(e)
-		.filter(([k, v]) => k !== 'id' && k !== 'name' && (typeof v === 'string' || typeof v === 'number'))
-		.map(([k, v]) => `${k}: ${v}`);
-	const out: string[] = [];
-	if (facts.length) out.push(facts.join(' · '));
-	collectText(Object.fromEntries(Object.entries(e).filter(([k]) => k !== 'name')), out);
-	if (!out.length) out.push(String(e.name?.['en-US'] ?? e.name));
-	return out;
-}
-
-export type RefItem = { kind: SrdKind; id: string; name: string; en: string[] };
+export type RefItem = { kind: SrdKind; id: string; name: string; nameLang: Lang; lines: Line[] };
 
 /** Elements of `kind` (all kinds if undefined) whose English name (or French name, in French) contains `q`. */
 export function searchSrd(kind: SrdKind | undefined, q: string, lang: Lang): { kind: SrdKind; items: RefItem[] }[] {
@@ -300,7 +269,8 @@ export function searchSrd(kind: SrdKind | undefined, q: string, lang: Lang): { k
 				kind: k,
 				id: d.element.id,
 				name: local.name,
-				en: englishLines(k, d.element)
+				nameLang: local.nameLang,
+				lines: linesOf(k, d.element.id, lang)
 			}))
 	}));
 }
@@ -319,50 +289,117 @@ export function adversariesByTier(
 export const getAdversary = (id: string, lang: Lang) => getSrd('adversaries', id, lang);
 export const getEnvironment = (id: string, lang: Lang) => getSrd('environments', id, lang);
 
-const upper = (s: unknown) => String(s ?? '');
-const cap = (s: unknown) => upper(s).charAt(0) + upper(s).slice(1).toLowerCase().replace(/_/g, ' ');
+const t = translate;
 
-function paragraphs(desc: unknown): string[] {
-	return Array.isArray(desc)
-		? desc.map((d) => d?.paragraph?.['en-US']).filter((x): x is string => typeof x === 'string')
-		: [];
+/** Collects the text of an SRD field in order: `en-US` leaves (which hold French once merged), and a named object
+ * with a description (a feature) as "<name>: <first paragraph>" then its other paragraphs. */
+function fieldTexts(node: unknown, out: string[]): void {
+	if (Array.isArray(node)) return node.forEach((n) => fieldTexts(n, out));
+	if (!node || typeof node !== 'object') return;
+	const o = node as Raw;
+	if (typeof o['en-US'] === 'string') {
+		out.push(o['en-US']);
+		return;
+	}
+	if (Array.isArray(o.description) && typeof o.name?.['en-US'] === 'string') {
+		const ps: string[] = [];
+		fieldTexts(o.description, ps);
+		out.push(`${o.name['en-US']}: ${ps[0] ?? ''}`.trim(), ...ps.slice(1));
+		return;
+	}
+	for (const [k, v] of Object.entries(o)) if (k !== 'name') fieldTexts(v, out);
 }
 
-/** English help lines of an SRD element: facts, description paragraphs, then "<feature>: <text>". */
-export function helpLines(kind: SrdKind, e: Raw): string[] {
-	const out: string[] = [];
+/** The enum key of an adversary range ("Very Close" -> "VERY_CLOSE"). */
+const rangeKey = (r: string) => r.trim().toUpperCase().replace(/\s+/g, '_');
+
+/** Adversary type ("Horde (3/HP)") with its role label in `lang`. */
+function roleLabel(type: string, lang: Lang): string {
+	const role = roleOf(type);
+	const rest = type.slice(type.indexOf(role) + role.length);
+	return `${t(lang, `adversary.role.${role}`)}${rest}`;
+}
+
+/** The facts line of an adversary or environment: catalog labels and values, in `lang`. */
+function flatFacts(kind: 'adversaries' | 'environments', e: Raw, lang: Lang): string {
+	const v = (k: string) => String(e[k] ?? '').trim();
+	const label = (k: string) => `${t(lang, `srd.field.${k}`)} ${v(k)}`;
+	const parts: string[] = [];
+	if (v('tier')) parts.push(label('tier'));
+	if (v('type')) parts.push(kind === 'adversaries' ? roleLabel(v('type'), lang) : t(lang, `environment.type.${v('type')}`));
+	for (const k of ['difficulty', 'hp', 'stress', 'thresholds', 'atk']) if (v(k)) parts.push(label(k));
+	if (v('range')) parts.push(`${t(lang, 'srd.field.range')} ${t(lang, `range.${rangeKey(v('range'))}`)}`);
+	if (v('damage')) parts.push(label('damage'));
+	return parts.join(' · ');
+}
+
+/** Text fields of adversaries and environments shown as "<label>: <text>" lines. */
+const FLAT_TEXT: Record<'adversaries' | 'environments', string[]> = {
+	adversaries: ['description', 'motives_and_tactics', 'attack', 'experience'],
+	environments: ['description', 'impulses', 'potential_adversaries']
+};
+
+/**
+ * Help lines of an SRD element (as returned by `localizedSrd`): a facts line in the page `lang` (catalog labels and
+ * enum keys) for weapons, armors, domain cards, adversaries and environments, then one line per text paragraph or
+ * feature ("<name>: <text>") in the language of the field it comes from (`langs[field]`, English when missing).
+ */
+export function helpLines(kind: SrdKind, e: Raw, langs: Record<string, Lang>, lang: Lang): Line[] {
+	const out: Line[] = [];
+	const fieldLang = (f: string): Lang => langs[f] ?? 'en';
+	if (kind === 'domains') {
+		const help = domainsHelp[e.id]?.[lang];
+		return [help ? { text: help, lang } : { text: displayName(kind, e), lang: fieldLang('name') }];
+	}
+	if (kind === 'adversaries' || kind === 'environments') {
+		const facts = flatFacts(kind, e, lang);
+		if (facts) out.push({ text: facts, lang });
+		for (const f of FLAT_TEXT[kind]) {
+			const v = String(e[f] ?? '').trim();
+			if (v) out.push({ label: t(lang, `srd.field.${f}`), text: v, lang: fieldLang(f) });
+		}
+		for (const f of (e.feature as Raw[] | undefined) ?? []) out.push({ text: `${f.name}: ${f.text}`, lang: fieldLang('feature') });
+		return out;
+	}
 	if (kind === 'weapons') {
 		const dmg = e.damage ?? {};
-		out.push(
-			[cap(e.trait), cap(e.range), `${dmg.dice ?? ''} ${cap(dmg.type)}`.trim(), cap(e.burden)].join(' · ')
-		);
+		const parts = [
+			e.trait ? t(lang, `trait.${String(e.trait).toLowerCase()}`) : '',
+			e.range ? t(lang, `range.${e.range}`) : '',
+			`${dmg.dice ?? ''} ${dmg.type ? t(lang, `damage.${dmg.type}`) : ''}`.trim(),
+			e.burden ? t(lang, `burden.${e.burden}`) : ''
+		];
+		out.push({ text: parts.filter(Boolean).join(' · '), lang });
 	} else if (kind === 'armors') {
-		out.push(`thresholds ${e.baseMajorThreshold}/${e.baseSevereThreshold} · score ${e.baseScore}`);
+		out.push({
+			text: `${t(lang, 'srd.help.thresholds')} ${e.baseMajorThreshold}/${e.baseSevereThreshold} · ${t(lang, 'srd.help.score')} ${e.baseScore}`,
+			lang
+		});
 	} else if (kind === 'domain-cards') {
-		out.push(`${cap(e.domain)} · level ${e.level} · recall cost ${e.recallCost}`);
+		const dom = String(e.domain ?? '');
+		const { name } = domainName(`core_domain_${dom.toLowerCase()}`, dom.charAt(0) + dom.slice(1).toLowerCase(), lang);
+		out.push({ text: `${name} · ${t(lang, 'srd.help.level')} ${e.level} · ${t(lang, 'srd.help.recallCost')} ${e.recallCost}`, lang });
 	}
-	out.push(...paragraphs(e.description));
-	(function walk(n: unknown) {
-		if (Array.isArray(n)) return n.forEach(walk);
-		if (n && typeof n === 'object') {
-			const o = n as Raw;
-			if (Array.isArray(o.description) && (o.name?.['en-US'] || !o.name)) {
-				const ps = paragraphs(o.description);
-				const nm = o.name?.['en-US'];
-				if (nm) out.push(`${nm}: ${ps[0] ?? ''}`.trim(), ...ps.slice(1));
-				else out.push(...ps);
-			} else {
-				for (const [k, v] of Object.entries(o)) if (k !== 'description' && k !== 'name') walk(v);
-			}
-		}
-	})(Object.fromEntries(Object.entries(e).filter(([k]) => k !== 'description' && k !== 'name')));
+	for (const [f, v] of Object.entries(e)) {
+		if (f === 'id' || f === 'name' || f === 'nameLocalized') continue;
+		const texts: string[] = [];
+		fieldTexts(v, texts);
+		for (const text of texts) if (text.trim()) out.push({ text, lang: fieldLang(f) });
+	}
+	if (!out.length) out.push({ text: displayName(kind, e), lang: fieldLang('name') });
 	return out;
 }
 
-export type Pick = { id: string; name: string; en: string[] };
+/** Help lines of a stored element in `lang`. */
+function linesOf(kind: SrdKind, id: string, lang: Lang): Line[] {
+	const r = localizedSrd(kind, id, lang)!;
+	return helpLines(kind, r.element, r.langs, lang);
+}
+
+export type Pick = { id: string; name: string; nameLang: Lang; lines: Line[] };
 
 function toPick(kind: SrdKind, d: { element: SrdElement; name: string }, lang: Lang): Pick {
-	return { id: d.element.id, name: localName(kind, d, lang).name, en: helpLines(kind, d.element) };
+	return { id: d.element.id, ...localName(kind, d, lang), lines: linesOf(kind, d.element.id, lang) };
 }
 
 export function pickList(kind: SrdKind, lang: Lang): Pick[] {
@@ -394,7 +431,7 @@ export function pickOf(kind: SrdKind, id: string | null | undefined, lang: Lang)
 	return d ? toPick(kind, d, lang) : null;
 }
 
-export type CardPick = Pick & { domain: string; domainName: string; level: number };
+export type CardPick = Pick & { domain: string; domainName: string; domainNameLang: Lang; level: number };
 
 function toCardPick(d: { element: SrdElement; name: string }, lang: Lang): CardPick {
 	const dom = String(d.element.domain);
@@ -402,7 +439,9 @@ function toCardPick(d: { element: SrdElement; name: string }, lang: Lang): CardP
 	return {
 		...toPick('domain-cards', d, lang),
 		domain: dom,
-		domainName: domainName(domId, dom.charAt(0) + dom.slice(1).toLowerCase(), lang),
+		...(({ name, nameLang }) => ({ domainName: name, domainNameLang: nameLang }))(
+			domainName(domId, dom.charAt(0) + dom.slice(1).toLowerCase(), lang)
+		),
 		level: Number(d.element.level)
 	};
 }
@@ -417,13 +456,13 @@ export function cardsByIds(ids: string[], lang: Lang): CardPick[] {
 }
 
 /** Domains of an SRD class (by English name, any case): raw ids ("BLADE"), localized name and help text. `[]` for other classes. */
-export function domainsOfClass(className: string, lang: Lang): { id: string; name: string; help: string }[] {
+export function domainsOfClass(className: string, lang: Lang): { id: string; name: string; nameLang: Lang; help: string }[] {
 	const cls = data.get('classes')!.find((c) => c.element.name === String(className ?? '').toUpperCase());
 	return ((cls?.element.domains as string[] | undefined) ?? []).map((id) => {
 		const domId = `core_domain_${id.toLowerCase()}`;
 		return {
 			id,
-			name: domainName(domId, id.charAt(0) + id.slice(1).toLowerCase(), lang),
+			...domainName(domId, id.charAt(0) + id.slice(1).toLowerCase(), lang),
 			help: domainsHelp[domId]?.[lang] ?? ''
 		};
 	});
@@ -485,10 +524,11 @@ export function armorGroups(tier: number, lang: Lang): GearGroup[] {
 	return gearGroups('armors', null, tier, lang);
 }
 
-export type GearFeature = { name: string; text: string };
+export type GearFeature = { name: string; text: string; lang: Lang };
 export type GearDetail = {
 	id: string;
 	name: string;
+	nameLang: Lang;
 	trait?: string;
 	range?: string;
 	dice?: string;
@@ -500,15 +540,17 @@ export type GearDetail = {
 	features: GearFeature[];
 };
 
-/** Structured details of a weapon or armor (raw SRD enum values); feature texts are the SRD's English. */
+/** Structured details of a weapon or armor (raw SRD enum values), with the language of its name and features. */
 export function gearDetail(kind: 'weapons' | 'armors', id: string | null | undefined, lang: Lang): GearDetail | null {
-	const e = id ? getSrd(kind, id, lang) : null;
-	if (!e) return null;
-	const features: GearFeature[] = ((e.features as Raw[] | undefined) ?? []).map((f) => ({
-		name: String(f.name?.['en-US'] ?? ''),
-		text: paragraphs(f.description).join(' ')
-	}));
-	const base = { id: e.id, name: e.nameLocalized, features };
+	const r = id ? localizedSrd(kind, id, lang) : null;
+	if (!r) return null;
+	const { element: e, langs } = r;
+	const features: GearFeature[] = ((e.features as Raw[] | undefined) ?? []).map((f) => {
+		const texts: string[] = [];
+		fieldTexts(f.description, texts);
+		return { name: String(f.name?.['en-US'] ?? ''), text: texts.join(' '), lang: langs.features ?? 'en' };
+	});
+	const base = { id: e.id, name: e.nameLocalized, nameLang: langs.name ?? 'en', features };
 	return kind === 'weapons'
 		? { ...base, trait: e.trait, range: e.range, dice: e.damage?.dice, damageType: e.damage?.type, burden: e.burden }
 		: { ...base, major: e.baseMajorThreshold, severe: e.baseSevereThreshold, score: e.baseScore };

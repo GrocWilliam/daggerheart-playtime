@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { translate } from '$lib/i18n';
+	import { translate, type Lang } from '$lib/i18n';
 	import Help from '$lib/components/Help.svelte';
 
 	// Chosen SRD subclass / ancestry / community of a character, each with its helper.
@@ -7,8 +7,8 @@
 		chosen,
 		lang
 	}: {
-		chosen: Record<string, { id: string; name: string; en: string[] } | null>;
-		lang: 'en' | 'fr';
+		chosen: Record<string, { id: string; name: string; nameLang: Lang; lines: { text: string; lang: Lang }[] } | null>;
+		lang: Lang;
 	} = $props();
 </script>
 
@@ -17,8 +17,8 @@
 		{#if chosen[k]}
 			<li class="[overflow-wrap:anywhere]">
 				<span class="muted">{translate(lang, `field.${k}`)}:</span>
-				<span data-testid={k}>{chosen[k].name}</span>
-				<Help id={chosen[k].id} name={chosen[k].name} {lang} en={chosen[k].en} />
+				<span data-testid={k} lang={chosen[k].nameLang}>{chosen[k].name}</span>
+				<Help id={chosen[k].id} name={chosen[k].name} nameLang={chosen[k].nameLang} {lang} lines={chosen[k].lines} />
 			</li>
 		{/if}
 	{/each}

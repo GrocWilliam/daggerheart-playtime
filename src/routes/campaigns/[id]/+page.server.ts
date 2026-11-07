@@ -1,5 +1,5 @@
 import { error, fail, redirect } from '@sveltejs/kit';
-import { getSrd, listSrd, pickOf } from '$lib/server/features/srd';
+import { getSrd, listSrd, localizedSrd, pickOf, type Line } from '$lib/server/features/srd';
 import type { Scene } from '$lib/server/features/scenes';
 import type { LootEntry } from '$lib/server/features/loot';
 import type { Lang } from '$lib/i18n';
@@ -40,13 +40,24 @@ function failure(r: { status: number; data: { error?: string } | null }, extra: 
 
 type Raw = { description?: { paragraph?: Record<string, string> }[] };
 
-/** A loot entry with its localized name and the English SRD feature texts. */
+/** Adversary and environment stats on this screen are the SRD's English (their own story localizes them). */
+const SOURCE_LANG: Lang = 'en';
+
+/** A loot entry with its localized name and SRD feature texts, each with its language. */
 function lootView(l: LootEntry, lang: Lang) {
-	const el = getSrd(l.table, l.srdId, lang) as (Record<string, unknown> & { nameLocalized: string }) | null;
-	const features = ((el?.features as Raw[] | undefined) ?? []).flatMap((f) =>
-		(f.description ?? []).map((d) => d.paragraph?.['en-US']).filter((x): x is string => typeof x === 'string')
+	const r = localizedSrd(l.table, l.srdId, lang);
+	const el = r?.element;
+	const featLang: Lang = r?.langs.features ?? SOURCE_LANG;
+	const features: Line[] = ((el?.features as Raw[] | undefined) ?? []).flatMap((f) =>
+		(f.description ?? [])
+			.map((d) => d.paragraph?.['en-US'])
+			.filter((x): x is string => typeof x === 'string')
+			.map((text) => ({ text, lang: featLang }))
 	);
-	return { id: l.id, roll: l.roll, given: l.given, name: el?.nameLocalized ?? l.name, features };
+	return {
+		id: l.id, roll: l.roll, given: l.given,
+		name: el?.nameLocalized ?? l.name, nameLang: r?.langs.name ?? SOURCE_LANG, features
+	};
 }
 
 type Feature = { name: string; text: string };
@@ -57,7 +68,7 @@ function adversaryView(a: { id: string; name: string; role: string; count: numbe
 	const s = (k: string) => String(d[k] ?? '');
 	const features = ((d.feature as Feature[] | undefined) ?? []).map((f) => ({ name: f.name, text: f.text }));
 	return {
-		id: a.id, name: a.name, role: a.role, count: a.count, cost: a.cost,
+		id: a.id, name: a.name, role: a.role, count: a.count, cost: a.cost, lang: SOURCE_LANG,
 		difficulty: s('difficulty'), hp: s('hp'), stress: s('stress'), thresholds: s('thresholds'),
 		attack: s('attack'), damage: s('damage'), features
 	};
@@ -92,9 +103,10 @@ const scenes = scenesRaw.map((s) => {
 					type: String(e.type ?? ''),
 					difficulty: String(e.difficulty ?? ''),
 					impulses: String(e.impulses ?? ''),
+					lang: SOURCE_LANG,
 					// Name and guiding question only: the full rules text stays in the SRD reference.
 					features: ((e.feature as { name: string; question?: string }[] | undefined) ?? []).map(
-						(f) => (f.question ? `${f.name.trim()}: ${f.question}` : f.name.trim())
+						(f): Line => ({ text: f.question ? `${f.name.trim()}: ${f.question}` : f.name.trim(), lang: SOURCE_LANG })
 					)
 				}
 			: null;

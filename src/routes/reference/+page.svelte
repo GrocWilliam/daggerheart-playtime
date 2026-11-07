@@ -33,8 +33,8 @@
 			<ul class="mt-0 mb-3 grid list-none grid-cols-[minmax(0,1fr)] gap-x-3 pl-0 md:grid-cols-[repeat(2,minmax(0,1fr))]" class:list={true}>
 				{#each s.items as item (item.id)}
 					<li data-testid="ref-item" class="mb-3 flex flex-wrap items-center gap-2 rounded-lg border-l-3 border-accent bg-surface px-3 py-2 wrap-anywhere last:mb-0">
-						<span>{item.name}</span>
-						<Help id={item.id} name={item.name} lang={data.lang} en={item.en} />
+						<span lang={item.nameLang}>{item.name}</span>
+						<Help id={item.id} name={item.name} nameLang={item.nameLang} lang={data.lang} lines={item.lines} />
 					</li>
 				{/each}
 			</ul>

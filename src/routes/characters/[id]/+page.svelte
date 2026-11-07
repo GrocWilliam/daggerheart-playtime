@@ -2,7 +2,7 @@
 	import { enhance } from '$app/forms';
 	import { busy } from '$lib/forms/busy';
 	import Divider from '$lib/components/Divider.svelte';
-	import { translate, formatNumber } from '$lib/i18n';
+	import { translate, formatNumber, type Lang } from '$lib/i18n';
 	import Pips from '$lib/components/Pips.svelte';
 
 	import Modal from '$lib/components/Modal.svelte';
@@ -46,7 +46,7 @@
 {#if data.domains.length}
 	<ul class="mt-0 mb-3 flex list-none flex-wrap gap-x-4 pl-0!">
 		{#each data.domains as d (d.id)}
-			<li data-testid="domain">{d.name} <Help id={d.id} name={d.name} text={d.help} lang={data.lang} /></li>
+			<li data-testid="domain"><span lang={d.nameLang}>{d.name}</span> <Help id={d.id} name={d.name} text={d.help} lang={data.lang} /></li>
 		{/each}
 	</ul>
 {/if}
@@ -54,9 +54,9 @@
 
 {#if form?.error && !form?.modal}<p role="alert">{t(form.error)}</p>{/if}
 
-{#snippet gear(testid: string, g: { name: string; trait?: string; range?: string; dice?: string; damageType?: string; burden?: string; major?: number; severe?: number; score?: number; features: { name: string; text: string }[] })}
+{#snippet gear(testid: string, g: { name: string; nameLang: Lang; trait?: string; range?: string; dice?: string; damageType?: string; burden?: string; major?: number; severe?: number; score?: number; features: { name: string; text: string; lang: Lang }[] })}
 	<div data-testid={testid}>
-		<strong>{g.name}</strong>
+		<strong lang={g.nameLang}>{g.name}</strong>
 		<ul class="mt-0 mb-3 list-none pl-0!">
 			{#if g.trait}
 				<li>{t('equipment.trait')}: {t(`trait.${g.trait.toLowerCase()}`)}</li>
@@ -68,7 +68,7 @@
 				<li>{t('equipment.score')}: {g.score}</li>
 			{/if}
 			{#each g.features as f (f.name)}
-				<li>{f.name}: {f.text}</li>
+				<li lang={f.lang}>{f.name}: {f.text}</li>
 			{/each}
 		</ul>
 	</div>
@@ -240,9 +240,10 @@
 			{#each c.items as it (it.id)}
 				<tr data-testid="item-row">
 					<td>
-						<span data-testid="item">{it.name} ×{n(it.quantity)}</span>
+						<span data-testid="item" lang={it.srdId ? data.storedItemLang : undefined}>{it.name} ×{n(it.quantity)}</span>
 						{#if it.srdId && data.itemPicks[it.srdId]}
-							<Help id={it.srdId} name={data.itemPicks[it.srdId].name} lang={data.lang} en={data.itemPicks[it.srdId].en} />
+							{@const pick = data.itemPicks[it.srdId]}
+							<Help id={it.srdId} name={pick.name} nameLang={pick.nameLang} lang={data.lang} lines={pick.lines} />
 						{/if}
 					</td>
 					<td>
@@ -270,9 +271,9 @@
 <ul class="list-none pl-0!">
 	{#each data.cards as card (card.id)}
 		<li class="[overflow-wrap:anywhere]" data-testid="card">
-			<span>{card.name}</span>
-			<span class="muted">{card.domainName}, {t('card.level')} {card.level}</span>
-			<Help id={card.id} name={card.name} lang={data.lang} en={card.en} />
+			<span lang={card.nameLang}>{card.name}</span>
+			<span class="muted"><span lang={card.domainNameLang}>{card.domainName}</span>, {t('card.level')} {card.level}</span>
+			<Help id={card.id} name={card.name} nameLang={card.nameLang} lang={data.lang} lines={card.lines} />
 			<form use:enhance={busy} method="POST" action="?/removeCard">
 				<input type="hidden" name="cardId" value={card.id} />
 				<button type="submit">{t('action.remove')}</button>

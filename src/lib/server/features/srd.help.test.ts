@@ -16,14 +16,32 @@ describe('SRD pick-lists', () => {
 	});
 	it('subclass help lines contain "<feature>: <text>"', () => {
 		const s = subclassesOf('Ranger', 'en')[0];
-		expect(s.en.some((l) => l.startsWith('Companion: You have an animal companion'))).toBe(true);
+		expect(s.lines.some((l) => l.text.startsWith('Companion: You have an animal companion'))).toBe(true);
 	});
-	it('formats weapons, armors and domain cards', () => {
-		expect(helpLines('weapons', pickOfRaw('weapons'))[0]).toMatch(/ · .* · D\d+ .* · /);
-		expect(helpLines('armors', { baseMajorThreshold: 5, baseSevereThreshold: 11, baseScore: 3 })[0]).toBe(
-			'thresholds 5/11 · score 3'
-		);
-		expect(helpLines('domain-cards', { domain: 'BLADE', level: 2, recallCost: 1 })[0]).toBe('Blade · level 2 · recall cost 1');
+	it('formats weapons, armors and domain cards in the page lang', () => {
+		expect(helpLines('weapons', pickOfRaw('weapons'), {}, 'en')[0]).toEqual({ text: 'Agility · Melee · D8 physical · One-handed', lang: 'en' });
+		expect(helpLines('armors', { baseMajorThreshold: 5, baseSevereThreshold: 11, baseScore: 3 }, {}, 'en')[0]).toEqual({
+			text: 'thresholds 5/11 · score 3',
+			lang: 'en'
+		});
+		expect(helpLines('armors', { baseMajorThreshold: 5, baseSevereThreshold: 11, baseScore: 3 }, {}, 'fr')[0]).toEqual({
+			text: 'seuils 5/11 · score 3',
+			lang: 'fr'
+		});
+		expect(helpLines('domain-cards', { domain: 'BLADE', level: 2, recallCost: 1 }, {}, 'en')[0]).toEqual({
+			text: 'Blade · level 2 · recall cost 1',
+			lang: 'en'
+		});
+	});
+	it('text lines carry the lang of their field', () => {
+		const lines = helpLines('classes', { id: 'x', description: [{ paragraph: { 'en-US': 'Hello' } }] }, { description: 'fr' }, 'en');
+		expect(lines).toEqual([{ text: 'Hello', lang: 'fr' }]);
+	});
+	it('adversary facts use catalog labels and role, text fields get a label', () => {
+		const lines = helpLines('adversaries', { tier: 1, type: 'Solo', difficulty: 14, motives_and_tactics: 'Burrow' }, {}, 'fr');
+		expect(lines[0]).toEqual({ text: expect.stringContaining('Solo'), lang: 'fr' });
+		expect(lines[1]).toMatchObject({ text: 'Burrow', lang: 'en' });
+		expect(lines[1].label).not.toContain('_');
 	});
 });
 

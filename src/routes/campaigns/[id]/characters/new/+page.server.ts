@@ -1,5 +1,6 @@
 import { error, fail, redirect } from '@sveltejs/kit';
-import { pickOptions } from '$lib/server/features/srd';
+import { listSrd, pickOptions } from '$lib/server/features/srd';
+import type { Lang } from '$lib/i18n';
 import { DEFAULTS, RANGES, TUNNEL_STEPS, characterBody, fieldOfMessage, firstInvalid, parseStep, readValues, stepOfField, tunnelHref } from './tunnel';
 type Actions = import('./$types').Actions;
 type PageServerLoad = import('./$types').PageServerLoad;
@@ -19,6 +20,12 @@ async function call(fetchFn: typeof fetch, method: string, path: string, body?: 
 /** `invalid` names a field (or `review`); anything else is ignored. */
 function readInvalid(v: string | null): string | null {
 	return v !== null && (FIELDS.includes(v) || v === 'review') ? v : null;
+}
+
+/** Select options with the language of each label (same SRD order as `listSrd`). */
+function withLang(kind: 'classes' | 'ancestries' | 'communities', lang: Lang) {
+	const langs = listSrd(kind, lang);
+	return pickOptions(kind, lang).map((o, i) => ({ ...o, lang: langs[i].nameLang }));
 }
 
 export const load: PageServerLoad = async ({ params, fetch, locals, url }) => {
@@ -41,9 +48,9 @@ export const load: PageServerLoad = async ({ params, fetch, locals, url }) => {
 		// hrefs[k] is step k with the current values (index 0 unused).
 		hrefs: [0, 1, 2, 3, 4].map((k) => tunnelHref(params.id, k, values)),
 		picks: {
-			class: pickOptions('classes', lang),
-			ancestry: pickOptions('ancestries', lang),
-			community: pickOptions('communities', lang)
+			class: withLang('classes', lang),
+			ancestry: withLang('ancestries', lang),
+			community: withLang('communities', lang)
 		}
 	};
 };

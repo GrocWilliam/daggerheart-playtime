@@ -33,7 +33,7 @@ Per page:
 In `src/lib/components/`:
 - `Divider`: the h1 flourish (`divider`).
 - `Pips`: filled/empty pips for a tracker (`<name>-pips`).
-- `Help`: a glossary `id` or a `text` prop (a catalog string); `help`.
+- `Help`: a glossary `id`, a `text` prop (a catalog string) or `lines: Line[]` (SRD text, each line rendered with its own `lang`; `nameLang` for the name); `help`.
 - `Chosen`: subclass, ancestry and community of a character.
 - `LanguageSwitcher`: `language-switcher`, `lang-en`, `lang-fr`.
 - `Modal.svelte`: the only dialog implementation.

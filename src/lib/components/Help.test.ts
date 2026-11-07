@@ -21,6 +21,7 @@ describe('help', () => {
 		const src = readFileSync(new URL('./Help.svelte', import.meta.url), 'utf8');
 		expect(src).toContain('<details data-testid="help" data-help={id}');
 		expect(src).toContain('aria-label=');
-		expect(src).toContain('lang="en"');
+		expect(src).toContain('lang={line.lang}');
+		expect(src).not.toContain('lang="en"');
 	});
 });

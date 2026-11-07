@@ -8,10 +8,10 @@ describe('searchSrd', () => {
 		expect(r[0].items.length).toBeGreaterThan(0);
 		for (const i of r[0].items) expect(i.name.toLowerCase()).toContain('sword');
 	});
-	it('covers every kind without filter and gives English text', () => {
+	it('covers every kind without filter and gives help lines', () => {
 		const r = searchSrd(undefined, '', 'fr');
 		expect(r).toHaveLength(13);
-		for (const s of r) for (const i of s.items) expect(i.en.length).toBeGreaterThan(0);
+		for (const s of r) for (const i of s.items) expect(i.lines.length).toBeGreaterThan(0);
 	});
 	it('matches nothing for gibberish', () => {
 		expect(searchSrd(undefined, 'zzqqxx', 'en').every((s) => s.items.length === 0)).toBe(true);

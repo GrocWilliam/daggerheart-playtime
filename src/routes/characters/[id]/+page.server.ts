@@ -58,6 +58,8 @@ export const load: PageServerLoad = async ({ params, fetch, locals }) => {
 		cards: cardsByIds(Array.isArray(ch.cards) ? ch.cards : [], lang),
 		cardGroups: cardGroups(String(ch.class), lang),
 		itemGroups: itemGroups(lang),
+		// SRD items are stored under their English name (the shown `item` text); their help is localized.
+		storedItemLang: 'en' as const,
 		itemPicks: itemPicks(
 			(Array.isArray(ch.items) ? ch.items : []).flatMap((i: { srdId?: string | null }) => (i.srdId ? [i.srdId] : [])),
 			lang

@@ -48,31 +48,31 @@
 </script>
 
 {#snippet adversaryStats(a: Adversary)}
-	<p><strong lang="en">{a.name}</strong> ×{a.count} · <span lang="en">{a.role}</span></p>
+	<p><strong lang={a.lang}>{a.name}</strong> ×{a.count} · <span lang={a.lang}>{a.role}</span></p>
 	<ul class="list-none pl-0!">
 		<li>{t('encounter.difficulty')}: {a.difficulty}</li>
 		<li>{t('encounter.hp')}: {a.hp}</li>
 		<li>{t('encounter.stress')}: {a.stress}</li>
 		<li>{t('encounter.thresholds')}: {a.thresholds}</li>
-		<li>{t('encounter.attack')}: <span lang="en">{a.attack}</span></li>
-		<li>{t('encounter.damage')}: <span lang="en">{a.damage}</span></li>
+		<li>{t('encounter.attack')}: <span lang={a.lang}>{a.attack}</span></li>
+		<li>{t('encounter.damage')}: <span lang={a.lang}>{a.damage}</span></li>
 	</ul>
 	<details>
 		<summary>{t('encounter.features')}</summary>
-		{#each a.features as f (f.name)}<p lang="en"><strong>{f.name}</strong>: {f.text}</p>{/each}
+		{#each a.features as f (f.name)}<p lang={a.lang}><strong>{f.name}</strong>: {f.text}</p>{/each}
 	</details>
 {/snippet}
 
 {#snippet lootHead(l: LootView)}
 	<p>
-		<strong>{l.name}</strong>
+		<strong lang={l.nameLang}>{l.name}</strong>
 		<span class="text-muted">{t('loot.roll.label')} {l.roll}</span>
 		{#if l.given}<span class="inline-block rounded-[999px] bg-calm px-[0.6rem] text-[0.875rem] text-bg">{t('loot.given')}</span>{/if}
 	</p>
 	{#if l.features.length}
 		<details>
 			<summary>{t('loot.features')}</summary>
-			{#each l.features as f (f)}<p lang="en">{f}</p>{/each}
+			{#each l.features as f, i (i)}<p lang={f.lang}>{f.text}</p>{/each}
 		</details>
 	{:else}
 		<details><summary>{t('loot.features')}</summary><p>{t('loot.noFeatures')}</p></details>
@@ -152,12 +152,12 @@
 		{#if s.environment}
 			{@const env = s.environment}
 			<div data-testid="scene-environment">
-				<p><strong lang="en">{env.name}</strong>
-					<Help id="environment" name={env.name} lang={data.lang} en={env.features} /></p>
+				<p><strong lang={env.lang}>{env.name}</strong>
+					<Help id="environment" name={env.name} nameLang={env.lang} lang={data.lang} lines={env.features} /></p>
 				<ul class="list-none pl-0!">
-					<li>{t('scenario.env.type')}: <span lang="en">{env.type}</span></li>
+					<li>{t('scenario.env.type')}: <span lang={env.lang}>{env.type}</span></li>
 					<li>{t('scenario.env.difficulty')}: {env.difficulty}</li>
-					<li>{t('scenario.env.impulses')}: <span lang="en">{env.impulses}</span></li>
+					<li>{t('scenario.env.impulses')}: <span lang={env.lang}>{env.impulses}</span></li>
 				</ul>
 			</div>
 		{/if}
@@ -275,8 +275,8 @@
 <div class="flow-root md:mt-[15px] lg:mt-0" data-testid="current-scene">
 	<h2>{t('campaign.currentScene')}: {cs.title}</h2>
 	{#if cs.environment}
-		<div><strong lang="en">{cs.environment.name}</strong>
-			<Help id="environment" name={cs.environment.name} lang={data.lang} en={cs.environment.features} /></div>
+		<div><strong lang={cs.environment.lang}>{cs.environment.name}</strong>
+			<Help id="environment" name={cs.environment.name} nameLang={cs.environment.lang} lang={data.lang} lines={cs.environment.features} /></div>
 	{/if}
 	<form use:enhance={busy} class="mb-4 bg-transparent! border-0! p-0!" method="POST" action="?/nextScene">
 		<button type="submit">{t('run.nextScene')}</button>
