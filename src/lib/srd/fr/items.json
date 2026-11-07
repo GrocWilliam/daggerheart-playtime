@@ -1,0 +1,182 @@
+{
+	"core_item_premium_bedroll": {
+		"name": "Couchage de luxe"
+	},
+	"core_item_piper_whistle": {
+		"name": "Sifflet du joueur de flûte"
+	},
+	"core_item_charging_quiver": {
+		"name": "Carquois chargeur"
+	},
+	"core_item_alistairs_torch": {
+		"name": "Torche d’Alistair"
+	},
+	"core_item_speaking_orbs": {
+		"name": "Orbes parlants"
+	},
+	"core_item_manacles": {
+		"name": "Menottes"
+	},
+	"core_item_arcane_cloak": {
+		"name": "Cape arcanique"
+	},
+	"core_item_woven_net": {
+		"name": "Filet tressé"
+	},
+	"core_item_fire_jar": {
+		"name": "Pot de feu"
+	},
+	"core_item_suspended_rod": {
+		"name": "Tige suspendue"
+	},
+	"core_item_glamour_stone": {
+		"name": "Pierre de glamour"
+	},
+	"core_item_empty_chest": {
+		"name": "Coffre vide"
+	},
+	"core_item_companion_case": {
+		"name": "Étui de compagnon"
+	},
+	"core_item_piercing_arrows": {
+		"name": "Flèches perforantes"
+	},
+	"core_item_valorstone": {
+		"name": "Pierre de bravoure"
+	},
+	"core_item_skeleton_key": {
+		"name": "Passe-partout"
+	},
+	"core_item_arcane_prism": {
+		"name": "Prisme arcanique"
+	},
+	"core_item_minor_stamina_potion_recipe": {
+		"name": "Recette de potion d’endurance mineure"
+	},
+	"core_item_minor_health_potion_recipe": {
+		"name": "Recette de potion de santé mineure"
+	},
+	"core_item_homing_compasses": {
+		"name": "Boussoles de retour"
+	},
+	"core_item_corrector_sprite": {
+		"name": "Lutin correcteur"
+	},
+	"core_item_gecko_gloves": {
+		"name": "Gants de gecko"
+	},
+	"core_item_lorekeeper": {
+		"name": "Gardien du savoir"
+	},
+	"core_item_vial_of_darksmoke_recipe": {
+		"name": "Recette de fiole de fumée noire"
+	},
+	"core_item_bloodstone": {
+		"name": "Pierre de sang"
+	},
+	"core_item_greatstone": {
+		"name": "Grande pierre"
+	},
+	"core_item_glider": {
+		"name": "Planeur"
+	},
+	"core_item_ring_of_silence": {
+		"name": "Anneau de silence"
+	},
+	"core_item_calming_pendant": {
+		"name": "Pendentif apaisant"
+	},
+	"core_item_dual_flask": {
+		"name": "Flasque double"
+	},
+	"core_item_bag_of_ficklesand": {
+		"name": "Sac de sable capricieux"
+	},
+	"core_item_ring_of_resistance": {
+		"name": "Anneau de résistance"
+	},
+	"core_item_phoenix_feather": {
+		"name": "Plume de phénix"
+	},
+	"core_item_box_of_many_goods": {
+		"name": "Boîte aux mille biens"
+	},
+	"core_item_airblade_charm": {
+		"name": "Charme de lame d’air"
+	},
+	"core_item_portal_seed": {
+		"name": "Graine de portail"
+	},
+	"core_item_paragons_chain": {
+		"name": "Chaîne du parangon"
+	},
+	"core_item_elusive_amulet": {
+		"name": "Amulette insaisissable"
+	},
+	"core_item_hopekeeper_locket": {
+		"name": "Médaillon du gardien d’espoir"
+	},
+	"core_item_infinite_bag": {
+		"name": "Sac infini"
+	},
+	"core_item_stride_relic": {
+		"name": "Relique de foulée"
+	},
+	"core_item_bolster_relic": {
+		"name": "Relique de renforcement"
+	},
+	"core_item_control_relic": {
+		"name": "Relique de contrôle"
+	},
+	"core_item_attune_relic": {
+		"name": "Relique d’harmonisation"
+	},
+	"core_item_charm_relic": {
+		"name": "Relique de charme"
+	},
+	"core_item_enlighten_relic": {
+		"name": "Relique d’illumination"
+	},
+	"core_item_honing_relic": {
+		"name": "Relique d’affûtage"
+	},
+	"core_item_flickerfly_pendant": {
+		"name": "Pendentif de luciole"
+	},
+	"core_item_lakestrider_boots": {
+		"name": "Bottes de marche-lac"
+	},
+	"core_item_clay_companion": {
+		"name": "Compagnon d’argile"
+	},
+	"core_item_mythic_dust_recipe": {
+		"name": "Recette de poussière mythique"
+	},
+	"core_item_shard_of_memory": {
+		"name": "Éclat de mémoire"
+	},
+	"core_item_gem_of_alacrity": {
+		"name": "Gemme d’alacrité"
+	},
+	"core_item_gem_of_might": {
+		"name": "Gemme de puissance"
+	},
+	"core_item_gem_of_precision": {
+		"name": "Gemme de précision"
+	},
+	"core_item_gem_of_insight": {
+		"name": "Gemme de perspicacité"
+	},
+	"core_item_gem_of_audacity": {
+		"name": "Gemme d’audace"
+	},
+	"core_item_gem_of_sagacity": {
+		"name": "Gemme de sagacité"
+	},
+	"core_item_ring_of_unbreakable_resolve": {
+		"name": "Anneau de résolution inébranlable"
+	},
+	"core_item_belt_of_unity": {
+		"name": "Ceinture d’unité"
+	}
+}

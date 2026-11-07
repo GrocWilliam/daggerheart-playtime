@@ -67,7 +67,7 @@ for (const [kind, [f, count]] of Object.entries(KINDS)) {
 	test(`GET /api/srd/${kind} lists ${count} {id,name} in file order, in en and by default`, async () => {
 		const els = file(f);
 		assert.equal(els.length, count);
-		const expected = els.map((e) => ({ id: e.id, name: enName(kind, e) }));
+		const expected = els.map((e) => ({ id: e.id, name: enName(kind, e), nameLang: 'en' })); // us-209 adds nameLang
 		for (const lang of [undefined, 'en']) {
 			const r = await get(`/api/srd/${kind}`, lang);
 			assert.equal(r.status, 200);

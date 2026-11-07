@@ -114,18 +114,22 @@ test('/reference?kind=weapons&q=sword lists only weapons whose name contains "sw
 	}
 });
 
-test('q matches the French name too, whatever the page language', async () => {
+// us-209: the French name is matched only when the page is French; an English page matches English names only.
+test('q matches the French name too when the page is French', async () => {
 	const all = await names('weapons', 'en');
 	const frAll = await names('weapons', 'fr');
 	const i = frAll.findIndex((n, j) => n !== all[j] && n.length > 3);
 	assert.ok(i >= 0, 'a weapon with a distinct French name');
 	const q = frAll[i].toLowerCase();
-	const wanted = all.filter((n, j) => n.toLowerCase().includes(q) || frAll[j].toLowerCase().includes(q)).length;
+	const wantedBy = {
+		fr: all.filter((n, j) => n.toLowerCase().includes(q) || frAll[j].toLowerCase().includes(q)).length,
+		en: all.filter((n) => n.toLowerCase().includes(q)).length
+	};
 	for (const lang of ['en', 'fr']) {
 		const { out } = await items(`?kind=weapons&q=${encodeURIComponent(q.toUpperCase())}`, lang);
-		assert.equal(out.weapons.length, wanted, `lang ${lang}`);
-		assert.ok(wanted >= 1);
+		assert.equal(out.weapons.length, wantedBy[lang], `lang ${lang}`);
 	}
+	assert.ok(wantedBy.fr >= 1);
 	// and the English name matches while the page is French
 	const { out } = await items(`?kind=weapons&q=${encodeURIComponent(all[i])}`, 'fr');
 	assert.ok(out.weapons.length >= 1);

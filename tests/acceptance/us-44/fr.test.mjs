@@ -112,7 +112,7 @@ test('GET /api/srd/<kind> in French returns French names in file order; English 
 		const ids = idsOf(kind);
 		const r = await get(`/api/srd/${kind}`, 'fr');
 		assert.equal(r.status, 200, kind);
-		assert.deepEqual(await r.json(), ids.map((id) => ({ id, name: fr[id] })), kind);
+		assert.deepEqual(await r.json(), ids.map((id) => ({ id, name: fr[id], nameLang: 'fr' })), kind); // us-209 adds nameLang
 		const enList = await (await get(`/api/srd/${kind}`, 'en')).json();
 		assert.deepEqual(enList.map((x) => x.id), ids, kind);
 		if (kind in FIXED) assert.notDeepEqual(enList.map((x) => x.name), FIXED[kind], `${kind} en must stay English`);
@@ -130,7 +130,8 @@ test('GET /api/srd/<kind>/<id> in French returns the file object unchanged plus 
 		for (const e of [els[0], els[els.length - 1]]) {
 			const r = await get(`/api/srd/${kind}/${e.id}`, 'fr');
 			assert.equal(r.status, 200);
-			assert.deepEqual(await r.json(), { ...e, nameLocalized: fr[e.id] });
+			// us-209: the French name is merged into `name` too (plain string for classes, {"en-US": fr} for core kinds)
+			assert.deepEqual(await r.json(), { ...e, name: typeof e.name === 'string' ? fr[e.id] : { 'en-US': fr[e.id] }, nameLocalized: fr[e.id] });
 			const en = await (await get(`/api/srd/${kind}/${e.id}`, 'en')).json();
 			assert.deepEqual(en, { ...e, nameLocalized: enName(kind, e) });
 		}

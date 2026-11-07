@@ -1,0 +1,104 @@
+{
+	"core_armor_gambeson_armor": {
+		"name": "Armure de gambison"
+	},
+	"core_armor_leather_armor": {
+		"name": "Armure de cuir"
+	},
+	"core_armor_chainmail_armor": {
+		"name": "Armure de mailles"
+	},
+	"core_armor_full_plate_armor": {
+		"name": "Armure de plates complète"
+	},
+	"core_armor_improved_gambeson_armor": {
+		"name": "Armure de gambison améliorée"
+	},
+	"core_armor_improved_leather_armor": {
+		"name": "Armure de cuir améliorée"
+	},
+	"core_armor_improved_chainmail_armor": {
+		"name": "Armure de mailles améliorée"
+	},
+	"core_armor_improved_full_plate_armor": {
+		"name": "Armure de plates complète améliorée"
+	},
+	"core_armor_elundrian_chain_armor": {
+		"name": "Cotte de mailles élundrienne"
+	},
+	"core_armor_harrowbone_armor": {
+		"name": "Armure d’os de herse"
+	},
+	"core_armor_irontree_breastplate_armor": {
+		"name": "Cuirasse en arbre-fer"
+	},
+	"core_armor_runetan_floating_armor": {
+		"name": "Armure flottante runetane"
+	},
+	"core_armor_tyris_soft_armor": {
+		"name": "Armure souple de Tyris"
+	},
+	"core_armor_rosewild_armor": {
+		"name": "Armure de rose sauvage"
+	},
+	"core_armor_advanced_gambeson_armor": {
+		"name": "Armure de gambison avancée"
+	},
+	"core_armor_advanced_leather_armor": {
+		"name": "Armure de cuir avancée"
+	},
+	"core_armor_advanced_chainmail_armor": {
+		"name": "Armure de mailles avancée"
+	},
+	"core_armor_advanced_full_plate_armor": {
+		"name": "Armure de plates complète avancée"
+	},
+	"core_armor_bellamoi_fine_armor": {
+		"name": "Armure fine de Bellamoi"
+	},
+	"core_armor_dragonscale_armor": {
+		"name": "Armure en écailles de dragon"
+	},
+	"core_armor_spiked_plate_armor": {
+		"name": "Armure de plates à pointes"
+	},
+	"core_armor_bladefare_armor": {
+		"name": "Armure de lame-chemin"
+	},
+	"core_armor_monetts_cloak": {
+		"name": "Cape de Monett"
+	},
+	"core_armor_runes_of_fortification": {
+		"name": "Runes de fortification"
+	},
+	"core_armor_legendary_gambeson_armor": {
+		"name": "Armure de gambison légendaire"
+	},
+	"core_armor_legendary_leather_armor": {
+		"name": "Armure de cuir légendaire"
+	},
+	"core_armor_legendary_chainmail_armor": {
+		"name": "Armure de mailles légendaire"
+	},
+	"core_armor_legendary_full_plate_armor": {
+		"name": "Armure de plates complète légendaire"
+	},
+	"core_armor_dunamis_silkchain": {
+		"name": "Soie-chaîne de Dunamis"
+	},
+	"core_armor_channeling_armor": {
+		"name": "Armure de canalisation"
+	},
+	"core_armor_emberwoven_armor": {
+		"name": "Armure tissée de braises"
+	},
+	"core_armor_full_fortified_armor": {
+		"name": "Armure entièrement fortifiée"
+	},
+	"core_armor_veritas_opal_armor": {
+		"name": "Armure d’opale de Veritas"
+	},
+	"core_armor_savior_chainmail": {
+		"name": "Cotte de mailles du sauveur"
+	}
+}

@@ -8,7 +8,11 @@ const config = {
 		adapter: adapter(),
 		// adapter-node assumes https behind a proxy, which breaks SvelteKit's
 		// built-in check on plain http; hooks.server.ts does the check instead.
-		csrf: { checkOrigin: false }
+		csrf: { checkOrigin: false },
+		// us-209's fallback.unit.ts imports a path that only exists in the temporary copy its run.sh builds.
+		typescript: {
+			config: (c) => ({ ...c, exclude: [...(c.exclude ?? []), '../tests/acceptance/us-209/fallback.unit.ts'] })
+		}
 	}
 };
 

@@ -1,0 +1,56 @@
+{
+	"core_subclass_beastbound": {
+		"name": "Lié aux bêtes"
+	},
+	"core_subclass_call_of_the_brave": {
+		"name": "Appel du brave"
+	},
+	"core_subclass_call_of_the_slayer": {
+		"name": "Appel du tueur"
+	},
+	"core_subclass_divine_wielder": {
+		"name": "Porteur divin"
+	},
+	"core_subclass_elemental_origin": {
+		"name": "Origine élémentaire"
+	},
+	"core_subclass_nightwalker": {
+		"name": "Marcheur de nuit"
+	},
+	"core_subclass_primal_origin": {
+		"name": "Origine primordiale"
+	},
+	"core_subclass_school_of_knowledge": {
+		"name": "École du savoir"
+	},
+	"core_subclass_school_of_war": {
+		"name": "École de la guerre"
+	},
+	"core_subclass_stalwart": {
+		"name": "Inébranlable"
+	},
+	"core_subclass_syndicate": {
+		"name": "Syndicat"
+	},
+	"core_subclass_troubadour": {
+		"name": "Troubadour"
+	},
+	"core_subclass_vengeance": {
+		"name": "Vengeance"
+	},
+	"core_subclass_warden_of_renewal": {
+		"name": "Gardien du renouveau"
+	},
+	"core_subclass_warden_of_the_elements": {
+		"name": "Gardien des éléments"
+	},
+	"core_subclass_wayfinder": {
+		"name": "Éclaireur"
+	},
+	"core_subclass_winged_sentinel": {
+		"name": "Sentinelle ailée"
+	},
+	"core_subclass_wordsmith": {
+		"name": "Orfèvre des mots"
+	}
+}

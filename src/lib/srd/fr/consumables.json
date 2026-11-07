@@ -1,0 +1,182 @@
+{
+	"core_consumable_stride_potion": {
+		"name": "Potion de foulée"
+	},
+	"core_consumable_bolster_potion": {
+		"name": "Potion de renforcement"
+	},
+	"core_consumable_control_potion": {
+		"name": "Potion de contrôle"
+	},
+	"core_consumable_attune_potion": {
+		"name": "Potion d’harmonisation"
+	},
+	"core_consumable_charm_potion": {
+		"name": "Potion de charme"
+	},
+	"core_consumable_enlighten_potion": {
+		"name": "Potion d’illumination"
+	},
+	"core_consumable_minor_health_potion": {
+		"name": "Potion de santé mineure"
+	},
+	"core_consumable_minor_stamina_potion": {
+		"name": "Potion d’endurance mineure"
+	},
+	"core_consumable_grindletooth_venom": {
+		"name": "Venin de grincedent"
+	},
+	"core_consumable_varik_leaves": {
+		"name": "Feuilles de varik"
+	},
+	"core_consumable_vial_of_moondrip": {
+		"name": "Fiole de goutte-lune"
+	},
+	"core_consumable_unstable_arcane_shard": {
+		"name": "Éclat arcanique instable"
+	},
+	"core_consumable_potion_of_stability": {
+		"name": "Potion de stabilité"
+	},
+	"core_consumable_improved_grindletooth_venom": {
+		"name": "Venin de grincedent amélioré"
+	},
+	"core_consumable_morphing_clay": {
+		"name": "Argile métamorphe"
+	},
+	"core_consumable_vial_of_darksmoke": {
+		"name": "Fiole de fumée noire"
+	},
+	"core_consumable_jumping_root": {
+		"name": "Racine sauteuse"
+	},
+	"core_consumable_snap_powder": {
+		"name": "Poudre claquante"
+	},
+	"core_consumable_health_potion": {
+		"name": "Potion de santé"
+	},
+	"core_consumable_stamina_potion": {
+		"name": "Potion d’endurance"
+	},
+	"core_consumable_armor_stitcher": {
+		"name": "Recoud-armure"
+	},
+	"core_consumable_gill_salve": {
+		"name": "Baume de branchies"
+	},
+	"core_consumable_replication_parchment": {
+		"name": "Parchemin de réplication"
+	},
+	"core_consumable_improved_arcane_shard": {
+		"name": "Éclat arcanique amélioré"
+	},
+	"core_consumable_major_stride_potion": {
+		"name": "Potion de foulée majeure"
+	},
+	"core_consumable_major_bolster_potion": {
+		"name": "Potion de renforcement majeure"
+	},
+	"core_consumable_major_control_potion": {
+		"name": "Potion de contrôle majeure"
+	},
+	"core_consumable_major_attune_potion": {
+		"name": "Potion d’harmonisation majeure"
+	},
+	"core_consumable_major_charm_potion": {
+		"name": "Potion de charme majeure"
+	},
+	"core_consumable_major_enlighten_potion": {
+		"name": "Potion d’illumination majeure"
+	},
+	"core_consumable_blood_of_the_yorgi": {
+		"name": "Sang des Yorgi"
+	},
+	"core_consumable_homet_s_secret_potion": {
+		"name": "Potion secrète de Homet"
+	},
+	"core_consumable_redthorn_saliva": {
+		"name": "Salive d’épine-rouge"
+	},
+	"core_consumable_channelstone": {
+		"name": "Pierre de canalisation"
+	},
+	"core_consumable_mythic_dust": {
+		"name": "Poussière mythique"
+	},
+	"core_consumable_acidpaste": {
+		"name": "Pâte acide"
+	},
+	"core_consumable_hopehold_flare": {
+		"name": "Fusée de l’Espoir"
+	},
+	"core_consumable_major_arcane_shard": {
+		"name": "Éclat arcanique majeur"
+	},
+	"core_consumable_featherbone": {
+		"name": "Os-plume"
+	},
+	"core_consumable_circle_of_the_void": {
+		"name": "Cercle du vide"
+	},
+	"core_consumable_sun_tree_sap": {
+		"name": "Sève d’arbre-soleil"
+	},
+	"core_consumable_dripfang_poison": {
+		"name": "Poison de croc-goutte"
+	},
+	"core_consumable_major_health_potion": {
+		"name": "Potion de santé majeure"
+	},
+	"core_consumable_major_stamina_potion": {
+		"name": "Potion d’endurance majeure"
+	},
+	"core_consumable_ogre_musk": {
+		"name": "Musc d’ogre"
+	},
+	"core_consumable_wingsprout": {
+		"name": "Pousse-aile"
+	},
+	"core_consumable_jar_of_lost_voices": {
+		"name": "Bocal des voix perdues"
+	},
+	"core_consumable_dragonbloom_tea": {
+		"name": "Thé de fleur-dragon"
+	},
+	"core_consumable_bridge_seed": {
+		"name": "Graine-pont"
+	},
+	"core_consumable_sleeping_sap": {
+		"name": "Sève soporifique"
+	},
+	"core_consumable_feast_of_xuria": {
+		"name": "Festin de Xuria"
+	},
+	"core_consumable_bonding_honey": {
+		"name": "Miel de lien"
+	},
+	"core_consumable_shrinking_potion": {
+		"name": "Potion de rétrécissement"
+	},
+	"core_consumable_growing_potion": {
+		"name": "Potion de croissance"
+	},
+	"core_consumable_knowledge_stone": {
+		"name": "Pierre de savoir"
+	},
+	"core_consumable_sweet_moss": {
+		"name": "Mousse douce"
+	},
+	"core_consumable_blinding_orb": {
+		"name": "Orbe aveuglant"
+	},
+	"core_consumable_death_tea": {
+		"name": "Thé de mort"
+	},
+	"core_consumable_mirror_of_marigold": {
+		"name": "Miroir de souci"
+	},
+	"core_consumable_stardrop": {
+		"name": "Goutte d’étoile"
+	}
+}

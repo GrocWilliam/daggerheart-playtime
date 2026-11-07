@@ -1,0 +1,29 @@
+{
+	"core_community_highborne": {
+		"name": "Haut-né"
+	},
+	"core_community_loreborne": {
+		"name": "Né du savoir"
+	},
+	"core_community_orderborne": {
+		"name": "Né de l'ordre"
+	},
+	"core_community_ridgeborne": {
+		"name": "Né des crêtes"
+	},
+	"core_community_seaborne": {
+		"name": "Né des mers"
+	},
+	"core_community_slyborne": {
+		"name": "Né de la ruse"
+	},
+	"core_community_underborne": {
+		"name": "Né des profondeurs"
+	},
+	"core_community_wanderborne": {
+		"name": "Né de l'errance"
+	},
+	"core_community_wildborne": {
+		"name": "Né des terres sauvages"
+	}
+}

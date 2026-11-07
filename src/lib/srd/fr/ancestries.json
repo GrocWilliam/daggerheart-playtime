@@ -1,0 +1,56 @@
+{
+	"core_ancestry_clank": {
+		"name": "Clank"
+	},
+	"core_ancestry_drakona": {
+		"name": "Drakona"
+	},
+	"core_ancestry_dwarf": {
+		"name": "Nain"
+	},
+	"core_ancestry_elf": {
+		"name": "Elfe"
+	},
+	"core_ancestry_faerie": {
+		"name": "Fée"
+	},
+	"core_ancestry_faun": {
+		"name": "Faune"
+	},
+	"core_ancestry_firbolg": {
+		"name": "Firbolg"
+	},
+	"core_ancestry_fungril": {
+		"name": "Fungril"
+	},
+	"core_ancestry_galapa": {
+		"name": "Galapa"
+	},
+	"core_ancestry_giant": {
+		"name": "Géant"
+	},
+	"core_ancestry_goblin": {
+		"name": "Gobelin"
+	},
+	"core_ancestry_halfling": {
+		"name": "Halfelin"
+	},
+	"core_ancestry_human": {
+		"name": "Humain"
+	},
+	"core_ancestry_infernis": {
+		"name": "Infernis"
+	},
+	"core_ancestry_katari": {
+		"name": "Katari"
+	},
+	"core_ancestry_orc": {
+		"name": "Orque"
+	},
+	"core_ancestry_ribbet": {
+		"name": "Ribbet"
+	},
+	"core_ancestry_simiah": {
+		"name": "Simiah"
+	}
+}

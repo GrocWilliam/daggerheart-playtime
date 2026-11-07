@@ -1,0 +1,44 @@
+{
+	"core_rule_action_rolls": {
+		"name": "Jets d’action"
+	},
+	"core_rule_reaction_rolls": {
+		"name": "Jets de réaction"
+	},
+	"core_rule_group_action_rolls": {
+		"name": "Jets d’action de groupe"
+	},
+	"core_rule_tag_team_rolls": {
+		"name": "Jets en tandem"
+	},
+	"core_rule_advantage_disadvantage": {
+		"name": "Avantage et désavantage"
+	},
+	"core_rule_help_an_ally": {
+		"name": "Aider un allié"
+	},
+	"core_rule_activate_hope_feature": {
+		"name": "Activer une capacité d’Espoir"
+	},
+	"core_rule_attack_rolls": {
+		"name": "Jets d’attaque"
+	},
+	"core_rule_damage_rolls": {
+		"name": "Jets de dégâts"
+	},
+	"core_rule_spellcast_rolls": {
+		"name": "Jets de sort"
+	},
+	"core_rule_evasion": {
+		"name": "Évasion"
+	},
+	"core_rule_conditions_restrained_vulnerable": {
+		"name": "États - Entravé et Vulnérable"
+	},
+	"core_rule_range_bands": {
+		"name": "Bandes de portée"
+	},
+	"core_rule_cover": {
+		"name": "Couvert"
+	}
+}

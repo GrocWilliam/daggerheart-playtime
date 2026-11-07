@@ -1,0 +1,569 @@
+{
+	"core_domain_card_a_soldiers_bond": {
+		"name": "Lien du soldat"
+	},
+	"core_domain_card_adjust_reality": {
+		"name": "Ajuster la réalité"
+	},
+	"core_domain_card_arcana_touched": {
+		"name": "Touché par les Arcanes"
+	},
+	"core_domain_card_arcane_reflection": {
+		"name": "Reflet arcanique"
+	},
+	"core_domain_card_armorer": {
+		"name": "Armurier"
+	},
+	"core_domain_card_astral_projection": {
+		"name": "Projection astrale"
+	},
+	"core_domain_card_banish": {
+		"name": "Bannir"
+	},
+	"core_domain_card_bare_bones": {
+		"name": "Os nus"
+	},
+	"core_domain_card_battle_cry": {
+		"name": "Cri de guerre"
+	},
+	"core_domain_card_battle_monster": {
+		"name": "Monstre de bataille"
+	},
+	"core_domain_card_battle_hardened": {
+		"name": "Aguerri"
+	},
+	"core_domain_card_blade_touched": {
+		"name": "Touché par la Lame"
+	},
+	"core_domain_card_blink_out": {
+		"name": "Disparition"
+	},
+	"core_domain_card_body_basher": {
+		"name": "Fracasseur"
+	},
+	"core_domain_card_bold_presence": {
+		"name": "Présence audacieuse"
+	},
+	"core_domain_card_bolt_beacon": {
+		"name": "Balise de foudre"
+	},
+	"core_domain_card_bone_touched": {
+		"name": "Touché par l’Os"
+	},
+	"core_domain_card_book_of_ava": {
+		"name": "Livre d’Ava"
+	},
+	"core_domain_card_book_of_exota": {
+		"name": "Livre d’Exota"
+	},
+	"core_domain_card_book_of_grynn": {
+		"name": "Livre de Grynn"
+	},
+	"core_domain_card_book_of_homet": {
+		"name": "Livre de Homet"
+	},
+	"core_domain_card_book_of_illiat": {
+		"name": "Livre d’Illiat"
+	},
+	"core_domain_card_book_of_korvax": {
+		"name": "Livre de Korvax"
+	},
+	"core_domain_card_book_of_norai": {
+		"name": "Livre de Norai"
+	},
+	"core_domain_card_book_of_ronin": {
+		"name": "Livre de Ronin"
+	},
+	"core_domain_card_book_of_sitil": {
+		"name": "Livre de Sitil"
+	},
+	"core_domain_card_book_of_tyfar": {
+		"name": "Livre de Tyfar"
+	},
+	"core_domain_card_book_of_vagras": {
+		"name": "Livre de Vagras"
+	},
+	"core_domain_card_book_of_vyola": {
+		"name": "Livre de Vyola"
+	},
+	"core_domain_card_book_of_yarrow": {
+		"name": "Livre de Yarrow"
+	},
+	"core_domain_card_boost": {
+		"name": "Coup de pouce"
+	},
+	"core_domain_card_brace": {
+		"name": "Se préparer"
+	},
+	"core_domain_card_breaking_blow": {
+		"name": "Coup brisant"
+	},
+	"core_domain_card_chain_lightning": {
+		"name": "Éclair en chaîne"
+	},
+	"core_domain_card_champions_edge": {
+		"name": "Avantage du champion"
+	},
+	"core_domain_card_chokehold": {
+		"name": "Étranglement"
+	},
+	"core_domain_card_cinder_grasp": {
+		"name": "Étreinte de cendres"
+	},
+	"core_domain_card_cloaking_blast": {
+		"name": "Explosion occultante"
+	},
+	"core_domain_card_codex_touched": {
+		"name": "Touché par le Codex"
+	},
+	"core_domain_card_confusing_aura": {
+		"name": "Aura de confusion"
+	},
+	"core_domain_card_conjure_swarm": {
+		"name": "Invocation d’essaim"
+	},
+	"core_domain_card_conjured_steeds": {
+		"name": "Montures invoquées"
+	},
+	"core_domain_card_copycat": {
+		"name": "Copieur"
+	},
+	"core_domain_card_corrosive_projectile": {
+		"name": "Projectile corrosif"
+	},
+	"core_domain_card_counterspell": {
+		"name": "Contresort"
+	},
+	"core_domain_card_critical_inspiration": {
+		"name": "Inspiration critique"
+	},
+	"core_domain_card_cruel_precision": {
+		"name": "Précision cruelle"
+	},
+	"core_domain_card_dark_whispers": {
+		"name": "Murmures sombres"
+	},
+	"core_domain_card_deadly_focus": {
+		"name": "Concentration mortelle"
+	},
+	"core_domain_card_death_grip": {
+		"name": "Poigne mortelle"
+	},
+	"core_domain_card_deathrun": {
+		"name": "Course mortelle"
+	},
+	"core_domain_card_deft_deceiver": {
+		"name": "Trompeur habile"
+	},
+	"core_domain_card_deft_maneuvers": {
+		"name": "Manœuvres habiles"
+	},
+	"core_domain_card_disintegration_wave": {
+		"name": "Onde de désintégration"
+	},
+	"core_domain_card_divination": {
+		"name": "Divination"
+	},
+	"core_domain_card_earthquake": {
+		"name": "Tremblement de terre"
+	},
+	"core_domain_card_eclipse": {
+		"name": "Éclipse"
+	},
+	"core_domain_card_encore": {
+		"name": "Rappel"
+	},
+	"core_domain_card_endless_charisma": {
+		"name": "Charisme infini"
+	},
+	"core_domain_card_enrapture": {
+		"name": "Ravissement"
+	},
+	"core_domain_card_falling_sky": {
+		"name": "Chute du ciel"
+	},
+	"core_domain_card_fane_of_the_wilds": {
+		"name": "Sanctuaire des terres sauvages"
+	},
+	"core_domain_card_ferocity": {
+		"name": "Férocité"
+	},
+	"core_domain_card_final_words": {
+		"name": "Dernières paroles"
+	},
+	"core_domain_card_flight": {
+		"name": "Vol"
+	},
+	"core_domain_card_floating_eye": {
+		"name": "Œil flottant"
+	},
+	"core_domain_card_forager": {
+		"name": "Cueilleur"
+	},
+	"core_domain_card_force_of_nature": {
+		"name": "Force de la nature"
+	},
+	"core_domain_card_forceful_push": {
+		"name": "Poussée puissante"
+	},
+	"core_domain_card_forest_sprites": {
+		"name": "Esprits de la forêt"
+	},
+	"core_domain_card_fortified_armor": {
+		"name": "Armure fortifiée"
+	},
+	"core_domain_card_frenzy": {
+		"name": "Frénésie"
+	},
+	"core_domain_card_full_surge": {
+		"name": "Déferlement total"
+	},
+	"core_domain_card_get_back_up": {
+		"name": "Se relever"
+	},
+	"core_domain_card_gifted_tracker": {
+		"name": "Pisteur doué"
+	},
+	"core_domain_card_glancing_blow": {
+		"name": "Coup effleurant"
+	},
+	"core_domain_card_glyph_of_nightfall": {
+		"name": "Glyphe de la tombée de la nuit"
+	},
+	"core_domain_card_goad_them_on": {
+		"name": "Les provoquer"
+	},
+	"core_domain_card_gore_and_glory": {
+		"name": "Sang et gloire"
+	},
+	"core_domain_card_grace_touched": {
+		"name": "Touché par la Grâce"
+	},
+	"core_domain_card_ground_pound": {
+		"name": "Frappe au sol"
+	},
+	"core_domain_card_healing_field": {
+		"name": "Champ de soins"
+	},
+	"core_domain_card_healing_hands": {
+		"name": "Mains guérisseuses"
+	},
+	"core_domain_card_healing_strike": {
+		"name": "Frappe guérisseuse"
+	},
+	"core_domain_card_hold_the_line": {
+		"name": "Tenir la ligne"
+	},
+	"core_domain_card_hush": {
+		"name": "Silence"
+	},
+	"core_domain_card_hypnotic_shimmer": {
+		"name": "Scintillement hypnotique"
+	},
+	"core_domain_card_i_am_your_shield": {
+		"name": "Je suis ton bouclier"
+	},
+	"core_domain_card_i_see_it_coming": {
+		"name": "Je le vois venir"
+	},
+	"core_domain_card_inevitable": {
+		"name": "Inévitable"
+	},
+	"core_domain_card_inspirational_words": {
+		"name": "Paroles inspirantes"
+	},
+	"core_domain_card_invigoration": {
+		"name": "Revigoration"
+	},
+	"core_domain_card_invisibility": {
+		"name": "Invisibilité"
+	},
+	"core_domain_card_know_thy_enemy": {
+		"name": "Connais ton ennemi"
+	},
+	"core_domain_card_lead_by_example": {
+		"name": "Montrer l’exemple"
+	},
+	"core_domain_card_lean_on_me": {
+		"name": "Compte sur moi"
+	},
+	"core_domain_card_life_ward": {
+		"name": "Protection de vie"
+	},
+	"core_domain_card_manifest_wall": {
+		"name": "Manifestation de mur"
+	},
+	"core_domain_card_mass_disguise": {
+		"name": "Déguisement de masse"
+	},
+	"core_domain_card_mass_enrapture": {
+		"name": "Ravissement de masse"
+	},
+	"core_domain_card_master_of_the_craft": {
+		"name": "Maître du métier"
+	},
+	"core_domain_card_mending_touch": {
+		"name": "Toucher réparateur"
+	},
+	"core_domain_card_midnight_spirit": {
+		"name": "Esprit de minuit"
+	},
+	"core_domain_card_midnight_touched": {
+		"name": "Touché par Minuit"
+	},
+	"core_domain_card_natural_familiar": {
+		"name": "Familier naturel"
+	},
+	"core_domain_card_natures_tongue": {
+		"name": "Langue de la nature"
+	},
+	"core_domain_card_never_upstaged": {
+		"name": "Jamais éclipsé"
+	},
+	"core_domain_card_night_terror": {
+		"name": "Terreur nocturne"
+	},
+	"core_domain_card_not_good_enough": {
+		"name": "Pas assez bien"
+	},
+	"core_domain_card_notorious": {
+		"name": "Notoire"
+	},
+	"core_domain_card_on_the_brink": {
+		"name": "Au bord du gouffre"
+	},
+	"core_domain_card_onslaught": {
+		"name": "Assaut"
+	},
+	"core_domain_card_overwhelming_aura": {
+		"name": "Aura écrasante"
+	},
+	"core_domain_card_phantom_retreat": {
+		"name": "Retraite fantôme"
+	},
+	"core_domain_card_pick_and_pull": {
+		"name": "Crocheter et tirer"
+	},
+	"core_domain_card_plant_dominion": {
+		"name": "Domination des plantes"
+	},
+	"core_domain_card_premonition": {
+		"name": "Prémonition"
+	},
+	"core_domain_card_preservation_blast": {
+		"name": "Explosion de préservation"
+	},
+	"core_domain_card_rage_up": {
+		"name": "Montée de rage"
+	},
+	"core_domain_card_rain_of_blades": {
+		"name": "Pluie de lames"
+	},
+	"core_domain_card_rapid_riposte": {
+		"name": "Riposte rapide"
+	},
+	"core_domain_card_reapers_strike": {
+		"name": "Frappe du faucheur"
+	},
+	"core_domain_card_reassurance": {
+		"name": "Réconfort"
+	},
+	"core_domain_card_reckless": {
+		"name": "Téméraire"
+	},
+	"core_domain_card_recovery": {
+		"name": "Récupération"
+	},
+	"core_domain_card_redirect": {
+		"name": "Redirection"
+	},
+	"core_domain_card_rejuvenation_barrier": {
+		"name": "Barrière de rajeunissement"
+	},
+	"core_domain_card_restoration": {
+		"name": "Restauration"
+	},
+	"core_domain_card_resurrection": {
+		"name": "Résurrection"
+	},
+	"core_domain_card_rift_walker": {
+		"name": "Marcheur de failles"
+	},
+	"core_domain_card_rise_up": {
+		"name": "Se redresser"
+	},
+	"core_domain_card_rousing_strike": {
+		"name": "Frappe stimulante"
+	},
+	"core_domain_card_rune_ward": {
+		"name": "Garde runique"
+	},
+	"core_domain_card_safe_haven": {
+		"name": "Havre de paix"
+	},
+	"core_domain_card_sage_touched": {
+		"name": "Touché par la Sauge"
+	},
+	"core_domain_card_salvation_beam": {
+		"name": "Rayon de salut"
+	},
+	"core_domain_card_scramble": {
+		"name": "Ruée"
+	},
+	"core_domain_card_second_wind": {
+		"name": "Second souffle"
+	},
+	"core_domain_card_sensory_projection": {
+		"name": "Projection sensorielle"
+	},
+	"core_domain_card_shadowbind": {
+		"name": "Lien d’ombre"
+	},
+	"core_domain_card_shadowhunter": {
+		"name": "Chasseur d’ombres"
+	},
+	"core_domain_card_shape_material": {
+		"name": "Façonner la matière"
+	},
+	"core_domain_card_share_the_burden": {
+		"name": "Partager le fardeau"
+	},
+	"core_domain_card_shield_aura": {
+		"name": "Aura protectrice"
+	},
+	"core_domain_card_shrug_it_off": {
+		"name": "Encaisser"
+	},
+	"core_domain_card_sigil_of_retribution": {
+		"name": "Sceau de rétribution"
+	},
+	"core_domain_card_signature_move": {
+		"name": "Coup signature"
+	},
+	"core_domain_card_smite": {
+		"name": "Châtiment"
+	},
+	"core_domain_card_soothing_speech": {
+		"name": "Discours apaisant"
+	},
+	"core_domain_card_specter_of_the_dark": {
+		"name": "Spectre des ténèbres"
+	},
+	"core_domain_card_spellcharge": {
+		"name": "Charge de sort"
+	},
+	"core_domain_card_splendor_touched": {
+		"name": "Touché par la Splendeur"
+	},
+	"core_domain_card_splintering_strike": {
+		"name": "Frappe éclatante"
+	},
+	"core_domain_card_stealth_expertise": {
+		"name": "Expertise de discrétion"
+	},
+	"core_domain_card_strategic_approach": {
+		"name": "Approche stratégique"
+	},
+	"core_domain_card_stunning_sunlight": {
+		"name": "Lumière du soleil étourdissante"
+	},
+	"core_domain_card_support_tank": {
+		"name": "Tank de soutien"
+	},
+	"core_domain_card_swift_step": {
+		"name": "Pas rapide"
+	},
+	"core_domain_card_tactician": {
+		"name": "Tacticien"
+	},
+	"core_domain_card_telekinesis": {
+		"name": "Télékinésie"
+	},
+	"core_domain_card_teleport": {
+		"name": "Téléportation"
+	},
+	"core_domain_card_tell_no_lies": {
+		"name": "Pas de mensonges"
+	},
+	"core_domain_card_tempest": {
+		"name": "Tempête"
+	},
+	"core_domain_card_thorn_skin": {
+		"name": "Peau d’épines"
+	},
+	"core_domain_card_thought_delver": {
+		"name": "Fouilleur de pensées"
+	},
+	"core_domain_card_through_your_eyes": {
+		"name": "À travers tes yeux"
+	},
+	"core_domain_card_towering_stalk": {
+		"name": "Tige colossale"
+	},
+	"core_domain_card_transcendent_union": {
+		"name": "Union transcendante"
+	},
+	"core_domain_card_troublemaker": {
+		"name": "Fauteur de troubles"
+	},
+	"core_domain_card_twilight_toll": {
+		"name": "Tribut du crépuscule"
+	},
+	"core_domain_card_unbreakable": {
+		"name": "Incassable"
+	},
+	"core_domain_card_uncanny_disguise": {
+		"name": "Déguisement troublant"
+	},
+	"core_domain_card_unleash_chaos": {
+		"name": "Déchaîner le chaos"
+	},
+	"core_domain_card_untouchable": {
+		"name": "Intouchable"
+	},
+	"core_domain_card_unyielding_armor": {
+		"name": "Armure inflexible"
+	},
+	"core_domain_card_valor_touched": {
+		"name": "Touché par la Bravoure"
+	},
+	"core_domain_card_vanishing_dodge": {
+		"name": "Esquive évanescente"
+	},
+	"core_domain_card_veil_of_night": {
+		"name": "Voile de la nuit"
+	},
+	"core_domain_card_versatile_fighter": {
+		"name": "Combattant polyvalent"
+	},
+	"core_domain_card_vicious_entangle": {
+		"name": "Enchevêtrement vicieux"
+	},
+	"core_domain_card_vitality": {
+		"name": "Vitalité"
+	},
+	"core_domain_card_voice_of_reason": {
+		"name": "Voix de la raison"
+	},
+	"core_domain_card_wall_walk": {
+		"name": "Marche sur les murs"
+	},
+	"core_domain_card_whirlwind": {
+		"name": "Tourbillon"
+	},
+	"core_domain_card_wild_fortress": {
+		"name": "Forteresse sauvage"
+	},
+	"core_domain_card_wild_surge": {
+		"name": "Déferlement sauvage"
+	},
+	"core_domain_card_words_of_discord": {
+		"name": "Mots de discorde"
+	},
+	"core_domain_card_wrangle": {
+		"name": "Maîtriser"
+	},
+	"core_domain_card_zone_of_protection": {
+		"name": "Zone de protection"
+	}
+}

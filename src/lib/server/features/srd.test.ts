@@ -8,18 +8,19 @@ describe('srd', () => {
 		SRD_KINDS.forEach((k, i) => expect(listSrd(k, 'en')).toHaveLength(COUNTS[i]));
 	});
 	it('capitalises class names and builds domain ids', () => {
-		expect(listSrd('classes', 'en')[0]).toEqual({ id: 'core_class_bard', name: 'Bard' });
+		expect(listSrd('classes', 'en')[0]).toEqual({ id: 'core_class_bard', name: 'Bard', nameLang: 'en' });
 		expect(getSrd('domains', 'core_domain_blade', 'en')?.nameLocalized).toBe('Blade');
 	});
 	it('returns the file object plus nameLocalized, null if unknown', () => {
+		expect(getSrd('classes', 'core_class_bard', 'en')?.name).toBe('BARD');
 		const e = getSrd('classes', 'core_class_bard', 'fr');
-		expect(e?.name).toBe('BARD');
+		expect(e?.name).toBe('Barde');
 		expect(e?.nameLocalized).toBe('Barde');
 		expect(getSrd('classes', 'nope', 'en')).toBeNull();
 	});
 	it('returns French names when the language is French', () => {
 		expect(getSrd('domains', 'core_domain_blade', 'fr')?.nameLocalized).toBe('Lame');
-		expect(listSrd('classes', 'fr')[0]).toEqual({ id: 'core_class_bard', name: 'Barde' });
+		expect(listSrd('classes', 'fr')[0]).toEqual({ id: 'core_class_bard', name: 'Barde', nameLang: 'fr' });
 		expect(listSrd('classes', 'en')[0].name).toBe('Bard');
 	});
 	it('has a French name for every element of every kind', () => {

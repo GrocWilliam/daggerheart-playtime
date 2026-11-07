@@ -1,0 +1,29 @@
+{
+	"core_domain_arcana": {
+		"name": "Arcanes"
+	},
+	"core_domain_blade": {
+		"name": "Lame"
+	},
+	"core_domain_bone": {
+		"name": "Os"
+	},
+	"core_domain_codex": {
+		"name": "Codex"
+	},
+	"core_domain_grace": {
+		"name": "Grâce"
+	},
+	"core_domain_midnight": {
+		"name": "Minuit"
+	},
+	"core_domain_sage": {
+		"name": "Sage"
+	},
+	"core_domain_splendor": {
+		"name": "Splendeur"
+	},
+	"core_domain_valor": {
+		"name": "Bravoure"
+	}
+}

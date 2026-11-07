@@ -1,0 +1,578 @@
+{
+	"core_weapon_broadsword": {
+		"name": "Épée large"
+	},
+	"core_weapon_longsword": {
+		"name": "Épée longue"
+	},
+	"core_weapon_battleaxe": {
+		"name": "Hache de bataille"
+	},
+	"core_weapon_greatsword": {
+		"name": "Épée à deux mains"
+	},
+	"core_weapon_mace": {
+		"name": "Masse"
+	},
+	"core_weapon_warhammer": {
+		"name": "Marteau de guerre"
+	},
+	"core_weapon_dagger": {
+		"name": "Dague"
+	},
+	"core_weapon_quarterstaff": {
+		"name": "Bâton long"
+	},
+	"core_weapon_cutlass": {
+		"name": "Coutelas"
+	},
+	"core_weapon_rapier": {
+		"name": "Rapière"
+	},
+	"core_weapon_halberd": {
+		"name": "Hallebarde"
+	},
+	"core_weapon_spear": {
+		"name": "Lance"
+	},
+	"core_weapon_shortbow": {
+		"name": "Arc court"
+	},
+	"core_weapon_crossbow": {
+		"name": "Arbalète"
+	},
+	"core_weapon_longbow": {
+		"name": "Arc long"
+	},
+	"core_weapon_arcane_gauntlets": {
+		"name": "Gantelets arcaniques"
+	},
+	"core_weapon_hallowed_axe": {
+		"name": "Hache sacrée"
+	},
+	"core_weapon_glowing_rings": {
+		"name": "Anneaux lumineux"
+	},
+	"core_weapon_hand_runes": {
+		"name": "Runes de main"
+	},
+	"core_weapon_returning_blade": {
+		"name": "Lame boomerang"
+	},
+	"core_weapon_shortstaff": {
+		"name": "Bâton court"
+	},
+	"core_weapon_dualstaff": {
+		"name": "Bâton double"
+	},
+	"core_weapon_scepter": {
+		"name": "Sceptre"
+	},
+	"core_weapon_wand": {
+		"name": "Baguette"
+	},
+	"core_weapon_greatstaff": {
+		"name": "Grand bâton"
+	},
+	"core_weapon_improved_broadsword": {
+		"name": "Épée large améliorée"
+	},
+	"core_weapon_improved_longsword": {
+		"name": "Épée longue améliorée"
+	},
+	"core_weapon_improved_battleaxe": {
+		"name": "Hache de bataille améliorée"
+	},
+	"core_weapon_improved_greatsword": {
+		"name": "Épée à deux mains améliorée"
+	},
+	"core_weapon_improved_mace": {
+		"name": "Masse améliorée"
+	},
+	"core_weapon_improved_warhammer": {
+		"name": "Marteau de guerre amélioré"
+	},
+	"core_weapon_improved_dagger": {
+		"name": "Dague améliorée"
+	},
+	"core_weapon_improved_quarterstaff": {
+		"name": "Bâton long amélioré"
+	},
+	"core_weapon_improved_cutlass": {
+		"name": "Coutelas amélioré"
+	},
+	"core_weapon_improved_rapier": {
+		"name": "Rapière améliorée"
+	},
+	"core_weapon_improved_halberd": {
+		"name": "Hallebarde améliorée"
+	},
+	"core_weapon_improved_spear": {
+		"name": "Lance améliorée"
+	},
+	"core_weapon_improved_shortbow": {
+		"name": "Arc court amélioré"
+	},
+	"core_weapon_improved_crossbow": {
+		"name": "Arbalète améliorée"
+	},
+	"core_weapon_improved_longbow": {
+		"name": "Arc long amélioré"
+	},
+	"core_weapon_gilded_falchion": {
+		"name": "Fauchon doré"
+	},
+	"core_weapon_knuckle_blades": {
+		"name": "Lames de poing"
+	},
+	"core_weapon_urok_broadsword": {
+		"name": "Épée large d’Urok"
+	},
+	"core_weapon_bladed_whip": {
+		"name": "Fouet à lames"
+	},
+	"core_weapon_steelforged_halberd": {
+		"name": "Hallebarde en acier forgé"
+	},
+	"core_weapon_war_scythe": {
+		"name": "Faux de guerre"
+	},
+	"core_weapon_blunderbuss": {
+		"name": "Tromblon"
+	},
+	"core_weapon_greatbow": {
+		"name": "Grand arc"
+	},
+	"core_weapon_finehair_bow": {
+		"name": "Arc fin-cheveu"
+	},
+	"core_weapon_improved_arcane_gauntlets": {
+		"name": "Gantelets arcaniques améliorés"
+	},
+	"core_weapon_improved_hallowed_axe": {
+		"name": "Hache sacrée améliorée"
+	},
+	"core_weapon_improved_glowing_rings": {
+		"name": "Anneaux lumineux améliorés"
+	},
+	"core_weapon_improved_hand_runes": {
+		"name": "Runes de main améliorées"
+	},
+	"core_weapon_improved_returning_blade": {
+		"name": "Lame boomerang améliorée"
+	},
+	"core_weapon_improved_shortstaff": {
+		"name": "Bâton court amélioré"
+	},
+	"core_weapon_improved_dualstaff": {
+		"name": "Bâton double amélioré"
+	},
+	"core_weapon_improved_scepter": {
+		"name": "Sceptre amélioré"
+	},
+	"core_weapon_improved_wand": {
+		"name": "Baguette améliorée"
+	},
+	"core_weapon_improved_greatstaff": {
+		"name": "Grand bâton amélioré"
+	},
+	"core_weapon_ego_blade": {
+		"name": "Lame d’ego"
+	},
+	"core_weapon_casting_sword": {
+		"name": "Épée de lancement"
+	},
+	"core_weapon_devouring_dagger": {
+		"name": "Dague dévoratrice"
+	},
+	"core_weapon_hammer_of_exota": {
+		"name": "Marteau d’Exota"
+	},
+	"core_weapon_yutari_bloodbow": {
+		"name": "Arc de sang de Yutari"
+	},
+	"core_weapon_elder_bow": {
+		"name": "Arc ancestral"
+	},
+	"core_weapon_scepter_of_elias": {
+		"name": "Sceptre d’Elias"
+	},
+	"core_weapon_wand_of_enthrallment": {
+		"name": "Baguette d’envoûtement"
+	},
+	"core_weapon_keeper_s_staff": {
+		"name": "Bâton du gardien"
+	},
+	"core_weapon_advanced_broadsword": {
+		"name": "Épée large avancée"
+	},
+	"core_weapon_advanced_longsword": {
+		"name": "Épée longue avancée"
+	},
+	"core_weapon_advanced_battleaxe": {
+		"name": "Hache de bataille avancée"
+	},
+	"core_weapon_advanced_greatsword": {
+		"name": "Épée à deux mains avancée"
+	},
+	"core_weapon_advanced_mace": {
+		"name": "Masse avancée"
+	},
+	"core_weapon_advanced_warhammer": {
+		"name": "Marteau de guerre avancé"
+	},
+	"core_weapon_advanced_dagger": {
+		"name": "Dague avancée"
+	},
+	"core_weapon_advanced_quarterstaff": {
+		"name": "Bâton long avancé"
+	},
+	"core_weapon_advanced_cutlass": {
+		"name": "Coutelas avancé"
+	},
+	"core_weapon_advanced_rapier": {
+		"name": "Rapière avancée"
+	},
+	"core_weapon_advanced_halberd": {
+		"name": "Hallebarde avancée"
+	},
+	"core_weapon_advanced_spear": {
+		"name": "Lance avancée"
+	},
+	"core_weapon_advanced_shortbow": {
+		"name": "Arc court avancé"
+	},
+	"core_weapon_advanced_crossbow": {
+		"name": "Arbalète avancée"
+	},
+	"core_weapon_advanced_longbow": {
+		"name": "Arc long avancé"
+	},
+	"core_weapon_flickerfly_blade": {
+		"name": "Lame de luciole"
+	},
+	"core_weapon_bravesword": {
+		"name": "Épée du brave"
+	},
+	"core_weapon_hammer_of_wrath": {
+		"name": "Marteau de courroux"
+	},
+	"core_weapon_labrys_axe": {
+		"name": "Hache labrys"
+	},
+	"core_weapon_meridian_cutlass": {
+		"name": "Coutelas méridien"
+	},
+	"core_weapon_retractable_saber": {
+		"name": "Sabre rétractable"
+	},
+	"core_weapon_double_flail": {
+		"name": "Fléau double"
+	},
+	"core_weapon_talon_blades": {
+		"name": "Lames-serres"
+	},
+	"core_weapon_black_powder_revolver": {
+		"name": "Revolver à poudre noire"
+	},
+	"core_weapon_spiked_bow": {
+		"name": "Arc hérissé"
+	},
+	"core_weapon_legendary_broadsword": {
+		"name": "Épée large légendaire"
+	},
+	"core_weapon_legendary_longsword": {
+		"name": "Épée longue légendaire"
+	},
+	"core_weapon_legendary_battleaxe": {
+		"name": "Hache de bataille légendaire"
+	},
+	"core_weapon_legendary_greatsword": {
+		"name": "Épée à deux mains légendaire"
+	},
+	"core_weapon_legendary_mace": {
+		"name": "Masse légendaire"
+	},
+	"core_weapon_legendary_warhammer": {
+		"name": "Marteau de guerre légendaire"
+	},
+	"core_weapon_legendary_dagger": {
+		"name": "Dague légendaire"
+	},
+	"core_weapon_legendary_quarterstaff": {
+		"name": "Bâton long légendaire"
+	},
+	"core_weapon_legendary_cutlass": {
+		"name": "Coutelas légendaire"
+	},
+	"core_weapon_legendary_rapier": {
+		"name": "Rapière légendaire"
+	},
+	"core_weapon_legendary_halberd": {
+		"name": "Hallebarde légendaire"
+	},
+	"core_weapon_legendary_spear": {
+		"name": "Lance légendaire"
+	},
+	"core_weapon_legendary_shortbow": {
+		"name": "Arc court légendaire"
+	},
+	"core_weapon_legendary_crossbow": {
+		"name": "Arbalète légendaire"
+	},
+	"core_weapon_legendary_longbow": {
+		"name": "Arc long légendaire"
+	},
+	"core_weapon_dual_ended_sword": {
+		"name": "Épée à double lame"
+	},
+	"core_weapon_impact_gauntlet": {
+		"name": "Gantelet d’impact"
+	},
+	"core_weapon_sledge_axe": {
+		"name": "Hache-masse"
+	},
+	"core_weapon_curved_dagger": {
+		"name": "Dague courbe"
+	},
+	"core_weapon_extended_polearm": {
+		"name": "Arme d’hast allongée"
+	},
+	"core_weapon_swinging_ropeblade": {
+		"name": "Lame-corde oscillante"
+	},
+	"core_weapon_ricochet_axes": {
+		"name": "Haches ricochet"
+	},
+	"core_weapon_aantari_bow": {
+		"name": "Arc d’Aantari"
+	},
+	"core_weapon_hand_cannon": {
+		"name": "Canon de poing"
+	},
+	"core_weapon_legendary_arcane_gauntlets": {
+		"name": "Gantelets arcaniques légendaires"
+	},
+	"core_weapon_legendary_hallowed_axe": {
+		"name": "Hache sacrée légendaire"
+	},
+	"core_weapon_legendary_glowing_rings": {
+		"name": "Anneaux lumineux légendaires"
+	},
+	"core_weapon_legendary_hand_runes": {
+		"name": "Runes de main légendaires"
+	},
+	"core_weapon_legendary_returning_blade": {
+		"name": "Lame boomerang légendaire"
+	},
+	"core_weapon_legendary_shortstaff": {
+		"name": "Bâton court légendaire"
+	},
+	"core_weapon_legendary_dualstaff": {
+		"name": "Bâton double légendaire"
+	},
+	"core_weapon_legendary_scepter": {
+		"name": "Sceptre légendaire"
+	},
+	"core_weapon_legendary_wand": {
+		"name": "Baguette légendaire"
+	},
+	"core_weapon_legendary_greatstaff": {
+		"name": "Grand bâton légendaire"
+	},
+	"core_weapon_sword_of_light_flame": {
+		"name": "Épée de lumière et de flamme"
+	},
+	"core_weapon_siphoning_gauntlets": {
+		"name": "Gantelets siphonneurs"
+	},
+	"core_weapon_midas_scythe": {
+		"name": "Faux de Midas"
+	},
+	"core_weapon_floating_bladeshards": {
+		"name": "Éclats de lame flottants"
+	},
+	"core_weapon_bloodstaff": {
+		"name": "Bâton de sang"
+	},
+	"core_weapon_thistlebow": {
+		"name": "Arc-chardon"
+	},
+	"core_weapon_wand_of_essek": {
+		"name": "Baguette d’Essek"
+	},
+	"core_weapon_magus_revolver": {
+		"name": "Revolver du mage"
+	},
+	"core_weapon_fusion_gloves": {
+		"name": "Gants de fusion"
+	},
+	"core_weapon_shortsword": {
+		"name": "Épée courte"
+	},
+	"core_weapon_round_shield": {
+		"name": "Bouclier rond"
+	},
+	"core_weapon_tower_shield": {
+		"name": "Bouclier tour"
+	},
+	"core_weapon_small_dagger": {
+		"name": "Petite dague"
+	},
+	"core_weapon_whip": {
+		"name": "Fouet"
+	},
+	"core_weapon_grappler": {
+		"name": "Grappin"
+	},
+	"core_weapon_hand_crossbow": {
+		"name": "Arbalète de poing"
+	},
+	"core_weapon_improved_shortsword": {
+		"name": "Épée courte améliorée"
+	},
+	"core_weapon_improved_round_shield": {
+		"name": "Bouclier rond amélioré"
+	},
+	"core_weapon_improved_tower_shield": {
+		"name": "Bouclier tour amélioré"
+	},
+	"core_weapon_improved_small_dagger": {
+		"name": "Petite dague améliorée"
+	},
+	"core_weapon_improved_whip": {
+		"name": "Fouet amélioré"
+	},
+	"core_weapon_improved_grappler": {
+		"name": "Grappin amélioré"
+	},
+	"core_weapon_improved_hand_crossbow": {
+		"name": "Arbalète de poing améliorée"
+	},
+	"core_weapon_spiked_shield": {
+		"name": "Bouclier à pointes"
+	},
+	"core_weapon_parrying_dagger": {
+		"name": "Dague de parade"
+	},
+	"core_weapon_returning_axe": {
+		"name": "Hache boomerang"
+	},
+	"core_weapon_advanced_shortsword": {
+		"name": "Épée courte avancée"
+	},
+	"core_weapon_advanced_round_shield": {
+		"name": "Bouclier rond avancé"
+	},
+	"core_weapon_advanced_tower_shield": {
+		"name": "Bouclier tour avancé"
+	},
+	"core_weapon_advanced_small_dagger": {
+		"name": "Petite dague avancée"
+	},
+	"core_weapon_advanced_whip": {
+		"name": "Fouet avancé"
+	},
+	"core_weapon_advanced_grappler": {
+		"name": "Grappin avancé"
+	},
+	"core_weapon_advanced_hand_crossbow": {
+		"name": "Arbalète de poing avancée"
+	},
+	"core_weapon_buckler": {
+		"name": "Rondache"
+	},
+	"core_weapon_powered_gauntlet": {
+		"name": "Gantelet motorisé"
+	},
+	"core_weapon_hand_sling": {
+		"name": "Fronde de poing"
+	},
+	"core_weapon_legendary_shortsword": {
+		"name": "Épée courte légendaire"
+	},
+	"core_weapon_legendary_round_shield": {
+		"name": "Bouclier rond légendaire"
+	},
+	"core_weapon_legendary_tower_shield": {
+		"name": "Bouclier tour légendaire"
+	},
+	"core_weapon_legendary_small_dagger": {
+		"name": "Petite dague légendaire"
+	},
+	"core_weapon_legendary_whip": {
+		"name": "Fouet légendaire"
+	},
+	"core_weapon_legendary_grappler": {
+		"name": "Grappin légendaire"
+	},
+	"core_weapon_legendary_hand_crossbow": {
+		"name": "Arbalète de poing légendaire"
+	},
+	"core_weapon_braveshield": {
+		"name": "Bouclier du brave"
+	},
+	"core_weapon_knuckle_claws": {
+		"name": "Griffes de poing"
+	},
+	"core_weapon_primer_shard": {
+		"name": "Éclat d’amorce"
+	},
+	"core_weapon_advanced_arcane_gauntlets": {
+		"name": "Gantelets arcaniques avancés"
+	},
+	"core_weapon_advanced_hallowed_axe": {
+		"name": "Hache sacrée avancée"
+	},
+	"core_weapon_advanced_glowing_rings": {
+		"name": "Anneaux lumineux avancés"
+	},
+	"core_weapon_advanced_hand_runes": {
+		"name": "Runes de main avancées"
+	},
+	"core_weapon_advanced_returning_blade": {
+		"name": "Lame boomerang avancée"
+	},
+	"core_weapon_advanced_shortstaff": {
+		"name": "Bâton court avancé"
+	},
+	"core_weapon_advanced_dualstaff": {
+		"name": "Bâton double avancé"
+	},
+	"core_weapon_advanced_scepter": {
+		"name": "Sceptre avancé"
+	},
+	"core_weapon_advanced_wand": {
+		"name": "Baguette avancée"
+	},
+	"core_weapon_advanced_greatstaff": {
+		"name": "Grand bâton avancé"
+	},
+	"core_weapon_axe_of_fortunis": {
+		"name": "Hache de Fortunis"
+	},
+	"core_weapon_blessed_anlace": {
+		"name": "Anlace bénie"
+	},
+	"core_weapon_ghostblade": {
+		"name": "Lame fantôme"
+	},
+	"core_weapon_runes_of_ruination": {
+		"name": "Runes de ruine"
+	},
+	"core_weapon_widogast_pendant": {
+		"name": "Pendentif de Widogast"
+	},
+	"core_weapon_gilded_bow": {
+		"name": "Arc doré"
+	},
+	"core_weapon_firestaff": {
+		"name": "Bâton de feu"
+	},
+	"core_weapon_mage_orb": {
+		"name": "Orbe de mage"
+	},
+	"core_weapon_ilmaris_rifle": {
+		"name": "Fusil d’Ilmari"
+	}
+}

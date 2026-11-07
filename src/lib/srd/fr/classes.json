@@ -1,0 +1,29 @@
+{
+	"core_class_bard": {
+		"name": "Barde"
+	},
+	"core_class_druid": {
+		"name": "Druide"
+	},
+	"core_class_guardian": {
+		"name": "Gardien"
+	},
+	"core_class_ranger": {
+		"name": "Rôdeur"
+	},
+	"core_class_rogue": {
+		"name": "Roublard"
+	},
+	"core_class_seraph": {
+		"name": "Séraphin"
+	},
+	"core_class_sorcerer": {
+		"name": "Ensorceleur"
+	},
+	"core_class_warrior": {
+		"name": "Guerrier"
+	},
+	"core_class_wizard": {
+		"name": "Magicien"
+	}
+}

@@ -124,19 +124,128 @@ export const srdSearchSchema = z.object({
 	q: z.string().catch('')
 });
 
-const fr: Record<string, string> = JSON.parse(readSrdFile('fr.json'));
+/** Fields a French overlay may translate, per kind (core kinds: top-level keys holding an `en-US` leaf). */
+export const TRANSLATED_FIELDS: Record<SrdKind, readonly string[]> = {
+	classes: ['name', 'description', 'classItems', 'hopeFeature', 'classFeatures'],
+	subclasses: ['name', 'foundation', 'specialization', 'mastery'],
+	ancestries: ['name', 'description', 'features'],
+	communities: ['name', 'description', 'personalities', 'features'],
+	domains: ['name'],
+	'domain-cards': ['name', 'features'],
+	weapons: ['name', 'features'],
+	armors: ['name', 'features'],
+	consumables: ['name', 'features'],
+	items: ['name', 'features'],
+	rules: ['name', 'description'],
+	adversaries: ['name', 'description', 'motives_and_tactics', 'experience', 'attack', 'feature'],
+	environments: ['name', 'description', 'impulses', 'potential_adversaries', 'feature']
+};
 
-function localize(id: string, name: string, lang: Lang): string {
-	return lang === 'fr' ? (fr[id] ?? name) : name;
+/** A line of SRD text and the language it is in. */
+export type Line = { text: string; lang: Lang };
+
+/** French overlays (`src/lib/srd/fr/<kind>.json`): id -> partial translated fields. */
+const frData = new Map<SrdKind, Record<string, Raw>>(
+	SRD_KINDS.map((k) => [k, JSON.parse(stripBom(readSrdFile(`fr/${k}.json`))) as Record<string, Raw>])
+);
+
+/** The raw French overlay of a kind. */
+export function frEntries(kind: SrdKind): Record<string, Raw> {
+	return frData.get(kind)!;
 }
 
-export function listSrd(kind: SrdKind, lang: Lang): { id: string; name: string }[] {
-	return data.get(kind)!.map((d) => ({ id: d.element.id, name: localize(d.element.id, d.name, lang) }));
+const MISMATCH = Symbol('mismatch');
+
+const isObject = (v: unknown): v is Raw => !!v && typeof v === 'object' && !Array.isArray(v);
+const isLeaf = (v: Raw) => typeof v['en-US'] === 'string' && Object.keys(v).length === 1;
+
+/**
+ * Merges a French value over its English counterpart. A `{"en-US": s}` leaf takes a plain French string (and keeps
+ * its key), a string takes a string, lists keep their length and objects their keys; any other shape is a MISMATCH.
+ */
+export function mergeFr(en: unknown, fr: unknown): unknown {
+	if (Array.isArray(en)) {
+		if (!Array.isArray(fr) || fr.length !== en.length) return MISMATCH;
+		const out = en.map((x, i) => mergeFr(x, fr[i]));
+		return out.includes(MISMATCH) ? MISMATCH : out;
+	}
+	if (isObject(en)) {
+		if (isLeaf(en)) return typeof fr === 'string' ? { 'en-US': fr } : MISMATCH;
+		if (!isObject(fr)) return MISMATCH;
+		const keys = Object.keys(en);
+		if (Object.keys(fr).length !== keys.length || !keys.every((k) => k in fr)) return MISMATCH;
+		const out: Raw = {};
+		for (const k of keys) {
+			const v = mergeFr(en[k], fr[k]);
+			if (v === MISMATCH) return MISMATCH;
+			out[k] = v;
+		}
+		return out;
+	}
+	if (typeof en === 'string') return typeof fr === 'string' ? fr : MISMATCH;
+	return typeof fr === typeof en && (fr === null) === (en === null) ? en : MISMATCH;
+}
+
+/** Whether a French value has the shape of the English one. */
+export function sameShape(en: unknown, fr: unknown): boolean {
+	return mergeFr(en, fr) !== MISMATCH;
+}
+
+const byId = new Map<SrdKind, Map<string, { element: SrdElement; name: string }>>(
+	SRD_KINDS.map((k) => [k, new Map(data.get(k)!.map((d) => [d.element.id, d]))])
+);
+
+function displayName(kind: SrdKind, e: Raw): string {
+	if (kind === 'classes') return englishName(kind, e);
+	return typeof e.name === 'string' ? e.name : e.name['en-US'];
+}
+
+export type Localized = { element: SrdElement & { nameLocalized: string }; langs: Record<string, Lang> };
+
+/**
+ * An SRD element with each translated field in French when the French overlay has the whole field with the English
+ * shape (else English), and the language of each translated field it has.
+ */
+export function localizedSrd(kind: SrdKind, id: string, lang: Lang): Localized | null {
+	const d = byId.get(kind)!.get(id);
+	if (!d) return null;
+	const element: Raw = { ...d.element };
+	const langs: Record<string, Lang> = {};
+	const tr = lang === 'fr' ? frData.get(kind)![id] : undefined;
+	for (const f of TRANSLATED_FIELDS[kind]) {
+		if (!(f in element)) continue;
+		langs[f] = 'en';
+		if (!tr || tr[f] === undefined) continue;
+		const v = mergeFr(element[f], tr[f]);
+		if (v === MISMATCH) continue;
+		element[f] = v;
+		langs[f] = 'fr';
+	}
+	element.nameLocalized = displayName(kind, element);
+	return { element: element as SrdElement & { nameLocalized: string }, langs };
+}
+
+/** The display name of an element in `lang` (English when the French name is missing) and its language. */
+function localName(kind: SrdKind, d: { element: SrdElement; name: string }, lang: Lang): { name: string; nameLang: Lang } {
+	if (lang === 'fr') {
+		const r = localizedSrd(kind, d.element.id, lang)!;
+		if (r.langs.name === 'fr') return { name: r.element.nameLocalized, nameLang: 'fr' };
+	}
+	return { name: d.name, nameLang: 'en' };
+}
+
+export function listSrd(kind: SrdKind, lang: Lang): { id: string; name: string; nameLang: Lang }[] {
+	return data.get(kind)!.map((d) => ({ id: d.element.id, ...localName(kind, d, lang) }));
 }
 
 export function getSrd(kind: SrdKind, id: string, lang: Lang): (SrdElement & { nameLocalized: string }) | null {
-	const d = data.get(kind)!.find((x) => x.element.id === id);
-	return d ? { ...d.element, nameLocalized: localize(d.element.id, d.name, lang) } : null;
+	return localizedSrd(kind, id, lang)?.element ?? null;
+}
+
+/** Localized name of a domain by id (`core_domain_blade`); `fallback` when unknown. */
+function domainName(domId: string, fallback: string, lang: Lang): string {
+	const d = byId.get('domains')!.get(domId);
+	return d ? localName('domains', d, lang).name : fallback;
 }
 
 const domainsHelp: Record<string, { en: string; fr: string }> = Object.fromEntries(
@@ -178,29 +287,33 @@ function englishLines(kind: SrdKind, e: Raw): string[] {
 
 export type RefItem = { kind: SrdKind; id: string; name: string; en: string[] };
 
-/** Elements of `kind` (all kinds if undefined) whose English or French name contains `q`. */
+/** Elements of `kind` (all kinds if undefined) whose English name (or French name, in French) contains `q`. */
 export function searchSrd(kind: SrdKind | undefined, q: string, lang: Lang): { kind: SrdKind; items: RefItem[] }[] {
 	const needle = q.trim().toLowerCase();
 	return SRD_KINDS.filter((k) => !kind || k === kind).map((k) => ({
 		kind: k,
 		items: data
 			.get(k)!
-			.filter((d) => !needle || d.name.toLowerCase().includes(needle) || (fr[d.element.id] ?? '').toLowerCase().includes(needle))
-			.map((d) => ({
+			.map((d) => ({ d, local: localName(k, d, lang) }))
+			.filter(({ d, local }) => !needle || d.name.toLowerCase().includes(needle) || (local.nameLang === 'fr' && local.name.toLowerCase().includes(needle)))
+			.map(({ d, local }) => ({
 				kind: k,
 				id: d.element.id,
-				name: localize(d.element.id, d.name, lang),
+				name: local.name,
 				en: englishLines(k, d.element)
 			}))
 	}));
 }
 
 /** Adversaries of a tier (1-4; all if undefined) in file order, with their role. */
-export function adversariesByTier(tier: number | undefined, lang: Lang): { id: string; name: string; tier: number; role: string }[] {
+export function adversariesByTier(
+	tier: number | undefined,
+	lang: Lang
+): { id: string; name: string; nameLang: Lang; tier: number; role: string }[] {
 	return data
 		.get('adversaries')!
 		.filter((d) => tier === undefined || d.element.tier === tier)
-		.map((d) => ({ id: d.element.id, name: localize(d.element.id, d.name, lang), tier: d.element.tier, role: d.element.role }));
+		.map((d) => ({ id: d.element.id, ...localName('adversaries', d, lang), tier: d.element.tier, role: d.element.role }));
 }
 
 export const getAdversary = (id: string, lang: Lang) => getSrd('adversaries', id, lang);
@@ -249,7 +362,7 @@ export function helpLines(kind: SrdKind, e: Raw): string[] {
 export type Pick = { id: string; name: string; en: string[] };
 
 function toPick(kind: SrdKind, d: { element: SrdElement; name: string }, lang: Lang): Pick {
-	return { id: d.element.id, name: localize(d.element.id, d.name, lang), en: helpLines(kind, d.element) };
+	return { id: d.element.id, name: localName(kind, d, lang).name, en: helpLines(kind, d.element) };
 }
 
 export function pickList(kind: SrdKind, lang: Lang): Pick[] {
@@ -289,7 +402,7 @@ function toCardPick(d: { element: SrdElement; name: string }, lang: Lang): CardP
 	return {
 		...toPick('domain-cards', d, lang),
 		domain: dom,
-		domainName: localize(domId, dom.charAt(0) + dom.slice(1).toLowerCase(), lang),
+		domainName: domainName(domId, dom.charAt(0) + dom.slice(1).toLowerCase(), lang),
 		level: Number(d.element.level)
 	};
 }
@@ -310,7 +423,7 @@ export function domainsOfClass(className: string, lang: Lang): { id: string; nam
 		const domId = `core_domain_${id.toLowerCase()}`;
 		return {
 			id,
-			name: localize(domId, id.charAt(0) + id.slice(1).toLowerCase(), lang),
+			name: domainName(domId, id.charAt(0) + id.slice(1).toLowerCase(), lang),
 			help: domainsHelp[domId]?.[lang] ?? ''
 		};
 	});
