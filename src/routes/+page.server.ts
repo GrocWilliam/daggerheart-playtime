@@ -15,7 +15,7 @@ export const actions: Actions = {
 			({ id } = await createCampaign({ name }));
 		} catch (e) {
 			if (e instanceof ApiError) {
-				return fail(e.status, { error: e.message, name: typeof name === 'string' ? name : '' });
+				return fail(400, { error: 'home.error', modal: 'campaign', values: { name: typeof name === 'string' ? name : '' } });
 			}
 			throw e;
 		}

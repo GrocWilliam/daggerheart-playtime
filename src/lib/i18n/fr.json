@@ -222,5 +222,7 @@
 	"tunnel.back": "Retour",
 	"tunnel.cancel": "Annuler",
 	"tunnel.edit": "Modifier",
-	"tunnel.create": "Créer le personnage"
+	"tunnel.create": "Créer le personnage",
+	"home.new": "Nouvelle campagne",
+	"modal.cancel": "Annuler"
 }

@@ -174,6 +174,7 @@ test('a form error (blank scene title) shows the same error text without a reloa
 test('home: a blank campaign name shows the error without a reload', async () => {
 	const p = await open('/');
 	await mark(p);
+	await p.locator('[data-testid=new-campaign]').click(); // US-193: the create form lives in the New campaign modal
 	const f = p.locator('form:has(input[name=name])').first();
 	await f.evaluate((x) => { x.noValidate = true; });
 	await f.locator('input[name=name]').fill('   ');
@@ -185,6 +186,7 @@ test('home: a blank campaign name shows the error without a reload', async () =>
 test('creating a campaign ends at /campaigns/<id>?step=build with the marker still present', async () => {
 	const p = await open('/');
 	await mark(p);
+	await p.locator('[data-testid=new-campaign]').click(); // US-193: the create form lives in the New campaign modal
 	const f = p.locator('form:has(input[name=name])').first();
 	await f.locator('input[name=name]').fill('Enhanced Start');
 	await f.locator('button[type=submit]').click();
@@ -209,7 +211,7 @@ test('without JavaScript the same forms still work as full-page POSTs', async ()
 	await p.locator('form[action="?/damage"] input[name=amount]').fill('1');
 	await Promise.all([p.waitForNavigation(), p.locator('form[action="?/damage"] button[type=submit]').click()]);
 	assert.match((await p.locator('[data-testid=hp]').textContent()).trim(), /^1\//);
-	p = await open('/', { js: false });
+	p = await open('/?new=campaign', { js: false }); // US-193: the create form lives in the New campaign modal
 	await p.locator('form:has(input[name=name])').first().locator('input[name=name]').fill('Plain Camp');
 	await Promise.all([p.waitForNavigation(), p.locator('form:has(input[name=name])').first().locator('button[type=submit]').click()]);
 	assert.match(p.url(), /\/campaigns\/[^/?]+\?step=build$/);

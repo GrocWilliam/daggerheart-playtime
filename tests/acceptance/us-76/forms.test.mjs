@@ -32,6 +32,10 @@ async function open(path, lang, vp) {
 	await ctx.addCookies([{ name: 'lang', value: lang, url: BASE }]);
 	const page = await ctx.newPage();
 	await page.goto(BASE + path);
+	if (path === '/') { // US-193: the create form lives in the New campaign modal
+		await page.waitForLoadState('networkidle');
+		await page.locator('[data-testid=new-campaign]').click();
+	}
 	await page.waitForSelector('form');
 	return { page, close: () => ctx.close() };
 }

@@ -137,7 +137,8 @@ test('creating a campaign on the home page lands on /campaigns/<id>?step=build',
 	const ctx = await browser.newContext();
 	const p = await ctx.newPage();
 	p.setDefaultTimeout(5000);
-	await p.goto(BASE + '/');
+	await p.goto(BASE + '/', { waitUntil: 'networkidle' });
+	await p.locator('[data-testid=new-campaign]').click(); // US-193: the create form lives in the New campaign modal
 	await p.locator('input[name=name]').fill('Fresh Start');
 	await p.locator('form', { has: p.locator('input[name=name]') }).locator('button[type=submit]').click();
 	await p.waitForURL(/\/campaigns\/[^/?]+\?step=build$/);

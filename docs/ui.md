@@ -35,7 +35,7 @@ In `src/lib/components/`:
 - `Help`: a glossary `id` or a `text` prop (a catalog string); `help`.
 - `Chosen`: subclass, ancestry and community of a character.
 - `LanguageSwitcher`: `language-switcher`, `lang-en`, `lang-fr`.
-- `Modal.svelte` (*planned*): the only dialog implementation.
+- `Modal.svelte`: the only dialog implementation.
   - Props: `kind`, `title`, `lang`, children.
   - Renders the opener `new-<kind>` (`href="?new=<kind>"`, other params kept) and `<dialog data-testid="modal-<kind>" aria-labelledby="modal-<kind>-title">`, open when `?new=<kind>` or `form.modal === kind`.
   - The Cancel link is `data-testid="modal-cancel"`.

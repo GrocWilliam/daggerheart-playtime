@@ -73,7 +73,9 @@ for (const [name, w, h] of [['phone', 375, 667], ['desktop', 1280, 800]]) {
 			const ctx = await browser.newContext({ viewport: { width: w, height: h }, locale: lang, extraHTTPHeaders: { 'accept-language': lang } });
 			await ctx.addCookies([{ name: 'lang', value: lang, url: BASE }]);
 			const page = await ctx.newPage();
-			await page.goto(BASE + '/');
+			await page.goto(BASE + '/', { waitUntil: 'networkidle' });
+			await page.locator('[data-testid=new-campaign]').click(); // US-193: the create form lives in the New campaign modal
+			await page.waitForFunction(() => document.querySelector('[data-testid=modal-campaign]')?.open);
 			const r = await page.evaluate(() => {
 				const q = (s) => document.querySelector(s);
 				const cs = (el) => getComputedStyle(el);
@@ -155,6 +157,10 @@ for (const [name, w, h] of [['phone', 375, 667], ['desktop', 1280, 800]]) {
 			assert.match(r.h1, /Cinzel/);
 			assert.ok(r.scroll <= 0, `horizontal scroll by ${r.scroll}`);
 
+			// US-193: close the modal and start tabbing from the top of the page, as before
+			await page.keyboard.press('Escape');
+			await page.waitForFunction(() => !document.querySelector('[data-testid=modal-campaign]')?.open);
+			await page.evaluate(() => document.activeElement?.blur());
 			// keyboard focus: every control on the page shows the teal outline
 			const seen = [];
 			for (let i = 0; i < 12; i++) {

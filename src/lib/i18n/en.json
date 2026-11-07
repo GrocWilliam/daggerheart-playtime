@@ -222,5 +222,7 @@
 	"tunnel.back": "Back",
 	"tunnel.cancel": "Cancel",
 	"tunnel.edit": "Edit",
-	"tunnel.create": "Create character"
+	"tunnel.create": "Create character",
+	"home.new": "New campaign",
+	"modal.cancel": "Cancel"
 }

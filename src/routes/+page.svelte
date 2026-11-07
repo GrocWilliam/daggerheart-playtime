@@ -2,6 +2,7 @@
 	import { enhance } from '$app/forms';
 	import { busy } from '$lib/forms/busy';
 	import Divider from '$lib/components/Divider.svelte';
+	import Modal from '$lib/components/Modal.svelte';
 	import { translate } from '$lib/i18n';
 	let { data, form } = $props();
 	const t = (key: string) => translate(data.lang, key);
@@ -20,8 +21,10 @@
 	{/each}
 </ul>
 
-<form use:enhance={busy} method="POST">
-	<label>{t('home.name')} <input type="text" name="name" value={form?.name ?? ''} /></label>
-	<button type="submit">{t('home.create')}</button>
-	{#if form?.error}<p role="alert">{t('home.error')}</p>{/if}
-</form>
+<Modal kind="campaign" title={t('home.new')} lang={data.lang}>
+	<form use:enhance={busy} method="POST">
+		<label>{t('home.name')} <input type="text" name="name" value={form?.values?.name ?? ''} /></label>
+		<button type="submit">{t('home.create')}</button>
+		{#if form?.error}<p role="alert">{t('home.error')}</p>{/if}
+	</form>
+</Modal>
