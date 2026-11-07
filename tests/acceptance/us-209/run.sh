@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Criteria (US-209) and where they are tested:
-# (1) no src file reads src/lib/srd/fr.json (kept unchanged); src/lib/srd/fr/ holds the 13 JSON-object files: files.test.mjs
-# (2) the files hold the 612 former fr.json names (Barde, Épée large, Arcanes examples): files.test.mjs
+# (1) no src file reads the legacy French file; src/lib/srd/fr/ holds the 13 JSON-object files: files.test.mjs
+# (2) the files hold 612 names, each on an element of its kind (Barde, Épée large, Arcanes examples): files.test.mjs
 # (3) lang=fr GET /api/srd/weapons/core_weapon_broadsword: French name, rest English: api.test.mjs
 # (4) lang=en / no cookie: English element exactly as before: api.test.mjs (+ srd.unit.ts)
 # (5) lang=fr GET /api/srd/classes Barde nameLang fr; adversaries English nameLang en: api.test.mjs (+ srd.unit.ts)

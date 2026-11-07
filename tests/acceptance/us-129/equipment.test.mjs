@@ -8,7 +8,9 @@ const BASE = process.env.BASE_URL;
 const json = (p) => JSON.parse(fs.readFileSync(p, 'utf8'));
 const W = json('src/lib/srd/core/weapons.json');
 const A = json('src/lib/srd/core/armors.json');
-const FR = json('src/lib/srd/fr.json');
+// French names from the overlay files: id -> name, one per `name` entry of src/lib/srd/fr/*.json
+const FR = Object.assign({}, ...fs.readdirSync('src/lib/srd/fr').filter((f) => f.endsWith('.json')).map((f) =>
+	Object.fromEntries(Object.entries(json(`src/lib/srd/fr/${f}`)).filter(([, e]) => e && 'name' in e).map(([id, e]) => [id, e.name]))));
 const FRUI = json('src/lib/i18n/fr.json');
 const en = (e) => e.name['en-US'];
 const PRIMARY = W.filter((w) => w.type === 'PRIMARY_PHYSICAL' || w.type === 'PRIMARY_MAGIC');

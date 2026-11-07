@@ -1,12 +1,14 @@
 import { describe, expect, it } from 'vitest';
-import { readFileSync } from 'node:fs';
+import { readFileSync, readdirSync } from 'node:fs';
 import * as srd from '../../../src/lib/server/features/srd';
 
 // Assumed shapes (the story says "for example"): weaponGroups(kind, tier, lang) with kind
 // 'primary' | 'secondary', armorGroups(tier, lang); each returns an array of groups
 // { tier: number, <one array property of picks { id, name }> }, ordered by tier.
 const core = (f: string) => JSON.parse(readFileSync(`src/lib/srd/core/${f}.json`, 'utf8'));
-const FR = JSON.parse(readFileSync('src/lib/srd/fr.json', 'utf8'));
+// French names from the overlay files: id -> name, one per `name` entry of src/lib/srd/fr/*.json
+const FR: Record<string, string> = Object.assign({}, ...readdirSync('src/lib/srd/fr').filter((f) => f.endsWith('.json')).map((f) =>
+	Object.fromEntries(Object.entries(JSON.parse(readFileSync(`src/lib/srd/fr/${f}`, 'utf8'))).filter(([, e]: any) => e && 'name' in e).map(([id, e]: any) => [id, e.name]))));
 const W = core('weapons'), A = core('armors');
 const s: any = srd;
 

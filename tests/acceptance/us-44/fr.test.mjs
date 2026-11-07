@@ -10,6 +10,11 @@ const KINDS = {
 	items: 'items.json', rules: 'rules.json'
 };
 const readJson = (p) => JSON.parse(fs.readFileSync(p, 'utf8'));
+// French names live in the overlay files src/lib/srd/fr/<kind>.json: {"<id>": {"name": ...}}
+const FR_DIR = 'src/lib/srd/fr';
+const frFiles = () => fs.readdirSync(FR_DIR).filter((f) => f.endsWith('.json')).map((f) => readJson(`${FR_DIR}/${f}`));
+const hasName = (e) => e && typeof e === 'object' && 'name' in e;
+const frNames = () => Object.assign({}, ...frFiles().map((d) => Object.fromEntries(Object.entries(d).filter(([, e]) => hasName(e)).map(([id, e]) => [id, e.name]))));
 const file = (n) => readJson(`${DIR}/core/${n}`);
 const get = (path, lang) => fetch(BASE + path, { headers: lang ? { cookie: `lang=${lang}` } : {} });
 const enName = (kind, e) => (kind === 'classes' ? e.name[0] + e.name.slice(1).toLowerCase() : e.name['en-US']);
@@ -29,8 +34,8 @@ function idsOf(kind) {
 }
 const ALL_KINDS = [...Object.keys(KINDS), 'domains'];
 
-test('fr.json has one non-empty French name per element id of every kind (612)', () => {
-	const fr = readJson(`${DIR}/fr.json`);
+test('the overlay files have one non-empty French name per element id of every kind (612)', () => {
+	const fr = frNames();
 	let n = 0;
 	for (const kind of ALL_KINDS) {
 		for (const id of idsOf(kind)) {
@@ -40,11 +45,11 @@ test('fr.json has one non-empty French name per element id of every kind (612)',
 		}
 	}
 	assert.equal(n, 612);
-	assert.equal(Object.keys(fr).length, 612);
+	assert.equal(frFiles().reduce((total, d) => total + Object.values(d).filter(hasName).length, 0), 612);
 });
 
-test('fr.json: classes, domains, ancestries, communities and subclasses have the fixed French names', () => {
-	const fr = readJson(`${DIR}/fr.json`);
+test('overlay files: classes, domains, ancestries, communities and subclasses have the fixed French names', () => {
+	const fr = frNames();
 	for (const [kind, names] of Object.entries(FIXED)) {
 		const ids = idsOf(kind);
 		assert.equal(ids.length, names.length, kind);
@@ -107,7 +112,7 @@ test('glossary.json has the 12 terms with their en and fr texts', () => {
 });
 
 test('GET /api/srd/<kind> in French returns French names in file order; English and default stay English', async () => {
-	const fr = readJson(`${DIR}/fr.json`);
+	const fr = frNames();
 	for (const kind of ALL_KINDS) {
 		const ids = idsOf(kind);
 		const r = await get(`/api/srd/${kind}`, 'fr');
@@ -124,7 +129,7 @@ test('GET /api/srd/<kind> in French returns French names in file order; English 
 });
 
 test('GET /api/srd/<kind>/<id> in French returns the file object unchanged plus the French nameLocalized', async () => {
-	const fr = readJson(`${DIR}/fr.json`);
+	const fr = frNames();
 	for (const [kind, f] of Object.entries(KINDS)) {
 		const els = file(f);
 		for (const e of [els[0], els[els.length - 1]]) {

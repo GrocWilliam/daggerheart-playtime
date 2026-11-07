@@ -7,7 +7,9 @@ const { chromium } = createRequire(process.env.PW_DIR + '/')('playwright-core');
 const BASE = process.env.BASE_URL;
 const json = (p) => JSON.parse(fs.readFileSync(p, 'utf8'));
 const core = (f) => json(`src/lib/srd/core/${f}.json`);
-const FR = json('src/lib/srd/fr.json');
+// French names from the overlay files: id -> name, one per `name` entry of src/lib/srd/fr/*.json
+const FR = Object.assign({}, ...fs.readdirSync('src/lib/srd/fr').filter((f) => f.endsWith('.json')).map((f) =>
+	Object.fromEntries(Object.entries(json(`src/lib/srd/fr/${f}`)).filter(([, e]) => e && 'name' in e).map(([id, e]) => [id, e.name]))));
 const CLASSES = core('classes');
 const SUBS = core('subclasses');
 const ANCS = core('ancestries');
