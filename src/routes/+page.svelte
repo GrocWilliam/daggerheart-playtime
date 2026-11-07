@@ -14,9 +14,9 @@
 
 <h2>{t('home.campaigns')}</h2>
 
-<ul class="list mb-3 mt-0 list-none pl-0!">
+<ul class="list mb-3 mt-0 grid list-none grid-cols-[minmax(0,1fr)] gap-3 pl-0! md:grid-cols-[repeat(2,minmax(0,1fr))] lg:grid-cols-[repeat(3,minmax(0,1fr))]">
 	{#each data.campaigns as c (c.id)}
-		<li class="mb-3 rounded-lg border-l-[3px] border-solid border-accent bg-surface last:mb-0"><a class="flex! min-h-11 w-full px-3 py-0" data-testid="campaign-link" href="/campaigns/{c.id}">{c.name}</a></li>
+		<li class="rounded-lg border-l-[3px] border-solid border-accent bg-surface"><a class="flex! min-h-11 w-full px-3 py-0" data-testid="campaign-link" href="/campaigns/{c.id}">{c.name}</a></li>
 	{/each}
 </ul>
 

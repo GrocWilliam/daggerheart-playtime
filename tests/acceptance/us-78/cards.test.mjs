@@ -40,7 +40,7 @@ const collect = (page) => page.evaluate(() => {
 			return {
 				bg: s.backgroundColor, bw: s.borderLeftWidth, bs: s.borderLeftStyle, bc: s.borderLeftColor,
 				radius: Math.min(...['borderTopLeftRadius', 'borderTopRightRadius', 'borderBottomLeftRadius', 'borderBottomRightRadius'].map((k) => parseFloat(s[k]))),
-				top: r.top, bottom: r.bottom
+				top: r.top, bottom: r.bottom, left: r.left, right: r.right
 			};
 		});
 		return { lst: cs.listStyleType, pl: cs.paddingLeft, cls: ul.className, lis };
@@ -73,7 +73,13 @@ for (const [path, name] of PAGES) {
 					assert.equal(li.bs, 'solid');
 					assert.equal(li.bc, d.accent);
 					assert.ok(li.radius >= 8, `radius ${li.radius}`);
-					if (i > 0) assert.ok(li.top - l.lis[i - 1].bottom >= 8, `gap ${li.top - l.lis[i - 1].bottom}`);
+					if (i > 0) {
+						const p = l.lis[i - 1];
+						// side by side in a grid row: check the column gap; otherwise the row gap
+						const sameRow = li.top < p.bottom && p.top < li.bottom;
+						const gap = sameRow ? li.left - p.right : li.top - p.bottom;
+						assert.ok(gap >= 8, `gap ${gap}`);
+					}
 				});
 			}
 			assert.ok(n >= 2);

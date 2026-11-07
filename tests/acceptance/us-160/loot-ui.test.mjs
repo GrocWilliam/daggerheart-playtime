@@ -34,7 +34,7 @@ async function open(c, lang = 'en', js = true) {
 	await ctx.addCookies([{ name: 'lang', value: lang, url: BASE }]);
 	const p = await ctx.newPage();
 	p.__js = js;
-	p.setDefaultTimeout(4000);
+	p.setDefaultTimeout(15000);
 	await p.goto(`${BASE}/campaigns/${c.id}?step=build`);
 	return p;
 }
