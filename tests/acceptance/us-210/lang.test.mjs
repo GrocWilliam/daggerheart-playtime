@@ -67,15 +67,15 @@ after(async () => {
 	await browser?.close();
 });
 
-test('French reference: core_class_bard shows Barde with lang="fr", its untranslated description with lang="en"', async () => {
+test('French reference: core_class_bard shows Barde with lang="fr", its translated description with lang="fr"', async () => {
 	const { ctx, p } = await open('fr', '/reference?q=Barde');
 	const item = p.locator('[data-testid="ref-classes"] [data-testid="ref-item"]').filter({ has: p.locator('details[data-help="core_class_bard"]') });
 	assert.equal(await item.count(), 1, 'one ref-item for core_class_bard');
 	const name = await langsOf(item, 'Barde');
 	assert.ok(name.some((x) => !x.page && x.lang === 'fr'), `Barde inside an element with lang="fr": ${JSON.stringify(name)}`);
-	const desc = await langsOf(item, 'Bards are the most charismatic people');
+	const desc = await langsOf(item, 'Les bardes sont les êtres les plus charismatiques');
 	assert.ok(desc.length > 0, 'description line shown');
-	for (const d of desc) assert.ok(!d.page && d.lang === 'en', `description inside lang="en": ${JSON.stringify(desc)}`);
+	for (const d of desc) assert.ok(!d.page && d.lang === 'fr', `description inside lang="fr": ${JSON.stringify(desc)}`);
 	await ctx.close();
 });
 

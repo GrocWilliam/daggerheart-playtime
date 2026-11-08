@@ -44,7 +44,7 @@ describe('helpLines(kind, element, langs, lang)', () => {
 	});
 
 	test("with langs.description === 'en', the description lines have lang 'en'", () => {
-		const { element, langs } = loc('classes', 'core_class_bard', 'fr');
+		const { element, langs } = loc('classes', 'core_class_bard', 'en');
 		const ls = { ...langs, description: 'en' };
 		const lines = helpLines('classes', element, ls, 'fr');
 		const desc = lines.filter((l) => l.text.includes('Bards are the most charismatic people'));

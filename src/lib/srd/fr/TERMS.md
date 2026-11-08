@@ -45,6 +45,12 @@ French terminology for every file in this folder; reuse these forms, add a row w
 | Fear Pool / Ward Die | réserve de Peur / dé de garde |
 | Tag Team Roll / Tend to Wounds / Help an Ally | jet en tandem / Soigner les blessures / Aider un allié |
 | bag / handful of gold | bourse / poignée d’or |
+| Rally Die / Prayer Dice / Slayer Dice / Unstoppable Die | dé de Ralliement / dés de prière / dés de tueur / dé d’Inarrêtable |
+| Beastform / Unstoppable / Cloaked (class features) | forme animale / Inarrêtable / Dissimulé |
+| Focus (Ranger's Focus) | Cible désignée (Cible du rôdeur) |
+| Channel / Charged / Prioritize | Canaliser / Chargé / désigner comme prioritaire |
+| Downtime move / level-up option | action de temps mort / option de montée de niveau |
+| Utilize an Experience | Utiliser une Expérience |
 | GM / PC | MJ / PJ |
 | scar | cicatrice |
 | Cover (Light / Full / Total) | Couvert (léger / complet / total) |

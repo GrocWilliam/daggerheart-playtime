@@ -58,7 +58,7 @@ describe('localizedSrd', () => {
 		expect(r.element.name).toBe('Barde');
 		expect(r.element.nameLocalized).toBe('Barde');
 		expect(r.langs.name).toBe('fr');
-		expect(r.langs.description).toBe('en');
+		expect(r.langs.description).toBe('fr');
 	});
 	it('domains: core_domain_arcana in fr has name {"en-US": "Arcanes"}', () => {
 		const r = srd.localizedSrd('domains', 'core_domain_arcana', 'fr');

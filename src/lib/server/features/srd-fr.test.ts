@@ -4,6 +4,8 @@ import { frEntries, listSrd, localizedSrd, sameShape, SRD_KINDS, TRANSLATED_FIEL
 
 /** Kinds (and ids, by filter) whose translation is complete. Translation stories fill it in. */
 const DONE: Partial<Record<SrdKind, (id: string) => boolean>> = {
+	classes: () => true,
+	subclasses: () => true,
 	ancestries: () => true,
 	communities: () => true,
 	'domain-cards': () => true,

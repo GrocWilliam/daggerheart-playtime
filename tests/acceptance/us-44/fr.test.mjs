@@ -143,6 +143,13 @@ test('GET /api/srd/<kind>/<id> in French returns the file object unchanged plus 
 				delete body.features;
 				delete expected.features;
 			}
+			// us-221: classes and subclasses carry French text fields too; compare the rest
+			if (kind === 'classes' || kind === 'subclasses') {
+				for (const k of ['features', 'description', 'hopeFeature', 'classFeatures', 'classItems', 'foundation', 'specialization', 'mastery']) {
+					delete body[k];
+					delete expected[k];
+				}
+			}
 			// us-220: ancestries and communities have French description, features and personalities
 			if (kind === 'ancestries' || kind === 'communities') {
 				for (const k of ['description', 'features', 'personalities']) {

@@ -166,6 +166,22 @@ function expected(e, lang = 'en') {
 	return { paras, feats };
 }
 
+// same, from a French overlay entry (core leaves are plain strings)
+function expectedFr(e) {
+	const paras = [], feats = [];
+	const para = (d) => (Array.isArray(d) ? d.map((x) => x.paragraph).filter((x) => typeof x === 'string') : []);
+	paras.push(...para(e.description));
+	(function walk(n) {
+		if (Array.isArray(n)) return n.forEach(walk);
+		if (n && typeof n === 'object') {
+			if (typeof n.name === 'string' && Array.isArray(n.description) && n !== e) feats.push([n.name, para(n.description)]);
+			else for (const [k, v] of Object.entries(n)) if (k !== 'description') walk(v);
+		}
+	})(Object.fromEntries(Object.entries(e).filter(([k]) => k !== 'description' && k !== 'name')));
+	return { paras, feats };
+}
+const FR_SUBS = json('src/lib/srd/fr/subclasses.json');
+
 async function setup() {
 	const s = sub('Ranger', 1), a = ANCS[2], c = COMS[1];
 	const { id, campId } = await mk({ class: 'Ranger' });
@@ -227,11 +243,12 @@ for (const [label, mkScope] of Object.entries(SCOPES)) {
 				assert.equal(await h.evaluate((d) => d.open), true);
 				const body = norm(await h.textContent());
 				assert.ok(body.includes(nameIn(e, lang)), `${e.id} name`);
-				const hl = lang === 'fr' && FRFULL[e.id]?.description ? 'fr' : 'en';
+				const frSub = lang === 'fr' && e.id.startsWith('core_subclass_') ? FR_SUBS[e.id] : undefined;
+				const hl = frSub || (lang === 'fr' && FRFULL[e.id]?.description) ? 'fr' : 'en';
 				const en = h.locator(`[lang="${hl}"]`);
 				assert.ok((await en.count()) >= 1, `${e.id} lang=${hl} block`);
 				const txt = norm((await en.allTextContents()).join(' '));
-				const { paras, feats } = expected(e, lang);
+				const { paras, feats } = frSub ? expectedFr(frSub) : expected(e, lang);
 				assert.ok(paras.length > 0 || feats.length > 0);
 				for (const p of paras) assert.ok(txt.includes(norm(p)), `${e.id} paragraph: ${p.slice(0, 40)}`);
 				for (const [n, ps] of feats) {

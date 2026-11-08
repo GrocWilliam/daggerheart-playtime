@@ -1,56 +1,957 @@
 {
 	"core_subclass_beastbound": {
-		"name": "Lié aux bêtes"
+		"name": "Lié aux bêtes",
+		"foundation": {
+			"features": [
+				{
+					"name": "Compagnon",
+					"description": [
+						{
+							"paragraph": "Vous avez un compagnon animal de votre choix (à la discrétion du MJ). Il reste à vos côtés sauf si vous lui dites le contraire."
+						},
+						{
+							"paragraph": "Prenez la fiche de compagnon du rôdeur. Quand vous montez votre personnage de niveau, choisissez aussi une option de montée de niveau pour votre compagnon sur cette fiche."
+						}
+					]
+				}
+			]
+		},
+		"specialization": {
+			"features": [
+				{
+					"name": "Dressage expert",
+					"description": [
+						{
+							"paragraph": "Choisissez une option de montée de niveau supplémentaire pour votre compagnon."
+						}
+					]
+				},
+				{
+					"name": "Lien de bataille",
+					"description": [
+						{
+							"paragraph": "Quand un adversaire vous attaque alors qu’il est à portée de mêlée de votre compagnon, vous gagnez un bonus de +2 à votre Évasion contre l’attaque."
+						}
+					]
+				}
+			]
+		},
+		"mastery": {
+			"features": [
+				{
+					"name": "Dressage avancé",
+					"description": [
+						{
+							"paragraph": "Choisissez deux options de montée de niveau supplémentaires pour votre compagnon."
+						}
+					]
+				},
+				{
+					"name": "Ami fidèle",
+					"description": [
+						{
+							"paragraph": "Une fois par repos long, quand les dégâts d’une attaque feraient marquer le dernier Stress de votre compagnon ou votre dernier point de vie et que vous êtes à portée proche l’un de l’autre, vous ou votre compagnon pouvez vous précipiter auprès de l’autre et subir ces dégâts à sa place."
+						}
+					]
+				}
+			]
+		}
 	},
 	"core_subclass_call_of_the_brave": {
-		"name": "Appel du brave"
+		"name": "Appel du brave",
+		"foundation": {
+			"features": [
+				{
+					"name": "Courage",
+					"description": [
+						{
+							"paragraph": "Quand vous ratez un jet avec la Peur, vous gagnez 1 Espoir."
+						}
+					]
+				},
+				{
+					"name": "Rituel de combat",
+					"description": [
+						{
+							"paragraph": "Une fois par repos long, avant de tenter quelque chose d’incroyablement dangereux ou d’affronter un ennemi qui vous surpasse nettement, décrivez le rituel que vous accomplissez ou les préparatifs que vous faites. Dans ce cas, effacez 2 Stress et gagnez 2 Espoirs."
+						}
+					]
+				}
+			]
+		},
+		"specialization": {
+			"features": [
+				{
+					"name": "Relever le défi",
+					"description": [
+						{
+							"paragraph": "Vous êtes vigilant face au danger grandissant. Tant qu’il vous reste 2 points de vie non marqués ou moins, vous pouvez lancer un d20 comme dé d’Espoir."
+						}
+					]
+				}
+			]
+		},
+		"mastery": {
+			"features": [
+				{
+					"name": "Camaraderie",
+					"description": [
+						{
+							"paragraph": "Votre bravoure inébranlable est un point de ralliement pour vos alliés. Vous pouvez lancer un jet en tandem une fois de plus par session. De plus, quand un allié lance un jet en tandem avec vous, il n’a besoin de dépenser que 2 Espoirs pour le faire."
+						}
+					]
+				}
+			]
+		}
 	},
 	"core_subclass_call_of_the_slayer": {
-		"name": "Appel du tueur"
+		"name": "Appel du tueur",
+		"foundation": {
+			"features": [
+				{
+					"name": "Tueur",
+					"description": [
+						{
+							"paragraph": "Vous gagnez une réserve de dés appelés dés de tueur. Lors d’un jet avec l’Espoir, vous pouvez placer un d6 sur cette carte au lieu de gagner 1 Espoir, en l’ajoutant à la réserve. Vous pouvez stocker un nombre de dés de tueur égal à votre Maîtrise. Quand vous faites un jet d’attaque ou de dégâts, vous pouvez dépenser autant de ces dés de tueur que vous voulez, les lancer et ajouter leur résultat au jet. À la fin de chaque session, effacez les dés de tueur non dépensés sur cette carte et gagnez 1 Espoir par dé effacé."
+						}
+					]
+				}
+			]
+		},
+		"specialization": {
+			"features": [
+				{
+					"name": "Spécialiste des armes",
+					"description": [
+						{
+							"paragraph": "Vous maniez plusieurs armes avec une aisance dangereuse. Quand vous réussissez une attaque, vous pouvez dépenser 1 Espoir pour ajouter un des dés de dégâts de votre arme secondaire au jet de dégâts. De plus, une fois par repos long, quand vous lancez vos dés de tueur, relancez tous les 1."
+						}
+					]
+				}
+			]
+		},
+		"mastery": {
+			"features": [
+				{
+					"name": "Préparation martiale",
+					"description": [
+						{
+							"paragraph": "Vous êtes un guerrier inspirant pour tous ceux qui voyagent avec vous. Votre groupe accède à l’action de temps mort Préparation martiale. Pour l’utiliser pendant un repos, décrivez comment vous instruisez votre groupe et vous entraînez avec lui. Vous et chaque allié qui choisit cette action de temps mort gagnez un dé de tueur d6. Un PJ qui a un dé de tueur peut le dépenser pour le lancer et ajouter le résultat à un jet d’attaque ou de dégâts de son choix."
+						}
+					]
+				}
+			]
+		}
 	},
 	"core_subclass_divine_wielder": {
-		"name": "Porteur divin"
+		"name": "Porteur divin",
+		"foundation": {
+			"features": [
+				{
+					"name": "Arme spirituelle",
+					"description": [
+						{
+							"paragraph": "Quand vous avez une arme équipée de portée mêlée ou très proche, elle peut s’envoler de votre main pour attaquer un adversaire à portée proche, puis vous revenir. Vous pouvez marquer un Stress pour viser un adversaire supplémentaire à portée avec le même jet d’attaque."
+						}
+					]
+				},
+				{
+					"name": "Toucher épargnant",
+					"description": [
+						{
+							"paragraph": "Une fois par repos long, touchez une créature et effacez-lui 2 points de vie ou 2 Stress."
+						}
+					]
+				}
+			]
+		},
+		"specialization": {
+			"features": [
+				{
+					"name": "Dévot",
+					"description": [
+						{
+							"paragraph": "Quand vous lancez vos dés de prière, vous pouvez lancer un dé supplémentaire et écarter le résultat le plus bas. De plus, vous pouvez utiliser votre aptitude « Toucher épargnant » deux fois au lieu d’une par repos long."
+						}
+					]
+				}
+			]
+		},
+		"mastery": {
+			"features": [
+				{
+					"name": "Résonance sacrée",
+					"description": [
+						{
+							"paragraph": "Quand vous lancez les dégâts de votre aptitude « Arme spirituelle », si des résultats de dés sont identiques, doublez la valeur de chaque dé identique. Par exemple, si vous obtenez deux 5, ils comptent comme deux 10."
+						}
+					]
+				}
+			]
+		}
 	},
 	"core_subclass_elemental_origin": {
-		"name": "Origine élémentaire"
+		"name": "Origine élémentaire",
+		"foundation": {
+			"features": [
+				{
+					"name": "Élémentaliste",
+					"description": [
+						{
+							"paragraph": "Choisissez l’un des éléments suivants à la création du personnage : air, terre, feu, foudre ou eau. Vous pouvez façonner cet élément en effets inoffensifs. De plus, dépensez 1 Espoir et décrivez comment votre maîtrise de cet élément aide un jet d’action que vous allez faire, puis gagnez soit un bonus de +2 au jet, soit un bonus de +3 aux dégâts du jet."
+						}
+					]
+				}
+			]
+		},
+		"specialization": {
+			"features": [
+				{
+					"name": "Évasion naturelle",
+					"description": [
+						{
+							"paragraph": "Vous pouvez faire appel à votre élément pour vous protéger du mal. Quand un jet d’attaque contre vous réussit, vous pouvez marquer un Stress et décrire comment vous utilisez votre élément pour vous défendre. Dans ce cas, lancez un d6 et ajoutez son résultat à votre Évasion contre l’attaque."
+						}
+					]
+				}
+			]
+		},
+		"mastery": {
+			"features": [
+				{
+					"name": "Transcendance",
+					"description": [
+						{
+							"paragraph": "Une fois par repos long, vous pouvez vous transformer en manifestation physique de votre élément. Dans ce cas, décrivez votre transformation et choisissez deux des avantages suivants à gagner jusqu’à votre prochain repos :"
+						},
+						{
+							"list": [
+								"Bonus de +4 à votre seuil grave",
+								"Bonus de +1 à un trait de personnage de votre choix",
+								"Bonus de +1 à votre Maîtrise",
+								"Bonus de +2 à votre Évasion"
+							]
+						}
+					]
+				}
+			]
+		}
 	},
 	"core_subclass_nightwalker": {
-		"name": "Marcheur de nuit"
+		"name": "Marcheur de nuit",
+		"foundation": {
+			"features": [
+				{
+					"name": "Pas d’ombre",
+					"description": [
+						{
+							"paragraph": "Vous pouvez passer d’ombre en ombre. Quand vous entrez dans une zone d’obscurité ou dans l’ombre projetée par une autre créature ou un objet, vous pouvez marquer un Stress pour disparaître de là où vous êtes et réapparaître dans une autre ombre à portée lointaine. Quand vous réapparaissez, vous êtes Dissimulé."
+						}
+					]
+				}
+			]
+		},
+		"specialization": {
+			"features": [
+				{
+					"name": "Nuage sombre",
+					"description": [
+						{
+							"paragraph": "Faites un jet de sort (15). En cas de réussite, créez un nuage sombre temporaire qui couvre une zone à portée proche. Quiconque se trouve dans ce nuage ne voit pas à l’extérieur, et quiconque est à l’extérieur ne voit pas à l’intérieur. Vous êtes considéré comme Dissimulé pour tout adversaire dont le nuage bloque la ligne de vue."
+						}
+					]
+				},
+				{
+					"name": "Adrénaline",
+					"description": [
+						{
+							"paragraph": "Tant que vous êtes Vulnérable, ajoutez votre niveau à vos jets de dégâts."
+						}
+					]
+				}
+			]
+		},
+		"mastery": {
+			"features": [
+				{
+					"name": "Ombre fugace",
+					"description": [
+						{
+							"paragraph": "Gagnez un bonus permanent de +1 à votre Évasion. Vous pouvez utiliser votre aptitude « Pas d’ombre » pour vous déplacer à portée très lointaine."
+						}
+					]
+				},
+				{
+					"name": "Disparition",
+					"description": [
+						{
+							"paragraph": "Marquez un Stress pour devenir Dissimulé à tout moment. Quand vous êtes Dissimulé grâce à cette aptitude, vous effacez automatiquement l’état Entravé si vous l’avez. Vous restez Dissimulé de cette manière jusqu’à ce que vous lanciez un jet avec la Peur ou jusqu’à votre prochain repos."
+						}
+					]
+				}
+			]
+		}
 	},
 	"core_subclass_primal_origin": {
-		"name": "Origine primordiale"
+		"name": "Origine primordiale",
+		"foundation": {
+			"features": [
+				{
+					"name": "Manipuler la magie",
+					"description": [
+						{
+							"paragraph": "Votre origine primitive vous permet de modifier l’essence même de la magie. Après avoir lancé un sort ou fait une attaque avec une arme qui inflige des dégâts magiques, vous pouvez marquer un Stress pour faire l’une des choses suivantes :"
+						},
+						{
+							"list": [
+								"Étendre la portée du sort ou de l’attaque d’un cran de portée",
+								"Gagner un bonus de +2 au résultat du jet d’action",
+								"Doubler un dé de dégâts de votre choix",
+								"Toucher une cible supplémentaire à portée"
+							]
+						}
+					]
+				}
+			]
+		},
+		"specialization": {
+			"features": [
+				{
+					"name": "Aide enchantée",
+					"description": [
+						{
+							"paragraph": "Vous pouvez renforcer la magie des autres avec votre essence. Quand vous Aidez un allié lors d’un jet de sort, vous pouvez lancer un d8 comme dé d’avantage. Une fois par repos long, après qu’un allié a fait un jet de sort avec votre aide, vous pouvez échanger les résultats de ses dés de Dualité."
+						}
+					]
+				}
+			]
+		},
+		"mastery": {
+			"features": [
+				{
+					"name": "Charge arcanique",
+					"description": [
+						{
+							"paragraph": "Vous pouvez rassembler de l’énergie magique pour améliorer vos capacités. Quand vous subissez des dégâts magiques, vous devenez Chargé. Vous pouvez aussi dépenser 2 Espoirs pour devenir Chargé. Quand vous réussissez une attaque qui inflige des dégâts magiques alors que vous êtes Chargé, vous pouvez dissiper votre Charge pour gagner soit un bonus de +10 au jet de dégâts, soit un bonus de +3 à la Difficulté d’un jet de réaction que le sort oblige la cible à faire. Vous cessez d’être Chargé à votre prochain repos long."
+						}
+					]
+				}
+			]
+		}
 	},
 	"core_subclass_school_of_knowledge": {
-		"name": "École du savoir"
+		"name": "École du savoir",
+		"foundation": {
+			"features": [
+				{
+					"name": "Préparé",
+					"description": [
+						{
+							"paragraph": "Prenez une carte de domaine supplémentaire de votre niveau ou inférieur dans un domaine auquel vous avez accès."
+						}
+					]
+				},
+				{
+					"name": "Adepte",
+					"description": [
+						{
+							"paragraph": "Quand vous Utilisez une Expérience, vous pouvez marquer un Stress au lieu de dépenser 1 Espoir. Dans ce cas, doublez le bonus de votre Expérience pour ce jet."
+						}
+					]
+				}
+			]
+		},
+		"specialization": {
+			"features": [
+				{
+					"name": "Accompli",
+					"description": [
+						{
+							"paragraph": "Prenez une carte de domaine supplémentaire de votre niveau ou inférieur dans un domaine auquel vous avez accès."
+						}
+					]
+				},
+				{
+					"name": "Mémoire parfaite",
+					"description": [
+						{
+							"paragraph": "Une fois par repos, quand vous rappelez une carte de domaine de votre coffre, vous pouvez réduire son coût de rappel de 1."
+						}
+					]
+				}
+			]
+		},
+		"mastery": {
+			"features": [
+				{
+					"name": "Brillant",
+					"description": [
+						{
+							"paragraph": "Prenez une carte de domaine supplémentaire de votre niveau ou inférieur dans un domaine auquel vous avez accès."
+						}
+					]
+				},
+				{
+					"name": "Expertise affinée",
+					"description": [
+						{
+							"paragraph": "Quand vous utilisez une Expérience, lancez un d6. Sur un résultat de 5 ou plus, vous pouvez l’utiliser sans dépenser d’Espoir."
+						}
+					]
+				}
+			]
+		}
 	},
 	"core_subclass_school_of_war": {
-		"name": "École de la guerre"
+		"name": "École de la guerre",
+		"foundation": {
+			"features": [
+				{
+					"name": "Mage de guerre",
+					"description": [
+						{
+							"paragraph": "Vous avez concentré vos études pour devenir une force invincible sur le champ de bataille. Gagnez un emplacement de point de vie supplémentaire."
+						}
+					]
+				},
+				{
+					"name": "Affrontez votre Peur",
+					"description": [
+						{
+							"paragraph": "Quand vous réussissez avec la Peur un jet d’attaque, vous infligez 1d10 dégâts magiques supplémentaires."
+						}
+					]
+				}
+			]
+		},
+		"specialization": {
+			"features": [
+				{
+					"name": "Conjurer un bouclier",
+					"description": [
+						{
+							"paragraph": "Vous pouvez maintenir une barrière magique protectrice. Tant que vous avez au moins 2 Espoirs, vous ajoutez votre Maîtrise à votre Évasion."
+						}
+					]
+				},
+				{
+					"name": "Alimenté par la Peur",
+					"description": [
+						{
+							"paragraph": "Les dégâts magiques supplémentaires de votre aptitude « Affrontez votre Peur » passent à 2d10."
+						}
+					]
+				}
+			]
+		},
+		"mastery": {
+			"features": [
+				{
+					"name": "Prospérer dans le chaos",
+					"description": [
+						{
+							"paragraph": "Quand vous réussissez une attaque, vous pouvez marquer un Stress après avoir lancé les dégâts pour forcer la cible à marquer un point de vie supplémentaire."
+						}
+					]
+				},
+				{
+					"name": "Sans peur",
+					"description": [
+						{
+							"paragraph": "Les dégâts magiques supplémentaires de votre aptitude « Affrontez votre Peur » passent à 3d10."
+						}
+					]
+				}
+			]
+		}
 	},
 	"core_subclass_stalwart": {
-		"name": "Inébranlable"
+		"name": "Inébranlable",
+		"foundation": {
+			"features": [
+				{
+					"name": "Inébranlable",
+					"description": [
+						{
+							"paragraph": "Gagnez un bonus permanent de +1 à vos seuils de dégâts."
+						}
+					]
+				},
+				{
+					"name": "Volonté de fer",
+					"description": [
+						{
+							"paragraph": "Quand vous subissez des dégâts physiques, vous pouvez marquer un emplacement d’armure supplémentaire pour en réduire la gravité."
+						}
+					]
+				}
+			]
+		},
+		"specialization": {
+			"features": [
+				{
+					"name": "Implacable",
+					"description": [
+						{
+							"paragraph": "Gagnez un bonus permanent de +2 à vos seuils de dégâts."
+						}
+					]
+				},
+				{
+					"name": "Frères d’armes",
+					"description": [
+						{
+							"paragraph": "Quand un allié à portée très proche subit des dégâts, vous pouvez marquer un emplacement d’armure pour en réduire la gravité d’un seuil."
+						}
+					]
+				}
+			]
+		},
+		"mastery": {
+			"features": [
+				{
+					"name": "Intrépide",
+					"description": [
+						{
+							"paragraph": "Gagnez un bonus permanent de +3 à vos seuils de dégâts."
+						}
+					]
+				},
+				{
+					"name": "Protecteur loyal",
+					"description": [
+						{
+							"paragraph": "Quand un allié à portée proche a 2 points de vie ou moins et s’apprête à subir des dégâts, vous pouvez marquer un Stress pour vous précipiter à ses côtés et subir les dégâts à sa place."
+						}
+					]
+				}
+			]
+		}
 	},
 	"core_subclass_syndicate": {
-		"name": "Syndicat"
+		"name": "Syndicat",
+		"foundation": {
+			"features": [
+				{
+					"name": "Bien connecté",
+					"description": [
+						{
+							"paragraph": "Quand vous arrivez dans une ville ou un lieu important, vous connaissez quelqu’un qui y vit. Donnez-lui un nom, notez en quoi il pourrait vous être utile et choisissez un fait dans la liste suivante :"
+						},
+						{
+							"list": [
+								"Il me doit une faveur, mais il sera difficile à trouver.",
+								"Il va demander quelque chose en échange.",
+								"Il a toujours de gros ennuis.",
+								"Nous étions ensemble autrefois. C’est une longue histoire.",
+								"Nous ne nous sommes pas quittés en bons termes."
+							]
+						}
+					]
+				}
+			]
+		},
+		"specialization": {
+			"features": [
+				{
+					"name": "Des contacts partout",
+					"description": [
+						{
+							"paragraph": "Une fois par session, vous pouvez brièvement faire appel à un contact louche. Choisissez l’un des avantages suivants et décrivez ce qui l’a amené à vous aider en ce moment :"
+						},
+						{
+							"list": [
+								"Il vous fournit 1 poignée d’or, un outil unique ou un objet ordinaire dont la situation a besoin.",
+								"À votre prochain jet d’action, son aide donne un bonus de +3 au résultat de votre dé d’Espoir ou de Peur.",
+								"La prochaine fois que vous infligez des dégâts, il tire depuis l’ombre, ajoutant 2d8 à votre jet de dégâts."
+							]
+						}
+					]
+				}
+			]
+		},
+		"mastery": {
+			"features": [
+				{
+					"name": "Renfort fiable",
+					"description": [
+						{
+							"paragraph": "Vous pouvez utiliser votre aptitude « Des contacts partout » trois fois par session. Les options suivantes sont ajoutées à la liste des avantages que vous pouvez choisir quand vous utilisez cette aptitude :"
+						},
+						{
+							"list": [
+								"Quand vous marquez 1 point de vie ou plus, il peut se précipiter pour vous protéger, réduisant de 1 les points de vie marqués.",
+								"Quand vous faites un jet de Présence en conversation, il vous soutient. Vous pouvez lancer un d20 comme dé d’Espoir."
+							]
+						}
+					]
+				}
+			]
+		}
 	},
 	"core_subclass_troubadour": {
-		"name": "Troubadour"
+		"name": "Troubadour",
+		"foundation": {
+			"features": [
+				{
+					"name": "Artiste doué",
+					"description": [
+						{
+							"paragraph": "Décrivez comment vous vous produisez devant les autres. Vous pouvez jouer chaque chanson une fois par repos long :"
+						},
+						{
+							"list": [
+								"Chanson apaisante : vous et tous les alliés à portée proche effacez 1 point de vie.",
+								"Chanson épique : rendez temporairement Vulnérable une cible à portée proche.",
+								"Chanson déchirante : vous et tous les alliés à portée proche gagnez 1 Espoir."
+							]
+						}
+					]
+				}
+			]
+		},
+		"specialization": {
+			"features": [
+				{
+					"name": "Maestro",
+					"description": [
+						{
+							"paragraph": "Vos chansons de ralliement aguerrissent le courage de ceux qui les écoutent. Quand vous donnez un dé de Ralliement à un allié, il peut gagner 1 Espoir ou effacer 1 Stress."
+						}
+					]
+				}
+			]
+		},
+		"mastery": {
+			"features": [
+				{
+					"name": "Virtuose",
+					"description": [
+						{
+							"paragraph": "Vous êtes parmi les plus grands de votre art et votre talent est sans limites. Vous pouvez jouer chacune des chansons de votre aptitude « Artiste doué » deux fois au lieu d’une par repos long."
+						}
+					]
+				}
+			]
+		}
 	},
 	"core_subclass_vengeance": {
-		"name": "Vengeance"
+		"name": "Vengeance",
+		"foundation": {
+			"features": [
+				{
+					"name": "Au repos",
+					"description": [
+						{
+							"paragraph": "Gagnez un emplacement de Stress supplémentaire."
+						}
+					]
+				},
+				{
+					"name": "Vengeance",
+					"description": [
+						{
+							"paragraph": "Quand un adversaire à portée de mêlée réussit une attaque contre vous, vous pouvez marquer 2 Stress pour forcer l’attaquant à marquer un point de vie."
+						}
+					]
+				}
+			]
+		},
+		"specialization": {
+			"features": [
+				{
+					"name": "Acte de représailles",
+					"description": [
+						{
+							"paragraph": "Quand un adversaire blesse un allié à portée de mêlée, vous gagnez un bonus de +1 à votre Maîtrise pour la prochaine attaque réussie que vous faites contre cet adversaire."
+						}
+					]
+				}
+			]
+		},
+		"mastery": {
+			"features": [
+				{
+					"name": "Némésis",
+					"description": [
+						{
+							"paragraph": "Dépensez 2 Espoirs pour désigner un adversaire comme prioritaire jusqu’à votre prochain repos. Quand vous attaquez votre adversaire prioritaire, vous pouvez échanger les résultats de vos dés d’Espoir et de Peur. Vous ne pouvez désigner qu’un seul adversaire prioritaire à la fois."
+						}
+					]
+				}
+			]
+		}
 	},
 	"core_subclass_warden_of_renewal": {
-		"name": "Gardien du renouveau"
+		"name": "Gardien du renouveau",
+		"foundation": {
+			"features": [
+				{
+					"name": "Clarté de la nature",
+					"description": [
+						{
+							"paragraph": "Une fois par repos long, vous pouvez créer un espace de sérénité naturelle à portée proche. Quand vous vous reposez quelques minutes dans cet espace, effacez un nombre de Stress égal à votre Instinct, répartis comme vous voulez entre vous et vos alliés."
+						}
+					]
+				},
+				{
+					"name": "Régénération",
+					"description": [
+						{
+							"paragraph": "Touchez une créature et dépensez 3 Espoirs. Cette créature efface 1d4 points de vie."
+						}
+					]
+				}
+			]
+		},
+		"specialization": {
+			"features": [
+				{
+					"name": "Allonge régénératrice",
+					"description": [
+						{
+							"paragraph": "Vous pouvez cibler des créatures à portée très proche avec votre aptitude « Régénération »."
+						}
+					]
+				},
+				{
+					"name": "Protection du gardien",
+					"description": [
+						{
+							"paragraph": "Une fois par repos long, dépensez 2 Espoirs pour effacer 2 points de vie à 1d4 alliés à portée proche."
+						}
+					]
+				}
+			]
+		},
+		"mastery": {
+			"features": [
+				{
+					"name": "Défenseur",
+					"description": [
+						{
+							"paragraph": "Votre transformation animale incarne un esprit gardien guérisseur. Quand vous êtes sous forme animale et qu’un allié à portée proche marque 2 points de vie ou plus, vous pouvez marquer un Stress pour réduire de 1 le nombre de points de vie qu’il marque."
+						}
+					]
+				}
+			]
+		}
 	},
 	"core_subclass_warden_of_the_elements": {
-		"name": "Gardien des éléments"
+		"name": "Gardien des éléments",
+		"foundation": {
+			"features": [
+				{
+					"name": "Incarnation élémentaire",
+					"description": [
+						{
+							"paragraph": "Marquez un Stress pour Canaliser l’un des éléments suivants jusqu’à ce que vous subissiez des dégâts graves ou jusqu’à votre prochain repos :"
+						},
+						{
+							"list": [
+								"Feu : quand un adversaire à portée de mêlée vous inflige des dégâts, il subit 1d10 dégâts magiques.",
+								"Terre : gagnez à vos seuils de dégâts un bonus égal à votre Maîtrise.",
+								"Eau : quand vous infligez des dégâts à un adversaire à portée de mêlée, tous les autres adversaires à portée très proche doivent marquer un Stress.",
+								"Air : vous pouvez léviter, gagnant l’avantage aux jets d’Agilité."
+							]
+						}
+					]
+				}
+			]
+		},
+		"specialization": {
+			"features": [
+				{
+					"name": "Aura élémentaire",
+					"description": [
+						{
+							"paragraph": "Une fois par repos pendant que vous Canalisez, vous pouvez prendre une aura correspondant à votre élément. L’aura affecte les cibles à portée proche jusqu’à la fin de votre canalisation."
+						},
+						{
+							"list": [
+								"Feu : quand un adversaire marque 1 point de vie ou plus, il doit aussi marquer un Stress.",
+								"Terre : vos alliés gagnent un bonus de +1 en Puissance.",
+								"Eau : quand un adversaire vous inflige des dégâts, vous pouvez marquer un Stress pour le déplacer n’importe où à portée très proche de là où il se trouve.",
+								"Air : quand vous ou un allié subissez des dégâts d’une attaque au-delà de la portée de mêlée, réduisez les dégâts de 1d8."
+							]
+						}
+					]
+				}
+			]
+		},
+		"mastery": {
+			"features": [
+				{
+					"name": "Domination élémentaire",
+					"description": [
+						{
+							"paragraph": "Vous incarnez encore davantage votre élément. Pendant que vous Canalisez, vous gagnez l’avantage suivant :"
+						},
+						{
+							"list": [
+								"Feu : vous gagnez un bonus de +1 à votre Maîtrise pour les attaques et les sorts qui infligent des dégâts.",
+								"Terre : quand vous devriez marquer des points de vie, lancez un d6 par point de vie marqué. Pour chaque résultat de 6, réduisez de 1 le nombre de points de vie que vous marquez.",
+								"Eau : quand une attaque contre vous réussit, vous pouvez marquer un Stress pour rendre temporairement Vulnérable l’attaquant.",
+								"Air : vous gagnez un bonus de +1 à votre Évasion et vous pouvez voler."
+							]
+						}
+					]
+				}
+			]
+		}
 	},
 	"core_subclass_wayfinder": {
-		"name": "Éclaireur"
+		"name": "Éclaireur",
+		"foundation": {
+			"features": [
+				{
+					"name": "Prédateur impitoyable",
+					"description": [
+						{
+							"paragraph": "Quand vous faites un jet de dégâts, vous pouvez marquer un Stress pour gagner un bonus de +1 à votre Maîtrise. De plus, quand vous infligez des dégâts graves à un adversaire, il doit marquer un Stress."
+						}
+					]
+				},
+				{
+					"name": "Voie à suivre",
+					"description": [
+						{
+							"paragraph": "Quand vous voyagez vers un lieu que vous avez déjà visité ou que vous portez un objet qui s’y est déjà trouvé, vous pouvez identifier le chemin le plus court et le plus direct vers votre destination."
+						}
+					]
+				}
+			]
+		},
+		"specialization": {
+			"features": [
+				{
+					"name": "Prédateur insaisissable",
+					"description": [
+						{
+							"paragraph": "Quand votre Cible désignée vous attaque, vous gagnez un bonus de +2 à votre Évasion contre l’attaque."
+						}
+					]
+				}
+			]
+		},
+		"mastery": {
+			"features": [
+				{
+					"name": "Superprédateur",
+					"description": [
+						{
+							"paragraph": "Avant de faire un jet d’attaque contre votre Cible désignée, vous pouvez dépenser 1 Espoir. Si l’attaque réussit, vous retirez 1 Peur de la réserve de Peur du MJ."
+						}
+					]
+				}
+			]
+		}
 	},
 	"core_subclass_winged_sentinel": {
-		"name": "Sentinelle ailée"
+		"name": "Sentinelle ailée",
+		"foundation": {
+			"features": [
+				{
+					"name": "Ailes de lumière",
+					"description": [
+						{
+							"paragraph": "Vous pouvez voler. En vol, vous pouvez faire ce qui suit :"
+						},
+						{
+							"list": [
+								"Marquer un Stress pour soulever et porter une autre créature consentante d’une taille approximativement égale ou inférieure à la vôtre.",
+								"Dépenser 1 Espoir pour infliger 1d8 dégâts supplémentaires lors d’une attaque réussie."
+							]
+						}
+					]
+				}
+			]
+		},
+		"specialization": {
+			"features": [
+				{
+					"name": "Visage éthéré",
+					"description": [
+						{
+							"paragraph": "Votre visage surnaturel inspire crainte et révérence. En vol, vous avez l’avantage aux jets de Présence. Quand vous réussissez avec l’Espoir un jet de Présence, vous pouvez retirer 1 Peur de la réserve de Peur du MJ au lieu de gagner 1 Espoir."
+						}
+					]
+				}
+			]
+		},
+		"mastery": {
+			"features": [
+				{
+					"name": "Ascendant",
+					"description": [
+						{
+							"paragraph": "Gagnez un bonus permanent de +4 à votre seuil de dégâts grave."
+						}
+					]
+				},
+				{
+					"name": "Pouvoir des dieux",
+					"description": [
+						{
+							"paragraph": "En vol, vous infligez 1d12 dégâts supplémentaires au lieu de 1d8 avec votre aptitude « Ailes de lumière »."
+						}
+					]
+				}
+			]
+		}
 	},
 	"core_subclass_wordsmith": {
-		"name": "Orfèvre des mots"
+		"name": "Orfèvre des mots",
+		"foundation": {
+			"features": [
+				{
+					"name": "Discours exaltant",
+					"description": [
+						{
+							"paragraph": "Une fois par repos long, vous pouvez prononcer un discours sincère et inspirant. Tous les alliés à portée lointaine effacent 2 Stress."
+						}
+					]
+				},
+				{
+					"name": "Cœur de poète",
+					"description": [
+						{
+							"paragraph": "Après avoir fait un jet d’action pour impressionner, convaincre ou offenser quelqu’un, vous pouvez dépenser 1 Espoir pour ajouter un d4 au jet."
+						}
+					]
+				}
+			]
+		},
+		"specialization": {
+			"features": [
+				{
+					"name": "Éloquent",
+					"description": [
+						{
+							"paragraph": "Vos paroles touchantes remontent le moral. Une fois par session, quand vous encouragez un allié, vous pouvez faire l’une des choses suivantes :"
+						},
+						{
+							"list": [
+								"Lui permettre de trouver un objet ordinaire ou un outil dont il a besoin.",
+								"Aider un allié sans dépenser d’Espoir.",
+								"Lui donner une action de temps mort supplémentaire pendant son prochain repos."
+							]
+						}
+					]
+				}
+			]
+		},
+		"mastery": {
+			"features": [
+				{
+					"name": "Poésie épique",
+					"description": [
+						{
+							"paragraph": "Votre dé de Ralliement passe à un d10. De plus, quand vous Aidez un allié, vous pouvez narrer le moment comme si vous écriviez le récit de son héroïsme dans des mémoires. Dans ce cas, lancez un d10 comme dé d’avantage."
+						}
+					]
+				}
+			]
+		}
 	}
 }

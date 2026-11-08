@@ -66,7 +66,7 @@ describe('lists, search and picks', () => {
 		expect(pickOptions('classes', 'fr')).toContainEqual({ value: 'Bard', label: 'Barde' });
 	});
 	it('exposes the overlays and translated fields', () => {
-		expect(frEntries('classes').core_class_bard).toEqual({ name: 'Barde' });
+		expect(frEntries('classes').core_class_bard).toMatchObject({ name: 'Barde' });
 		expect(TRANSLATED_FIELDS.domains).toEqual(['name']);
 	});
 });

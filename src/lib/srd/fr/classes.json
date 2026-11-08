@@ -1,29 +1,363 @@
 {
 	"core_class_bard": {
-		"name": "Barde"
+		"name": "Barde",
+		"description": [
+			{
+				"paragraph": "Les bardes sont les êtres les plus charismatiques de tous les royaumes. Les membres de cette classe sont des maîtres de la fascination et se spécialisent dans divers types de représentations : chanter, jouer d’un instrument, tisser des récits ou raconter des blagues. Qu’ils se produisent devant un public ou s’adressent à une seule personne, les bardes s’épanouissent en société. Les membres de cette profession se lient et se forment dans des écoles ou des guildes, mais un courant d’égocentrisme traverse ceux de la persuasion bardique. S’ils sont sans doute la classe la plus apte à rassembler les gens, un barde de mauvaise humeur peut tout aussi bien déchirer un groupe."
+			}
+		],
+		"classItems": [
+			"Un roman à l’eau de rose",
+			"Une lettre jamais ouverte"
+		],
+		"hopeFeature": {
+			"name": "Faire une scène",
+			"description": [
+				{
+					"paragraph": "Dépensez 3 Espoirs pour Distraire temporairement une cible à portée proche, lui infligeant un malus de −2 à sa Difficulté."
+				}
+			]
+		},
+		"classFeatures": [
+			{
+				"description": [
+					{
+						"paragraph": "Une fois par session, décrivez comment vous ralliez le groupe et donnez-vous, ainsi qu’à chacun de vos alliés, un dé de Ralliement. Au niveau 1, votre dé de Ralliement est un d6. Un PJ peut dépenser son dé de Ralliement pour le lancer et ajouter le résultat à son jet d’action, son jet de réaction ou son jet de dégâts, ou pour effacer un nombre de Stress égal au résultat. À la fin de chaque session, effacez tous les dés de Ralliement non dépensés. Au niveau 5, votre dé de Ralliement passe à un d8."
+					}
+				],
+				"name": "Ralliement"
+			}
+		]
 	},
 	"core_class_druid": {
-		"name": "Druide"
+		"name": "Druide",
+		"description": [
+			{
+				"paragraph": "Devenir druide est plus qu’un métier : c’est une vocation pour ceux qui souhaitent apprendre de la magie des contrées sauvages et la protéger. On peut sous-estimer un druide paisible qui se consacre au travail souvent discret de la culture des plantes, mais ceux qui canalisent les forces indomptées de la nature sont terrifiants à voir. Les druides cultivent leurs capacités en petits groupes, souvent liés par une éthique ou un lieu précis, bien que certains choisissent de travailler seuls. Après des années d’étude et de dévouement, les druides peuvent apprendre à se transformer en bêtes et à façonner la nature elle-même."
+			}
+		],
+		"classItems": [
+			"Un petit sac de pierres et d’ossements",
+			"Un étrange pendentif trouvé dans la terre"
+		],
+		"hopeFeature": {
+			"name": "Évolution",
+			"description": [
+				{
+					"paragraph": "Dépensez 3 Espoirs pour vous transformer en une forme animale sans marquer de Stress. Dans ce cas, choisissez un trait à augmenter de +1 jusqu’à ce que vous quittiez cette forme animale."
+				}
+			]
+		},
+		"classFeatures": [
+			{
+				"description": [
+					{
+						"paragraph": "Marquez un Stress pour vous transformer magiquement en une créature de votre palier ou inférieur de la liste des formes animales. Vous pouvez quitter cette forme à tout moment. Transformé, vous ne pouvez pas utiliser d’armes ni lancer de sorts de cartes de domaine, mais vous pouvez toujours utiliser vos autres aptitudes et capacités. Les sorts lancés avant la transformation restent actifs et durent leur durée normale, et vous pouvez parler et communiquer normalement. De plus, vous obtenez les aptitudes de la forme animale, ajoutez son bonus d’Évasion à votre Évasion et utilisez le trait indiqué dans ses statistiques pour votre attaque. Sous forme animale, votre armure fait partie de votre corps et vous marquez vos emplacements d’armure comme d’habitude ; quand vous quittez la forme animale, ces emplacements d’armure restent marqués. Si vous marquez votre dernier point de vie, vous quittez automatiquement cette forme."
+					}
+				],
+				"name": "Forme animale"
+			},
+			{
+				"description": [
+					{
+						"paragraph": "Vous pouvez produire à volonté des effets discrets et inoffensifs liés à la nature — faire pousser rapidement une fleur, invoquer une légère brise ou allumer un feu de camp, par exemple."
+					}
+				],
+				"name": "Toucher sauvage"
+			}
+		]
 	},
 	"core_class_guardian": {
-		"name": "Gardien"
+		"name": "Gardien",
+		"description": [
+			{
+				"paragraph": "Le titre de gardien recouvre une panoplie de professions martiales et renvoie davantage à leur boussole morale et à leur force d’âme inébranlable qu’à leur manière de combattre. Si beaucoup de gardiens rejoignent des troupes de militants pour un pays ou une cause, ils suivront plus volontiers les rares personnes qui leur tiennent vraiment à cœur, quoi qu’en pense la majorité. Les gardiens sont connus pour se battre avec une férocité remarquable, même contre des forces écrasantes, et défendent leur compagnie par-dessus tout. Malheur à ceux qui s’en prennent à l’allié d’un gardien : il rendra la pareille."
+			}
+		],
+		"classItems": [
+			"Un totem de votre mentor",
+			"Une clé secrète"
+		],
+		"hopeFeature": {
+			"name": "Rempart de première ligne",
+			"description": [
+				{
+					"paragraph": "Dépensez 3 Espoirs pour effacer 2 emplacements d’armure."
+				}
+			]
+		},
+		"classFeatures": [
+			{
+				"description": [
+					{
+						"paragraph": "Une fois par repos long, vous pouvez devenir Inarrêtable. Vous gagnez un dé d’Inarrêtable. Au niveau 1, votre dé d’Inarrêtable est un d4. Placez-le sur votre feuille de personnage dans l’espace prévu, la face 1 vers le haut. Après un jet de dégâts qui inflige 1 point de vie ou plus à une cible, augmentez de un la valeur du dé d’Inarrêtable. Quand la valeur du dé dépasserait son maximum ou quand la scène se termine, retirez le dé et cessez d’être Inarrêtable. Au niveau 5, votre dé d’Inarrêtable passe à un d6."
+					}
+				],
+				"name": "Inarrêtable"
+			},
+			{
+				"description": [
+					{
+						"list": [
+							"Vous réduisez la gravité des dégâts physiques d’un seuil (grave à majeur, majeur à mineur, mineur à aucun).",
+							"Vous ajoutez la valeur actuelle du dé d’Inarrêtable à votre jet de dégâts.",
+							"Vous ne pouvez pas être Entravé ni Vulnérable."
+						]
+					}
+				],
+				"name": "Tant que vous êtes Inarrêtable, vous obtenez les avantages suivants :"
+			}
+		]
 	},
 	"core_class_ranger": {
-		"name": "Rôdeur"
+		"name": "Rôdeur",
+		"description": [
+			{
+				"paragraph": "Les rôdeurs sont des chasseurs très habiles qui, malgré leurs talents martiaux, prêtent rarement leurs compétences à une armée. Grâce à la maîtrise de leur corps et à une profonde connaissance des contrées sauvages, ils deviennent de fins tacticiens, qui traquent leur proie avec ruse et patience. Beaucoup pistent et combattent aux côtés d’un compagnon animal avec lequel ils ont noué un puissant lien spirituel. En affûtant leurs talents dans la nature, les rôdeurs deviennent des pisteurs hors pair, aussi susceptibles de piéger leurs ennemis que de les attaquer de front."
+			}
+		],
+		"classItems": [
+			"Un trophée de votre première proie",
+			"Une boussole apparemment cassée"
+		],
+		"hopeFeature": {
+			"name": "Les tenir en respect",
+			"description": [
+				{
+					"paragraph": "Dépensez 3 Espoirs quand vous réussissez une attaque avec une arme pour utiliser ce même jet contre deux adversaires supplémentaires à portée de l’attaque."
+				}
+			]
+		},
+		"classFeatures": [
+			{
+				"description": [
+					{
+						"paragraph": "Dépensez 1 Espoir et attaquez une cible. En cas de réussite, infligez les dégâts normaux de votre attaque et faites temporairement de la cible de l’attaque votre Cible désignée. Jusqu’à la fin de cette aptitude ou jusqu’à ce que vous désigniez une autre créature, vous obtenez les avantages suivants contre votre Cible désignée :"
+					},
+					{
+						"list": [
+							"Vous savez précisément dans quelle direction elle se trouve.",
+							"Quand vous lui infligez des dégâts, elle doit marquer un Stress.",
+							"Quand vous ratez une attaque contre elle, vous pouvez mettre fin à votre aptitude Cible du rôdeur pour relancer vos dés de Dualité."
+						]
+					}
+				],
+				"name": "Cible du rôdeur"
+			}
+		]
 	},
 	"core_class_rogue": {
-		"name": "Roublard"
+		"name": "Roublard",
+		"description": [
+			{
+				"paragraph": "Les roublards sont des canailles, souvent par l’attitude comme par la pratique. Connus comme menteurs et voleurs, les meilleurs d’entre eux traversent le monde dans l’anonymat. Usant de leur esprit vif et de leurs lames, ils dupent leurs ennemis par la manipulation sociale aussi aisément qu’ils crochètent des serrures, escaladent des fenêtres ou portent des coups bas. Ces maîtres de l’art magique manipulent l’ombre et le mouvement, ajoutant à leur répertoire une panoplie d’outils utiles et mortels. Les roublards fondent fréquemment des guildes pour rencontrer de futurs complices, se faire engager et perfectionner leurs talents secrets, prouvant qu’il existe un honneur chez les voleurs pour qui sait où chercher."
+			}
+		],
+		"classItems": [
+			"Un nécessaire de faussaire",
+			"Un grappin"
+		],
+		"hopeFeature": {
+			"name": "Esquive du roublard",
+			"description": [
+				{
+					"paragraph": "Dépensez 3 Espoirs pour gagner un bonus de +2 à votre Évasion jusqu’à la prochaine fois qu’une attaque vous touche. Sinon, ce bonus dure jusqu’à votre prochain repos."
+				}
+			]
+		},
+		"classFeatures": [
+			{
+				"description": [
+					{
+						"paragraph": "Chaque fois que vous devriez être Caché, vous êtes Dissimulé à la place. En plus des avantages de l’état Caché, tant que vous êtes Dissimulé, vous restez invisible si vous êtes immobile quand un adversaire se déplace là où il vous verrait normalement. Après une attaque ou la fin d’un déplacement en ligne de vue d’un adversaire, vous n’êtes plus Dissimulé."
+					}
+				],
+				"name": "Dissimulé"
+			},
+			{
+				"description": [
+					{
+						"paragraph": "Quand vous réussissez une attaque alors que vous êtes Dissimulé ou qu’un allié est à portée de mêlée de votre cible, ajoutez à votre jet de dégâts un nombre de d6 égal à votre palier."
+					},
+					{
+						"list": [
+							"Niveau 1 → Palier 1",
+							"Niveaux 2-4 → Palier 2",
+							"Niveaux 5-7 → Palier 3",
+							"Niveaux 8-10 → Palier 4"
+						]
+					}
+				],
+				"name": "Attaque sournoise"
+			}
+		]
 	},
 	"core_class_seraph": {
-		"name": "Séraphin"
+		"name": "Séraphin",
+		"description": [
+			{
+				"paragraph": "Les séraphins sont des combattants et des guérisseurs divins, investis d’une mission sacrée. Une grande variété de divinités existent dans les royaumes, et de nombreuses sortes de séraphins sont donc désignées par ces dieux. Leur éthique s’aligne traditionnellement sur le domaine ou les buts de leur dieu : défendre les faibles, exercer la vengeance, protéger une terre ou un artefact, ou faire respecter une foi particulière. Certains séraphins s’allient à une armée ou à un lieu, à la grande satisfaction de leurs souverains, mais d’autres croisés combattent les folies du Royaume des mortels. Mieux vaut être l’allié d’un séraphin que son ennemi : ils sont terrifiants pour ceux qui défient leur mission."
+			}
+		],
+		"classItems": [
+			"Un ballot d’offrandes",
+			"Un sceau de votre dieu"
+		],
+		"hopeFeature": {
+			"name": "Soutien vital",
+			"description": [
+				{
+					"paragraph": "Dépensez 3 Espoirs pour effacer un point de vie d’un allié à portée proche."
+				}
+			]
+		},
+		"classFeatures": [
+			{
+				"description": [
+					{
+						"paragraph": "Au début de chaque session, lancez un nombre de d4 égal au trait de lancement de sorts de votre sous-classe et placez-les sur votre feuille de personnage dans l’espace prévu. Ce sont vos dés de prière. Vous pouvez dépenser n’importe quel nombre de dés de prière pour vous aider ou aider un allié à portée lointaine. Vous pouvez utiliser la valeur d’un dé dépensé pour réduire des dégâts subis, l’ajouter au résultat d’un jet après qu’il a été fait, ou gagner un nombre d’Espoirs égal au résultat. À la fin de chaque session, effacez tous les dés de prière non dépensés."
+					}
+				],
+				"name": "Dés de prière"
+			}
+		]
 	},
 	"core_class_sorcerer": {
-		"name": "Ensorceleur"
+		"name": "Ensorceleur",
+		"description": [
+			{
+				"paragraph": "Tous les utilisateurs de magie innée ne choisissent pas de perfectionner leur art, mais ceux qui le font peuvent devenir de puissants ensorceleurs. Les dons de ces manieurs se transmettent de génération en génération, même quand la famille l’ignore ou rechigne à les pratiquer. Les capacités d’un ensorceleur peuvent aller de l’élémentaire à l’illusoire et au-delà, et beaucoup de praticiens se regroupent en collectifs selon leurs talents. Devenir un ensorceleur redoutable ne consiste pas à acquérir du pouvoir, mais à apprendre à cultiver et à maîtriser celui que l’on possède déjà. La magie d’un ensorceleur égaré ou indiscipliné est une force bien dangereuse."
+			}
+		],
+		"classItems": [
+			"Un orbe chuchotant",
+			"Un héritage de famille"
+		],
+		"hopeFeature": {
+			"name": "Magie instable",
+			"description": [
+				{
+					"paragraph": "Dépensez 3 Espoirs pour relancer autant de vos dés de dégâts que vous voulez lors d’une attaque qui inflige des dégâts magiques."
+				}
+			]
+		},
+		"classFeatures": [
+			{
+				"description": [
+					{
+						"paragraph": "Vous pouvez percevoir la présence de personnes et d’objets magiques à portée proche."
+					}
+				],
+				"name": "Sens arcanique"
+			},
+			{
+				"description": [
+					{
+						"paragraph": "Faites un jet de sort (10). En cas de réussite, vous créez une illusion visuelle mineure, pas plus grande que vous, à portée proche. Cette illusion est convaincante pour quiconque se trouve à portée proche ou plus loin."
+					}
+				],
+				"name": "Illusion mineure"
+			},
+			{
+				"description": [
+					{
+						"paragraph": "Une fois par repos long, vous pouvez placer une carte de domaine de votre équipement dans votre coffre et choisir soit de :"
+					},
+					{
+						"list": [
+							"Gagner un nombre d’Espoirs égal au niveau de la carte.",
+							"Renforcer un sort qui inflige des dégâts, en gagnant un bonus à votre jet de dégâts égal à deux fois le niveau de la carte."
+						]
+					}
+				],
+				"name": "Canaliser un pouvoir brut"
+			}
+		]
 	},
 	"core_class_warrior": {
-		"name": "Guerrier"
+		"name": "Guerrier",
+		"description": [
+			{
+				"paragraph": "Devenir guerrier exige des années, souvent une vie entière, d’entraînement et de dévouement à la maîtrise des armes et de la violence. Alors que beaucoup de ceux qui cherchent à se battre ne cultivent que leur force, les guerriers comprennent l’importance d’un corps et d’un esprit agiles, ce qui fait d’eux des combattants parmi les plus recherchés des royaumes. Les guerriers trouvent souvent un emploi dans une armée, une bande de mercenaires, voire une garde royale, mais leur potentiel est gâché dans tout poste où ils ne peuvent continuer à progresser et à élargir leurs talents. Les guerriers ont réputément une arme de prédilection ; se placer entre eux et leur lame serait une grave erreur."
+			}
+		],
+		"classItems": [
+			"Le portrait d’un être aimé",
+			"Une pierre à aiguiser"
+		],
+		"hopeFeature": {
+			"name": "Sans pitié",
+			"description": [
+				{
+					"paragraph": "Dépensez 3 Espoirs pour gagner un bonus de +1 à vos jets d’attaque jusqu’à votre prochain repos."
+				}
+			]
+		},
+		"classFeatures": [
+			{
+				"description": [
+					{
+						"paragraph": "Si un adversaire à portée de mêlée tente de quitter cette portée, faites un jet de réaction avec un trait de votre choix contre sa Difficulté. En cas de réussite, choisissez un effet, ou deux en cas de réussite critique :"
+					},
+					{
+						"list": [
+							"Il ne peut pas quitter l’endroit où il se trouve.",
+							"Vous lui infligez des dégâts égaux à ceux de votre arme principale.",
+							"Vous vous déplacez avec lui."
+						]
+					}
+				],
+				"name": "Attaque d’opportunité"
+			},
+			{
+				"description": [
+					{
+						"paragraph": "Vous ignorez l’encombrement lorsque vous équipez des armes. Quand vous infligez des dégâts physiques, vous gagnez à votre jet de dégâts un bonus égal à votre niveau."
+					}
+				],
+				"name": "Entraînement au combat"
+			}
+		]
 	},
 	"core_class_wizard": {
-		"name": "Magicien"
+		"name": "Magicien",
+		"description": [
+			{
+				"paragraph": "Que ce soit par une institution ou par l’étude personnelle, ceux qu’on appelle magiciens acquièrent et affinent d’immenses pouvoirs magiques au fil d’années d’apprentissage, à l’aide d’outils variés : livres, pierres, potions et herbes. Certains magiciens consacrent leur vie à la maîtrise d’une école de magie particulière, d’autres puisent dans une grande variété de disciplines. Nombre d’entre eux deviennent des figures sages et puissantes de leur communauté, conseillant les dirigeants, fournissant remèdes et soins, voire présidant des conseils de guerre. Bien que tous ces mages œuvrent au but commun d’amasser le savoir magique, les magiciens connaissent souvent le plus de conflits dans leurs propres rangs, car l’acquisition, la garde et le partage de secrets puissants font l’objet d’un âpre débat qui a causé d’innombrables morts."
+			}
+		],
+		"classItems": [
+			"Un livre que vous tentez de traduire",
+			"Un minuscule familier élémentaire inoffensif"
+		],
+		"hopeFeature": {
+			"name": "Pas cette fois",
+			"description": [
+				{
+					"paragraph": "Dépensez 3 Espoirs pour forcer un adversaire à portée lointaine à relancer un jet d’attaque ou de dégâts."
+				}
+			]
+		},
+		"classFeatures": [
+			{
+				"description": [
+					{
+						"paragraph": "Vous pouvez produire à volonté des effets magiques discrets et inoffensifs. Par exemple, vous pouvez changer la couleur d’un objet, créer une odeur, allumer une bougie, faire flotter un minuscule objet, éclairer une pièce ou réparer un petit objet."
+					}
+				],
+				"name": "Prestidigitation"
+			},
+			{
+				"description": [
+					{
+						"paragraph": "Choisissez un nombre entre 1 et 12. Quand vous obtenez ce nombre sur un dé de Dualité, gagnez 1 Espoir ou effacez 1 Stress."
+					},
+					{
+						"paragraph": "Vous pouvez changer ce nombre quand vous faites un repos long."
+					}
+				],
+				"name": "Motifs étranges"
+			}
+		]
 	}
 }
