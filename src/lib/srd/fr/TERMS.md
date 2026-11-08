@@ -56,6 +56,8 @@ French terminology for every file in this folder; reuse these forms, add a row w
 | Cover (Light / Full / Total) | Couvert (léger / complet / total) |
 | downtime move | action de temps mort |
 | Tag Team Roll (rules) / advantage die | jet en tandem / dé d’avantage |
+| Weapon/armor features: Reliable, Heavy, Quick, Cumbersome, Returning, Versatile, Powerful, Painful, Burning, Paired, Barrier, Protective | Fiable, Lourd, Rapide, Encombrant, Revenant, Polyvalent, Puissant, Douloureux, Ardent, Apparié, Barrière, Protecteur |
+| Armor Slot (mark / clear) | emplacement d’armure (cocher / effacer) |
 | Relentless (n) / Minion (n) / Horde (n) (feature names) | Implacable (n) / Sbire (n) / Horde (n) |
 | Momentum / Group Attack / Slow | Élan / Attaque de groupe / Lent |
 | Poisoned, Cursed, Ignited, Taunted | Empoisonné, Maudit, Enflammé, Provoqué |

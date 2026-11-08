@@ -36,15 +36,17 @@ describe('TRANSLATED_FIELDS', () => {
 });
 
 describe('localizedSrd', () => {
-	it("weapons broadsword in fr: langs.name === 'fr', untranslated features stay English with lang 'en'", () => {
+	it("weapons broadsword in fr: langs.name === 'fr', translated features come from the overlay with lang 'fr'", () => {
 		const r = srd.localizedSrd('weapons', 'core_weapon_broadsword', 'fr');
 		const en = broadsword();
 		expect(r.langs.name).toBe('fr');
-		expect(r.langs.features).toBe('en');
+		expect(r.langs.features).toBe('fr');
 		expect(r.element.name).toEqual({ 'en-US': 'Épée large' });
 		expect(r.element.nameLocalized).toBe('Épée large');
-		expect(r.element.features).toEqual(en.features);
-		expect({ ...r.element, name: en.name, nameLocalized: undefined }).toEqual({ ...en, nameLocalized: undefined });
+		const fr = JSON.parse(fs.readFileSync('src/lib/srd/fr/weapons.json', 'utf8')).core_weapon_broadsword;
+		expect(r.element.features).not.toEqual(en.features);
+		expect(JSON.stringify(r.element.features)).toContain(fr.features[0].name);
+		expect({ ...r.element, name: en.name, features: en.features, nameLocalized: undefined }).toEqual({ ...en, nameLocalized: undefined });
 	});
 	it("in en every field is English and every lang is 'en'", () => {
 		const r = srd.localizedSrd('weapons', 'core_weapon_broadsword', 'en');

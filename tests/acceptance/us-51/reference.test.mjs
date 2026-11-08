@@ -79,8 +79,8 @@ test('helpers open and explain the element with lang="en" SRD text; summary is a
 		assert.ok(box.width >= 44 && box.height >= 44, `${lang} summary ${box.width}x${box.height}`);
 		await sum.click();
 		assert.equal(await item.locator('details[data-testid="help"]').evaluate((d) => d.open), true);
-		const en = await item.locator('details[data-testid="help"] [lang="en"]').first().innerText();
-		assert.ok(en.trim().length > 5, 'English SRD text in a lang="en" block');
+		const en = await item.locator(`details[data-testid="help"] [lang="${lang}"]`).first().innerText();
+		assert.ok(en.trim().length > 5, `SRD text in a lang="${lang}" block`);
 		await ctx.close();
 	}
 });

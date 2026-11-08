@@ -12,6 +12,8 @@ const DONE: Partial<Record<SrdKind, (id: string) => boolean>> = {
 	items: () => true,
 	consumables: () => true,
 	rules: () => true,
+	weapons: () => true,
+	armors: () => true,
 	adversaries: () => true,
 	environments: () => true,
 };
@@ -82,4 +84,24 @@ describe.each(SRD_KINDS)('French overlay %s', (kind) => {
 			expect(problems).toEqual([]);
 		});
 	}
+});
+
+describe('French weapons and armors', () => {
+	const kinds = ['weapons', 'armors'] as const;
+	const feats = kinds.flatMap((k) =>
+		Object.entries(frEntries(k)).flatMap(([id, e]) => {
+			const en = english(k, id)?.features as { name: { 'en-US': string } }[] | undefined;
+			const fe = (e.features ?? []) as { name: string; description: { paragraph: string }[] }[];
+			return fe.map((f, i) => ({ id, en: en![i].name['en-US'], fr: f.name, text: f.description.map((d) => d.paragraph).join(' ') }));
+		})
+	);
+	it('uses one French name per English feature name', () => {
+		const names = new Map<string, Set<string>>();
+		for (const f of feats) names.set(f.en, (names.get(f.en) ?? new Set()).add(f.fr));
+		expect([...names].filter(([, s]) => s.size > 1).map(([n]) => n)).toEqual([]);
+	});
+	it('keeps the English terms out of the French values', () => {
+		const bad = feats.filter((f) => /\b(Hope|Fear|Armor Slot|Hit Points)\b/.test(`${f.fr} ${f.text}`)).map((f) => f.id);
+		expect(bad).toEqual([]);
+	});
 });

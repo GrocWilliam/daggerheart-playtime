@@ -1,104 +1,404 @@
 {
 	"core_armor_gambeson_armor": {
-		"name": "Armure de gambison"
+		"name": "Armure de gambison",
+		"features": [
+			{
+				"name": "Souple",
+				"description": [
+					{
+						"paragraph": "+1 à l’Évasion"
+					}
+				]
+			}
+		]
 	},
 	"core_armor_leather_armor": {
 		"name": "Armure de cuir"
 	},
 	"core_armor_chainmail_armor": {
-		"name": "Armure de mailles"
+		"name": "Armure de mailles",
+		"features": [
+			{
+				"name": "Lourd",
+				"description": [
+					{
+						"paragraph": "-1 à l’Évasion"
+					}
+				]
+			}
+		]
 	},
 	"core_armor_full_plate_armor": {
-		"name": "Armure de plates complète"
+		"name": "Armure de plates complète",
+		"features": [
+			{
+				"name": "Très lourd",
+				"description": [
+					{
+						"paragraph": "-2 à l’Évasion ; -1 à l’Agilité"
+					}
+				]
+			}
+		]
 	},
 	"core_armor_improved_gambeson_armor": {
-		"name": "Armure de gambison améliorée"
+		"name": "Armure de gambison améliorée",
+		"features": [
+			{
+				"name": "Souple",
+				"description": [
+					{
+						"paragraph": "+1 à l’Évasion"
+					}
+				]
+			}
+		]
 	},
 	"core_armor_improved_leather_armor": {
 		"name": "Armure de cuir améliorée"
 	},
 	"core_armor_improved_chainmail_armor": {
-		"name": "Armure de mailles améliorée"
+		"name": "Armure de mailles améliorée",
+		"features": [
+			{
+				"name": "Lourd",
+				"description": [
+					{
+						"paragraph": "-1 à l’Évasion"
+					}
+				]
+			}
+		]
 	},
 	"core_armor_improved_full_plate_armor": {
-		"name": "Armure de plates complète améliorée"
+		"name": "Armure de plates complète améliorée",
+		"features": [
+			{
+				"name": "Très lourd",
+				"description": [
+					{
+						"paragraph": "-2 à l’Évasion ; -1 à l’Agilité"
+					}
+				]
+			}
+		]
 	},
 	"core_armor_elundrian_chain_armor": {
-		"name": "Cotte de mailles élundrienne"
+		"name": "Cotte de mailles élundrienne",
+		"features": [
+			{
+				"name": "Protégé",
+				"description": [
+					{
+						"paragraph": "Vous réduisez les dégâts magiques subis de votre score d’armure avant de les comparer à vos seuils de dégâts."
+					}
+				]
+			}
+		]
 	},
 	"core_armor_harrowbone_armor": {
-		"name": "Armure d’os de herse"
+		"name": "Armure d’os de herse",
+		"features": [
+			{
+				"name": "Résilient",
+				"description": [
+					{
+						"paragraph": "Avant de cocher votre dernier emplacement d’armure, lancez un d6. Sur un résultat de 6, réduisez la gravité d’un seuil sans cocher d’emplacement d’armure."
+					}
+				]
+			}
+		]
 	},
 	"core_armor_irontree_breastplate_armor": {
-		"name": "Cuirasse en arbre-fer"
+		"name": "Cuirasse en arbre-fer",
+		"features": [
+			{
+				"name": "Renforcé",
+				"description": [
+					{
+						"paragraph": "Lorsque vous cochez votre dernier emplacement d’armure, augmentez vos seuils de dégâts de +2 jusqu’à ce que vous ayez effacé au moins 1 emplacement d’armure."
+					}
+				]
+			}
+		]
 	},
 	"core_armor_runetan_floating_armor": {
-		"name": "Armure flottante runetane"
+		"name": "Armure flottante runetane",
+		"features": [
+			{
+				"name": "Changeant",
+				"description": [
+					{
+						"paragraph": "Lorsque vous êtes la cible d’une attaque, vous pouvez cocher un emplacement d’armure pour donner un désavantage au jet d’attaque contre vous."
+					}
+				]
+			}
+		]
 	},
 	"core_armor_tyris_soft_armor": {
-		"name": "Armure souple de Tyris"
+		"name": "Armure souple de Tyris",
+		"features": [
+			{
+				"name": "Silencieux",
+				"description": [
+					{
+						"paragraph": "Vous gagnez un bonus de +2 aux jets que vous faites pour vous déplacer en silence."
+					}
+				]
+			}
+		]
 	},
 	"core_armor_rosewild_armor": {
-		"name": "Armure de rose sauvage"
+		"name": "Armure de rose sauvage",
+		"features": [
+			{
+				"name": "Plein d’espoir",
+				"description": [
+					{
+						"paragraph": "Lorsque vous devriez dépenser un Espoir, vous pouvez cocher un emplacement d’armure à la place."
+					}
+				]
+			}
+		]
 	},
 	"core_armor_advanced_gambeson_armor": {
-		"name": "Armure de gambison avancée"
+		"name": "Armure de gambison avancée",
+		"features": [
+			{
+				"name": "Souple",
+				"description": [
+					{
+						"paragraph": "+1 à l’Évasion"
+					}
+				]
+			}
+		]
 	},
 	"core_armor_advanced_leather_armor": {
 		"name": "Armure de cuir avancée"
 	},
 	"core_armor_advanced_chainmail_armor": {
-		"name": "Armure de mailles avancée"
+		"name": "Armure de mailles avancée",
+		"features": [
+			{
+				"name": "Lourd",
+				"description": [
+					{
+						"paragraph": "-1 à l’Évasion"
+					}
+				]
+			}
+		]
 	},
 	"core_armor_advanced_full_plate_armor": {
-		"name": "Armure de plates complète avancée"
+		"name": "Armure de plates complète avancée",
+		"features": [
+			{
+				"name": "Très lourd",
+				"description": [
+					{
+						"paragraph": "-2 à l’Évasion ; -1 à l’Agilité"
+					}
+				]
+			}
+		]
 	},
 	"core_armor_bellamoi_fine_armor": {
-		"name": "Armure fine de Bellamoi"
+		"name": "Armure fine de Bellamoi",
+		"features": [
+			{
+				"name": "Doré",
+				"description": [
+					{
+						"paragraph": "+1 à la Présence"
+					}
+				]
+			}
+		]
 	},
 	"core_armor_dragonscale_armor": {
-		"name": "Armure en écailles de dragon"
+		"name": "Armure en écailles de dragon",
+		"features": [
+			{
+				"name": "Impénétrable",
+				"description": [
+					{
+						"paragraph": "Une fois par repos court, lorsque vous devriez cocher votre dernier PV, vous pouvez cocher un Stress à la place."
+					}
+				]
+			}
+		]
 	},
 	"core_armor_spiked_plate_armor": {
-		"name": "Armure de plates à pointes"
+		"name": "Armure de plates à pointes",
+		"features": [
+			{
+				"name": "Tranchant",
+				"description": [
+					{
+						"paragraph": "Lors d’une attaque réussie contre une cible à portée de Mêlée, ajoutez un d4 au jet de dégâts."
+					}
+				]
+			}
+		]
 	},
 	"core_armor_bladefare_armor": {
-		"name": "Armure de lame-chemin"
+		"name": "Armure de lame-chemin",
+		"features": [
+			{
+				"name": "Physique",
+				"description": [
+					{
+						"paragraph": "Vous ne pouvez pas cocher d’emplacement d’armure pour réduire les dégâts magiques."
+					}
+				]
+			}
+		]
 	},
 	"core_armor_monetts_cloak": {
-		"name": "Cape de Monett"
+		"name": "Cape de Monett",
+		"features": [
+			{
+				"name": "Magique",
+				"description": [
+					{
+						"paragraph": "Vous ne pouvez pas cocher d’emplacement d’armure pour réduire les dégâts physiques."
+					}
+				]
+			}
+		]
 	},
 	"core_armor_runes_of_fortification": {
-		"name": "Runes de fortification"
+		"name": "Runes de fortification",
+		"features": [
+			{
+				"name": "Douloureux",
+				"description": [
+					{
+						"paragraph": "Chaque fois que vous cochez un emplacement d’armure, vous devez cocher un Stress."
+					}
+				]
+			}
+		]
 	},
 	"core_armor_legendary_gambeson_armor": {
-		"name": "Armure de gambison légendaire"
+		"name": "Armure de gambison légendaire",
+		"features": [
+			{
+				"name": "Souple",
+				"description": [
+					{
+						"paragraph": "+1 à l’Évasion"
+					}
+				]
+			}
+		]
 	},
 	"core_armor_legendary_leather_armor": {
 		"name": "Armure de cuir légendaire"
 	},
 	"core_armor_legendary_chainmail_armor": {
-		"name": "Armure de mailles légendaire"
+		"name": "Armure de mailles légendaire",
+		"features": [
+			{
+				"name": "Lourd",
+				"description": [
+					{
+						"paragraph": "-1 à l’Évasion"
+					}
+				]
+			}
+		]
 	},
 	"core_armor_legendary_full_plate_armor": {
-		"name": "Armure de plates complète légendaire"
+		"name": "Armure de plates complète légendaire",
+		"features": [
+			{
+				"name": "Très lourd",
+				"description": [
+					{
+						"paragraph": "-2 à l’Évasion ; -1 à l’Agilité"
+					}
+				]
+			}
+		]
 	},
 	"core_armor_dunamis_silkchain": {
-		"name": "Soie-chaîne de Dunamis"
+		"name": "Soie-chaîne de Dunamis",
+		"features": [
+			{
+				"name": "Ralentisseur de temps",
+				"description": [
+					{
+						"paragraph": "Cochez un emplacement d’armure pour lancer un d4 et ajouter son résultat comme bonus à votre Évasion contre une attaque entrante."
+					}
+				]
+			}
+		]
 	},
 	"core_armor_channeling_armor": {
-		"name": "Armure de canalisation"
+		"name": "Armure de canalisation",
+		"features": [
+			{
+				"name": "Canalisant",
+				"description": [
+					{
+						"paragraph": "+1 aux jets de sort"
+					}
+				]
+			}
+		]
 	},
 	"core_armor_emberwoven_armor": {
-		"name": "Armure tissée de braises"
+		"name": "Armure tissée de braises",
+		"features": [
+			{
+				"name": "Ardent",
+				"description": [
+					{
+						"paragraph": "Lorsqu’un adversaire vous attaque à portée de Mêlée, il coche un Stress."
+					}
+				]
+			}
+		]
 	},
 	"core_armor_full_fortified_armor": {
-		"name": "Armure entièrement fortifiée"
+		"name": "Armure entièrement fortifiée",
+		"features": [
+			{
+				"name": "Fortifié",
+				"description": [
+					{
+						"paragraph": "Lorsque vous cochez un emplacement d’armure, vous réduisez la gravité d’une attaque de deux seuils au lieu d’un."
+					}
+				]
+			}
+		]
 	},
 	"core_armor_veritas_opal_armor": {
-		"name": "Armure d’opale de Veritas"
+		"name": "Armure d’opale de Veritas",
+		"features": [
+			{
+				"name": "Chercheur de vérité",
+				"description": [
+					{
+						"paragraph": "Cette armure brille lorsqu’une autre créature à portée Proche ment."
+					}
+				]
+			}
+		]
 	},
 	"core_armor_savior_chainmail": {
-		"name": "Cotte de mailles du sauveur"
+		"name": "Cotte de mailles du sauveur",
+		"features": [
+			{
+				"name": "Difficile",
+				"description": [
+					{
+						"paragraph": "-1 à tous les traits du personnage et à l’Évasion"
+					}
+				]
+			}
+		]
 	}
 }

@@ -21,7 +21,7 @@ const lines = (e) => (e.features ?? []).flatMap((f) => {
 	return f.name ? [`${f.name['en-US']}: ${ps[0] ?? ''}`.trim(), ...ps.slice(1)] : ps;
 });
 // us-223: in French, items and consumables take their text from the overlay (lang="fr"); other kinds stay English
-const FRO = { ...json('src/lib/srd/fr/consumables.json'), ...json('src/lib/srd/fr/items.json') };
+const FRO = { ...json('src/lib/srd/fr/consumables.json'), ...json('src/lib/srd/fr/items.json'), ...json('src/lib/srd/fr/weapons.json'), ...json('src/lib/srd/fr/armors.json') }; // us-222
 const plain = (v) => (typeof v === 'string' ? v : v?.['en-US']);
 const linesFr = (e) => FRO[e.id]?.features?.length ? FRO[e.id].features.flatMap((f) => {
 	const ps = (f.description ?? []).map((x) => plain(x.paragraph)).filter(Boolean);

@@ -51,6 +51,6 @@ test('the 13 files hold 612 names, each on an element of its kind', () => {
 
 test('examples: Barde, Épée large, Arcanes', () => {
 	assert.equal(overlay('classes').core_class_bard.name, 'Barde');
-	assert.deepEqual(overlay('weapons').core_weapon_broadsword, { name: 'Épée large' });
+	assert.equal(overlay('weapons').core_weapon_broadsword.name, 'Épée large');
 	assert.deepEqual(overlay('domains').core_domain_arcana, { name: 'Arcanes' });
 });

@@ -159,8 +159,8 @@ test('GET /api/srd/<kind>/<id> in French returns the file object unchanged plus 
 					delete expected[k];
 				}
 			}
-			// us-223: items, consumables and rules are translated too; compare the rest
-			if (['consumables', 'items', 'rules'].includes(kind)) {
+			// us-223, us-222: items, consumables, rules, weapons and armors are translated too; compare the rest
+			if (['consumables', 'items', 'rules', 'weapons', 'armors'].includes(kind)) {
 				for (const k of ['features', 'description']) { delete body[k]; delete expected[k]; }
 			}
 			assert.deepEqual(body, expected);

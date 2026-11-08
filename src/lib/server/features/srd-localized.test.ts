@@ -30,14 +30,14 @@ describe('mergeFr / sameShape', () => {
 });
 
 describe('localizedSrd', () => {
-	it('translates the broadsword name only; other fields stay English', () => {
+	it('translates the broadsword name and features', () => {
 		const r = localizedSrd('weapons', 'core_weapon_broadsword', 'fr')!;
-		expect(r.langs).toEqual({ name: 'fr', features: 'en' });
+		expect(r.langs).toEqual({ name: 'fr', features: 'fr' });
 		expect(r.element.name).toEqual({ 'en-US': 'Épée large' });
 		expect(r.element.nameLocalized).toBe('Épée large');
 		const en = localizedSrd('weapons', 'core_weapon_broadsword', 'en')!;
 		expect(en.langs).toEqual({ name: 'en', features: 'en' });
-		expect(r.element.features).toEqual(en.element.features);
+		expect(r.element.features).not.toEqual(en.element.features);
 		expect(getSrd('weapons', 'core_weapon_broadsword', 'fr')).toEqual(r.element);
 	});
 	it('translates tiers 1 and 2 adversaries and keeps the others English', () => {

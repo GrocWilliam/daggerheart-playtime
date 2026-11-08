@@ -1,6 +1,16 @@
 {
 	"core_weapon_broadsword": {
-		"name": "Épée large"
+		"name": "Épée large",
+		"features": [
+			{
+				"name": "Fiable",
+				"description": [
+					{
+						"paragraph": "+1 aux jets d’attaque"
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_longsword": {
 		"name": "Épée longue"
@@ -9,13 +19,33 @@
 		"name": "Hache de bataille"
 	},
 	"core_weapon_greatsword": {
-		"name": "Épée à deux mains"
+		"name": "Épée à deux mains",
+		"features": [
+			{
+				"name": "Massif",
+				"description": [
+					{
+						"paragraph": "-1 à l’Évasion ; lors d’une attaque réussie, lancez un dé de dégâts supplémentaire et défaussez le plus bas résultat."
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_mace": {
 		"name": "Masse"
 	},
 	"core_weapon_warhammer": {
-		"name": "Marteau de guerre"
+		"name": "Marteau de guerre",
+		"features": [
+			{
+				"name": "Lourd",
+				"description": [
+					{
+						"paragraph": "-1 à l’Évasion"
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_dagger": {
 		"name": "Dague"
@@ -27,10 +57,30 @@
 		"name": "Coutelas"
 	},
 	"core_weapon_rapier": {
-		"name": "Rapière"
+		"name": "Rapière",
+		"features": [
+			{
+				"name": "Rapide",
+				"description": [
+					{
+						"paragraph": "Lorsque vous faites une attaque, vous pouvez cocher un Stress pour cibler une autre créature à portée."
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_halberd": {
-		"name": "Hallebarde"
+		"name": "Hallebarde",
+		"features": [
+			{
+				"name": "Encombrant",
+				"description": [
+					{
+						"paragraph": "-1 à la Finesse"
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_spear": {
 		"name": "Lance"
@@ -42,7 +92,17 @@
 		"name": "Arbalète"
 	},
 	"core_weapon_longbow": {
-		"name": "Arc long"
+		"name": "Arc long",
+		"features": [
+			{
+				"name": "Encombrant",
+				"description": [
+					{
+						"paragraph": "-1 à la Finesse"
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_arcane_gauntlets": {
 		"name": "Gantelets arcaniques"
@@ -57,7 +117,17 @@
 		"name": "Runes de main"
 	},
 	"core_weapon_returning_blade": {
-		"name": "Lame boomerang"
+		"name": "Lame boomerang",
+		"features": [
+			{
+				"name": "Revenant",
+				"description": [
+					{
+						"paragraph": "Lorsque cette arme est lancée à portée, elle réapparaît dans votre main immédiatement après l’attaque."
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_shortstaff": {
 		"name": "Bâton court"
@@ -66,13 +136,33 @@
 		"name": "Bâton double"
 	},
 	"core_weapon_scepter": {
-		"name": "Sceptre"
+		"name": "Sceptre",
+		"features": [
+			{
+				"name": "Polyvalent",
+				"description": [
+					{
+						"paragraph": "Cette arme peut aussi être utilisée avec ces statistiques : Présence, Mêlée, d8."
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_wand": {
 		"name": "Baguette"
 	},
 	"core_weapon_greatstaff": {
-		"name": "Grand bâton"
+		"name": "Grand bâton",
+		"features": [
+			{
+				"name": "Puissant",
+				"description": [
+					{
+						"paragraph": "Lors d’une attaque réussie, lancez un dé de dégâts supplémentaire et défaussez le plus bas résultat."
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_improved_broadsword": {
 		"name": "Épée large améliorée"
@@ -84,13 +174,33 @@
 		"name": "Hache de bataille améliorée"
 	},
 	"core_weapon_improved_greatsword": {
-		"name": "Épée à deux mains améliorée"
+		"name": "Épée à deux mains améliorée",
+		"features": [
+			{
+				"name": "Massif",
+				"description": [
+					{
+						"paragraph": "-1 à l’Évasion ; lors d’une attaque réussie, lancez un dé de dégâts supplémentaire et défaussez le plus bas résultat."
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_improved_mace": {
 		"name": "Masse améliorée"
 	},
 	"core_weapon_improved_warhammer": {
-		"name": "Marteau de guerre amélioré"
+		"name": "Marteau de guerre amélioré",
+		"features": [
+			{
+				"name": "Lourd",
+				"description": [
+					{
+						"paragraph": "-1 à l’Évasion"
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_improved_dagger": {
 		"name": "Dague améliorée"
@@ -102,10 +212,30 @@
 		"name": "Coutelas amélioré"
 	},
 	"core_weapon_improved_rapier": {
-		"name": "Rapière améliorée"
+		"name": "Rapière améliorée",
+		"features": [
+			{
+				"name": "Rapide",
+				"description": [
+					{
+						"paragraph": "Lorsque vous faites une attaque, vous pouvez cocher un Stress pour cibler une autre créature à portée."
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_improved_halberd": {
-		"name": "Hallebarde améliorée"
+		"name": "Hallebarde améliorée",
+		"features": [
+			{
+				"name": "Encombrant",
+				"description": [
+					{
+						"paragraph": "-1 à la Finesse"
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_improved_spear": {
 		"name": "Lance améliorée"
@@ -117,34 +247,134 @@
 		"name": "Arbalète améliorée"
 	},
 	"core_weapon_improved_longbow": {
-		"name": "Arc long amélioré"
+		"name": "Arc long amélioré",
+		"features": [
+			{
+				"name": "Encombrant",
+				"description": [
+					{
+						"paragraph": "-1 à la Finesse"
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_gilded_falchion": {
-		"name": "Fauchon doré"
+		"name": "Fauchon doré",
+		"features": [
+			{
+				"name": "Puissant",
+				"description": [
+					{
+						"paragraph": "Lors d’une attaque réussie, lancez un dé de dégâts supplémentaire et défaussez le plus bas résultat."
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_knuckle_blades": {
-		"name": "Lames de poing"
+		"name": "Lames de poing",
+		"features": [
+			{
+				"name": "Brutal",
+				"description": [
+					{
+						"paragraph": "Lorsque vous obtenez la valeur maximale sur un dé de dégâts, lancez un dé de dégâts supplémentaire."
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_urok_broadsword": {
-		"name": "Épée large d’Urok"
+		"name": "Épée large d’Urok",
+		"features": [
+			{
+				"name": "Mortel",
+				"description": [
+					{
+						"paragraph": "Lorsque vous infligez des dégâts graves, la cible doit cocher un PV supplémentaire."
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_bladed_whip": {
-		"name": "Fouet à lames"
+		"name": "Fouet à lames",
+		"features": [
+			{
+				"name": "Rapide",
+				"description": [
+					{
+						"paragraph": "Lorsque vous faites une attaque, vous pouvez cocher un Stress pour cibler une autre créature à portée."
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_steelforged_halberd": {
-		"name": "Hallebarde en acier forgé"
+		"name": "Hallebarde en acier forgé",
+		"features": [
+			{
+				"name": "Effrayant",
+				"description": [
+					{
+						"paragraph": "Lors d’une attaque réussie, la cible doit cocher un Stress."
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_war_scythe": {
-		"name": "Faux de guerre"
+		"name": "Faux de guerre",
+		"features": [
+			{
+				"name": "Fiable",
+				"description": [
+					{
+						"paragraph": "+1 aux jets d’attaque"
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_blunderbuss": {
-		"name": "Tromblon"
+		"name": "Tromblon",
+		"features": [
+			{
+				"name": "Rechargement",
+				"description": [
+					{
+						"paragraph": "Après avoir fait une attaque, lancez un d6. Sur un résultat de 1, vous devez cocher un Stress pour recharger cette arme avant de pouvoir tirer à nouveau."
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_greatbow": {
-		"name": "Grand arc"
+		"name": "Grand arc",
+		"features": [
+			{
+				"name": "Puissant",
+				"description": [
+					{
+						"paragraph": "Lors d’une attaque réussie, lancez un dé de dégâts supplémentaire et défaussez le plus bas résultat."
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_finehair_bow": {
-		"name": "Arc fin-cheveu"
+		"name": "Arc fin-cheveu",
+		"features": [
+			{
+				"name": "Fiable",
+				"description": [
+					{
+						"paragraph": "+1 aux jets d’attaque"
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_improved_arcane_gauntlets": {
 		"name": "Gantelets arcaniques améliorés"
@@ -159,7 +389,17 @@
 		"name": "Runes de main améliorées"
 	},
 	"core_weapon_improved_returning_blade": {
-		"name": "Lame boomerang améliorée"
+		"name": "Lame boomerang améliorée",
+		"features": [
+			{
+				"name": "Revenant",
+				"description": [
+					{
+						"paragraph": "Lorsque cette arme est lancée à portée, elle réapparaît dans votre main immédiatement après l’attaque."
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_improved_shortstaff": {
 		"name": "Bâton court amélioré"
@@ -168,43 +408,163 @@
 		"name": "Bâton double amélioré"
 	},
 	"core_weapon_improved_scepter": {
-		"name": "Sceptre amélioré"
+		"name": "Sceptre amélioré",
+		"features": [
+			{
+				"name": "Polyvalent",
+				"description": [
+					{
+						"paragraph": "Cette arme peut aussi être utilisée avec ces statistiques : Présence, Mêlée, d8+3."
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_improved_wand": {
 		"name": "Baguette améliorée"
 	},
 	"core_weapon_improved_greatstaff": {
-		"name": "Grand bâton amélioré"
+		"name": "Grand bâton amélioré",
+		"features": [
+			{
+				"name": "Puissant",
+				"description": [
+					{
+						"paragraph": "Lors d’une attaque réussie, lancez un dé de dégâts supplémentaire et défaussez le plus bas résultat."
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_ego_blade": {
-		"name": "Lame d’ego"
+		"name": "Lame d’ego",
+		"features": [
+			{
+				"name": "Pompeux",
+				"description": [
+					{
+						"paragraph": "Vous devez avoir une Présence de 0 ou moins pour utiliser cette arme."
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_casting_sword": {
-		"name": "Épée de lancement"
+		"name": "Épée de lancement",
+		"features": [
+			{
+				"name": "Polyvalent",
+				"description": [
+					{
+						"paragraph": "Cette arme peut aussi être utilisée avec ces statistiques : Connaissance, Loin, d6+3."
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_devouring_dagger": {
-		"name": "Dague dévoratrice"
+		"name": "Dague dévoratrice",
+		"features": [
+			{
+				"name": "Effrayant",
+				"description": [
+					{
+						"paragraph": "Lors d’une attaque réussie, la cible doit cocher un Stress."
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_hammer_of_exota": {
-		"name": "Marteau d’Exota"
+		"name": "Marteau d’Exota",
+		"features": [
+			{
+				"name": "Éruptif",
+				"description": [
+					{
+						"paragraph": "Lors d’une attaque réussie contre une cible à portée de Mêlée, tous les autres adversaires à portée Très proche doivent réussir un jet de réaction (14) ou subir la moitié des dégâts."
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_yutari_bloodbow": {
-		"name": "Arc de sang de Yutari"
+		"name": "Arc de sang de Yutari",
+		"features": [
+			{
+				"name": "Brutal",
+				"description": [
+					{
+						"paragraph": "Lorsque vous obtenez la valeur maximale sur un dé de dégâts, lancez un dé de dégâts supplémentaire."
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_elder_bow": {
-		"name": "Arc ancestral"
+		"name": "Arc ancestral",
+		"features": [
+			{
+				"name": "Puissant",
+				"description": [
+					{
+						"paragraph": "Lors d’une attaque réussie, lancez un dé de dégâts supplémentaire et défaussez le plus bas résultat."
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_scepter_of_elias": {
-		"name": "Sceptre d’Elias"
+		"name": "Sceptre d’Elias",
+		"features": [
+			{
+				"name": "Revigorant",
+				"description": [
+					{
+						"paragraph": "Lors d’une attaque réussie, lancez un d4. Sur un résultat de 4, effacez un Stress."
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_wand_of_enthrallment": {
-		"name": "Baguette d’envoûtement"
+		"name": "Baguette d’envoûtement",
+		"features": [
+			{
+				"name": "Persuasif",
+				"description": [
+					{
+						"paragraph": "Avant de faire un jet de Présence, vous pouvez cocher un Stress pour gagner un bonus de +2 au résultat."
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_keeper_s_staff": {
-		"name": "Bâton du gardien"
+		"name": "Bâton du gardien",
+		"features": [
+			{
+				"name": "Fiable",
+				"description": [
+					{
+						"paragraph": "+1 aux jets d’attaque"
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_advanced_broadsword": {
-		"name": "Épée large avancée"
+		"name": "Épée large avancée",
+		"features": [
+			{
+				"name": "Fiable",
+				"description": [
+					{
+						"paragraph": "+1 aux jets d’attaque"
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_advanced_longsword": {
 		"name": "Épée longue avancée"
@@ -213,13 +573,33 @@
 		"name": "Hache de bataille avancée"
 	},
 	"core_weapon_advanced_greatsword": {
-		"name": "Épée à deux mains avancée"
+		"name": "Épée à deux mains avancée",
+		"features": [
+			{
+				"name": "Massif",
+				"description": [
+					{
+						"paragraph": "-1 à l’Évasion ; lors d’une attaque réussie, lancez un dé de dégâts supplémentaire et défaussez le plus bas résultat."
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_advanced_mace": {
 		"name": "Masse avancée"
 	},
 	"core_weapon_advanced_warhammer": {
-		"name": "Marteau de guerre avancé"
+		"name": "Marteau de guerre avancé",
+		"features": [
+			{
+				"name": "Lourd",
+				"description": [
+					{
+						"paragraph": "-1 à l’Évasion"
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_advanced_dagger": {
 		"name": "Dague avancée"
@@ -231,10 +611,30 @@
 		"name": "Coutelas avancé"
 	},
 	"core_weapon_advanced_rapier": {
-		"name": "Rapière avancée"
+		"name": "Rapière avancée",
+		"features": [
+			{
+				"name": "Rapide",
+				"description": [
+					{
+						"paragraph": "Lorsque vous faites une attaque, vous pouvez cocher un Stress pour cibler une autre créature à portée."
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_advanced_halberd": {
-		"name": "Hallebarde avancée"
+		"name": "Hallebarde avancée",
+		"features": [
+			{
+				"name": "Encombrant",
+				"description": [
+					{
+						"paragraph": "-1 à la Finesse"
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_advanced_spear": {
 		"name": "Lance avancée"
@@ -246,40 +646,160 @@
 		"name": "Arbalète avancée"
 	},
 	"core_weapon_advanced_longbow": {
-		"name": "Arc long avancé"
+		"name": "Arc long avancé",
+		"features": [
+			{
+				"name": "Encombrant",
+				"description": [
+					{
+						"paragraph": "-1 à la Finesse"
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_flickerfly_blade": {
-		"name": "Lame de luciole"
+		"name": "Lame de luciole",
+		"features": [
+			{
+				"name": "Aile-acérée",
+				"description": [
+					{
+						"paragraph": "Gagnez un bonus à vos jets de dégâts égal à votre Agilité."
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_bravesword": {
-		"name": "Épée du brave"
+		"name": "Épée du brave",
+		"features": [
+			{
+				"name": "Brave",
+				"description": [
+					{
+						"paragraph": "-1 à l’Évasion ; +3 au seuil de dégâts grave"
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_hammer_of_wrath": {
-		"name": "Marteau de courroux"
+		"name": "Marteau de courroux",
+		"features": [
+			{
+				"name": "Dévastateur",
+				"description": [
+					{
+						"paragraph": "Avant de faire un jet d’attaque, vous pouvez cocher un Stress pour utiliser un d20 comme dé de dégâts."
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_labrys_axe": {
-		"name": "Hache labrys"
+		"name": "Hache labrys",
+		"features": [
+			{
+				"name": "Protecteur",
+				"description": [
+					{
+						"paragraph": "+1 au score d’armure"
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_meridian_cutlass": {
-		"name": "Coutelas méridien"
+		"name": "Coutelas méridien",
+		"features": [
+			{
+				"name": "Duelliste",
+				"description": [
+					{
+						"paragraph": "Lorsqu’aucune autre créature ne se trouve à portée Proche de la cible, gagnez un avantage sur votre jet d’attaque contre elle."
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_retractable_saber": {
-		"name": "Sabre rétractable"
+		"name": "Sabre rétractable",
+		"features": [
+			{
+				"name": "Rétractable",
+				"description": [
+					{
+						"paragraph": "La lame peut être dissimulée dans la poignée pour éviter d’être détectée."
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_double_flail": {
-		"name": "Fléau double"
+		"name": "Fléau double",
+		"features": [
+			{
+				"name": "Puissant",
+				"description": [
+					{
+						"paragraph": "Lors d’une attaque réussie, lancez un dé de dégâts supplémentaire et défaussez le plus bas résultat."
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_talon_blades": {
-		"name": "Lames-serres"
+		"name": "Lames-serres",
+		"features": [
+			{
+				"name": "Brutal",
+				"description": [
+					{
+						"paragraph": "Lorsque vous obtenez la valeur maximale sur un dé de dégâts, lancez un dé de dégâts supplémentaire."
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_black_powder_revolver": {
-		"name": "Revolver à poudre noire"
+		"name": "Revolver à poudre noire",
+		"features": [
+			{
+				"name": "Rechargement",
+				"description": [
+					{
+						"paragraph": "Après avoir fait une attaque, lancez un d6. Sur un résultat de 1, vous devez cocher un Stress pour recharger cette arme avant de pouvoir tirer à nouveau."
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_spiked_bow": {
-		"name": "Arc hérissé"
+		"name": "Arc hérissé",
+		"features": [
+			{
+				"name": "Polyvalent",
+				"description": [
+					{
+						"paragraph": "Cette arme peut aussi être utilisée avec ces statistiques : Agilité, Mêlée, d10+5."
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_legendary_broadsword": {
-		"name": "Épée large légendaire"
+		"name": "Épée large légendaire",
+		"features": [
+			{
+				"name": "Fiable",
+				"description": [
+					{
+						"paragraph": "+1 aux jets d’attaque"
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_legendary_longsword": {
 		"name": "Épée longue légendaire"
@@ -288,13 +808,33 @@
 		"name": "Hache de bataille légendaire"
 	},
 	"core_weapon_legendary_greatsword": {
-		"name": "Épée à deux mains légendaire"
+		"name": "Épée à deux mains légendaire",
+		"features": [
+			{
+				"name": "Massif",
+				"description": [
+					{
+						"paragraph": "-1 à l’Évasion ; lors d’une attaque réussie, lancez un dé de dégâts supplémentaire et défaussez le plus bas résultat."
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_legendary_mace": {
 		"name": "Masse légendaire"
 	},
 	"core_weapon_legendary_warhammer": {
-		"name": "Marteau de guerre légendaire"
+		"name": "Marteau de guerre légendaire",
+		"features": [
+			{
+				"name": "Lourd",
+				"description": [
+					{
+						"paragraph": "-1 à l’Évasion"
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_legendary_dagger": {
 		"name": "Dague légendaire"
@@ -306,10 +846,30 @@
 		"name": "Coutelas légendaire"
 	},
 	"core_weapon_legendary_rapier": {
-		"name": "Rapière légendaire"
+		"name": "Rapière légendaire",
+		"features": [
+			{
+				"name": "Rapide",
+				"description": [
+					{
+						"paragraph": "Lorsque vous faites une attaque, vous pouvez cocher un Stress pour cibler une autre créature à portée."
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_legendary_halberd": {
-		"name": "Hallebarde légendaire"
+		"name": "Hallebarde légendaire",
+		"features": [
+			{
+				"name": "Encombrant",
+				"description": [
+					{
+						"paragraph": "-1 à la Finesse"
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_legendary_spear": {
 		"name": "Lance légendaire"
@@ -321,34 +881,134 @@
 		"name": "Arbalète légendaire"
 	},
 	"core_weapon_legendary_longbow": {
-		"name": "Arc long légendaire"
+		"name": "Arc long légendaire",
+		"features": [
+			{
+				"name": "Encombrant",
+				"description": [
+					{
+						"paragraph": "-1 à la Finesse"
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_dual_ended_sword": {
-		"name": "Épée à double lame"
+		"name": "Épée à double lame",
+		"features": [
+			{
+				"name": "Rapide",
+				"description": [
+					{
+						"paragraph": "Lorsque vous faites une attaque, vous pouvez cocher un Stress pour cibler une autre créature à portée."
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_impact_gauntlet": {
-		"name": "Gantelet d’impact"
+		"name": "Gantelet d’impact",
+		"features": [
+			{
+				"name": "Percutant",
+				"description": [
+					{
+						"paragraph": "Lors d’une attaque réussie, vous pouvez dépenser un Espoir pour repousser la cible à portée Loin."
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_sledge_axe": {
-		"name": "Hache-masse"
+		"name": "Hache-masse",
+		"features": [
+			{
+				"name": "Destructeur",
+				"description": [
+					{
+						"paragraph": "-1 à l’Agilité ; lors d’une attaque réussie, tous les adversaires à portée Très proche doivent cocher un Stress."
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_curved_dagger": {
-		"name": "Dague courbe"
+		"name": "Dague courbe",
+		"features": [
+			{
+				"name": "Dentelé",
+				"description": [
+					{
+						"paragraph": "Lorsque vous obtenez 1 sur un dé de dégâts, il inflige 8 dégâts à la place."
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_extended_polearm": {
-		"name": "Arme d’hast allongée"
+		"name": "Arme d’hast allongée",
+		"features": [
+			{
+				"name": "Long",
+				"description": [
+					{
+						"paragraph": "L’attaque de cette arme cible tous les adversaires alignés à portée."
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_swinging_ropeblade": {
-		"name": "Lame-corde oscillante"
+		"name": "Lame-corde oscillante",
+		"features": [
+			{
+				"name": "Agrippant",
+				"description": [
+					{
+						"paragraph": "Lors d’une attaque réussie, vous pouvez dépenser un Espoir pour Entraver la cible ou l’attirer à portée de Mêlée avec vous."
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_ricochet_axes": {
-		"name": "Haches ricochet"
+		"name": "Haches ricochet",
+		"features": [
+			{
+				"name": "Rebondissant",
+				"description": [
+					{
+						"paragraph": "Cochez 1 Stress ou plus pour toucher autant de cibles à portée de l’attaque."
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_aantari_bow": {
-		"name": "Arc d’Aantari"
+		"name": "Arc d’Aantari",
+		"features": [
+			{
+				"name": "Fiable",
+				"description": [
+					{
+						"paragraph": "+1 aux jets d’attaque"
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_hand_cannon": {
-		"name": "Canon de poing"
+		"name": "Canon de poing",
+		"features": [
+			{
+				"name": "Rechargement",
+				"description": [
+					{
+						"paragraph": "Après avoir fait une attaque, lancez un d6. Sur un résultat de 1, vous devez cocher un Stress pour recharger cette arme avant de pouvoir tirer à nouveau."
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_legendary_arcane_gauntlets": {
 		"name": "Gantelets arcaniques légendaires"
@@ -363,7 +1023,17 @@
 		"name": "Runes de main légendaires"
 	},
 	"core_weapon_legendary_returning_blade": {
-		"name": "Lame boomerang légendaire"
+		"name": "Lame boomerang légendaire",
+		"features": [
+			{
+				"name": "Revenant",
+				"description": [
+					{
+						"paragraph": "Lorsque cette arme est lancée à portée, elle réapparaît dans votre main immédiatement après l’attaque."
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_legendary_shortstaff": {
 		"name": "Bâton court légendaire"
@@ -372,151 +1042,591 @@
 		"name": "Bâton double légendaire"
 	},
 	"core_weapon_legendary_scepter": {
-		"name": "Sceptre légendaire"
+		"name": "Sceptre légendaire",
+		"features": [
+			{
+				"name": "Polyvalent",
+				"description": [
+					{
+						"paragraph": "Cette arme peut aussi être utilisée avec ces statistiques : Présence, Mêlée, d8+6."
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_legendary_wand": {
 		"name": "Baguette légendaire"
 	},
 	"core_weapon_legendary_greatstaff": {
-		"name": "Grand bâton légendaire"
+		"name": "Grand bâton légendaire",
+		"features": [
+			{
+				"name": "Puissant",
+				"description": [
+					{
+						"paragraph": "Lors d’une attaque réussie, lancez un dé de dégâts supplémentaire et défaussez le plus bas résultat."
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_sword_of_light_flame": {
-		"name": "Épée de lumière et de flamme"
+		"name": "Épée de lumière et de flamme",
+		"features": [
+			{
+				"name": "Incandescent",
+				"description": [
+					{
+						"paragraph": "Cette arme tranche les matériaux solides."
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_siphoning_gauntlets": {
-		"name": "Gantelets siphonneurs"
+		"name": "Gantelets siphonneurs",
+		"features": [
+			{
+				"name": "Vampirique",
+				"description": [
+					{
+						"paragraph": "Lors d’une attaque réussie, lancez un d6. Sur un résultat de 6, effacez un PV ou effacez un Stress."
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_midas_scythe": {
-		"name": "Faux de Midas"
+		"name": "Faux de Midas",
+		"features": [
+			{
+				"name": "Cupide",
+				"description": [
+					{
+						"paragraph": "Dépensez une poignée d’or pour gagner un bonus de +1 à votre Maîtrise lors d’un jet de dégâts."
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_floating_bladeshards": {
-		"name": "Éclats de lame flottants"
+		"name": "Éclats de lame flottants",
+		"features": [
+			{
+				"name": "Puissant",
+				"description": [
+					{
+						"paragraph": "Lors d’une attaque réussie, lancez un dé de dégâts supplémentaire et défaussez le plus bas résultat."
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_bloodstaff": {
-		"name": "Bâton de sang"
+		"name": "Bâton de sang",
+		"features": [
+			{
+				"name": "Douloureux",
+				"description": [
+					{
+						"paragraph": "Chaque fois que vous réussissez une attaque, vous devez cocher un Stress."
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_thistlebow": {
-		"name": "Arc-chardon"
+		"name": "Arc-chardon",
+		"features": [
+			{
+				"name": "Fiable",
+				"description": [
+					{
+						"paragraph": "+1 aux jets d’attaque"
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_wand_of_essek": {
-		"name": "Baguette d’Essek"
+		"name": "Baguette d’Essek",
+		"features": [
+			{
+				"name": "Courbe-temps",
+				"description": [
+					{
+						"paragraph": "Vous pouvez choisir la cible de votre attaque après avoir fait votre jet d’attaque."
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_magus_revolver": {
-		"name": "Revolver du mage"
+		"name": "Revolver du mage",
+		"features": [
+			{
+				"name": "Rechargement",
+				"description": [
+					{
+						"paragraph": "Après avoir fait une attaque, lancez un d6. Sur un résultat de 1, vous devez cocher un Stress pour recharger cette arme avant de pouvoir tirer à nouveau."
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_fusion_gloves": {
-		"name": "Gants de fusion"
+		"name": "Gants de fusion",
+		"features": [
+			{
+				"name": "Lié",
+				"description": [
+					{
+						"paragraph": "Gagnez un bonus à vos jets de dégâts égal à votre niveau."
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_shortsword": {
-		"name": "Épée courte"
+		"name": "Épée courte",
+		"features": [
+			{
+				"name": "Apparié",
+				"description": [
+					{
+						"paragraph": "+2 aux dégâts de l’arme principale contre les cibles à portée de Mêlée"
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_round_shield": {
-		"name": "Bouclier rond"
+		"name": "Bouclier rond",
+		"features": [
+			{
+				"name": "Protecteur",
+				"description": [
+					{
+						"paragraph": "+1 au score d’armure"
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_tower_shield": {
-		"name": "Bouclier tour"
+		"name": "Bouclier tour",
+		"features": [
+			{
+				"name": "Barrière",
+				"description": [
+					{
+						"paragraph": "+2 au score d’armure ; -1 à l’Évasion"
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_small_dagger": {
-		"name": "Petite dague"
+		"name": "Petite dague",
+		"features": [
+			{
+				"name": "Apparié",
+				"description": [
+					{
+						"paragraph": "+2 aux dégâts de l’arme principale contre les cibles à portée de Mêlée"
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_whip": {
-		"name": "Fouet"
+		"name": "Fouet",
+		"features": [
+			{
+				"name": "Surprenant",
+				"description": [
+					{
+						"paragraph": "Cochez un Stress pour faire claquer le fouet et repousser tous les adversaires à portée de Mêlée à portée Proche."
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_grappler": {
-		"name": "Grappin"
+		"name": "Grappin",
+		"features": [
+			{
+				"name": "À crochet",
+				"description": [
+					{
+						"paragraph": "Lors d’une attaque réussie, vous pouvez attirer la cible à portée de Mêlée."
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_hand_crossbow": {
 		"name": "Arbalète de poing"
 	},
 	"core_weapon_improved_shortsword": {
-		"name": "Épée courte améliorée"
+		"name": "Épée courte améliorée",
+		"features": [
+			{
+				"name": "Apparié",
+				"description": [
+					{
+						"paragraph": "+3 aux dégâts de l’arme principale contre les cibles à portée de Mêlée"
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_improved_round_shield": {
-		"name": "Bouclier rond amélioré"
+		"name": "Bouclier rond amélioré",
+		"features": [
+			{
+				"name": "Protecteur",
+				"description": [
+					{
+						"paragraph": "+2 au score d’armure"
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_improved_tower_shield": {
-		"name": "Bouclier tour amélioré"
+		"name": "Bouclier tour amélioré",
+		"features": [
+			{
+				"name": "Barrière",
+				"description": [
+					{
+						"paragraph": "+3 au score d’armure ; -1 à l’Évasion"
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_improved_small_dagger": {
-		"name": "Petite dague améliorée"
+		"name": "Petite dague améliorée",
+		"features": [
+			{
+				"name": "Apparié",
+				"description": [
+					{
+						"paragraph": "+3 aux dégâts de l’arme principale contre les cibles à portée de Mêlée"
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_improved_whip": {
-		"name": "Fouet amélioré"
+		"name": "Fouet amélioré",
+		"features": [
+			{
+				"name": "Surprenant",
+				"description": [
+					{
+						"paragraph": "Cochez un Stress pour faire claquer le fouet et repousser tous les adversaires à portée de Mêlée à portée Proche."
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_improved_grappler": {
-		"name": "Grappin amélioré"
+		"name": "Grappin amélioré",
+		"features": [
+			{
+				"name": "À crochet",
+				"description": [
+					{
+						"paragraph": "Lors d’une attaque réussie, vous pouvez attirer la cible à portée de Mêlée."
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_improved_hand_crossbow": {
 		"name": "Arbalète de poing améliorée"
 	},
 	"core_weapon_spiked_shield": {
-		"name": "Bouclier à pointes"
+		"name": "Bouclier à pointes",
+		"features": [
+			{
+				"name": "Double emploi",
+				"description": [
+					{
+						"paragraph": "+1 au score d’armure ; +1 aux dégâts de l’arme principale à portée de Mêlée"
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_parrying_dagger": {
-		"name": "Dague de parade"
+		"name": "Dague de parade",
+		"features": [
+			{
+				"name": "Parade",
+				"description": [
+					{
+						"paragraph": "Lorsque vous êtes attaqué, lancez les dés de dégâts de cette arme. Si un des dés de dégâts de l’attaquant a obtenu la même valeur que l’un de vos dés, les résultats identiques sont défaussés des dés de dégâts de l’attaquant avant que les dégâts que vous subissez ne soient totalisés."
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_returning_axe": {
-		"name": "Hache boomerang"
+		"name": "Hache boomerang",
+		"features": [
+			{
+				"name": "Revenant",
+				"description": [
+					{
+						"paragraph": "Lorsque cette arme est lancée à portée, elle réapparaît dans votre main immédiatement après l’attaque."
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_advanced_shortsword": {
-		"name": "Épée courte avancée"
+		"name": "Épée courte avancée",
+		"features": [
+			{
+				"name": "Apparié",
+				"description": [
+					{
+						"paragraph": "+4 aux dégâts de l’arme principale contre les cibles à portée de Mêlée"
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_advanced_round_shield": {
-		"name": "Bouclier rond avancé"
+		"name": "Bouclier rond avancé",
+		"features": [
+			{
+				"name": "Protecteur",
+				"description": [
+					{
+						"paragraph": "+3 au score d’armure"
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_advanced_tower_shield": {
-		"name": "Bouclier tour avancé"
+		"name": "Bouclier tour avancé",
+		"features": [
+			{
+				"name": "Barrière",
+				"description": [
+					{
+						"paragraph": "+4 au score d’armure ; -1 à l’Évasion"
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_advanced_small_dagger": {
-		"name": "Petite dague avancée"
+		"name": "Petite dague avancée",
+		"features": [
+			{
+				"name": "Apparié",
+				"description": [
+					{
+						"paragraph": "+4 aux dégâts de l’arme principale contre les cibles à portée de Mêlée"
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_advanced_whip": {
-		"name": "Fouet avancé"
+		"name": "Fouet avancé",
+		"features": [
+			{
+				"name": "Surprenant",
+				"description": [
+					{
+						"paragraph": "Cochez un Stress pour faire claquer le fouet et repousser tous les adversaires à portée de Mêlée à portée Proche."
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_advanced_grappler": {
-		"name": "Grappin avancé"
+		"name": "Grappin avancé",
+		"features": [
+			{
+				"name": "À crochet",
+				"description": [
+					{
+						"paragraph": "Lors d’une attaque réussie, vous pouvez attirer la cible à portée de Mêlée."
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_advanced_hand_crossbow": {
 		"name": "Arbalète de poing avancée"
 	},
 	"core_weapon_buckler": {
-		"name": "Rondache"
+		"name": "Rondache",
+		"features": [
+			{
+				"name": "Déviant",
+				"description": [
+					{
+						"paragraph": "Lorsque vous êtes attaqué, vous pouvez cocher un emplacement d’armure pour gagner un bonus à votre Évasion égal à vos emplacements d’armure disponibles contre l’attaque."
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_powered_gauntlet": {
-		"name": "Gantelet motorisé"
+		"name": "Gantelet motorisé",
+		"features": [
+			{
+				"name": "Chargé",
+				"description": [
+					{
+						"paragraph": "Cochez un Stress pour gagner un bonus de +1 à votre Maîtrise lors d’une attaque avec l’arme principale."
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_hand_sling": {
-		"name": "Fronde de poing"
+		"name": "Fronde de poing",
+		"features": [
+			{
+				"name": "Polyvalent",
+				"description": [
+					{
+						"paragraph": "Cette arme peut aussi être utilisée avec ces statistiques : Finesse, Proche, d8+4."
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_legendary_shortsword": {
-		"name": "Épée courte légendaire"
+		"name": "Épée courte légendaire",
+		"features": [
+			{
+				"name": "Apparié",
+				"description": [
+					{
+						"paragraph": "+5 aux dégâts de l’arme principale contre les cibles à portée de Mêlée"
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_legendary_round_shield": {
-		"name": "Bouclier rond légendaire"
+		"name": "Bouclier rond légendaire",
+		"features": [
+			{
+				"name": "Protecteur",
+				"description": [
+					{
+						"paragraph": "+4 au score d’armure"
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_legendary_tower_shield": {
-		"name": "Bouclier tour légendaire"
+		"name": "Bouclier tour légendaire",
+		"features": [
+			{
+				"name": "Barrière",
+				"description": [
+					{
+						"paragraph": "+5 au score d’armure ; -1 à l’Évasion."
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_legendary_small_dagger": {
-		"name": "Petite dague légendaire"
+		"name": "Petite dague légendaire",
+		"features": [
+			{
+				"name": "Apparié",
+				"description": [
+					{
+						"paragraph": "+5 aux dégâts de l’arme principale contre les cibles à portée de Mêlée"
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_legendary_whip": {
-		"name": "Fouet légendaire"
+		"name": "Fouet légendaire",
+		"features": [
+			{
+				"name": "Surprenant",
+				"description": [
+					{
+						"paragraph": "Cochez un Stress pour faire claquer le fouet et repousser tous les adversaires à portée de Mêlée à portée Proche."
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_legendary_grappler": {
-		"name": "Grappin légendaire"
+		"name": "Grappin légendaire",
+		"features": [
+			{
+				"name": "À crochet",
+				"description": [
+					{
+						"paragraph": "Lors d’une attaque réussie, vous pouvez attirer la cible à portée de Mêlée."
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_legendary_hand_crossbow": {
 		"name": "Arbalète de poing légendaire"
 	},
 	"core_weapon_braveshield": {
-		"name": "Bouclier du brave"
+		"name": "Bouclier du brave",
+		"features": [
+			{
+				"name": "Abritant",
+				"description": [
+					{
+						"paragraph": "Lorsque vous cochez un emplacement d’armure, il réduit les dégâts pour vous et pour tous les alliés à portée de Mêlée qui ont subi les mêmes dégâts."
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_knuckle_claws": {
-		"name": "Griffes de poing"
+		"name": "Griffes de poing",
+		"features": [
+			{
+				"name": "Doublé",
+				"description": [
+					{
+						"paragraph": "Lorsque vous faites une attaque avec votre arme principale, vous pouvez infliger des dégâts à une autre cible à portée de Mêlée."
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_primer_shard": {
-		"name": "Éclat d’amorce"
+		"name": "Éclat d’amorce",
+		"features": [
+			{
+				"name": "Verrouillé",
+				"description": [
+					{
+						"paragraph": "Lors d’une attaque réussie, votre prochaine attaque contre la même cible réussit automatiquement."
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_advanced_arcane_gauntlets": {
 		"name": "Gantelets arcaniques avancés"
@@ -531,7 +1641,17 @@
 		"name": "Runes de main avancées"
 	},
 	"core_weapon_advanced_returning_blade": {
-		"name": "Lame boomerang avancée"
+		"name": "Lame boomerang avancée",
+		"features": [
+			{
+				"name": "Revenant",
+				"description": [
+					{
+						"paragraph": "Lorsque cette arme est lancée à portée, elle réapparaît dans votre main immédiatement après l’attaque."
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_advanced_shortstaff": {
 		"name": "Bâton court avancé"
@@ -540,39 +1660,149 @@
 		"name": "Bâton double avancé"
 	},
 	"core_weapon_advanced_scepter": {
-		"name": "Sceptre avancé"
+		"name": "Sceptre avancé",
+		"features": [
+			{
+				"name": "Polyvalent",
+				"description": [
+					{
+						"paragraph": "Cette arme peut aussi être utilisée avec ces statistiques : Présence, Mêlée, d8+4."
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_advanced_wand": {
 		"name": "Baguette avancée"
 	},
 	"core_weapon_advanced_greatstaff": {
-		"name": "Grand bâton avancé"
+		"name": "Grand bâton avancé",
+		"features": [
+			{
+				"name": "Puissant",
+				"description": [
+					{
+						"paragraph": "Lors d’une attaque réussie, lancez un dé de dégâts supplémentaire et défaussez le plus bas résultat."
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_axe_of_fortunis": {
-		"name": "Hache de Fortunis"
+		"name": "Hache de Fortunis",
+		"features": [
+			{
+				"name": "Chanceux",
+				"description": [
+					{
+						"paragraph": "Lors d’une attaque ratée, vous pouvez cocher un Stress pour relancer votre attaque."
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_blessed_anlace": {
-		"name": "Anlace bénie"
+		"name": "Anlace bénie",
+		"features": [
+			{
+				"name": "Guérisseur",
+				"description": [
+					{
+						"paragraph": "Pendant le temps mort, effacez automatiquement un PV."
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_ghostblade": {
-		"name": "Lame fantôme"
+		"name": "Lame fantôme",
+		"features": [
+			{
+				"name": "Surnaturel",
+				"description": [
+					{
+						"paragraph": "Lors d’une attaque réussie, vous pouvez infliger des dégâts physiques ou magiques."
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_runes_of_ruination": {
-		"name": "Runes de ruine"
+		"name": "Runes de ruine",
+		"features": [
+			{
+				"name": "Douloureux",
+				"description": [
+					{
+						"paragraph": "Chaque fois que vous réussissez une attaque, vous devez cocher un Stress."
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_widogast_pendant": {
-		"name": "Pendentif de Widogast"
+		"name": "Pendentif de Widogast",
+		"features": [
+			{
+				"name": "Courbe-temps",
+				"description": [
+					{
+						"paragraph": "Vous choisissez la cible de votre attaque après avoir fait votre jet d’attaque."
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_gilded_bow": {
-		"name": "Arc doré"
+		"name": "Arc doré",
+		"features": [
+			{
+				"name": "Autocorrecteur",
+				"description": [
+					{
+						"paragraph": "Lorsque vous obtenez 1 sur un dé de dégâts, il inflige 6 dégâts à la place."
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_firestaff": {
-		"name": "Bâton de feu"
+		"name": "Bâton de feu",
+		"features": [
+			{
+				"name": "Ardent",
+				"description": [
+					{
+						"paragraph": "Lorsque vous obtenez 6 sur un dé de dégâts, la cible doit cocher un Stress."
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_mage_orb": {
-		"name": "Orbe de mage"
+		"name": "Orbe de mage",
+		"features": [
+			{
+				"name": "Puissant",
+				"description": [
+					{
+						"paragraph": "Lors d’une attaque réussie, lancez un dé de dégâts supplémentaire et défaussez le plus bas résultat."
+					}
+				]
+			}
+		]
 	},
 	"core_weapon_ilmaris_rifle": {
-		"name": "Fusil d’Ilmari"
+		"name": "Fusil d’Ilmari",
+		"features": [
+			{
+				"name": "Rechargement",
+				"description": [
+					{
+						"paragraph": "Après avoir fait une attaque, lancez un d6. Sur un résultat de 1, vous devez cocher un Stress pour recharger cette arme avant de pouvoir tirer à nouveau."
+					}
+				]
+			}
+		]
 	}
 }

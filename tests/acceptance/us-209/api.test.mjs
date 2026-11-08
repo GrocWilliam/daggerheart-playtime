@@ -14,18 +14,19 @@ const get = async (path, lang) => {
 	const r = await fetch(BASE + path, { headers: lang ? { cookie: `lang=${lang}` } : {} });
 	return { status: r.status, json: await r.json().catch(() => null) };
 };
+const overlay = () => JSON.parse(fs.readFileSync('src/lib/srd/fr/weapons.json', 'utf8')).core_weapon_broadsword;
 const broadsword = () => JSON.parse(fs.readFileSync('src/lib/srd/core/weapons.json', 'utf8')).find((e) => e.id === 'core_weapon_broadsword');
 
-test("lang=fr: GET /api/srd/weapons/core_weapon_broadsword has name['en-US'] and nameLocalized 'Épée large', everything else English", async () => {
+test("lang=fr: GET /api/srd/weapons/core_weapon_broadsword has name['en-US'] and nameLocalized 'Épée large', only the translated fields (name, feature name and text) differ from English", async () => {
 	const r = await get('/api/srd/weapons/core_weapon_broadsword', 'fr');
 	assert.equal(r.status, 200);
 	assert.equal(r.json.name['en-US'], 'Épée large');
 	assert.equal(r.json.nameLocalized, 'Épée large');
 	const en = (await get('/api/srd/weapons/core_weapon_broadsword', 'en')).json;
-	assert.deepEqual({ ...r.json, name: en.name, nameLocalized: en.nameLocalized }, en);
+	assert.deepEqual({ ...r.json, name: en.name, nameLocalized: en.nameLocalized, features: en.features }, en);
 	assert.deepEqual(r.json.name, { 'en-US': 'Épée large' });
-	assert.equal(r.json.features[0].description[0].paragraph['en-US'], broadsword().features[0].description[0].paragraph['en-US']);
-	assert.equal(r.json.features[0].name['en-US'], 'Reliable');
+	assert.equal(r.json.features[0].description[0].paragraph['en-US'], overlay().features[0].description[0].paragraph);
+	assert.equal(r.json.features[0].name['en-US'], overlay().features[0].name);
 });
 
 test('lang=en or no cookie: the same request returns the English element exactly as before', async () => {
