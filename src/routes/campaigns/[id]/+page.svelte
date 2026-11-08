@@ -43,23 +43,26 @@
 		notesTimer = setTimeout(() => saveNotes(sceneId, value), 800);
 	}
 	const t = (key: string) => translate(data.lang, key);
+	/** Catalog labels are shown capitalised: they are heading-like values here (the SRD writes `Exploration`). */
+	const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+	const envType = (type: string) => cap(t(`environment.type.${type}`));
 	const c = $derived(data.campaign);
 	const cs = $derived(data.scenes.find((x) => x.status === 'current'));
 </script>
 
 {#snippet adversaryStats(a: Adversary)}
-	<p><strong lang={a.lang}>{a.name}</strong> ×{a.count} · <span lang={a.lang}>{a.role}</span></p>
+	<p><strong lang={a.nameLang}>{a.name}</strong> ×{a.count} · <span lang={data.lang}>{cap(t(`adversary.role.${a.role}`))}</span></p>
 	<ul class="list-none pl-0!">
 		<li>{t('encounter.difficulty')}: {a.difficulty}</li>
 		<li>{t('encounter.hp')}: {a.hp}</li>
 		<li>{t('encounter.stress')}: {a.stress}</li>
 		<li>{t('encounter.thresholds')}: {a.thresholds}</li>
-		<li>{t('encounter.attack')}: <span lang={a.lang}>{a.attack}</span></li>
-		<li>{t('encounter.damage')}: <span lang={a.lang}>{a.damage}</span></li>
+		<li>{t('encounter.attack')}: <span lang={a.attackLang}>{a.attack}</span></li>
+		<li>{t('encounter.damage')}: <span>{a.dice}</span>{#if a.damageType}{' '}<span lang={data.lang}>{t(`damage.${a.damageType}`)}</span>{/if}</li>
 	</ul>
 	<details>
 		<summary>{t('encounter.features')}</summary>
-		{#each a.features as f (f.name)}<p lang={a.lang}><strong>{f.name}</strong>: {f.text}</p>{/each}
+		{#each a.features as f (f.name)}<p lang={f.lang}><strong>{f.name}</strong>: {f.text}</p>{/each}
 	</details>
 {/snippet}
 
@@ -152,12 +155,12 @@
 		{#if s.environment}
 			{@const env = s.environment}
 			<div data-testid="scene-environment">
-				<p><strong lang={env.lang}>{env.name}</strong>
-					<Help id="environment" name={env.name} nameLang={env.lang} lang={data.lang} lines={env.features} /></p>
+				<p><strong lang={env.nameLang}>{env.name}</strong>
+					<Help id="environment" name={env.name} nameLang={env.nameLang} lang={data.lang} lines={env.features} /></p>
 				<ul class="list-none pl-0!">
-					<li>{t('scenario.env.type')}: <span lang={env.lang}>{env.type}</span></li>
+					<li>{t('scenario.env.type')}: <span lang={data.lang}>{envType(env.type)}</span></li>
 					<li>{t('scenario.env.difficulty')}: {env.difficulty}</li>
-					<li>{t('scenario.env.impulses')}: <span lang={env.lang}>{env.impulses}</span></li>
+					<li>{t('scenario.env.impulses')}: <span lang={env.impulsesLang}>{env.impulses}</span></li>
 				</ul>
 			</div>
 		{/if}
@@ -275,8 +278,8 @@
 <div class="flow-root md:mt-[15px] lg:mt-0" data-testid="current-scene">
 	<h2>{t('campaign.currentScene')}: {cs.title}</h2>
 	{#if cs.environment}
-		<div><strong lang={cs.environment.lang}>{cs.environment.name}</strong>
-			<Help id="environment" name={cs.environment.name} nameLang={cs.environment.lang} lang={data.lang} lines={cs.environment.features} /></div>
+		<div><strong lang={cs.environment.nameLang}>{cs.environment.name}</strong> <span lang={data.lang}>{envType(cs.environment.type)}</span>
+			<Help id="environment" name={cs.environment.name} nameLang={cs.environment.nameLang} lang={data.lang} lines={cs.environment.features} /></div>
 	{/if}
 	<form use:enhance={busy} class="mb-4 bg-transparent! border-0! p-0!" method="POST" action="?/nextScene">
 		<button type="submit">{t('run.nextScene')}</button>

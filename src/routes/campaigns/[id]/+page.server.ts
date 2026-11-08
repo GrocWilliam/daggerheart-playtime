@@ -1,10 +1,11 @@
 import { error, fail, redirect } from '@sveltejs/kit';
-import { getSrd, listSrd, localizedSrd, pickOf, type Line } from '$lib/server/features/srd';
+import { listSrd, localizedSrd, pickOf, type Line } from '$lib/server/features/srd';
 import type { Scene } from '$lib/server/features/scenes';
 import type { LootEntry } from '$lib/server/features/loot';
 import type { Lang } from '$lib/i18n';
 import { partyDefaults, ADJUSTMENTS, type Encounter } from '$lib/server/features/encounters';
 import { trackerFieldSchema } from '$lib/server/features/characters';
+import { splitDamage } from './damage';
 type Actions = import('./$types').Actions;
 type PageServerLoad = import('./$types').PageServerLoad;
 
@@ -40,7 +41,7 @@ function failure(r: { status: number; data: { error?: string } | null }, extra: 
 
 type Raw = { description?: { paragraph?: Record<string, string> }[] };
 
-/** Adversary and environment stats on this screen are the SRD's English (their own story localizes them). */
+/** Language of SRD text that has no translation yet. */
 const SOURCE_LANG: Lang = 'en';
 
 /** A loot entry with its localized name and SRD feature texts, each with its language. */
@@ -62,15 +63,19 @@ function lootView(l: LootEntry, lang: Lang) {
 
 type Feature = { name: string; text: string };
 
-/** An encounter entry with its English SRD stats. */
-function adversaryView(a: { id: string; name: string; role: string; count: number; cost: number }) {
-	const d = (getSrd('adversaries', a.id, 'en') ?? {}) as Record<string, unknown>;
+/** An encounter entry with its SRD stats in `lang` (the stored English name and role stay in the database). */
+function adversaryView(a: { id: string; name: string; role: string; count: number; cost: number }, lang: Lang) {
+	const r = localizedSrd('adversaries', a.id, lang);
+	const d = (r?.element ?? {}) as Record<string, unknown>;
 	const s = (k: string) => String(d[k] ?? '');
-	const features = ((d.feature as Feature[] | undefined) ?? []).map((f) => ({ name: f.name, text: f.text }));
+	const featLang: Lang = r?.langs.feature ?? SOURCE_LANG;
+	const features = ((d.feature as Feature[] | undefined) ?? []).map((f) => ({ name: f.name, text: f.text, lang: featLang }));
+	const dmg = splitDamage(s('damage'));
 	return {
-		id: a.id, name: a.name, role: a.role, count: a.count, cost: a.cost, lang: SOURCE_LANG,
-		difficulty: s('difficulty'), hp: s('hp'), stress: s('stress'), thresholds: s('thresholds'),
-		attack: s('attack'), damage: s('damage'), features
+		id: a.id, name: r ? String(d.nameLocalized) : a.name, nameLang: r?.langs.name ?? SOURCE_LANG,
+		role: s('role') || a.role, count: a.count, cost: a.cost,
+		attack: s('attack'), attackLang: r?.langs.attack ?? SOURCE_LANG, dice: dmg.dice, damageType: dmg.type,
+		difficulty: s('difficulty'), hp: s('hp'), stress: s('stress'), thresholds: s('thresholds'), features
 	};
 }
 
@@ -96,22 +101,24 @@ export const load: PageServerLoad = async ({ params, fetch, locals, url }) => {
 	const scenesRaw = (Array.isArray(sc.data) ? sc.data : []) as Scene[];
 	const current = scenesRaw.find((s) => s.status === 'current');
 const scenes = scenesRaw.map((s) => {
-		const e = s.environmentId ? getSrd('environments', s.environmentId, 'en') : null;
-		const environment = e
+		const er = s.environmentId ? localizedSrd('environments', s.environmentId, lang) : null;
+		const e = er?.element as Record<string, unknown> | undefined;
+		const environment = e && er
 			? {
-					name: String(e.name),
+					name: String(e.nameLocalized),
+					nameLang: er.langs.name ?? SOURCE_LANG,
 					type: String(e.type ?? ''),
 					difficulty: String(e.difficulty ?? ''),
 					impulses: String(e.impulses ?? ''),
-					lang: SOURCE_LANG,
+					impulsesLang: er.langs.impulses ?? SOURCE_LANG,
 					// Name and guiding question only: the full rules text stays in the SRD reference.
 					features: ((e.feature as { name: string; question?: string }[] | undefined) ?? []).map(
-						(f): Line => ({ text: f.question ? `${f.name.trim()}: ${f.question}` : f.name.trim(), lang: SOURCE_LANG })
+						(f): Line => ({ text: f.question ? `${f.name.trim()}: ${f.question}` : f.name.trim(), lang: er.langs.feature ?? SOURCE_LANG })
 					)
 				}
 			: null;
 		const enc = s.encounter as Encounter | null;
-		const encounter = enc ? { ...enc, over: enc.spent > enc.budget, adversaries: enc.adversaries.map(adversaryView) } : null;
+		const encounter = enc ? { ...enc, over: enc.spent > enc.budget, adversaries: enc.adversaries.map((a) => adversaryView(a, lang)) } : null;
 		const loot = (Array.isArray(s.loot) ? (s.loot as LootEntry[]) : []).map((l) => lootView(l, lang));
 		return { ...s, environment, loot, encounter };
 	});
