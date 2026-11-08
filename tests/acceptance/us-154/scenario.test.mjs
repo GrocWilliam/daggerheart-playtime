@@ -125,16 +125,19 @@ test('a scene with an environment shows its name, type, difficulty, impulses and
 	await addScene(c.id, 'Plain');
 	const raw = (await import('node:fs')).readFileSync('src/lib/srd/environments.json', 'utf8').replace(/^﻿/, '');
 	const full = JSON.parse(raw).find((e) => e.name === env.name || e.name?.['en-US'] === env.name) ?? JSON.parse(raw)[0];
+	const frEnvs = JSON.parse((await import('node:fs')).readFileSync('src/lib/srd/fr/environments.json', 'utf8').replace(/^﻿/, ''));
 	for (const lang of ['en', 'fr']) {
 		const p = await open(`/campaigns/${c.id}?step=build`, lang);
 		const el = scene(p, 'Grove');
 		const text = (await el.textContent()).replace(/\s+/g, ' ');
-		assert.ok(text.includes(String(full.name)), 'name');
+		const fr = lang === 'fr' ? frEnvs[env.id] : undefined;
+		const shown = { ...full, ...(fr ?? {}), feature: [{ ...full.feature[0], ...(fr?.feature?.[0] ?? {}) }] };
+		assert.ok(text.includes(String(shown.name)), 'name');
 		assert.ok(text.includes(String(full.type)), 'type');
 		assert.ok(text.includes(String(full.difficulty)), 'difficulty');
-		assert.ok(text.includes(String(full.impulses).split(',')[0].trim()), 'impulses');
+		assert.ok(text.includes(String(shown.impulses).split(',')[0].trim()), 'impulses');
 		assert.ok(await el.locator('details').count() >= 1, 'features in details');
-		assert.ok(text.includes(full.feature[0].name.trim()), 'feature name');
+		assert.ok(text.includes(shown.feature[0].name.trim()), 'feature name');
 		assert.equal(await scene(p, 'Plain').locator('details').count(), 0);
 	}
 });

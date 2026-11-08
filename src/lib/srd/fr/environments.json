@@ -1,1 +1,318 @@
-{}
+{
+  "env_abandoned_grove": {
+    "name": "Bosquet abandonné",
+    "description": "Un ancien bosquet druidique laissé en friche, entièrement reconquis par la nature.",
+    "impulses": "Attirer les curieux, faire écho au passé",
+    "potential_adversaries": "Bêtes (Ours, Loup sanguinaire, Serpent de verre), Gardiens du bosquet (Tréant mineur, Soldat sylvestre, Jeune dryade)",
+    "feature": [
+      {
+        "name": "Champ de bataille envahi - Passive",
+        "question": "Pourquoi ces groupes en sont-ils venus aux mains ? Pourquoi le bosquet est-il désormais abandonné ?",
+        "text": "Une bataille a eu lieu ici. Un PJ peut faire un jet d'Instinct pour relever les traces de ce combat. En cas de réussite avec Espoir, il apprend les trois informations ci-dessous. En cas de réussite avec Peur, il en apprend deux. En cas d'échec, un PJ peut cocher un Stress pour en apprendre une et obtenir l'avantage au prochain jet d'action pour examiner cet environnement. Un PJ ayant un passé ou une Expérience appropriés peut apprendre un détail supplémentaire et poser une question de suivi sur la scène pour obtenir une réponse sincère (mais pas toujours complète). _Pourquoi ces groupes en sont-ils venus aux mains ? Pourquoi le bosquet est-il désormais abandonné ?_\n\n- Des traces de bataille (armes et branches brisées, entailles dans le sol) jonchent la terre.\n- Un tronc d'arbre couvert de mousse est en réalité le cadavre d'un tréant.\n- Les arbres encore debout sont tordus de façon étrange, comme par une puissante magie."
+      },
+      {
+        "name": "Vignes barbelées - Action",
+        "question": "Combien y a-t-il de vignes ? Où vous saisissent-elles ? Vous tirent-elles vers le bas ou vous soulèvent-elles du sol ?",
+        "text": "Choisissez un point du bosquet. Toutes les cibles à portée Très proche de ce point doivent réussir un jet de réaction d'Agilité, sinon elles subissent **1d8+3** dégâts physiques et deviennent _Entravées_ par des vignes barbelées. L'état _Entravé_ dure jusqu'à ce qu'elles soient libérées par un jet de Finesse ou de Puissance réussi, ou en infligeant au moins 6 dégâts aux vignes. _Combien y a-t-il de vignes ? Où vous saisissent-elles ? Vous tirent-elles vers le bas ou vous soulèvent-elles du sol ?_"
+      },
+      {
+        "name": "Vous n'êtes pas les bienvenus - Action",
+        "question": "Que cachent les gardiens du bosquet ? Quelle menace pesant sur la forêt les PJ pourraient-ils affronter pour apaiser la dryade ?",
+        "text": "Une Jeune dryade, deux Soldats sylvestres et un nombre de Tréants mineurs égal au nombre de PJ surgissent pour confronter le groupe à son intrusion. _Que cachent les gardiens du bosquet ? Quelle menace pesant sur la forêt les PJ pourraient-ils affronter pour apaiser la dryade ?_"
+      },
+      {
+        "name": "Profanateur - Action",
+        "question": "De quelle couleur l'herbe devient-elle quand l'élémentaire apparaît ? Comment le chaos déforme-t-il les insectes et la petite faune du bosquet ?",
+        "text": "**Dépensez une Peur** pour invoquer un Élémentaire du chaos mineur, attiré par les échos de la violence et de la discorde. Il apparaît à portée Lointaine d'un PJ choisi et prend immédiatement le projecteur. _De quelle couleur l'herbe devient-elle quand l'élémentaire apparaît ? Comment le chaos déforme-t-il les insectes et la petite faune du bosquet ?_"
+      }
+    ]
+  },
+  "env_ambushed": {
+    "name": "Pris en embuscade",
+    "description": "Une embuscade est tendue pour surprendre un groupe sans méfiance.",
+    "impulses": "Submerger, disperser, encercler",
+    "potential_adversaries": "N'importe lesquels",
+    "feature": [
+      {
+        "name": "Force relative - Passive",
+        "question": "Qui donne le signal de l'embuscade ? Qu'est-ce qui montre clairement qu'il commande ?",
+        "text": "La Difficulté de cet environnement est égale à celle de l'adversaire ayant la plus haute Difficulté. _Qui donne le signal de l'embuscade ? Qu'est-ce qui montre clairement qu'il commande ?_"
+      },
+      {
+        "name": "Surprise ! - Action",
+        "question": "Que veulent les assaillants au groupe ? En quoi leurs tactiques reflètent-elles ce désir ?",
+        "text": "Les assaillants se révèlent au groupe, vous gagnez 2 Peur, et le projecteur passe immédiatement à l'un des adversaires de l'embuscade. _Que veulent les assaillants au groupe ? En quoi leurs tactiques reflètent-elles ce désir ?_"
+      }
+    ]
+  },
+  "env_ambushers": {
+    "name": "Guet-apens tendu",
+    "description": "Une embuscade est tendue par les PJ pour surprendre des adversaires sans méfiance.",
+    "impulses": "S'échapper, se regrouper, protéger les plus vulnérables",
+    "potential_adversaries": "N'importe lesquels",
+    "feature": [
+      {
+        "name": "Force relative - Passive",
+        "question": "Quel adversaire est le moins préparé ? Lequel l'est le plus ?",
+        "text": "La Difficulté de cet environnement est égale à celle de l'adversaire ayant la plus haute Difficulté. _Quel adversaire est le moins préparé ? Lequel l'est le plus ?_"
+      },
+      {
+        "name": "D'où sortent-ils ? - Réaction",
+        "question": "Que sont en train de faire les adversaires quand l'embuscade commence ? Comment cela influence-t-il leur façon d'aborder le combat ?",
+        "text": "Quand un PJ déclenche l'embuscade contre des adversaires sans méfiance, vous perdez 2 Peur et le premier jet d'attaque d'un PJ a l'avantage. _Que sont en train de faire les adversaires quand l'embuscade commence ? Comment cela influence-t-il leur façon d'aborder le combat ?_"
+      }
+    ]
+  },
+  "env_bustling_marketplace": {
+    "name": "Marché animé",
+    "description": "Le cœur économique de la ville, avec des artisans locaux, des marchands itinérants et des clients de toutes les classes sociales.",
+    "impulses": "Acheter bon marché et vendre cher, tenter et séduire avec des marchandises venues de près et de loin",
+    "potential_adversaries": "Gardes (Garde à l'épée, Chef de la garde), Voleur masqué, Marchand",
+    "feature": [
+      {
+        "name": "Faire pencher la balance - Passive",
+        "question": "À quel point les PJ sont-ils ouverts dans leur offre de pot-de-vin ?",
+        "text": "Les PJ peuvent obtenir l'avantage à un jet de Présence en offrant une poignée d'or lors de l'échange. _Toute pièce sera-t-elle acceptée, ou seulement la monnaie locale ? À quel point les PJ sont-ils ouverts dans leur offre de pot-de-vin ?_"
+      },
+      {
+        "name": "Trouvaille inattendue - Action",
+        "question": "Quel prix, au-delà de l'or, le marchand demandera-t-il en échange de cette rareté ?",
+        "text": "Révélez aux PJ qu'un des marchands possède quelque chose qu'ils veulent ou dont ils ont besoin, comme de la nourriture de leur région, un livre rare, des composants magiques, une carte au trésor douteuse ou une clé magique. _Quel prix, au-delà de l'or, le marchand demandera-t-il en échange de cette rareté ?_"
+      },
+      {
+        "name": "Doigts collants - Action",
+        "question": "Qu'est-ce qui a poussé cette personne à voler à la tire ? Où se trouve la cachette du voleur et comment est-elle passée inaperçue ?",
+        "text": "Un voleur tente de dérober quelque chose à un PJ. Le PJ doit réussir un jet d'Instinct pour remarquer le voleur, sinon il perd un objet choisi par le MJ tandis que le voleur s'enfuit à distance Proche. Pour récupérer l'objet volé, les PJ doivent accomplir un compte à rebours de progression (6) pour rattraper le voleur avant que celui-ci n'accomplisse un compte à rebours de conséquence (4) et ne s'échappe vers sa cachette. _Qu'est-ce qui a poussé cette personne à voler à la tire ? Où se trouve la cachette du voleur et comment est-elle passée inaperçue ?_"
+      },
+      {
+        "name": "La foule se referme - Réaction",
+        "question": "Où le mouvement de la foule les emporte-t-il ? Que ressentent-ils à l'idée d'être seuls mais cernés ?",
+        "text": "Quand l'un des PJ se sépare du groupe, la foule se déplace et le coupe de ses compagnons. _Où le mouvement de la foule les emporte-t-il ? Que ressentent-ils à l'idée d'être seuls mais cernés ?_"
+      }
+    ]
+  },
+  "env_cliffside_ascent": {
+    "name": "Ascension de la falaise",
+    "description": "Une falaise rocheuse et abrupte, assez haute pour rendre la traversée dangereuse.",
+    "impulses": "Précipiter les imprudents vers une mort rocailleuse, attirer les gens avec la promesse de ce qui se trouve au sommet",
+    "potential_adversaries": "Golem, Défenseur de Racine-Profonde, Scorpion géant, Serpent de verre",
+    "feature": [
+      {
+        "name": "L'escalade - Passive",
+        "question": "En quelles formations étranges les pierres sont-elles disposées ? Quels avertissements sinistres les aventuriers précédents ont-ils laissés ?",
+        "text": "Gravir la falaise utilise un compte à rebours de progression (12). Il diminue selon les critères suivants quand les PJ font un jet d'action pour grimper :\n\n- **Réussite critique :** Diminuez de 3\n- **Réussite avec Espoir :** Diminuez de 2\n- **Réussite avec Peur :** Diminuez de 1\n- **Échec avec Espoir :** Aucune avancée\n- **Échec avec Peur :** Augmentez de 1\n\nQuand le compte à rebours se déclenche, le groupe a atteint le sommet de la falaise. _En quelles formations étranges les pierres sont-elles disposées ? Quels avertissements sinistres les aventuriers précédents ont-ils laissés ?_"
+      },
+      {
+        "name": "Pitons laissés en place - Passive",
+        "question": "Que révèlent la forme et le matériau de ces pitons sur les grimpeurs précédents ? À quelle distance sont-ils les uns des autres ?",
+        "text": "Les grimpeurs précédents ont laissé de grandes tiges de métal que l'on peut utiliser pour faciliter l'ascension. Si un PJ utilisant les pitons échoue à un jet d'action pour grimper, il peut cocher un Stress au lieu de faire augmenter le compte à rebours. _Que révèlent la forme et le matériau de ces pitons sur les grimpeurs précédents ? À quelle distance sont-ils les uns des autres ?_"
+      },
+      {
+        "name": "Chute - Action",
+        "question": "Comment voyez-vous que beaucoup d'autres sont déjà tombés ici ? Qu'est-ce qui vit dans ces parois et pourrait tenter d'effrayer les aventuriers pour qu'ils tombent et lui offrent un repas facile ?",
+        "text": "**Dépensez une Peur** pour qu'une prise cède sous un PJ, le précipitant vers le sol. S'il n'est pas sauvé à l'action suivante, il heurte le sol et le compte à rebours augmente de 2. Le PJ subit **1d12** dégâts physiques si le compte à rebours est entre 8 et 12, **2d12** entre 4 et 7, et **3d12** à 3 ou moins. _Comment voyez-vous que beaucoup d'autres sont déjà tombés ici ? Qu'est-ce qui vit dans ces parois et pourrait tenter d'effrayer les aventuriers pour qu'ils tombent et lui offrent un repas facile ?_"
+      }
+    ]
+  },
+  "env_local_tavern": {
+    "name": "Taverne du coin",
+    "description": "Une taverne animée qui sert de lieu de rencontre à sa ville.",
+    "impulses": "Offrir des occasions aux aventuriers, nourrir la communauté",
+    "potential_adversaries": "Gardes (Garde à l'épée, Chef de la garde), Mercenaires (Harceleur, Mercenaire, Lame-sorcière, Maître d'armes), Marchand",
+    "feature": [
+      {
+        "name": "Que dit-on en ville ? - Passive",
+        "question": "Qui détient quelles informations ? Quelles rumeurs les habitants se mettent-ils à répandre sur les PJ ?",
+        "text": "Un PJ peut interroger le tavernier, le personnel ou les clients sur les événements locaux, les rumeurs et les travaux possibles avec un jet de Présence. En cas de réussite, il peut choisir deux des détails ci-dessous à apprendre, ou trois en cas de réussite critique. En cas d'échec, il peut en choisir un et cocher un Stress tandis que le local s'étend sur un sujet sans importance. _Qui détient quelles informations ? Quelles rumeurs les habitants se mettent-ils à répandre sur les PJ ?_\n\n- Une rumeur fascinante liée au passé d'un PJ\n- Un travail prometteur pour le groupe, lié à une menace ou une situation proche\n- Un folklore local qui se rapporte à quelque chose qu'ils ont vu\n- Un ragot de la ville qui laisse entrevoir un problème de la communauté"
+      },
+      {
+        "name": "Chanter pour son souper - Passive",
+        "question": "Quel morceau interprétez-vous ? Que signifie-t-il pour vous ? Quand l'avez-vous joué pour la dernière fois devant un public ?",
+        "text": "Un PJ peut se produire une fois devant les clients en faisant un jet de Présence. En cas de réussite, il gagne **1d4** poignées d'or (**2d4** en cas de réussite critique). En cas d'échec, il coche un Stress. _Quel morceau interprétez-vous ? Que signifie-t-il pour vous ? Quand l'avez-vous joué pour la dernière fois devant un public ?_"
+      },
+      {
+        "name": "Mystérieux inconnu - Action",
+        "question": "Que veut-il ? Quelle impression a-t-il des PJ ? Quelles manières ou quels accessoires le distinguent ?",
+        "text": "Révélez un inconnu dissimulant son identité, tapi dans un box obscur. _Que veut-il ? Quelle impression a-t-il des PJ ? Quelles manières ou quels accessoires le distinguent ?_"
+      },
+      {
+        "name": "Quelqu'un arrive en ville - Action",
+        "question": "Savait-il que les PJ étaient là ? Que veut-il dans cette ville ?",
+        "text": "Introduisez un PNJ important qui veut engager le groupe pour une tâche ou qui est lié au passé d'un PJ. _Savait-il que les PJ étaient là ? Que veut-il dans cette ville ?_"
+      },
+      {
+        "name": "Bagarre de taverne ! - Action",
+        "question": "Qui a commencé la bagarre ? Que faudra-t-il pour l'arrêter ?",
+        "text": "**Dépensez une Peur** pour qu'une bagarre éclate dans la taverne. Quand un PJ tente de traverser la taverne tant que la bagarre dure, il doit réussir un jet d'Agilité ou de Présence, sinon il subit **1d6+2** dégâts physiques d'un coup sauvage ou d'un objet lancé. Un PJ peut déclencher cette capacité en réussissant un jet d'action qui provoquerait les clients de la taverne. _Qui a commencé la bagarre ? Que faudra-t-il pour l'arrêter ?_"
+      }
+    ]
+  },
+  "env_outpost_town": {
+    "name": "Ville avant-poste",
+    "description": "Une petite ville aux confins d'une nation ou d'une région, proche d'un donjon, de tombeaux ou d'autres destinations d'aventure.",
+    "impulses": "Mener les désespérés à une perte certaine, profiter d'un espoir en lambeaux",
+    "potential_adversaries": "Bandits du Couteau Dentelé (Jeteur de sorts, Casseur de genoux, Larbin, Lieutenant, Ombre, Tireur d'élite), Voleur masqué, Marchand",
+    "feature": [
+      {
+        "name": "Les rumeurs courent - Passive",
+        "question": "Quelles nouvelles les PJ ont-ils à transmettre aux voyageurs curieux ? Que pensent les habitants de ces événements ?",
+        "text": "Les ragots sont la monnaie qui voyage le plus vite du royaume. Un PJ peut s'enquérir des événements importants avec un jet de Présence. Ce qu'il apprend dépend du résultat de son jet, selon les critères suivants. _Quelles nouvelles les PJ ont-ils à transmettre aux voyageurs curieux ? Que pensent les habitants de ces événements ?_\n\n- **Réussite critique :** Il apprend deux événements majeurs. Le PJ peut poser une question de suivi sur l'une des rumeurs et obtenir une réponse sincère (mais pas toujours complète).\n- **Réussite avec Espoir :** Il apprend deux événements, dont au moins un concerne le passé du personnage.\n- **Réussite avec Peur :** Il apprend une rumeur alarmante liée au passé du personnage.\n- **Tout échec :** Les habitants réagissent mal à ses questions. Le PJ doit cocher un Stress pour apprendre une rumeur pertinente."
+      },
+      {
+        "name": "Société de la Boussole brisée - Passive",
+        "question": "Quelles vantardises les aventuriers d'ici font-ils, et lesquelles croyez-vous vraies ?",
+        "text": "Une société d'aventuriers tient ici une maison de chapitre, où les héros échangent vantardises et rumeurs, boivent à leurs succès imaginaires et complotent pour nuire à leurs rivaux. _Quelles vantardises les aventuriers d'ici font-ils, et lesquelles croyez-vous vraies ?_"
+      },
+      {
+        "name": "Groupe rival - Passive",
+        "question": "Quel PJ a un lien avec l'un des membres du groupe rival ? Viennent-ils trouver le PJ en premier ou attendent-ils qu'il fasse le premier pas ?",
+        "text": "Un autre groupe d'aventuriers est ici, à la recherche du même trésor ou des mêmes pistes que les PJ. _Quel PJ a un lien avec l'un des membres du groupe rival ? Viennent-ils trouver le PJ en premier ou attendent-ils qu'il fasse le premier pas ?_"
+      },
+      {
+        "name": "Ce serait dommage qu'il arrive malheur à votre boutique - Action",
+        "question": "Quels ennuis cela cause-t-il si les PJ interviennent ?",
+        "text": "Les PJ sont témoins d'agents d'un chef du crime local qui rackettent une boutique d'articles divers. _Quels ennuis cela cause-t-il si les PJ interviennent ?_"
+      },
+      {
+        "name": "Mauvais endroit, mauvais moment - Réaction",
+        "question": "Quels détails montrent au groupe que ces gens sont d'anciens aventuriers désespérés ?",
+        "text": "La nuit, ou quand le groupe est seul dans une ruelle, vous pouvez **dépenser une Peur** pour introduire un groupe de voleurs qui tentent de les détrousser. Les voleurs apparaissent à portée Proche d'un PJ choisi et comprennent un Casseur de genoux du Couteau Dentelé, autant de Larbins que de PJ, et un Lieutenant. Pour un groupe plus nombreux, ajoutez un Jeteur de sorts ou un Tireur d'élite. _Quels détails montrent au groupe que ces gens sont d'anciens aventuriers désespérés ?_"
+      }
+    ]
+  },
+  "env_raging_river": {
+    "name": "Rivière déchaînée",
+    "description": "Une rivière au courant rapide, sans pont pour la traverser, assez profonde pour emporter la plupart des gens.",
+    "impulses": "Barrer le passage, emporter les imprudents, diviser la terre",
+    "potential_adversaries": "Bêtes (Ours, Serpent de verre), Bandits du Couteau Dentelé (Jeteur de sorts, Casseur de genoux, Larbin, Lieutenant, Ombre, Tireur d'élite)",
+    "feature": [
+      {
+        "name": "Traversée dangereuse - Passive",
+        "question": "L'un d'eux a-t-il peur de se noyer ?",
+        "text": "Traverser la rivière demande au groupe d'accomplir un compte à rebours de progression (4). Un PJ qui obtient un échec avec Peur est immédiatement ciblé par l'action « Courant sous-marin » sans qu'il faille dépenser de Peur pour cette capacité. _Certains PJ ont-ils déjà franchi des rivières comme celle-ci ? L'un d'eux a-t-il peur de se noyer ?_"
+      },
+      {
+        "name": "Courant sous-marin - Action",
+        "question": "Quelles babioles et bibelots gisent au fond du lit de la rivière ? Des prédateurs nagent-ils dans ces eaux ?",
+        "text": "**Dépensez une Peur** pour piéger un PJ dans le courant. Il doit faire un jet de réaction d'Agilité. En cas d'échec, il subit **1d6+1** dégâts physiques et est emporté à distance Proche en aval, devenant _Vulnérable_ jusqu'à ce qu'il sorte de la rivière. En cas de réussite, il doit cocher un Stress. _Quelles babioles et bibelots gisent au fond du lit de la rivière ? Des prédateurs nagent-ils dans ces eaux ?_"
+      },
+      {
+        "name": "Chasseur patient - Action",
+        "question": "Quels trésors la bête garde-t-elle dans son terrier ? Quels voyageurs ont déjà été victimes de ce prédateur ?",
+        "text": "**Dépensez une Peur** pour invoquer un Serpent de verre à portée Proche d'un PJ choisi. Le serpent apparaît dans la rivière ou près d'elle et prend immédiatement le projecteur pour utiliser son action « Serpent tournoyant ». _Quels trésors la bête garde-t-elle dans son terrier ? Quels voyageurs ont déjà été victimes de ce prédateur ?_"
+      }
+    ]
+  },
+  "env_cult_ritual": {
+    "name": "Rituel du culte",
+    "description": "Un culte déchu s'assemble autour d'un sceau des dieux vaincus et d'un brasier qui brûle d'un vert maladif.",
+    "impulses": "Profaner la terre, unir le Royaume mortel aux Cercles d'en bas",
+    "potential_adversaries": "Culte des Déchus (Adepte du culte, Croc du culte, Initié du culte, Gardien du secret)",
+    "feature": [
+      {
+        "name": "Terre profanée - Passive",
+        "question": "Comment les PJ remarquent-ils d'abord que quelque chose cloche ici ? Quelles peurs refont surface tandis que l'espoir est tenu à distance ?",
+        "text": "Des cultistes ont dédié ce lieu aux dieux déchus, et leur influence impie s'y infiltre. Réduisez le dé d'Espoir des PJ à un **d10** tant qu'ils sont dans cet environnement. La profanation peut être levée par un compte à rebours de progression (6). _Comment les PJ remarquent-ils d'abord que quelque chose cloche ici ? Quelles peurs refont surface tandis que l'espoir est tenu à distance ?_"
+      },
+      {
+        "name": "Puissance blasphématoire - Action",
+        "question": "Comment l'ennemi change-t-il d'apparence ? Quelles peurs ses coups font-ils remonter à la surface ?",
+        "text": "Une partie de la puissance du rituel est détournée vers un membre du culte pour repousser les intrus. Choisissez un adversaire qui devient _Imprégné_ d'une terrible magie jusqu'à la fin de la scène ou jusqu'à sa défaite. Un adversaire _Imprégné_ prend immédiatement le projecteur et obtient l'un des avantages suivants, ou les trois si vous **dépensez une Peur** :\n\n- Il a l'avantage à toutes ses attaques.\n- Il inflige **1d10** dégâts supplémentaires lors d'une attaque réussie.\n- Il obtient la capacité suivante : _Implacable (2) - Passive :_ cet adversaire peut recevoir le projecteur jusqu'à deux fois par tour du MJ. Dépensez de la Peur comme d'habitude pour lui donner le projecteur. _Comment l'ennemi change-t-il d'apparence ? Quelles peurs ses coups font-ils remonter à la surface ?_"
+      },
+      {
+        "name": "L'invocation - Réaction : compte à rebours (6)",
+        "question": "Que fera le culte de ce démon tenu en laisse s'il réussit ? Que tentera-t-il d'invoquer ensuite ?",
+        "text": "Quand les PJ entrent dans la scène ou que le culte commence le rituel d'invocation d'un démon, activez le compte à rebours. Désignez un adversaire pour mener le rituel. Le compte à rebours diminue quand un PJ obtient un résultat avec Peur. Quand il se déclenche, invoquez un Démon mineur à portée Très proche du chef du rituel. Si le chef est vaincu, le compte à rebours prend fin sans effet, car le rituel échoue. _Que fera le culte de ce démon tenu en laisse s'il réussit ? Que tentera-t-il d'invoquer ensuite ?_"
+      },
+      {
+        "name": "Achever le rituel - Réaction",
+        "question": "Que ressent-on en voyant une telle dévotion tournée vers la quête de la peur et de la domination ?",
+        "text": "Si le chef du rituel est ciblé par une attaque ou un sort, un allié à portée Très proche de lui peut **cocher un Stress** pour être ciblé à sa place par cette attaque ou ce sort. _Que ressent-on en voyant une telle dévotion tournée vers la quête de la peur et de la domination ?_"
+      }
+    ]
+  },
+  "env_hallowed_temple": {
+    "name": "Temple sanctifié",
+    "description": "Un temple animé mais bien entretenu, qui offre des soins et accueille des offices réguliers, sous la direction d'un prêtre ou d'un séraphin.",
+    "impulses": "Relier le Royaume mortel aux Hauteurs sacrées, manifester la puissance du divin, apporter aide et réconfort aux fidèles",
+    "potential_adversaries": "Gardes (Garde archer, Garde à l'épée, Chef de la garde)",
+    "feature": [
+      {
+        "name": "Un lieu de guérison - Passive",
+        "question": "Quelle odeur a l'encens ? Quels chants les acolytes entonnent-ils ?",
+        "text": "Un PJ qui prend un repos dans le Temple sanctifié efface automatiquement tous ses PV. _Quelle odeur a l'encens ? Quels chants les acolytes entonnent-ils ?_"
+      },
+      {
+        "name": "Guidance divine - Passive",
+        "question": "Que ressentez-vous en étant touché par cette vision ? Quel sentiment persiste après que les images se sont effacées ?",
+        "text": "Un PJ qui prie une divinité dans le Temple sanctifié peut faire un jet d'Instinct pour recevoir des réponses. Si le dieu qu'il implore n'est pas le bienvenu dans ce temple, le jet est fait avec désavantage. _Que ressentez-vous en étant touché par cette vision ? Quel sentiment persiste après que les images se sont effacées ?_\n\n- **Réussite critique :** Le PJ obtient une information claire. De plus, il gagne **1d4** Espoir, qui peut être réparti entre le groupe s'il partage la vision et la guidance reçues.\n- **Réussite avec Espoir :** Le PJ reçoit une information claire.\n- **Réussite avec Peur :** Le PJ reçoit de brefs éclairs de compréhension et une impression émotionnelle qui transmet une réponse.\n- **Tout échec :** Le PJ ne reçoit que de vagues éclairs. Il peut cocher un Stress pour recevoir une image claire sans contexte."
+      },
+      {
+        "name": "Espoir tenace - Réaction",
+        "question": "À quelles émotions ou quels souvenirs vous raccrochez-vous quand la peur vous écrase ?",
+        "text": "Une fois par scène, chaque PJ peut cocher un Stress pour transformer un résultat avec Peur en résultat avec Espoir. _À quelles émotions ou quels souvenirs vous raccrochez-vous quand la peur vous écrase ?_"
+      },
+      {
+        "name": "Réprimande divine - Réaction",
+        "question": "Quels symboles ou icônes portent-ils pour montrer qu'ils sont les agents oints de la divinité ? Qui dirige le groupe et qu'est-ce qui l'a mené à cette vocation ?",
+        "text": "Quand les PJ ont profané les lieux, blasphémé ou offensé le clergé, vous pouvez **dépenser une Peur** pour invoquer un Haut Séraphin et **1d4** Gardes à l'épée à portée Proche du prêtre principal afin de faire respecter sa volonté. _Quels symboles ou icônes portent-ils pour montrer qu'ils sont les agents oints de la divinité ? Qui dirige le groupe et qu'est-ce qui l'a mené à cette vocation ?_"
+      }
+    ]
+  },
+  "env_haunted_city": {
+    "name": "Cité hantée",
+    "description": "Une cité abandonnée peuplée par les esprits agités d'époques révolues.",
+    "impulses": "Égarer et désorienter, rejouer des apocalypses publiques comme personnelles",
+    "potential_adversaries": "Fantômes (Archer spectral, Capitaine spectral, Gardien spectral), versions fantomatiques d'autres adversaires (voir « Forme fantomatique »)",
+    "feature": [
+      {
+        "name": "Savoir enfoui - Passive",
+        "question": "Quels plus grands secrets la cité recèle-t-elle ? Pourquoi tant de fantômes s'y attardent-ils ? Quels aventuriers condamnés y ont déjà connu une fin funeste ?",
+        "text": "La cité compte d'innombrables mystères à percer. Un PJ qui cherche à en savoir plus sur la cité déchue peut faire un jet d'Instinct ou de Connaissance pour s'informer sur ce lieu et découvrir du butin (peut-être hanté). _Quels plus grands secrets la cité recèle-t-elle ? Pourquoi tant de fantômes s'y attardent-ils ? Quels aventuriers condamnés y ont déjà connu une fin funeste ?_\n\n- **Réussite critique :** Il obtient une information précieuse et un objet utile qui s'y rapporte.\n- **Réussite avec Espoir :** Il obtient une information précieuse.\n- **Réussite avec Peur :** Il découvre une information vague ou incomplète.\n- **Tout échec :** Il coche un Stress pour trouver une piste après une fouille exhaustive."
+      },
+      {
+        "name": "Forme fantomatique - Passive",
+        "question": "Quelles blessures de leur forme physique révèlent leur cause de mort ? Quel dessein inachevé les retient dans le Plan mortel ?",
+        "text": "Les adversaires qui apparaissent ici ont une forme fantomatique. Ils résistent aux dégâts physiques et peuvent **cocher un Stress** pour traverser des objets solides jusqu'à portée Proche. _Quelles blessures de leur forme physique révèlent leur cause de mort ? Quel dessein inachevé les retient dans le Plan mortel ?_"
+      },
+      {
+        "name": "Impasses - Action",
+        "question": "Que vous veulent les fantômes ? Que leur voulez-vous ?",
+        "text": "Les fantômes d'une époque révolue font resurgir des scènes de leur passé, comme une fête de rue, une révolution ou un cambriolage. Ces hantises modifient la disposition de la cité autour des PJ, leur bloquant le chemin derrière eux, les forçant à un détour ou leur présentant un défi, comme les prendre pour des voleurs rivaux pendant le cambriolage. _Que vous veulent les fantômes ? Que leur voulez-vous ?_"
+      },
+      {
+        "name": "Apocalypse d'antan - Action",
+        "question": "Est-ce le désastre qui a conduit à l'abandon de la cité ? Que sait-on de ce désastre, et comment cela pourrait-il aider les PJ à s'échapper ?",
+        "text": "**Dépensez une Peur** pour faire resurgir l'écho d'un désastre passé qui a ravagé la cité. Activez un compte à rebours de progression (5) tandis que le désastre se rejoue autour des PJ. Pour achever le compte à rebours et échapper à la catastrophe, les PJ doivent surmonter des menaces comme des incendies déchaînés, des civils en débandade, des bâtiments qui s'effondrent ou des rues qui s'écroulent, tout en se remémorant l'histoire et en trouvant des indices pour fuir l'inévitable. _Est-ce le désastre qui a conduit à l'abandon de la cité ? Que sait-on de ce désastre, et comment cela pourrait-il aider les PJ à s'échapper ?_"
+      }
+    ]
+  },
+  "env_mountain_pass": {
+    "name": "Col de montagne",
+    "description": "Des pics rocheux qui percent les nuages, avec un sentier sinueux qui monte et passe de l'autre côté par de nombreux lacets.",
+    "impulses": "Prélever un tribut glacial en vivres et en endurance, révéler une manipulation magique, ralentir le voyage",
+    "potential_adversaries": "Bêtes (Ours, Aigle géant, Serpent de verre), Crâne du chaos, Minotaure dévastateur, Chasseur mortel",
+    "feature": [
+      {
+        "name": "Sigles gravés - Passive",
+        "question": "Qui a jeté cet enchantement ? Est-il à proximité ? Pourquoi voulait-il rendre le temps plus redoutable ?",
+        "text": "De grandes marques et gravures ont été faites dans la montagne. Un PJ ayant un passé ou une Expérience pertinents les identifie comme de la magie météorologique qui renforce la puissance des vents glacés. Un PJ qui réussit un jet de Connaissance peut se rappeler des informations sur les sigles, de possibles informations sur leurs créateurs, et le moyen de les dissiper. Si un PJ obtient une réussite critique, il reconnaît que les sigles sont d'un style créé par les enchanteurs des crêtes et il obtient l'avantage à un jet pour les dissiper. _Qui a jeté cet enchantement ? Est-il à proximité ? Pourquoi voulait-il rendre le temps plus redoutable ?_"
+      },
+      {
+        "name": "Avalanche - Action",
+        "question": "Comment les PJ tentent-ils de résister à l'avalanche ? Quelle approche les personnages adoptent-ils pour se retrouver quand leurs compagnons dévalent la montagne ?",
+        "text": "**Dépensez une Peur** pour fendre la montagne d'un torrent glacé et provoquer une avalanche. Tous les PJ sur son passage doivent réussir un jet de réaction d'Agilité ou de Puissance, sinon ils sont renversés et emportés le long de la montagne. Un PJ utilisant une corde, des pitons ou un autre équipement d'escalade a l'avantage à ce jet. Les cibles qui échouent sont projetées jusqu'à portée Lointaine en contrebas, subissent **2d20** dégâts physiques et doivent cocher un Stress. Les cibles qui réussissent doivent cocher un Stress. _Comment les PJ tentent-ils de résister à l'avalanche ? Quelle approche les personnages adoptent-ils pour se retrouver quand leurs compagnons dévalent la montagne ?_"
+      },
+      {
+        "name": "Nid de rapaces - Réaction",
+        "question": "Depuis combien de temps les aigles n'ont-ils pas trouvé de proie ? Ont-ils des œufs dans leur nid, ou des petits qui ne volent pas encore ?",
+        "text": "Quand les PJ pénètrent dans le territoire de chasse des rapaces, deux Aigles géants apparaissent à portée Très lointaine d'un PJ choisi, voyant dans les PJ des proies probables. _Depuis combien de temps les aigles n'ont-ils pas trouvé de proie ? Ont-ils des œufs dans leur nid, ou des petits qui ne volent pas encore ?_"
+      },
+      {
+        "name": "Vents glacés - Réaction : compte à rebours (Boucle 4)",
+        "question": "Quelles parties du corps des PJ s'engourdissent en premier ? Comment tentent-ils de se garder au chaud en avançant ?",
+        "text": "Quand les PJ entrent dans le col, activez le compte à rebours. Quand il se déclenche, tous les personnages qui traversent le col doivent réussir un jet de réaction de Puissance, sinon ils cochent un Stress. Un PJ portant des vêtements adaptés au froid extrême a l'avantage à ces jets. _Quelles parties du corps des PJ s'engourdissent en premier ? Comment tentent-ils de se garder au chaud en avançant ?_"
+      }
+    ]
+  }
+}

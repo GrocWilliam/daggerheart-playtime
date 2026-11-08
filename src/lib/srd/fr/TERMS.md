@@ -68,3 +68,5 @@ French terminology for every file in this folder; reuse these forms, add a row w
 | Phase Change (feature names) | changement de phase |
 | Guilty, Unstuck | Coupable, Désancré |
 | Fallen Shock Troop, Hallowed Soldier, Outer Realms Thrall | Soldat de choc déchu, Soldat sanctifié, Serviteur des Royaumes extérieurs |
+| Progress / Consequence Countdown; Imbued; Ranged distances (Far, Very Far) | compte à rebours de progression / de conséquence; Imprégné; portée Lointaine, Très lointaine |
+| Spend a Fear / mark a Stress (environment features) | dépenser une Peur / cocher un Stress |

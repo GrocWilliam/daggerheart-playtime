@@ -13,6 +13,7 @@ const DONE: Partial<Record<SrdKind, (id: string) => boolean>> = {
 	consumables: () => true,
 	rules: () => true,
 	adversaries: () => true,
+	environments: (id) => { const tier = Number(english('environments', id)?.tier); return tier <= 2; },
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

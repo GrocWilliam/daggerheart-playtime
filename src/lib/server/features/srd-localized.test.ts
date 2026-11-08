@@ -55,7 +55,7 @@ describe('localizedSrd', () => {
 describe('lists, search and picks', () => {
 	it('lists names with their language', () => {
 		expect(listSrd('domains', 'fr').find((d) => d.id === 'core_domain_arcana')).toEqual({ id: 'core_domain_arcana', name: 'Arcanes', nameLang: 'fr' });
-		expect(listSrd('environments', 'fr').every((e) => e.nameLang === 'en')).toBe(true);
+		expect(listSrd('environments', 'fr').filter((e) => e.nameLang === 'fr')).toHaveLength(12);
 	});
 	it('searches French names only in French', () => {
 		const ids = (q: string, lang: 'en' | 'fr') => searchSrd('weapons', q, lang)[0].items.map((i) => i.id);

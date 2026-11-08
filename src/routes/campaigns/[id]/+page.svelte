@@ -278,8 +278,9 @@
 <div class="flow-root md:mt-[15px] lg:mt-0" data-testid="current-scene">
 	<h2>{t('campaign.currentScene')}: {cs.title}</h2>
 	{#if cs.environment}
-		<div><strong lang={cs.environment.nameLang}>{cs.environment.name}</strong> <span lang={data.lang}>{envType(cs.environment.type)}</span>
-			<Help id="environment" name={cs.environment.name} nameLang={cs.environment.nameLang} lang={data.lang} lines={cs.environment.features} /></div>
+		<div data-testid="scene-environment"><strong lang={cs.environment.nameLang}>{cs.environment.name}</strong> <span lang={data.lang}>{envType(cs.environment.type)}</span>
+			<Help id="environment" name={cs.environment.name} nameLang={cs.environment.nameLang} lang={data.lang} lines={cs.environment.features} />
+			<span class="block">{t('scenario.env.impulses')}: <span lang={cs.environment.impulsesLang}>{cs.environment.impulses}</span></span></div>
 	{/if}
 	<form use:enhance={busy} class="mb-4 bg-transparent! border-0! p-0!" method="POST" action="?/nextScene">
 		<button type="submit">{t('run.nextScene')}</button>
