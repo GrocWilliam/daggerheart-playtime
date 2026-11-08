@@ -1007,5 +1007,751 @@
 				"text": "Quand les Zombies marquent des PV à cause d'une attaque à portée de Mêlée, vous pouvez **marquer un Stress** pour faire une attaque standard contre l'attaquant."
 			}
 		]
+	},
+	"adv_archer_squadron": {
+		"name": "Escouade d'archers",
+		"description": "Un groupe d'archers entraînés armés d'arcs massifs.",
+		"motives_and_tactics": "Rester groupés, survivre, tirer en volées",
+		"attack": "Arc long",
+		"feature": [
+			{
+				"name": "Horde (1d6+3) - Passive",
+				"text": "Quand l'Escouade a marqué la moitié ou plus de ses PV, son attaque standard inflige à la place **1d6+3** dégâts physiques."
+			},
+			{
+				"name": "Volée concentrée - Action",
+				"text": "**Dépensez une Peur** pour viser un point à portée Loin. Faites une attaque avec avantage contre toutes les cibles à portée Proche de ce point. Les cibles contre lesquelles l'Escouade réussit subissent **1d10+4** dégâts physiques."
+			},
+			{
+				"name": "Tir de suppression - Action",
+				"text": "**Marquez un Stress** pour viser un point à portée Loin. Jusqu'au prochain jet avec Peur, une créature qui se déplace à portée Proche de ce point doit faire un jet de réaction d'Agilité. En cas d'échec, elle subit **2d6+3** dégâts physiques. En cas de réussite, elle subit la moitié des dégâts."
+			}
+		]
+	},
+	"adv_apprentice_assassin": {
+		"name": "Apprenti assassin",
+		"description": "Un jeune stagiaire désireux de faire ses preuves.",
+		"motives_and_tactics": "Agir avec témérité, tuer, prouver sa valeur, se faire remarquer",
+		"experience": "Intrusion +2",
+		"attack": "Dague de lancer",
+		"feature": [
+			{
+				"name": "Sbire (6) - Passive",
+				"text": "L'Assassin est vaincu dès qu'il subit des dégâts. Pour chaque tranche de 6 dégâts qu'un PJ inflige à l'Assassin, vainquez un Sbire supplémentaire à portée contre lequel l'attaque réussirait."
+			},
+			{
+				"name": "Attaque de groupe - Action",
+				"text": "**Dépensez une Peur** pour choisir une cible et donner le projecteur à tous les Apprentis assassins à portée Proche de celle-ci. Ces Sbires se déplacent à portée de Mêlée de la cible et font un jet d'attaque commun. En cas de réussite, ils infligent 4 dégâts physiques chacun. Additionnez ces dégâts."
+			}
+		]
+	},
+	"adv_assassin_poisoner": {
+		"name": "Assassin empoisonneur",
+		"description": "Un vaurien rusé, habile tant avec les poisons qu'avec les embuscades.",
+		"motives_and_tactics": "Anticiper, se faire payer, tuer, souiller la nourriture et l'eau",
+		"experience": "Intrusion +2",
+		"attack": "Dague de lancer empoisonnée",
+		"feature": [
+			{
+				"name": "Venin de grindletooth - Passive",
+				"text": "Les cibles qui marquent des PV à cause des attaques de l'Assassin sont _Vulnérables_ jusqu'à ce qu'elles effacent un PV."
+			},
+			{
+				"name": "Surgi de nulle part - Passive",
+				"text": "L'Assassin a l'avantage sur ses attaques s'il est _Caché_."
+			},
+			{
+				"name": "Fumigation - Action",
+				"text": "Lancez une bombe fumigène qui emplit l'air à portée Proche de fumée et rend toutes les cibles de cette zone _Désorientées_. Les cibles _Désorientées_ ont un désavantage sur leur prochain jet d'action, puis effacent cet état."
+			}
+		]
+	},
+	"adv_master_assassin": {
+		"name": "Maître assassin",
+		"description": "Un tueur chevronné à la voix menaçante et à la lame mortelle.",
+		"motives_and_tactics": "Tendre une embuscade, s'en sortir vivant, tuer, se préparer à tous les scénarios",
+		"experience": "Commandement +3, Intrusion +3",
+		"attack": "Dague dentelée",
+		"feature": [
+			{
+				"name": "Vous ne le verrez pas venir - Passive",
+				"text": "L'Assassin inflige des dégâts directs tant qu'il est _Caché_."
+			},
+			{
+				"name": "Frapper comme un seul homme - Action",
+				"text": "**Marquez un Stress** pour donner le projecteur à un nombre d'autres Assassins égal au Stress non marqué de l'Assassin."
+			},
+			{
+				"name": "La lame subtile - Réaction",
+				"text": "Quand l'Assassin réussit une attaque standard contre une cible _Vulnérable_, vous pouvez **dépenser une Peur** pour infliger des dégâts graves au lieu de ses dégâts standard."
+			},
+			{
+				"name": "Élan - Réaction",
+				"text": "Quand l'Assassin réussit une attaque contre un PJ, vous gagnez une Peur."
+			}
+		]
+	},
+	"adv_battle_box": {
+		"name": "Boîte de combat",
+		"description": "Une construction cubique portant une rune différente sur chacune de ses six faces.",
+		"motives_and_tactics": "Changer de tactique, piétiner les ennemis, attendre déguisée",
+		"experience": "Camouflage +2",
+		"attack": "Coup de boule",
+		"feature": [
+			{
+				"name": "Implacable (2) - Passive",
+				"text": "La Boîte peut recevoir le projecteur jusqu'à deux fois par tour du MJ. Dépensez de la Peur normalement pour lui donner le projecteur."
+			},
+			{
+				"name": "Tactiques aléatoires - Action",
+				"text": "**Marquez un Stress** et lancez un **d6**. La Boîte utilise l'action correspondante :\n\n- 1. _Rayon de mana._ La Boîte tire un rayon incandescent. Faites une attaque contre une cible à portée Loin. En cas de réussite, infligez **2d10+2** dégâts magiques.\n- 2. _Jets de flammes._ La Boîte s'élève dans les airs en tournoyant et crache des jets de flammes. Faites une attaque contre toutes les cibles à portée Proche. Les cibles contre lesquelles la Boîte réussit subissent **2d8** dégâts physiques.\n- 3. _Piétinement._ La Boîte fonce de façon erratique. Faites une attaque contre tous les PJ à portée Proche. Les cibles contre lesquelles la Boîte réussit subissent **1d6+5** dégâts physiques et sont _Vulnérables_ jusqu'à leur prochain jet avec Espoir.\n- 4. _Gaz électrisant._ La Boîte projette un gaz argenté crépitant d'éclairs. Toutes les cibles à portée Proche doivent réussir un jet de réaction de Finesse, sinon elles marquent 3 Stress.\n- 5. _Claquement étourdissant._ La Boîte bondit et ses côtés claquent, créant un petit bang sonique. Toutes les cibles à portée Très proche doivent réussir un jet de réaction de Puissance, sinon elles deviennent _Vulnérables_ jusqu'à la défaite du cube.\n- 6. _Plainte psionique._ La Boîte libère un essaim d'abeilles mécaniques dont le bourdonnement ébranle les esprits mortels. Toutes les cibles à portée Proche doivent réussir un jet de réaction de Présence, sinon elles subissent **2d4+9** dégâts magiques directs."
+			},
+			{
+				"name": "Surcharge - Réaction",
+				"text": "Avant de lancer les dégâts de l'attaque de la Boîte, vous pouvez **marquer un Stress** pour ajouter un **d6** au jet de dégâts. De plus, vous gagnez une Peur."
+			},
+			{
+				"name": "Séisme mortel - Réaction",
+				"text": "Quand la Boîte marque son dernier PV, la magie qui l'anime se rompt dans une explosion de force. Toutes les cibles à portée Proche doivent réussir un jet de réaction d'Instinct, sinon elles subissent **2d8+1** dégâts magiques."
+			}
+		]
+	},
+	"adv_chaos_skull": {
+		"name": "Crâne du chaos",
+		"description": "Un crâne humanoïde flottant, animé par une magie scintillante.",
+		"motives_and_tactics": "Ricaner, consommer la magie, servir son créateur",
+		"attack": "Décharge d'énergie",
+		"feature": [
+			{
+				"name": "Lévitation - Passive",
+				"text": "Le Crâne lévite à quelques pieds du sol et ne peut pas être _Entravé_."
+			},
+			{
+				"name": "Protections - Passive",
+				"text": "Le Crâne résiste aux dégâts magiques."
+			},
+			{
+				"name": "Explosion magique - Action",
+				"text": "**Marquez un Stress** pour faire une attaque contre toutes les cibles à portée Proche. Les cibles contre lesquelles le Crâne réussit subissent **2d6+4** dégâts magiques."
+			},
+			{
+				"name": "Siphon de magie - Action",
+				"text": "**Dépensez une Peur** pour faire une attaque contre un PJ ayant un trait de lancement de sorts à portée Très proche. En cas de réussite, la cible marque **1d4** Stress et le Crâne efface autant de Stress. De plus, en cas de réussite, le Crâne peut immédiatement recevoir de nouveau le projecteur."
+			}
+		]
+	},
+	"adv_conscript": {
+		"name": "Conscrit",
+		"description": "Un civil mal entraîné, enrôlé de force dans la guerre.",
+		"motives_and_tactics": "Suivre les ordres, se liguer, survivre",
+		"attack": "Lances",
+		"feature": [
+			{
+				"name": "Sbire (6) - Passive",
+				"text": "Le Conscrit est vaincu dès qu'il subit des dégâts. Pour chaque tranche de 6 dégâts qu'un PJ inflige au Conscrit, vainquez un Sbire supplémentaire à portée contre lequel l'attaque réussirait."
+			},
+			{
+				"name": "Attaque de groupe - Action",
+				"text": "**Dépensez une Peur** pour choisir une cible et donner le projecteur à tous les Conscrits à portée Proche de celle-ci. Ces Sbires se déplacent à portée de Mêlée de la cible et font un jet d'attaque commun. En cas de réussite, ils infligent 6 dégâts physiques chacun. Additionnez ces dégâts."
+			}
+		]
+	},
+	"adv_courtesan": {
+		"name": "Courtisane",
+		"description": "Une manipulatrice accomplie, maîtresse des arts mondains.",
+		"motives_and_tactics": "Séduire, manœuvrer, s'assurer des mécènes",
+		"experience": "Manipulation +3, Mondanités +3",
+		"attack": "Dague",
+		"feature": [
+			{
+				"name": "Regard brûlant - Réaction",
+				"text": "Quand un PJ à portée Proche fait un jet de Présence, vous pouvez **marquer un Stress** pour lancer un regard sur les conséquences. Si la cible échoue, elle doit marquer 2 Stress et est _Vulnérable_ jusqu'à la fin de la scène ou jusqu'à ce qu'elle réussisse une action sociale contre la Courtisane. Si la cible réussit, elle doit marquer un Stress."
+			}
+		]
+	},
+	"adv_cult_adept": {
+		"name": "Adepte du culte",
+		"description": "Un mage expérimenté qui manie l'ombre et la peur.",
+		"motives_and_tactics": "Gagner des faveurs, entraver les ennemis, percer des secrets",
+		"experience": "Savoir des Déchus +2, Rituels +2",
+		"attack": "Bâton couvert de runes",
+		"feature": [
+			{
+				"name": "Décharge affaiblissante - Action",
+				"text": "**Dépensez une Peur** pour faire une attaque standard contre une cible à portée. En cas de réussite, la cible doit marquer un Stress."
+			},
+			{
+				"name": "Voile des Déchus - Action",
+				"text": "**Marquez un Stress** pour envelopper un allié à portée Proche d'un voile de _Protection_ jusqu'à ce que l'Adepte marque son dernier PV. Tant qu'elle est _Protégée_, la cible résiste à tous les dégâts."
+			},
+			{
+				"name": "Chaînes d'ombre - Action",
+				"text": "**Dépensez une Peur** et choisissez un point à portée Loin. Toutes les cibles à portée Proche de ce point sont _Entravées_ par des chaînes de fumée jusqu'à ce qu'elles s'en libèrent par un jet de Puissance ou d'Instinct réussi. Une cible _Entravée_ par cette aptitude doit dépenser un Espoir pour faire un jet d'action."
+			},
+			{
+				"name": "La peur est un carburant - Réaction",
+				"text": "Deux fois par scène, quand un PJ obtient un échec avec Peur, effacez un Stress."
+			}
+		]
+	},
+	"adv_cult_fang": {
+		"name": "Croc du culte",
+		"description": "Un tueur professionnel devenu cultiste.",
+		"motives_and_tactics": "Capturer des sacrifices, isoler les proies, gravir les échelons",
+		"attack": "Long couteau",
+		"feature": [
+			{
+				"name": "Étreinte de l'ombre - Passive",
+				"text": "Le Croc peut grimper et marcher sur les surfaces verticales. **Marquez un Stress** pour passer d'une ombre à une autre à portée Loin."
+			},
+			{
+				"name": "Cueillir le retardataire - Action",
+				"text": "**Marquez un Stress** pour obliger une cible à portée de Mêlée à faire un jet de réaction d'Instinct. En cas d'échec, la cible doit marquer 2 Stress et est téléportée avec le Croc dans une ombre à portée Loin, ce qui la rend temporairement _Vulnérable_. En cas de réussite, la cible doit marquer un Stress."
+			}
+		]
+	},
+	"adv_cult_initiate": {
+		"name": "Initié du culte",
+		"description": "Un cultiste de bas rang en simple robe, avide de pouvoir.",
+		"motives_and_tactics": "Suivre les ordres, gagner en pouvoir, chercher le savoir interdit",
+		"attack": "Dague rituelle",
+		"feature": [
+			{
+				"name": "Sbire (6) - Passive",
+				"text": "L'Initié est vaincu dès qu'il subit des dégâts. Pour chaque tranche de 6 dégâts qu'un PJ inflige à l'Initié, vainquez un Sbire supplémentaire à portée contre lequel l'attaque réussirait."
+			},
+			{
+				"name": "Attaque de groupe - Action",
+				"text": "**Dépensez une Peur** pour choisir une cible et donner le projecteur à tous les Initiés du culte à portée Proche de celle-ci. Ces Sbires se déplacent à portée de Mêlée de la cible et font un jet d'attaque commun. En cas de réussite, ils infligent 5 dégâts physiques chacun. Additionnez ces dégâts."
+			}
+		]
+	},
+	"adv_demonic_hound_pack": {
+		"name": "Meute de chiens démoniaques",
+		"description": "Des chiens contre nature, illuminés de l'intérieur par les flammes de l'enfer.",
+		"motives_and_tactics": "Semer la peur, dévorer la chair, plaire à leurs maîtres",
+		"experience": "Pistage à l'odeur +3",
+		"attack": "Griffes et crocs",
+		"feature": [
+			{
+				"name": "Horde (2d4+1) - Passive",
+				"text": "Quand la Meute a marqué la moitié ou plus de ses PV, son attaque standard inflige à la place **2d4+1** dégâts physiques."
+			},
+			{
+				"name": "Hurlement d'effroi - Action",
+				"text": "**Marquez un Stress** pour faire perdre un Espoir à toutes les cibles à portée Très proche. Si une cible ne peut pas perdre d'Espoir, elle doit à la place marquer 2 Stress."
+			},
+			{
+				"name": "Élan - Réaction",
+				"text": "Quand la Meute réussit une attaque contre un PJ, vous gagnez une Peur."
+			}
+		]
+	},
+	"adv_electric_eels": {
+		"name": "Anguilles électriques",
+		"description": "Un banc d'anguilles qui encerclent et électrocutent.",
+		"motives_and_tactics": "Éviter les grands prédateurs, foudroyer les proies, déchiqueter",
+		"attack": "Morsure électrique",
+		"feature": [
+			{
+				"name": "Horde (2d4+1) - Passive",
+				"text": "Quand les Anguilles ont marqué la moitié ou plus de leurs PV, leur attaque standard inflige à la place **2d4+1** dégâts physiques."
+			},
+			{
+				"name": "Décharge paralysante - Action",
+				"text": "**Marquez un Stress** pour faire une attaque standard contre toutes les cibles à portée Très proche. Vous gagnez une Peur pour chaque cible qui marque des PV."
+			}
+		]
+	},
+	"adv_elite_soldier": {
+		"name": "Soldat d'élite",
+		"description": "Un écuyer en armure ou un roturier expérimenté qui cherche à gravir les échelons.",
+		"motives_and_tactics": "Gagner la gloire, maintenir l'ordre, nouer des alliances",
+		"attack": "Lance",
+		"feature": [
+			{
+				"name": "Renfort - Action",
+				"text": "**Marquez un Stress** pour vous déplacer à portée de Mêlée d'un allié et faire une attaque standard contre une cible à portée Très proche. En cas de réussite, infligez **2d10+2** dégâts physiques et l'allié peut effacer un Stress."
+			},
+			{
+				"name": "Loyauté du vassal - Réaction",
+				"text": "Quand le Soldat est à portée Très proche d'un chevalier ou d'un autre noble qui s'apprête à subir des dégâts, vous pouvez **marquer un Stress** pour vous déplacer à portée de Mêlée de lui et subir les dégâts à sa place."
+			}
+		]
+	},
+	"adv_failed_experiment": {
+		"name": "Expérience ratée",
+		"description": "Une expérience de nécromancie qui a mal tourné, les laissant difformes et disgracieux.",
+		"motives_and_tactics": "Dévorer, chasser, pister",
+		"experience": "Imitation +3",
+		"attack": "Morsure et griffe",
+		"feature": [
+			{
+				"name": "Robustesse difforme - Passive",
+				"text": "L'Expérience résiste aux dégâts physiques."
+			},
+			{
+				"name": "Submerger - Passive",
+				"text": "Quand une cible attaquée par l'Expérience a d'autres adversaires à portée Très proche, l'Expérience inflige le double de dégâts."
+			},
+			{
+				"name": "Bond titubant - Action",
+				"text": "**Marquez un Stress** pour donner le projecteur à l'Expérience comme action supplémentaire du MJ au lieu de dépenser de la Peur."
+			}
+		]
+	},
+	"adv_giant_beastmaster": {
+		"name": "Géant dompteur",
+		"description": "Un guerrier vêtu de cuir, armé d'un fouet et d'un arc massif.",
+		"motives_and_tactics": "Commander, gagner sa vie, manœuvrer, clouer sur place, protéger ses compagnons animaux",
+		"experience": "Dressage +3",
+		"attack": "Arc long",
+		"feature": [
+			{
+				"name": "Deux ne font qu'un - Passive",
+				"text": "Quand le Dompteur reçoit le projecteur, vous pouvez aussi donner le projecteur à un adversaire animal de palier 1 qu'il contrôle actuellement."
+			},
+			{
+				"name": "Tir qui cloue - Action",
+				"text": "Faites une attaque standard contre une cible. En cas de réussite, vous pouvez **marquer un Stress** pour la clouer à une surface proche. La cible clouée est _Entravée_ jusqu'à ce qu'elle se libère par un jet de Finesse ou de Puissance réussi."
+			},
+			{
+				"name": "Compagnon mortel - Action",
+				"text": "Deux fois par scène, invoquez un Ours, un Loup sanguinaire ou un adversaire animal similaire de palier 1 sous le contrôle du Dompteur. L'adversaire apparaît à portée Proche et reçoit immédiatement le projecteur."
+			}
+		]
+	},
+	"adv_giant_brawler": {
+		"name": "Géant bagarreur",
+		"description": "Un géant particulièrement musclé qui brandit un marteau de guerre plus grand qu'un humain.",
+		"motives_and_tactics": "Gagner sa vie, submerger, pilonner, renverser",
+		"experience": "Intrusion +2",
+		"attack": "Marteau de guerre",
+		"feature": [
+			{
+				"name": "Bélier - Action",
+				"text": "**Marquez un Stress** pour que le Bagarreur charge un objet inanimé à portée Proche qu'il pourrait raisonnablement fracasser (comme un mur, une charrette ou un étal de marché) et le détruise. Toutes les cibles à portée Très proche de l'objet doivent réussir un jet de réaction d'Agilité, sinon elles subissent **2d4+3** dégâts physiques à cause des éclats."
+			},
+			{
+				"name": "Représailles sanglantes - Réaction",
+				"text": "Quand le Bagarreur marque 2 PV ou plus à cause d'une attaque à portée Très proche, vous pouvez faire une attaque standard contre l'attaquant. En cas de réussite, le Bagarreur inflige **2d6+15** dégâts physiques au lieu de ses dégâts standard."
+			},
+			{
+				"name": "Élan - Réaction",
+				"text": "Quand le Bagarreur réussit une attaque contre un PJ, vous gagnez une Peur."
+			}
+		]
+	},
+	"adv_giant_recruit": {
+		"name": "Recrue géante",
+		"description": "Un combattant géant portant une armure d'emprunt.",
+		"motives_and_tactics": "Marteler, gagner sa vie, submerger, terrifier",
+		"attack": "Marteau de guerre",
+		"feature": [
+			{
+				"name": "Sbire (7) - Passive",
+				"text": "La Recrue est vaincu dès qu'il subit des dégâts. Pour chaque tranche de 7 dégâts qu'un PJ inflige à la Recrue, vainquez un Sbire supplémentaire à portée contre lequel l'attaque réussirait."
+			},
+			{
+				"name": "Attaque de groupe - Action",
+				"text": "**Dépensez une Peur** pour choisir une cible et donner le projecteur à tous les Recrues géantes à portée Proche de celle-ci. Ces Sbires se déplacent à portée de Mêlée de la cible et font un jet d'attaque commun. En cas de réussite, ils infligent 5 dégâts physiques chacun. Additionnez ces dégâts."
+			}
+		]
+	},
+	"adv_giant_eagle": {
+		"name": "Aigle géant",
+		"description": "Un immense oiseau de proie aux serres tachées de sang.",
+		"motives_and_tactics": "Chasser les proies, rester mobile, frapper avec décision",
+		"attack": "Serres et bec",
+		"feature": [
+			{
+				"name": "Vol - Passive",
+				"text": "En vol, l'Aigle gagne un bonus de +3 à sa Difficulté."
+			},
+			{
+				"name": "Piqué mortel - Action",
+				"text": "**Marquez un Stress** pour attaquer une cible à portée Loin. En cas de réussite, infligez **2d10+2** dégâts physiques et renversez la cible, ce qui la rend _Vulnérable_ jusqu'à sa prochaine action."
+			},
+			{
+				"name": "Décollage - Action",
+				"text": "Faites une attaque contre une cible à portée Très proche. En cas de réussite, infligez **2d4+3** dégâts physiques et la cible doit réussir un jet de réaction d'Agilité, sinon elle est temporairement _Entravée_ dans les serres massives de l'Aigle. Si la cible est _Entravée_, l'Aigle s'élève immédiatement dans les airs, à portée Très loin au-dessus du champ de bataille, en la tenant."
+			},
+			{
+				"name": "Chute mortelle - Action",
+				"text": "En vol, l'Aigle peut lâcher une cible _Entravée_ qu'il tient. Une fois lâchée, la cible n'est plus _Entravée_ mais commence à tomber. Si sa chute n'est pas empêchée lors de la prochaine action des PJ, la cible subit **2d20** dégâts physiques en atterrissant."
+			}
+		]
+	},
+	"adv_gorgon": {
+		"name": "Gorgone",
+		"description": "Une humanoïde écailleuse à tête de serpents, armée d'un arc doré, furieuse qu'on ait troublé sa paix.",
+		"motives_and_tactics": "Acculer, harceler, pétrifier, chercher vengeance",
+		"experience": "Discrétion +3",
+		"attack": "Arc court Brûle-soleil",
+		"feature": [
+			{
+				"name": "Implacable (2) - Passive",
+				"text": "La Gorgone peut recevoir le projecteur jusqu'à deux fois par tour du MJ. Dépensez de la Peur normalement pour lui donner le projecteur."
+			},
+			{
+				"name": "Flèches Brûle-soleil - Passive",
+				"text": "Quand la Gorgone réussit une attaque standard, la cible est _Luminescente_ jusqu'à la fin de la scène et ne peut pas devenir _Cachée_. Les jets d'attaque contre une cible _Luminescente_ ont l'avantage."
+			},
+			{
+				"name": "Couronne de serpents - Action",
+				"text": "Faites un jet d'attaque contre une cible à portée de Mêlée avec les serpents protecteurs de la Gorgone. En cas de réussite, **marquez un Stress** pour infliger **2d10+4** dégâts physiques ; la cible doit marquer un Stress."
+			},
+			{
+				"name": "Regard pétrifiant - Réaction",
+				"text": "Quand la Gorgone subit des dégâts d'une attaque à portée Proche, vous pouvez **dépenser une Peur** pour forcer l'attaquant à faire un jet de réaction d'Instinct. En cas d'échec, il commence à se changer en pierre, marque un PV et lance un compte à rebours de pétrification (4). Ce compte à rebours avance quand la Gorgone est attaquée. Quand il se déclenche, la cible doit faire un Dernier souffle. Si la Gorgone est vaincue, tous les comptes à rebours de pétrification prennent fin."
+			},
+			{
+				"name": "Élan - Réaction",
+				"text": "Quand la Gorgone réussit une attaque contre un PJ, vous gagnez une Peur."
+			}
+		]
+	},
+	"adv_juvenile_flickerfly": {
+		"name": "Scintillemouche juvénile",
+		"description": "Un insecte grand comme un cheval, aux écailles irisées et aux ailes cristallines qui battent plus vite que l'œil ne peut le suivre.",
+		"motives_and_tactics": "Collectionner les objets brillants, chasser, fondre sur ses proies",
+		"attack": "Coup d'aile",
+		"feature": [
+			{
+				"name": "Implacable (3) - Passive",
+				"text": "La Scintillemouche peut recevoir le projecteur jusqu'à trois fois par tour du MJ. Dépensez de la Peur normalement pour lui donner le projecteur."
+			},
+			{
+				"name": "Précision inégalée - Passive",
+				"text": "Avant que la Scintillemouche ne fasse une attaque, lancez un **d6**. Sur un résultat de 4 ou plus, l'Évasion de la cible est réduite de moitié contre cette attaque."
+			},
+			{
+				"name": "Danse mentale - Action",
+				"text": "**Marquez un Stress** pour créer un spectacle magiquement éblouissant qui s'empare de l'esprit des ennemis proches. Toutes les cibles à portée Proche doivent faire un jet de réaction d'Instinct. Pour chaque cible qui échoue, vous gagnez une Peur et la Scintillemouche découvre l'une des peurs de la cible."
+			},
+			{
+				"name": "Souffle hallucinogène - Réaction : compte à rebours (Boucle 1d6)",
+				"text": "Quand la Scintillemouche subit des dégâts pour la première fois, activez le compte à rebours. Quand il se déclenche, la Scintillemouche souffle un gaz hallucinogène sur toutes les cibles devant elle jusqu'à portée Loin. Les cibles doivent réussir un jet de réaction d'Instinct, sinon elles sont tourmentées par des hallucinations effrayantes. Les cibles dont la Scintillemouche connaît les peurs ont un désavantage à ce jet. Les cibles qui échouent doivent marquer un Stress et perdre un Espoir."
+			}
+		]
+	},
+	"adv_knight_of_the_realm": {
+		"name": "Chevalier du royaume",
+		"description": "Un soldat décoré, en armure lourde, monté sur un puissant destrier.",
+		"motives_and_tactics": "Piétiner, chercher la gloire, afficher sa domination",
+		"experience": "Savoir ancien +3, Haute société +2, Tactique +2",
+		"attack": "Épée longue",
+		"feature": [
+			{
+				"name": "Chevalier - Passive",
+				"text": "Tant que le Chevalier est monté, il gagne un bonus de +2 à sa Difficulté. Quand il subit des dégâts graves, il est désarçonné et perd cet avantage jusqu'à ce qu'il reçoive de nouveau le projecteur."
+			},
+			{
+				"name": "Lourdement armuré - Passive",
+				"text": "Quand le Chevalier subit des dégâts physiques, réduisez-les de 3."
+			},
+			{
+				"name": "Charge de cavalerie - Action",
+				"text": "Si le Chevalier est monté, déplacez-vous jusqu'à portée Loin et faites une attaque standard contre une cible. En cas de réussite, infligez **2d8+4** dégâts physiques et la cible doit marquer un Stress."
+			},
+			{
+				"name": "Pour le royaume ! - Action",
+				"text": "**Marquez un Stress** pour donner le projecteur à **1d4+1** alliés. Les attaques qu'ils font ainsi sous le projecteur infligent la moitié des dégâts."
+			}
+		]
+	},
+	"adv_masked_thief": {
+		"name": "Voleur masqué",
+		"description": "Un voleur rusé à l'agilité d'acrobate et au sens du spectacle.",
+		"motives_and_tactics": "Esquiver, se cacher, chaparder, faire du profit",
+		"experience": "Acrobaties +3",
+		"attack": "Épée à un tranchant",
+		"feature": [
+			{
+				"name": "Mains agiles - Action",
+				"text": "Faites une attaque contre une cible à portée de Mêlée. En cas de réussite, infligez **1d8+2** dégâts physiques et le Voleur dérobe un objet ou un consommable dans l'inventaire de la cible."
+			},
+			{
+				"name": "Plan d'évasion - Action",
+				"text": "**Marquez un Stress** pour révéler un piège à collet placé n'importe où sur le champ de bataille par le Voleur. Toutes les cibles à portée Très proche du piège doivent réussir un jet de réaction d'Agilité (13), sinon elles sont soulevées et suspendues par les pieds. Une cible est _Entravée_ et _Vulnérable_ jusqu'à ce qu'elle se libère, ce qui met fin aux deux états, par un jet de Finesse ou de Puissance réussi (13)."
+			}
+		]
+	},
+	"adv_merchant_baron": {
+		"name": "Baron marchand",
+		"description": "Un marchand accompli qui dirige une vaste entreprise.",
+		"motives_and_tactics": "Abuser de son pouvoir, amasser des ressources, mobiliser ses sbires",
+		"experience": "Noblesse +2, Commerce +2",
+		"attack": "Rapière",
+		"feature": [
+			{
+				"name": "Chacun a son prix - Action",
+				"text": "**Dépensez une Peur** pour proposer à une cible un marché dangereux en échange de ce qu'elle désire ou dont elle a besoin. Si c'est utilisé sur un PJ, il doit faire un jet de réaction de Présence (17). En cas d'échec, il doit marquer 2 Stress ou accepter l'accord."
+			},
+			{
+				"name": "Les meilleurs muscles qu'on puisse acheter - Action",
+				"text": "Une fois par scène, **marquez un Stress** pour invoquer **1d4+1** adversaires de palier 1, qui apparaissent à portée Loin, afin d'imposer la volonté du Baron."
+			}
+		]
+	},
+	"adv_minotaur_wrecker": {
+		"name": "Minotaure dévastateur",
+		"description": "Un massif firbolg à tête de taureau au tempérament vif.",
+		"motives_and_tactics": "Dévorer, encorner, s'orienter, dominer, poursuivre",
+		"experience": "Orientation +2",
+		"attack": "Hache de bataille",
+		"feature": [
+			{
+				"name": "Montée en puissance - Passive",
+				"text": "Vous devez **dépenser une Peur** pour donner le projecteur au Minotaure. Tant qu'il l'a, il peut faire son attaque standard contre toutes les cibles à portée."
+			},
+			{
+				"name": "Taureau en charge - Action",
+				"text": "**Marquez un Stress** pour charger à travers un groupe à portée Proche et faire une attaque contre toutes les cibles sur le chemin du Minotaure. Les cibles contre lesquelles le Minotaure réussit subissent **2d6+8** dégâts physiques et sont repoussées à portée Très loin. Si une cible est projetée contre un objet solide ou une autre créature, elle subit **1d6** dégâts supplémentaires (additionnez les dégâts)."
+			},
+			{
+				"name": "Encornage - Action",
+				"text": "Faites une attaque contre une cible à portée Très proche, en déplaçant le Minotaure à portée de Mêlée de celle-ci. En cas de réussite, infligez **2d8** dégâts physiques directs."
+			}
+		]
+	},
+	"adv_mortal_hunter": {
+		"name": "Chasseur mortel",
+		"description": "Une silhouette morte-vivante en lourd manteau de cuir, aux yeux fouineurs et à l'attitude négligemment cruelle.",
+		"motives_and_tactics": "Dévorer, chasser, pister",
+		"experience": "Limier +3",
+		"attack": "Déchirer la chair",
+		"feature": [
+			{
+				"name": "Terrifiant - Passive",
+				"text": "Quand le Chasseur réussit une attaque, tous les PJ à portée Loin perdent un Espoir et vous gagnez une Peur."
+			},
+			{
+				"name": "Verrou mortel - Action",
+				"text": "**Dépensez une Peur** pour maudire une cible à portée Très proche d'un _Verrou mortel_ nécrotique jusqu'à la fin de la scène. Les attaques du Chasseur contre une cible _sous Verrou mortel_ infligent des dégâts directs. Le Chasseur ne peut maintenir qu'un seul _Verrou mortel_ à la fois."
+			},
+			{
+				"name": "Mort inévitable - Action",
+				"text": "**Marquez un Stress** pour donner le projecteur à **1d4** alliés. Les attaques qu'ils font ainsi sous le projecteur infligent la moitié des dégâts."
+			},
+			{
+				"name": "Déchaînement - Réaction : compte à rebours (Boucle 1d6)",
+				"text": "Quand le Chasseur reçoit le projecteur pour la première fois, activez le compte à rebours. Quand il se déclenche, déplacez le Chasseur en ligne droite jusqu'à un point à portée Loin et faites une attaque contre toutes les cibles sur son chemin. Les cibles contre lesquelles le Chasseur réussit subissent **2d8+2** dégâts physiques."
+			}
+		]
+	},
+	"adv_royal_advisor": {
+		"name": "Conseiller royal",
+		"description": "Un courtisan de haut rang qui a l'oreille de la noblesse locale.",
+		"motives_and_tactics": "Gagner des faveurs, fabriquer des preuves, comploter",
+		"experience": "Administration +3, Courtisan +3",
+		"attack": "Baguette",
+		"feature": [
+			{
+				"name": "Réplique dévastatrice - Passive",
+				"text": "Un PJ qui obtient moins de 17 à un jet d'action ciblant le Conseiller doit marquer un Stress."
+			},
+			{
+				"name": "Souffler à l'oreille - Action",
+				"text": "**Marquez un Stress** pour influencer un PNJ à portée de Mêlée par des paroles chuchotées. L'opinion de cette cible sur un sujet penche vers la préférence du Conseiller, sauf si elle s'oppose directement aux motivations de la cible."
+			},
+			{
+				"name": "Bouc émissaire - Action",
+				"text": "**Dépensez une Peur** pour convaincre une foule ou une personne notable qu'une personne ou un groupe est responsable d'un problème auquel la cible fait face. La cible devient hostile envers le bouc émissaire jusqu'à ce qu'on la convainque de son innocence par un jet de Présence réussi (17)."
+			}
+		]
+	},
+	"adv_secret_keeper": {
+		"name": "Gardien du secret",
+		"description": "Un chef clandestin en lien direct avec les Dieux déchus.",
+		"motives_and_tactics": "Amasser un grand pouvoir, comploter, prendre le commandement",
+		"experience": "Coercition +2, Savoir des Déchus +2",
+		"attack": "Bâton couvert de sceaux",
+		"feature": [
+			{
+				"name": "Saisissez votre moment - Action",
+				"text": "**Dépensez 2 Peur** pour donner le projecteur à **1d4** alliés. Les attaques qu'ils font ainsi sous le projecteur infligent la moitié des dégâts."
+			},
+			{
+				"name": "La volonté de notre maître - Réaction",
+				"text": "Quand vous donnez le projecteur à un allié à portée Loin, **marquez un Stress** pour gagner une Peur."
+			},
+			{
+				"name": "Rituel d'invocation - Réaction : compte à rebours (6)",
+				"text": "Quand le Gardien du secret reçoit le projecteur pour la première fois, activez le compte à rebours. Quand il marque des PV, faites avancer ce compte à rebours du nombre de PV marqués. Quand il se déclenche, invoquez un Démon mineur qui apparaît à portée Proche."
+			},
+			{
+				"name": "Chiens déchus - Réaction",
+				"text": "Une fois par scène, quand le Gardien du secret marque 2 PV ou plus, vous pouvez **marquer un Stress** pour invoquer une Meute de chiens démoniaques, qui apparaît à portée Proche et reçoit immédiatement le projecteur."
+			}
+		]
+	},
+	"adv_shark": {
+		"name": "Requin",
+		"description": "Un grand prédateur aquatique, toujours en mouvement.",
+		"motives_and_tactics": "Flairer le sang, isoler les proies, viser les faibles",
+		"experience": "Odorat +3",
+		"attack": "Gueule dentée",
+		"feature": [
+			{
+				"name": "Terrifiant - Passive",
+				"text": "Quand le Requin réussit une attaque, tous les PJ à portée Loin perdent un Espoir et vous gagnez une Peur."
+			},
+			{
+				"name": "Morsure déchirante - Passive",
+				"text": "Quand le Requin réussit une attaque, la cible doit marquer un emplacement d'armure sans en recevoir les bénéfices (elle peut toujours utiliser son armure pour réduire les dégâts). Si elle ne peut pas marquer d'emplacement d'armure, elle doit marquer un PV supplémentaire."
+			},
+			{
+				"name": "Du sang dans l'eau - Réaction",
+				"text": "Quand une créature à portée Proche du Requin marque des PV à cause de l'attaque d'une autre créature, vous pouvez **marquer un Stress** pour donner immédiatement le projecteur au Requin, le déplacer à portée de Mêlée de la cible et faire une attaque standard."
+			}
+		]
+	},
+	"adv_siren": {
+		"name": "Sirène",
+		"description": "Une créature mi-poisson aux écailles chatoyantes et à la voix irrésistible.",
+		"motives_and_tactics": "Dévorer, attirer les proies, soumettre par le chant",
+		"experience": "Répertoire de chants +3",
+		"attack": "Morsure de mâchoire distendue",
+		"feature": [
+			{
+				"name": "Public captif - Passive",
+				"text": "Si la Sirène fait une attaque standard contre une cible _Envoûtée_ par son chant, l'attaque inflige **2d10+1** dégâts au lieu de ses dégâts standard."
+			},
+			{
+				"name": "Chant enchanteur - Action",
+				"text": "**Dépensez une Peur** pour chanter un air qui affecte toutes les cibles à portée Proche. Les cibles doivent réussir un jet de réaction d'Instinct, sinon elles sont _Envoûtées_ jusqu'à ce qu'elles marquent 2 Stress. Les autres Sirènes à portée Proche de la cible peuvent chacune **marquer un Stress** pour ajouter un bonus de +1 à la Difficulté du jet de réaction. Tant qu'elle est _Envoûtée_, une cible ne peut pas agir et est _Vulnérable_."
+			}
+		]
+	},
+	"adv_spectral_archer": {
+		"name": "Archer spectral",
+		"description": "Un combattant fantomatique à l'arc éthéré, incapable de partir tant que son protégé est vulnérable.",
+		"motives_and_tactics": "Traverser les objets solides, rester hors de la mêlée, ressasser les vieilles batailles",
+		"experience": "Savoir ancien +2",
+		"attack": "Arc long",
+		"feature": [
+			{
+				"name": "Fantôme - Passive",
+				"text": "L'Archer résiste aux dégâts physiques. **Marquez un Stress** pour vous déplacer jusqu'à portée Proche à travers des objets solides."
+			},
+			{
+				"name": "Choisir sa cible - Action",
+				"text": "**Dépensez une Peur** pour faire une attaque à portée Loin contre un PJ qui se trouve à portée Très proche d'au moins deux autres PJ. En cas de réussite, la cible subit **2d8+12** dégâts physiques."
+			}
+		]
+	},
+	"adv_spectral_captain": {
+		"name": "Capitaine spectral",
+		"description": "Un commandant fantomatique qui mène ses troupes par-delà la mort.",
+		"motives_and_tactics": "Traverser les objets solides, rallier les troupes, ressasser les vieilles batailles",
+		"experience": "Savoir ancien +3",
+		"attack": "Arc long",
+		"feature": [
+			{
+				"name": "Fantôme - Passive",
+				"text": "Le Capitaine résiste aux dégâts physiques. **Marquez un Stress** pour vous déplacer jusqu'à portée Proche à travers des objets solides."
+			},
+			{
+				"name": "Bataille sans fin - Action",
+				"text": "**Dépensez 2 Peur** pour ramener au combat jusqu'à **1d4+1** alliés Spectraux vaincus aux points où ils sont apparus la première fois (sans PV ni Stress marqués)."
+			},
+			{
+				"name": "Tenir bon - Réaction",
+				"text": "Quand les alliés Spectraux du Capitaine sont forcés de faire un jet de réaction, vous pouvez **marquer un Stress** pour leur donner un bonus de +2 au jet."
+			},
+			{
+				"name": "Élan - Réaction",
+				"text": "Quand le Capitaine réussit une attaque contre un PJ, vous gagnez une Peur."
+			}
+		]
+	},
+	"adv_spectral_guardian": {
+		"name": "Gardien spectral",
+		"description": "Un combattant fantomatique armé de lances et d'épées, retenu par le devoir.",
+		"motives_and_tactics": "Traverser les objets solides, protéger le trésor, ressasser les vieilles batailles",
+		"experience": "Savoir ancien +2",
+		"attack": "Lance",
+		"feature": [
+			{
+				"name": "Fantôme - Passive",
+				"text": "Le Gardien résiste aux dégâts physiques. **Marquez un Stress** pour vous déplacer jusqu'à portée Proche à travers des objets solides."
+			},
+			{
+				"name": "Lame du tombeau - Action",
+				"text": "**Dépensez une Peur** pour faire une attaque contre une cible à portée Très proche. En cas de réussite, infligez **2d10+6** dégâts physiques et la cible doit marquer un Stress."
+			}
+		]
+	},
+	"adv_spy": {
+		"name": "Espion",
+		"description": "Un agent d'espionnage habile, doué pour se trouver au bon endroit pour surprendre des secrets.",
+		"motives_and_tactics": "Frapper et fuir, changer d'apparence, écouter aux portes",
+		"experience": "Espionnage +3",
+		"attack": "Dague",
+		"feature": [
+			{
+				"name": "Récolter des secrets - Action",
+				"text": "**Dépensez une Peur** pour décrire comment l'Espion connaît un secret sur un PJ présent dans la scène."
+			},
+			{
+				"name": "Mouche sur le mur - Réaction",
+				"text": "Quand un PJ ou un groupe discute d'un sujet sensible, vous pouvez **marquer un Stress** pour révéler que l'Espion est présent dans la scène et les observe. Si l'Espion s'échappe de la scène pour rapporter ce qu'il a appris, vous gagnez **1d4** Peur."
+			}
+		]
+	},
+	"adv_stonewraith": {
+		"name": "Spectre de pierre",
+		"description": "Un chasseur rôdeur, comme un puma furtif, au corps de pierre gris ardoise.",
+		"motives_and_tactics": "Défendre son territoire, isoler les proies, traquer",
+		"experience": "Sens de la pierre +3",
+		"attack": "Morsure et griffes",
+		"feature": [
+			{
+				"name": "Marcheur de pierre - Passive",
+				"text": "Le Spectre de pierre peut se déplacer dans la pierre et la terre aussi aisément que dans l'air. Dans la pierre ou la terre, il est _Caché_ et immunisé contre tous les dégâts."
+			},
+			{
+				"name": "Embuscade rocheuse - Action",
+				"text": "Tant qu'il est _Caché_, **marquez un Stress** pour bondir à portée de Mêlée d'une cible à portée Très proche. La cible doit réussir un jet de réaction d'Agilité ou d'Instinct (15), sinon elle subit **2d8** dégâts physiques et devient temporairement _Entravée_."
+			},
+			{
+				"name": "Rugissement d'avalanche - Action",
+				"text": "**Dépensez une Peur** pour rugir dans une grotte et provoquer un éboulement. Toutes les cibles à portée Proche doivent réussir un jet de réaction d'Agilité (14), sinon elles subissent **2d10** dégâts physiques. Les gravats peuvent être dégagés avec un compte à rebours de progression (8)."
+			},
+			{
+				"name": "Élan - Réaction",
+				"text": "Quand le Spectre de pierre réussit une attaque contre un PJ, vous gagnez une Peur."
+			}
+		]
+	},
+	"adv_war_wizard": {
+		"name": "Mage de guerre",
+		"description": "Un mage aguerri par les batailles, formé à la magie destructrice.",
+		"motives_and_tactics": "Mettre au point de nouveaux sorts, chercher le pouvoir, briser les formations",
+		"experience": "Savoir magique +2, Stratégie +2",
+		"attack": "Bâton",
+		"feature": [
+			{
+				"name": "Téléportation de combat - Passive",
+				"text": "Avant ou après une attaque standard, vous pouvez **marquer un Stress** pour vous téléporter à un endroit à portée Loin."
+			},
+			{
+				"name": "Recharger la sphère protectrice - Action",
+				"text": "**Marquez un Stress** pour recharger la réaction « Sphère protectrice » du Mage."
+			},
+			{
+				"name": "Éruption - Action",
+				"text": "**Dépensez une Peur** et choisissez un point à portée Loin. Une zone Très proche autour de ce point se change en terrain infranchissable. Toutes les cibles de cette zone doivent faire un jet de réaction d'Agilité (14). Les cibles qui échouent subissent **2d10** dégâts physiques et sont projetées hors de la zone. Les cibles qui réussissent subissent la moitié des dégâts et ne sont pas déplacées."
+			},
+			{
+				"name": "Artillerie arcanique - Action",
+				"text": "**Dépensez une Peur** pour déchaîner une pluie précise de décharges magiques. Toutes les cibles de la scène doivent faire un jet de réaction d'Agilité. Les cibles qui échouent subissent **2d12** dégâts magiques. Les cibles qui réussissent subissent la moitié des dégâts."
+			},
+			{
+				"name": "Sphère protectrice - Réaction",
+				"text": "Quand le Mage subit des dégâts d'une attaque à portée Proche, infligez **2d6** dégâts magiques à l'attaquant. Cette réaction ne peut pas être réutilisée tant que le Mage ne la recharge pas avec son action « Recharger la sphère protectrice »."
+			}
+		]
 	}
 }

@@ -12,7 +12,7 @@ const DONE: Partial<Record<SrdKind, (id: string) => boolean>> = {
 	items: () => true,
 	consumables: () => true,
 	rules: () => true,
-	adversaries: (id) => (english('adversaries', id)?.tier ?? 99) <= 1,
+	adversaries: (id) => (english('adversaries', id)?.tier ?? 99) <= 2,
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -40,12 +40,12 @@ describe('localizedSrd', () => {
 		expect(r.element.features).toEqual(en.element.features);
 		expect(getSrd('weapons', 'core_weapon_broadsword', 'fr')).toEqual(r.element);
 	});
-	it('translates tier 1 adversaries and keeps the others English', () => {
+	it('translates tiers 1 and 2 adversaries and keeps the others English', () => {
 		const t1 = localizedSrd('adversaries', 'adv_acid_burrower', 'fr')!;
 		expect(t1.element.name).toBe('Fouisseur acide');
 		expect(t1.langs.name).toBe('fr');
 		const all = adversariesByTier(undefined, 'fr');
-		expect(all.filter((a) => a.tier > 1).every((a) => a.nameLang === 'en')).toBe(true);
+		expect(all.filter((a) => a.tier > 2).every((a) => a.nameLang === 'en') && all.filter((a) => a.tier <= 2).every((a) => a.nameLang === 'fr')).toBe(true);
 	});
 	it('returns null for an unknown id', () => {
 		expect(localizedSrd('weapons', 'nope', 'fr')).toBeNull();

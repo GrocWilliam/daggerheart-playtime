@@ -60,3 +60,6 @@ French terminology for every file in this folder; reuse these forms, add a row w
 | Momentum / Group Attack / Slow | Élan / Attaque de groupe / Lent |
 | Poisoned, Cursed, Ignited, Taunted | Empoisonné, Maudit, Enflammé, Provoqué |
 | Spotlight (verb: spotlight X) / GM turn | donner le projecteur à X / tour du MJ |
+| Dizzied, Protected, Entranced, Glowing | Désorienté, Protégé, Envoûté, Luminescent |
+| Deathlock / Progress Countdown / Petrification Countdown | Verrou mortel / compte à rebours de progression / compte à rebours de pétrification |
+| Countdown (Loop 1d6) (feature names) | compte à rebours (Boucle 1d6) |
