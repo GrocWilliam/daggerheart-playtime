@@ -127,6 +127,8 @@ test('English and French work: French shows the French item name', async () => {
 	await roll(fr, 'items', 'common', 3);
 	const stored = await apiLoot(c, s);
 	const entries = sceneOf(fr).locator('[data-testid=loot-entry]');
+	await entries.first().waitFor({ timeout: 30000 });
+	for (let t = 0; t < 60 && (await entries.count()) < 3; t++) await fr.waitForTimeout(500);
 	assert.equal(await entries.count(), 3);
 	for (let i = 0; i < 3; i++) {
 		const frName = (await api('GET', `/api/srd/items/${stored[i].srdId}`, undefined, 'fr')).json.nameLocalized;

@@ -143,12 +143,19 @@ test('GET /api/srd/<kind>/<id> in French returns the file object unchanged plus 
 				delete body.features;
 				delete expected.features;
 			}
+			// us-220: ancestries and communities have French description, features and personalities
+			if (kind === 'ancestries' || kind === 'communities') {
+				for (const k of ['description', 'features', 'personalities']) {
+					delete body[k];
+					delete expected[k];
+				}
+			}
 			// us-223: items, consumables and rules are translated too; compare the rest
 			if (['consumables', 'items', 'rules'].includes(kind)) {
 				for (const k of ['features', 'description']) { delete body[k]; delete expected[k]; }
 			}
 			assert.deepEqual(body, expected);
-			const en = await (await get(`/api/srd/${kind}/${e.id}`, 'en')).json();
+			const en =await (await get(`/api/srd/${kind}/${e.id}`, 'en')).json();
 			assert.deepEqual(en, { ...e, nameLocalized: enName(kind, e) });
 		}
 	}

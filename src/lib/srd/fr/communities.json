@@ -1,29 +1,236 @@
 {
 	"core_community_highborne": {
-		"name": "Haut-né"
+		"name": "Haut-né",
+		"description": [
+			{
+				"paragraph": "Appartenir à une communauté de haut-nés signifie que vous êtes habitué à une vie d’élégance, d’opulence et de prestige dans les hautes sphères de la société. Traditionnellement, les membres d’une telle communauté possèdent d’incroyables richesses matérielles. Celles-ci peuvent prendre bien des formes selon la communauté — or et autres minerais, terres, contrôle des moyens de production — mais ce statut s’accompagne toujours de pouvoir et d’influence. Les haut-nés accordent une grande valeur aux titres et aux possessions, et il y a peu de mobilité sociale dans leurs rangs. Les membres d’une communauté de haut-nés contrôlent souvent la situation politique et économique des régions où ils vivent, car leur fortune leur permet d’influencer les gens et l’économie. La santé et la sécurité des habitants moins aisés de ces lieux dépendent souvent de la capacité de cette classe dirigeante à placer le bien-être de ses sujets avant le profit."
+			}
+		],
+		"personalities": [
+			"aimable",
+			"franc",
+			"intrigant",
+			"entreprenant",
+			"ostentatoire",
+			"imperturbable"
+		],
+		"features": [
+			{
+				"name": "Privilège",
+				"description": [
+					{
+						"paragraph": "Vous avez l’avantage sur les jets pour fréquenter des nobles, négocier des prix ou tirer parti de votre réputation pour obtenir ce que vous voulez."
+					}
+				]
+			}
+		]
 	},
 	"core_community_loreborne": {
-		"name": "Né du savoir"
+		"name": "Né du savoir",
+		"description": [
+			{
+				"paragraph": "Appartenir à une communauté de nés du savoir signifie que vous venez d’une société qui privilégie la maîtrise intellectuelle ou politique. Ces communautés accordent une grande valeur à la connaissance, souvent sous la forme de la préservation de l’histoire, de l’ascension politique, de l’étude scientifique, du perfectionnement des compétences ou de la compilation de savoirs et de mythes. La plupart de leurs membres mènent leurs recherches dans des institutions bâties au cœur des bastions de la civilisation, tandis que quelques esprits éclectiques préfèrent recueillir des informations dans le monde naturel. Certains sont isolationnistes et œuvrent dans de petites enclaves, écoles ou guildes, suivant leur propre éthique. D’autres emploient leur savoir à plus grande échelle, avec d’habiles manœuvres politiques sur la scène gouvernementale."
+			}
+		],
+		"personalities": [
+			"direct",
+			"éloquent",
+			"inquisiteur",
+			"patient",
+			"rhapsodique",
+			"spirituel"
+		],
+		"features": [
+			{
+				"name": "Grand lecteur",
+				"description": [
+					{
+						"paragraph": "Vous avez l’avantage sur les jets qui concernent l’histoire, la culture ou la politique d’une personnalité ou d’un lieu important."
+					}
+				]
+			}
+		]
 	},
 	"core_community_orderborne": {
-		"name": "Né de l'ordre"
+		"name": "Né de l'ordre",
+		"description": [
+			{
+				"paragraph": "Appartenir à une communauté de nés de l’ordre signifie que vous venez d’une collectivité centrée sur la discipline ou la foi, et que vous défendez un ensemble de principes qui reflètent votre expérience en son sein. Les nés de l’ordre comptent souvent parmi les plus puissants des communautés environnantes. En rassemblant les membres de leur société autour d’une valeur ou d’un but commun — un dieu, une doctrine, une éthique, ou même un commerce ou un métier partagé — les instances dirigeantes de ces enclaves peuvent mobiliser de plus grandes populations avec moins d’efforts. Si ces communautés prennent des formes variées — certaines sont même profondément pacifistes — les plus redoutées sont peut-être celles qui s’organisent autour de la prouesse militaire. Dans ce cas, il n’est pas rare que les nés de l’ordre fournissent des soldats à louer à d’autres cités ou pays."
+			}
+		],
+		"personalities": [
+			"ambitieux",
+			"bienveillant",
+			"pensif",
+			"prudent",
+			"sardonique",
+			"stoïque"
+		],
+		"features": [
+			{
+				"name": "Dévoué",
+				"description": [
+					{
+						"paragraph": "Notez trois maximes ou valeurs que votre éducation vous a inculquées. Une fois par repos, quand vous décrivez comment vous incarnez l’un de ces principes par votre action en cours, vous pouvez lancer un d20 comme dé d’Espoir."
+					}
+				]
+			}
+		]
 	},
 	"core_community_ridgeborne": {
-		"name": "Né des crêtes"
+		"name": "Né des crêtes",
+		"description": [
+			{
+				"paragraph": "Appartenir à une communauté de nés des crêtes signifie que vous avez fait votre foyer des pics rocheux et des falaises abruptes de la montagne. Ceux qui ont vécu en montagne se jugent souvent plus endurcis que les autres, car ils ont prospéré parmi les terrains les plus dangereux que bien des continents puissent offrir. Ces groupes excellent dans l’adaptation et mettent au point des technologies et des équipements uniques pour transporter gens et marchandises sur des terrains difficiles. Les nés des crêtes grandissent donc en crapahutant et en grimpant, ce qui les rend robustes et déterminés. Leurs implantations prennent des formes variées : certaines cités creusent des falaises entières, d’autres bâtissent des châteaux de pierre, et d’autres encore vivent dans de petites maisons sur des sommets battus par le vent. Les forces extérieures peinent souvent à attaquer les groupes de nés des crêtes, car leurs petites milices comme leurs grandes armées savent tirer parti de l’avantage de la hauteur."
+			}
+		],
+		"personalities": [
+			"audacieux",
+			"robuste",
+			"indomptable",
+			"loyal",
+			"réservé",
+			"têtu"
+		],
+		"features": [
+			{
+				"name": "Stable",
+				"description": [
+					{
+						"paragraph": "Vous avez l’avantage sur les jets pour traverser des falaises et des corniches dangereuses, vous orienter dans des environnements hostiles et utiliser vos connaissances de survie."
+					}
+				]
+			}
+		]
 	},
 	"core_community_seaborne": {
-		"name": "Né des mers"
+		"name": "Né des mers",
+		"description": [
+			{
+				"paragraph": "Appartenir à une communauté de nés de la mer signifie que vous avez vécu sur ou près d’une vaste étendue d’eau. Ces communautés sont bâties, physiquement comme culturellement, autour des eaux précises qu’elles appellent leur foyer. Certains de ces groupes vivent le long du rivage et construisent des ports pour les habitants comme pour les voyageurs. Ces havres servent de centres de commerce, d’attractions touristiques, ou simplement de lieux sûrs où se reposer après des semaines de voyage. D’autres nés de la mer vivent sur l’eau, dans de petits bateaux ou de grands navires, et leur idée du « foyer » se résume à un navire et à son équipage plutôt qu’à une terre. Où qu’elles se trouvent, ces communautés sont étroitement liées aux marées et aux créatures qui les peuplent. Leurs membres sont très recherchés pour leurs talents de marin, et beaucoup deviennent capitaines de vaisseaux, au sein de leur communauté, au service d’une autre, ou même à la barre d’une puissante opération navale."
+			}
+		],
+		"personalities": [
+			"franc",
+			"coopératif",
+			"exubérant",
+			"féroce",
+			"résolu",
+			"buriné"
+		],
+		"features": [
+			{
+				"name": "Connaître la marée",
+				"description": [
+					{
+						"paragraph": "Vous sentez le flux et le reflux de la vie. Quand vous faites un jet avec Peur, placez un jeton sur cette carte. Vous pouvez conserver un nombre de jetons égal à votre niveau. Avant de faire un jet d’action, vous pouvez dépenser autant de ces jetons que vous voulez pour gagner un bonus de +1 au jet par jeton dépensé. À la fin de chaque session, retirez tous les jetons non dépensés."
+					}
+				]
+			}
+		]
 	},
 	"core_community_slyborne": {
-		"name": "Né de la ruse"
+		"name": "Né de la ruse",
+		"description": [
+			{
+				"paragraph": "Appartenir à une communauté de nés de la ruse signifie que vous venez d’un groupe qui opère en marge de la loi : criminels de toutes sortes, escrocs et arnaqueurs. Les membres de ces communautés sont réunis par leurs buts peu recommandables et leur ingéniosité pour les atteindre. Beaucoup possèdent tout un éventail de talents peu scrupuleux : falsification, vol, contrebande et violence. Des gens de toute classe sociale peuvent être nés de la ruse, de ceux qui ont amassé richesse et influence à ceux qui n’ont pas un sou. Vus de l’extérieur, les nés de la ruse peuvent passer pour des voyous sans loyauté, mais ces communautés suivent certains des codes d’honneur les plus stricts qui soient, et leur violation peut valoir au fautif une fin terrifiante."
+			}
+		],
+		"personalities": [
+			"calculateur",
+			"astucieux",
+			"redoutable",
+			"perspicace",
+			"retors",
+			"tenace"
+		],
+		"features": [
+			{
+				"name": "Fripouille",
+				"description": [
+					{
+						"paragraph": "Vous avez l’avantage sur les jets pour négocier avec des criminels, détecter des mensonges ou trouver une cachette sûre."
+					}
+				]
+			}
+		]
 	},
 	"core_community_underborne": {
-		"name": "Né des profondeurs"
+		"name": "Né des profondeurs",
+		"description": [
+			{
+				"paragraph": "Appartenir à une communauté de nés du sous-sol signifie que vous venez d’une société souterraine. Beaucoup vivent juste sous les cités et les villages d’autres collectivités, tandis que d’autres vivent bien plus profond. Ces communautés vont de petits groupes familiaux dans des terriers à d’immenses métropoles dans des cavernes de pierre. En de nombreux endroits, les nés du sous-sol sont reconnus pour leur audace et leur habileté extraordinaires, qui permettent de grands exploits d’architecture et d’ingénierie. On les engage régulièrement pour leur bravoure : même le moins téméraire d’entre eux a probablement affronté de redoutables bêtes des profondeurs, et apprendre à les abattre est une pratique courante dans ces sociétés. À cause des dangers de leur environnement, beaucoup de communautés du sous-sol développent des langages non verbaux uniques, tout aussi utiles à la surface."
+			}
+		],
+		"personalities": [
+			"posé",
+			"insaisissable",
+			"indomptable",
+			"novateur",
+			"débrouillard",
+			"modeste"
+		],
+		"features": [
+			{
+				"name": "Vie à la lueur ténue",
+				"description": [
+					{
+						"paragraph": "Quand vous êtes dans une zone de faible lumière ou de forte ombre, vous avez l’avantage sur les jets pour vous cacher, enquêter ou percevoir des détails dans cette zone."
+					}
+				]
+			}
+		]
 	},
 	"core_community_wanderborne": {
-		"name": "Né de l'errance"
+		"name": "Né de l'errance",
+		"description": [
+			{
+				"paragraph": "Appartenir à une communauté de nés du voyage signifie que vous avez vécu en nomade, sans foyer permanent, au contact d’une grande variété de cultures. Contrairement à beaucoup de communautés définies par leur lieu, les nés du voyage se définissent par leur mode de vie itinérant. À cause de leurs migrations fréquentes, ils attachent moins d’importance à l’accumulation de biens matériels qu’à l’acquisition d’informations, de compétences et de relations. Certains sont unis par une éthique commune, comme une religion ou un ensemble de valeurs politiques ou économiques ; d’autres se rassemblent après un drame partagé, comme la perte de leur foyer ou de leurs terres. Quelle qu’en soit la raison, les dangers de la vie sur les routes et le choix de continuer à les parcourir ensemble font des nés du voyage des gens réputés pour leur loyauté indéfectible."
+			}
+		],
+		"personalities": [
+			"impénétrable",
+			"magnanime",
+			"jovial",
+			"fiable",
+			"avisé",
+			"non conformiste"
+		],
+		"features": [
+			{
+				"name": "Besace nomade",
+				"description": [
+					{
+						"paragraph": "Ajoutez une besace nomade à votre inventaire. Une fois par session, vous pouvez dépenser un Espoir pour plonger la main dans cette besace et en sortir un objet banal utile à votre situation. Déterminez avec le MJ quel objet vous en sortez."
+					}
+				]
+			}
+		]
 	},
 	"core_community_wildborne": {
-		"name": "Né des terres sauvages"
+		"name": "Né des terres sauvages",
+		"description": [
+			{
+				"paragraph": "Appartenir à une communauté de nés de la nature sauvage signifie que vous avez vécu au cœur de la forêt. Ces communautés se définissent par leur dévouement à la préservation de leurs terres, et beaucoup entretiennent de forts liens religieux ou culturels avec la faune parmi laquelle elles vivent. Il en résulte des avancées architecturales et technologiques uniques, qui favorisent la durabilité plutôt que les résultats rapides à fort rendement. Les sociétés de nés de la nature sauvage se distinguent par l’intégration de leurs villages et de leurs cités à l’environnement naturel, en évitant de troubler la vie des plantes et des animaux. Certains construisent leurs logis haut dans les branches des arbres, d’autres établissent leurs foyers au sol, sous la canopée. Il n’est pas rare que les nés de la nature sauvage restent reclus et cachés dans leurs demeures forestières."
+			}
+		],
+		"personalities": [
+			"robuste",
+			"loyal",
+			"attentionné",
+			"reclus",
+			"sagace",
+			"vibrant"
+		],
+		"features": [
+			{
+				"name": "Pas léger",
+				"description": [
+					{
+						"paragraph": "Vos déplacements sont naturellement silencieux. Vous avez l’avantage sur les jets pour vous déplacer sans être entendu."
+					}
+				]
+			}
+		]
 	}
 }

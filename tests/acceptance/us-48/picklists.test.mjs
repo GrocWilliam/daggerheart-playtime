@@ -10,6 +10,8 @@ const core = (f) => json(`src/lib/srd/core/${f}.json`);
 // French names from the overlay files: id -> name, one per `name` entry of src/lib/srd/fr/*.json
 const FR = Object.assign({}, ...fs.readdirSync('src/lib/srd/fr').filter((f) => f.endsWith('.json')).map((f) =>
 	Object.fromEntries(Object.entries(json(`src/lib/srd/fr/${f}`)).filter(([, e]) => e && 'name' in e).map(([id, e]) => [id, e.name]))));
+// French overlay entries that translate description and features (ancestries, communities)
+const FRFULL = Object.assign({}, ...['ancestries', 'communities'].map((k) => json(`src/lib/srd/fr/${k}.json`)));
 const CLASSES = core('classes');
 const SUBS = core('subclasses');
 const ANCS = core('ancestries');
@@ -144,8 +146,14 @@ test('changing the class in the form to another class works (subclass none)', as
 });
 
 // expected texts of an SRD element: description paragraphs and "name: text" features
-function expected(e) {
+function expected(e, lang = 'en') {
 	const paras = [], feats = [];
+	const fr = lang === 'fr' ? FRFULL[e.id] : undefined;
+	if (fr?.description) {
+		paras.push(...fr.description.map((x) => x.paragraph).filter(Boolean));
+		for (const f of fr.features ?? []) feats.push([f.name, f.description.map((x) => x.paragraph).filter(Boolean)]);
+		return { paras, feats };
+	}
 	const para = (d) => (Array.isArray(d) ? d.map((x) => x.paragraph?.['en-US']).filter(Boolean) : []);
 	paras.push(...para(e.description));
 	(function walk(n) {
@@ -219,10 +227,11 @@ for (const [label, mkScope] of Object.entries(SCOPES)) {
 				assert.equal(await h.evaluate((d) => d.open), true);
 				const body = norm(await h.textContent());
 				assert.ok(body.includes(nameIn(e, lang)), `${e.id} name`);
-				const en = h.locator('[lang="en"]');
-				assert.ok((await en.count()) >= 1, `${e.id} lang=en block`);
+				const hl = lang === 'fr' && FRFULL[e.id]?.description ? 'fr' : 'en';
+				const en = h.locator(`[lang="${hl}"]`);
+				assert.ok((await en.count()) >= 1, `${e.id} lang=${hl} block`);
 				const txt = norm((await en.allTextContents()).join(' '));
-				const { paras, feats } = expected(e);
+				const { paras, feats } = expected(e, lang);
 				assert.ok(paras.length > 0 || feats.length > 0);
 				for (const p of paras) assert.ok(txt.includes(norm(p)), `${e.id} paragraph: ${p.slice(0, 40)}`);
 				for (const [n, ps] of feats) {

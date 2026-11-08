@@ -36,6 +36,10 @@ French terminology for every file in this folder; reuse these forms, add a row w
 | Death Move | Dernier souffle |
 | Restrained, Vulnerable, Hidden, Asleep, Silenced, Corroded, Horrified | Entravé, Vulnérable, Caché, Endormi, Réduit au silence, Corrodé, Horrifié |
 | token | jeton |
+| Hit Point slot / Stress slot | emplacement de Point de vie / emplacement de Stress |
+| mark (a Stress, a Hit Point) | cocher |
+| damage thresholds | seuils de dégâts |
+| Tide, Nomadic Pack (community cards) | marée, besace nomade |
 | Stunned, Enraptured, On Fire, Cloaked, Invisible | Étourdi, Ravi, En feu, Dissimulé, Invisible |
 | Spellcast trait | trait de lancement de sorts |
 | Fear Pool / Ward Die | réserve de Peur / dé de garde |

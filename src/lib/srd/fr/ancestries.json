@@ -1,56 +1,470 @@
 {
 	"core_ancestry_clank": {
-		"name": "Clank"
+		"name": "Clank",
+		"description": [
+			{
+				"paragraph": "Les Clanks sont des êtres mécaniques doués de conscience, bâtis dans des matériaux variés : métal, bois, pierre. Ils peuvent ressembler à des humanoïdes, à des animaux, voire à des objets inanimés. Comme les êtres organiques, leurs corps existent dans une grande variété de tailles. Leur construction sur mesure leur donne souvent une configuration physique très spécialisée : mains griffues pour saisir, roues pour se déplacer, armes intégrées. Beaucoup de Clanks adoptent des modifications corporelles autant par style que par fonction, et les membres d’autres ascendances s’adressent souvent aux artisans clanks pour fabriquer des aides à la mobilité ou des parures sur mesure. Les autres ascendances peuvent créer des Clanks, en s’inspirant parfois de leurs propres caractéristiques physiques, mais il est tout aussi courant que les Clanks se construisent entre eux. La durée de vie d’un Clank dure aussi longtemps qu’il peut se procurer ou fabriquer de nouvelles pièces, ce qui rend son corps pratiquement immortel. Son esprit, en revanche, subit les effets du temps et se dégrade à mesure que la magie qui l’anime perd de sa puissance."
+			}
+		],
+		"features": [
+			{
+				"name": "Conception réfléchie",
+				"description": [
+					{
+						"paragraph": "Décidez qui vous a fabriqué et dans quel but. À la création du personnage, choisissez celle de vos Expériences qui correspond le mieux à ce but et gagnez-y un bonus permanent de +1."
+					}
+				]
+			},
+			{
+				"name": "Efficace",
+				"description": [
+					{
+						"paragraph": "Quand vous faites un repos court, vous pouvez choisir une action de repos long au lieu d’une action de repos court."
+					}
+				]
+			}
+		]
 	},
 	"core_ancestry_drakona": {
-		"name": "Drakona"
+		"name": "Drakona",
+		"description": [
+			{
+				"paragraph": "Les Drakonas ressemblent à des dragons sans ailes sous forme humanoïde et possèdent un puissant souffle élémentaire. Tous ont d’épaisses écailles qui offrent une excellente armure naturelle contre les attaques comme contre les forces de la nature. Ils sont grands, de 6 à 7 pieds en moyenne, avec de longues dents acérées. De nouvelles dents poussent tout au long de la vie d’un Drakona, qui dure environ 600 ans : il ne risque donc jamais de perdre une incisive pour de bon. Contrairement à leurs ancêtres dragons, les Drakonas n’ont pas d’ailes et ne peuvent pas voler sans aide magique. Les membres de cette ascendance se transmettent l’élément de leur souffle de génération en génération, même si, dans de rares cas, le pouvoir élémentaire d’un Drakona diffère de celui du reste de sa famille."
+			}
+		],
+		"features": [
+			{
+				"name": "Écailles",
+				"description": [
+					{
+						"paragraph": "Vos écailles forment une protection naturelle. Quand vous devriez subir des dégâts graves, vous pouvez cocher un Stress pour cocher 1 Point de vie de moins."
+					}
+				]
+			},
+			{
+				"name": "Souffle élémentaire",
+				"description": [
+					{
+						"paragraph": "Choisissez un élément pour votre souffle (par exemple l’électricité, le feu ou la glace). Vous pouvez l’utiliser contre une cible ou un groupe de cibles à portée Très proche, en le traitant comme une arme d’Instinct qui inflige d8 dégâts magiques en utilisant votre Maîtrise."
+					}
+				]
+			}
+		]
 	},
 	"core_ancestry_dwarf": {
-		"name": "Nain"
+		"name": "Nain",
+		"description": [
+			{
+				"paragraph": "Les Nains sont petits, trapus et puissamment bâtis, avec une musculature dense et une épaisse pilosité. Leurs grandes mains et leurs grands pieds, leur nez proéminent et leurs sourcils lourds les distinguent. Les Nains sont réputés pour leur savoir-faire, leur résistance et la force de leurs liens familiaux. Ils vivent souvent dans les régions montagneuses ou sous terre, où ils bâtissent de vastes salles et des forteresses élaborées. Leur culture met l’accent sur la tradition et l’honneur, et leurs communautés sont soudées, souvent dirigées par des conseils d’anciens. Les Nains peuvent vivre des siècles, et leur longévité se reflète dans la profondeur de leurs connaissances et la solidité de leurs ouvrages."
+			}
+		],
+		"features": [
+			{
+				"name": "Peau épaisse",
+				"description": [
+					{
+						"paragraph": "Quand vous subissez des dégâts mineurs, vous pouvez cocher 2 Stress au lieu de cocher un Point de vie."
+					}
+				]
+			},
+			{
+				"name": "Robustesse accrue",
+				"description": [
+					{
+						"paragraph": "Dépensez 3 Espoirs pour diviser par deux les dégâts physiques subis."
+					}
+				]
+			}
+		]
 	},
 	"core_ancestry_elf": {
-		"name": "Elfe"
+		"name": "Elfe",
+		"description": [
+			{
+				"paragraph": "Les Elfes sont des humanoïdes grands et élancés, aux oreilles pointues et aux sens aiguisés. Leurs traits sont anguleux et gracieux, et ils se meuvent avec une élégance naturelle. Les Elfes sont profondément accordés au monde naturel et au monde magique, et vivent souvent en harmonie avec les forêts, les rivières et d’autres lieux sauvages. Leur longévité est exceptionnelle, s’étendant parfois sur de nombreux siècles, et leurs souvenirs sont tout aussi durables. La société elfique valorise l’art, la magie et le savoir, et leurs demeures sont souvent des œuvres d’art parfaitement intégrées au paysage."
+			}
+		],
+		"features": [
+			{
+				"name": "Réactions rapides",
+				"description": [
+					{
+						"paragraph": "Cochez un Stress pour obtenir l’avantage sur un jet de réaction."
+					}
+				]
+			},
+			{
+				"name": "Transe céleste",
+				"description": [
+					{
+						"paragraph": "Pendant un repos, vous pouvez entrer en transe pour choisir une action de temps mort supplémentaire."
+					}
+				]
+			}
+		]
 	},
 	"core_ancestry_faerie": {
-		"name": "Fée"
+		"name": "Fée",
+		"description": [
+			{
+				"paragraph": "Les Fées sont des humanoïdes minuscules et ailés, aux traits délicats évoquant les insectes. Leurs ailes translucides et leurs couleurs vives les font remarquer en tout lieu. Les Fées sont étroitement liées aux forces de la magie et du destin, et servent souvent d’intermédiaires entre le monde des esprits et les mortels. Leur tempérament est changeant, du malicieux au bienveillant, et elles se plaisent autant aux tours qu’aux gestes de bonté. Les Fées sont curieuses et aventureuses, et leur présence s’accompagne souvent de présages étranges ou d’éclats de magie sauvage."
+			}
+		],
+		"features": [
+			{
+				"name": "Tordeur de chance",
+				"description": [
+					{
+						"paragraph": "Une fois par session, après que vous ou un allié consentant à portée Proche avez fait un jet d’action, vous pouvez dépenser 3 Espoirs pour relancer les dés de Dualité."
+					}
+				]
+			},
+			{
+				"name": "Ailes",
+				"description": [
+					{
+						"paragraph": "Vous pouvez voler. En vol, vous pouvez cocher un Stress après qu’un adversaire a fait une attaque contre vous pour gagner un bonus de +2 à votre Évasion contre cette attaque."
+					}
+				]
+			}
+		]
 	},
 	"core_ancestry_faun": {
-		"name": "Faune"
+		"name": "Faune",
+		"description": [
+			{
+				"paragraph": "Les Faunes sont des humanoïdes dotés du bas du corps d’une chèvre, avec sabots fendus et jambes hirsutes, et du haut du corps d’un humain. On les reconnaît facilement à leurs cornes recourbées, leurs pupilles carrées et leurs oreilles expressives. Les Faunes sont connus pour leur exubérance, leur talent musical et leur goût des festivités. On trouve souvent leurs communautés dans les bois et les prairies, où ils vivent en harmonie avec la nature et célèbrent le cycle des saisons. Les Faunes chérissent la liberté, la créativité et la quête du plaisir, et l’on dit que leur rire est contagieux."
+			}
+		],
+		"features": [
+			{
+				"name": "Bond caprin",
+				"description": [
+					{
+						"paragraph": "Vous pouvez bondir n’importe où à portée Proche comme si vous vous déplaciez normalement, ce qui vous permet de franchir des obstacles, de sauter par-dessus des gouffres ou d’escalader des barrières avec aisance."
+					}
+				]
+			},
+			{
+				"name": "Ruade",
+				"description": [
+					{
+						"paragraph": "Quand vous réussissez une attaque contre une cible à portée de Mêlée, vous pouvez cocher un Stress pour vous propulser d’un coup de sabot contre elle, ce qui inflige 2d6 dégâts supplémentaires et vous repousse, vous ou la cible, à portée Très proche."
+					}
+				]
+			}
+		]
 	},
 	"core_ancestry_firbolg": {
-		"name": "Firbolg"
+		"name": "Firbolg",
+		"description": [
+			{
+				"paragraph": "Les Firbolgs sont de grands humanoïdes paisibles aux traits bovins : larges naseaux, longues oreilles tombantes et parfois de petites cornes. Ils sont profondément liés au monde naturel et servent souvent de gardiens aux forêts anciennes et aux lieux sacrés. Les Firbolgs chérissent la paix, l’équilibre et la force tranquille qui naît de la vie en harmonie avec leur environnement. Leur magie est discrète mais puissante : elle leur permet de se fondre dans le décor ou de communiquer avec les animaux et les plantes. Les Firbolgs sont lents à la colère, mais redoutables quand on les provoque."
+			}
+		],
+		"features": [
+			{
+				"name": "Charge",
+				"description": [
+					{
+						"paragraph": "Quand vous réussissez un jet d’Agilité pour passer de la portée Loin ou Très loin à la portée de Mêlée d’une ou plusieurs cibles, vous pouvez cocher un Stress pour infliger 1d12 dégâts physiques à toutes les cibles à portée de Mêlée."
+					}
+				]
+			},
+			{
+				"name": "Inébranlable",
+				"description": [
+					{
+						"paragraph": "Quand vous devriez cocher un Stress, lancez un d6. Sur un résultat de 6, ne le cochez pas."
+					}
+				]
+			}
+		]
 	},
 	"core_ancestry_fungril": {
-		"name": "Fungril"
+		"name": "Fungril",
+		"description": [
+			{
+				"paragraph": "Les Fungrils sont des champignons humanoïdes, au corps formé de mycélium et surmonté de chapeaux de formes et de couleurs variées. Leur peau est souvent spongieuse ou caoutchouteuse, et leurs traits peuvent paraître très étranges aux autres ascendances. Les Fungrils prospèrent dans les milieux humides et sombres, et leurs communautés sont reliées par de vastes réseaux souterrains. Ils communiquent par des spores et de subtils signaux chimiques, partageant pensées et souvenirs sur de grandes distances. Les Fungrils sont patients et contemplatifs, et ont une vision singulière de la vie et de la mort, qu’ils considèrent comme les deux faces d’un cycle naturel."
+			}
+		],
+		"features": [
+			{
+				"name": "Réseau fungril",
+				"description": [
+					{
+						"paragraph": "Faites un jet d’Instinct (12) pour utiliser votre réseau mycélien et parler à d’autres membres de votre ascendance. En cas de réussite, vous pouvez communiquer à n’importe quelle distance."
+					}
+				]
+			},
+			{
+				"name": "Lien avec la mort",
+				"description": [
+					{
+						"paragraph": "Tant que vous touchez un cadavre mort récemment, vous pouvez cocher un Stress pour en extraire un souvenir lié à une émotion ou à une sensation précise de votre choix."
+					}
+				]
+			}
+		]
 	},
 	"core_ancestry_galapa": {
-		"name": "Galapa"
+		"name": "Galapa",
+		"description": [
+			{
+				"paragraph": "Les Galapas sont des humanoïdes tortues, dotés d’une grande carapace bombée qui les protège naturellement. Leur peau coriace, leurs membres robustes et leurs mouvements lents et mesurés sont les marques de leur ascendance. Les Galapas sont connus pour leur sagesse, leur patience et leur longévité, vivant souvent des siècles. Leurs sociétés reposent sur la tradition et la responsabilité collective, et les anciens y jouissent d’un grand respect. Les Galapas valorisent la stabilité et la prévoyance, et ceux qui doivent prendre une décision difficile recherchent leurs conseils."
+			}
+		],
+		"features": [
+			{
+				"name": "Carapace",
+				"description": [
+					{
+						"paragraph": "Gagnez un bonus à vos seuils de dégâts égal à votre Maîtrise."
+					}
+				]
+			},
+			{
+				"name": "Rétraction",
+				"description": [
+					{
+						"paragraph": "Cochez un Stress pour vous rétracter dans votre carapace. Dans votre carapace, vous avez la résistance aux dégâts physiques, vous avez le désavantage sur les jets d’action et vous ne pouvez pas bouger."
+					}
+				]
+			}
+		]
 	},
 	"core_ancestry_giant": {
-		"name": "Géant"
+		"name": "Géant",
+		"description": [
+			{
+				"paragraph": "Les Géants sont d’énormes humanoïdes, dominant souvent de très haut les autres ascendances. Ils ont de larges épaules, de longs membres et peuvent avoir un, deux ou trois yeux. Les Géants sont réputés pour leur force, leur endurance et leur résistance. Leurs sociétés s’organisent souvent autour de clans ou de grandes familles, avec un fort accent sur l’honneur et l’accomplissement personnel. Les Géants sont de grands bâtisseurs et conteurs, et leurs traditions orales préservent l’histoire de leur peuple de génération en génération. Malgré leur taille, beaucoup de Géants sont doux et protecteurs envers ceux qu’ils considèrent comme leur famille."
+			}
+		],
+		"features": [
+			{
+				"name": "Endurance",
+				"description": [
+					{
+						"paragraph": "Gagnez un emplacement de Point de vie supplémentaire à la création du personnage."
+					}
+				]
+			},
+			{
+				"name": "Allonge",
+				"description": [
+					{
+						"paragraph": "Traitez toute arme, capacité, sort ou autre aptitude dont la portée est de Mêlée comme si elle avait une portée Très proche à la place."
+					}
+				]
+			}
+		]
 	},
 	"core_ancestry_goblin": {
-		"name": "Gobelin"
+		"name": "Gobelin",
+		"description": [
+			{
+				"paragraph": "Les Gobelins sont de petits humanoïdes nerveux, aux yeux surdimensionnés et aux grandes oreilles membraneuses. Leurs réflexes vifs et leurs sens aiguisés les rendent habiles pour se déplacer dans les lieux sombres ou exigus. Les Gobelins sont ingénieux et débrouillards, et détournent souvent des objets abandonnés en outils ou en armes utiles. Leurs communautés sont soudées et farouchement loyales, mais les Gobelins sont aussi réputés pour leur ruse et leur propension à contourner les règles pour atteindre leurs buts. Ils prospèrent dans les milieux où l’adaptabilité et l’astuce sont prisées."
+			}
+		],
+		"features": [
+			{
+				"name": "Pied sûr",
+				"description": [
+					{
+						"paragraph": "Vous ignorez le désavantage sur les jets d’Agilité."
+					}
+				]
+			},
+			{
+				"name": "Sens du danger",
+				"description": [
+					{
+						"paragraph": "Une fois par repos, cochez un Stress pour forcer un adversaire à relancer une attaque contre vous ou contre un allié à portée Très proche."
+					}
+				]
+			}
+		]
 	},
 	"core_ancestry_halfling": {
-		"name": "Halfelin"
+		"name": "Halfelin",
+		"description": [
+			{
+				"paragraph": "Les Halfelins sont de petits humanoïdes joyeux, aux visages ronds, aux grands pieds poilus et aux oreilles saillantes. Ils sont connus pour leur hospitalité, leur optimisme et leur fort sens de la communauté. Les Halfelins vivent souvent en milieu rural, dans de douillets foyers creusés à flanc de colline ou nichés parmi les champs et les jardins. Leurs sociétés accordent une grande valeur à la tradition, à la famille et aux plaisirs simples. Les Halfelins sont remarquablement résilients, capables de trouver espoir et humour même dans les pires circonstances."
+			}
+		],
+		"features": [
+			{
+				"name": "Porte-bonheur",
+				"description": [
+					{
+						"paragraph": "Au début de chaque session, tous les membres de votre groupe gagnent un Espoir."
+					}
+				]
+			},
+			{
+				"name": "Boussole intérieure",
+				"description": [
+					{
+						"paragraph": "Quand vous obtenez 1 sur votre dé d’Espoir, vous pouvez le relancer."
+					}
+				]
+			}
+		]
 	},
 	"core_ancestry_human": {
-		"name": "Humain"
+		"name": "Humain",
+		"description": [
+			{
+				"paragraph": "Les Humains sont adaptables, inventifs et résilients, avec une remarquable capacité de changement. Ils se distinguent par leurs mains habiles, leurs oreilles arrondies et leurs apparences variées. Les sociétés humaines sont diverses, des tribus nomades aux villes tentaculaires, et leurs cultures sont façonnées par l’ambition, la curiosité et l’envie d’explorer. Les Humains tissent des liens profonds avec les autres ascendances et sont connus pour apprendre vite de nouvelles compétences. Leur vie relativement courte nourrit un sentiment d’urgence et de détermination."
+			}
+		],
+		"features": [
+			{
+				"name": "Grande endurance",
+				"description": [
+					{
+						"paragraph": "Gagnez un emplacement de Stress supplémentaire à la création du personnage."
+					}
+				]
+			},
+			{
+				"name": "Adaptabilité",
+				"description": [
+					{
+						"paragraph": "Quand vous ratez un jet qui utilisait l’une de vos Expériences, vous pouvez cocher un Stress pour le relancer."
+					}
+				]
+			}
+		]
 	},
 	"core_ancestry_infernis": {
-		"name": "Infernis"
+		"name": "Infernis",
+		"description": [
+			{
+				"paragraph": "Les Infernis sont des humanoïdes marqués par de longues canines, des oreilles pointues et des cornes de formes et de tailles variées. Leur ascendance remonte aux royaumes infernaux, et ils possèdent souvent une résistance innée à la chaleur ou au feu. Les Infernis sont passionnés et ambitieux, réputés pour leur audace et leur détermination. Leurs sociétés se structurent autour de l’accomplissement personnel et de la force de volonté, et beaucoup d’Infernis cherchent à faire leurs preuves par des exploits de courage ou de ruse. Malgré leurs origines, les Infernis ne sont pas mauvais par nature et s’efforcent souvent de définir leur propre destin."
+			}
+		],
+		"features": [
+			{
+				"name": "Sans peur",
+				"description": [
+					{
+						"paragraph": "Quand vous faites un jet avec Peur, vous pouvez cocher 2 Stress pour le changer en jet avec Espoir à la place."
+					}
+				]
+			},
+			{
+				"name": "Visage terrifiant",
+				"description": [
+					{
+						"paragraph": "Vous avez l’avantage sur les jets pour intimider des créatures hostiles."
+					}
+				]
+			}
+		]
 	},
 	"core_ancestry_katari": {
-		"name": "Katari"
+		"name": "Katari",
+		"description": [
+			{
+				"paragraph": "Les Kataris sont des humanoïdes félins, au pelage lisse, aux griffes rétractiles et aux pupilles en fente verticale. Leurs hautes oreilles triangulaires et leur corps agile leur donnent une allure résolument féline. Les Kataris sont curieux, indépendants et vifs d’esprit, et préfèrent souvent s’en remettre à leurs propres talents et à leur instinct. Leurs sociétés valorisent la liberté personnelle et l’adaptabilité, et les Kataris savent prospérer aussi bien dans la nature sauvage qu’en milieu urbain. Leurs sens sont exceptionnellement fins, ce qui en fait d’excellents chasseurs et éclaireurs."
+			}
+		],
+		"features": [
+			{
+				"name": "Instincts félins",
+				"description": [
+					{
+						"paragraph": "Quand vous faites un jet d’Agilité, vous pouvez dépenser 2 Espoirs pour relancer votre dé d’Espoir."
+					}
+				]
+			},
+			{
+				"name": "Griffes rétractiles",
+				"description": [
+					{
+						"paragraph": "Faites un jet d’Agilité pour griffer une cible à portée de Mêlée. En cas de réussite, elle devient temporairement Vulnérable."
+					}
+				]
+			}
+		]
 	},
 	"core_ancestry_orc": {
-		"name": "Orque"
+		"name": "Orque",
+		"description": [
+			{
+				"paragraph": "Les Orcs sont de puissants humanoïdes aux traits larges et carrés, avec de proéminentes défenses qui sortent de leur mâchoire inférieure. Leur peau va du vert profond au gris, et leur physique est taillé pour l’endurance et la force. Les sociétés orques s’organisent en clans et mettent l’accent sur l’honneur, la loyauté et la prouesse physique. Ce sont de redoutables guerriers, mais aussi des artisans et des chasseurs habiles. Les Orcs valorisent la bravoure et la franchise, et leurs traditions se transmettent par des chants, des récits et des rituels."
+			}
+		],
+		"features": [
+			{
+				"name": "Robuste",
+				"description": [
+					{
+						"paragraph": "Quand il vous reste 1 Point de vie, les attaques contre vous ont le désavantage."
+					}
+				]
+			},
+			{
+				"name": "Défenses",
+				"description": [
+					{
+						"paragraph": "Quand vous réussissez une attaque contre une cible à portée de Mêlée, vous pouvez dépenser un Espoir pour l’encorner de vos défenses, ce qui inflige 1d6 dégâts supplémentaires."
+					}
+				]
+			}
+		]
 	},
 	"core_ancestry_ribbet": {
-		"name": "Ribbet"
+		"name": "Ribbet",
+		"description": [
+			{
+				"paragraph": "Les Ribbets sont des humanoïdes batraciens, à la peau lisse et humide, aux yeux globuleux et aux mains et pieds palmés. Leurs jambes fortes et souples leur permettent de bondir très loin ou de nager sans effort. Les Ribbets se sentent chez eux dans les marais, les rivières et les lacs, où leurs sens aiguisés et leur adaptabilité leur sont précieux. Leurs sociétés sont communautaires et coopératives, souvent organisées autour de grandes familles ou de villages. Les Ribbets sont joyeux et débrouillards, connus pour leur vivacité d’esprit et leur talent pour échapper au danger."
+			}
+		],
+		"features": [
+			{
+				"name": "Amphibie",
+				"description": [
+					{
+						"paragraph": "Vous pouvez respirer et vous déplacer naturellement sous l’eau."
+					}
+				]
+			},
+			{
+				"name": "Longue langue",
+				"description": [
+					{
+						"paragraph": "Vous pouvez utiliser votre longue langue pour attraper des choses à portée Proche. Cochez un Stress pour l’utiliser comme une arme de Finesse à portée Proche qui inflige d12 dégâts physiques en utilisant votre Maîtrise."
+					}
+				]
+			}
+		]
 	},
 	"core_ancestry_simiah": {
-		"name": "Simiah"
+		"name": "Simiah",
+		"description": [
+			{
+				"paragraph": "Les Simiahs sont des humanoïdes semblables aux singes et aux grands singes, aux membres longs, aux pieds préhensiles et aux visages expressifs. Leur corps est couvert d’un pelage doux, et leurs mains comme leurs pieds sont tout aussi habiles. Les Simiahs sont d’agiles grimpeurs et acrobates, capables de se déplacer dans les arbres comme en ville avec aisance. Leurs sociétés sont vivantes et sociables, avec de solides liens forgés par le jeu, les récits et l’entraide. Les Simiahs valorisent la curiosité, la créativité et le sens de l’humour, et se font vite des amis parmi ceux qui partagent leur joie de vivre."
+			}
+		],
+		"features": [
+			{
+				"name": "Grimpeur naturel",
+				"description": [
+					{
+						"paragraph": "Vous avez l’avantage sur les jets d’Agilité qui impliquent de garder l’équilibre ou de grimper."
+					}
+				]
+			},
+			{
+				"name": "Leste",
+				"description": [
+					{
+						"paragraph": "Gagnez un bonus permanent de +1 à votre Évasion à la création du personnage."
+					}
+				]
+			}
+		]
 	}
 }
