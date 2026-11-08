@@ -107,7 +107,7 @@ test('domain card help facts line: niveau and coût de rappel (fr), level and re
 });
 
 test('French adversary adv_acid_burrower help: no raw key, facts line lang="fr" with the role label Solo', async () => {
-	const { ctx, details, lines } = await refHelp('fr', 'adversaries', 'adv_acid_burrower', 'Acid Burrower');
+	const { ctx, details, lines } = await refHelp('fr', 'adversaries', 'adv_acid_burrower', await srdName('adversaries', 'adv_acid_burrower', 'fr'));
 	const all = await details.evaluate((d) => d.textContent);
 	assert.doesNotMatch(all, /motives_and_tactics\s*:/);
 	assert.doesNotMatch(all, /\b[a-z]+(_[a-z]+)+\s*:/, 'no snake_case key followed by a colon');

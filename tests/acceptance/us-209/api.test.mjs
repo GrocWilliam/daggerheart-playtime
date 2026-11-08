@@ -47,17 +47,22 @@ test("lang=fr: GET /api/srd/classes lists core_class_bard as Barde with nameLang
 	assert.equal(en.nameLang, 'en');
 });
 
-test("lang=fr: GET /api/srd/adversaries returns English names with nameLang 'en'", async () => {
+test("lang=fr: GET /api/srd/adversaries returns French names (nameLang 'fr') where translated, English with 'en' otherwise", async () => {
 	const fr = await get('/api/srd/adversaries', 'fr');
 	const en = await get('/api/srd/adversaries', 'en');
 	assert.equal(fr.status, 200);
 	assert.ok(fr.json.length > 0);
 	assert.deepEqual(fr.json.map((a) => a.id), en.json.map((a) => a.id));
 	fr.json.forEach((a, i) => {
-		assert.equal(a.name, en.json[i].name, a.id);
-		assert.equal(a.nameLang, 'en', a.id);
+		if (a.nameLang === 'fr') assert.notEqual(a.name, en.json[i].name, a.id);
+		else {
+			assert.equal(a.name, en.json[i].name, a.id);
+			assert.equal(a.nameLang, 'en', a.id);
+		}
 	});
-	assert.equal(fr.json.find((a) => a.id === 'adv_acid_burrower').name, 'Acid Burrower');
+	const acid = fr.json.find((a) => a.id === 'adv_acid_burrower');
+	assert.equal(acid.nameLang, 'fr');
+	assert.notEqual(acid.name, 'Acid Burrower');
 });
 
 test('GET /api/srd/weapons/nope still answers 404 {"error"}; an unknown kind still answers 404 "unknown SRD kind"', async () => {

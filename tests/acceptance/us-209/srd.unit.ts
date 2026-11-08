@@ -109,14 +109,14 @@ describe('listSrd and adversariesByTier with nameLang', () => {
 		expect(srd.listSrd('classes', 'fr').find((c: { id: string }) => c.id === 'core_class_bard')).toMatchObject({ name: 'Barde', nameLang: 'fr' });
 		expect(srd.listSrd('classes', 'en').find((c: { id: string }) => c.id === 'core_class_bard')).toMatchObject({ name: 'Bard', nameLang: 'en' });
 	});
-	it("adversariesByTier in fr keeps English names with nameLang 'en', plus tier and role", () => {
+	it("adversariesByTier in fr returns French names with nameLang 'fr' for tier 1, plus tier and role", () => {
 		const en = srd.adversariesByTier(1, 'en');
 		const fr = srd.adversariesByTier(1, 'fr');
 		expect(fr.length).toBeGreaterThan(0);
 		expect(fr.map((a: { id: string }) => a.id)).toEqual(en.map((a: { id: string }) => a.id));
 		fr.forEach((a: Record<string, unknown>, i: number) => {
-			expect(a.name).toBe(en[i].name);
-			expect(a.nameLang).toBe('en');
+			expect(a.name).not.toBe(en[i].name);
+			expect(a.nameLang).toBe('fr');
 			expect(a.tier).toBe(1);
 			expect(a.role).toBe(en[i].role);
 		});

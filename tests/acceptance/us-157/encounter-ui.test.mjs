@@ -162,7 +162,8 @@ test('French: the encounter section is translated and works', async () => {
 	const cards = scene(p).locator('[data-testid=encounter-adversary]');
 	assert.ok((await cards.count()) > 0);
 	const text = await cards.first().textContent();
-	assert.ok(text.includes(enc.adversaries[0].name), 'SRD names stay English');
+	const frSrd = await (await fetch(`${new URL(p.url()).origin}/api/srd/adversaries/${enc.adversaries[0].id}`, { headers: { cookie: 'lang=fr' } })).json();
+	assert.ok(text.includes(frSrd.nameLocalized), 'tier 1 SRD names are shown in French');
 	assert.deepEqual(await budget(p), { spent: enc.spent, budget: enc.budget });
 	const again = (await scene(p).locator('form', { has: p.locator('input[type=checkbox]') }).first().locator('button').last().textContent()).trim();
 	assert.notEqual(again, label, 'button changes to the regenerate label');

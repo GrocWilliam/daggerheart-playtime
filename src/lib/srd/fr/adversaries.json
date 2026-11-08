@@ -1,1 +1,1011 @@
-{}
+{
+	"adv_acid_burrower": {
+		"name": "Fouisseur acide",
+		"description": "Un insecte grand comme un cheval, aux griffes fouisseuses et au sang acide.",
+		"motives_and_tactics": "Creuser, entraîner au loin, se nourrir, se repositionner",
+		"experience": "Sens des secousses +2",
+		"attack": "Griffes",
+		"feature": [
+			{
+				"name": "Implacable (3) - Passive",
+				"text": "Le Fouisseur peut recevoir le projecteur jusqu'à trois fois par tour du MJ. Dépensez de la Peur normalement pour lui donner le projecteur."
+			},
+			{
+				"name": "Éruption de terre - Action",
+				"text": "**Marquez un Stress** pour que le Fouisseur surgisse du sol. Toutes les créatures à portée Très proche doivent réussir un jet de réaction d'Agilité, sinon elles sont renversées et deviennent _Vulnérables_ jusqu'à leur prochaine action."
+			},
+			{
+				"name": "Crachat d'acide - Action",
+				"text": "Faites une attaque contre toutes les cibles devant le Fouisseur à portée Proche. Les cibles contre lesquelles le Fouisseur réussit subissent **2d6** dégâts physiques et doivent marquer un emplacement d'armure sans en recevoir les bénéfices (elles peuvent toujours utiliser leur armure pour réduire les dégâts). Si elles ne peuvent pas marquer d'emplacement d'armure, elles doivent marquer un PV supplémentaire et vous gagnez une Peur."
+			},
+			{
+				"name": "Bain d'acide - Réaction",
+				"text": "Quand le Fouisseur subit des dégâts graves, toutes les créatures à portée Proche sont aspergées de son sang acide et subissent **1d10** dégâts physiques. Cette éclaboussure recouvre de sang le sol à portée Très proche, et toutes les créatures autres que le Fouisseur qui le traversent subissent **1d6** dégâts physiques."
+			}
+		]
+	},
+	"adv_bear": {
+		"name": "Ours",
+		"description": "Un grand ours à la fourrure épaisse et aux griffes puissantes.",
+		"motives_and_tactics": "Grimper, défendre son territoire, rouer de coups, pister",
+		"experience": "Embusqué +3, Sens aiguisés +2",
+		"attack": "Griffes",
+		"feature": [
+			{
+				"name": "Force écrasante - Passive",
+				"text": "Les cibles qui marquent des PV à cause de l'attaque standard de l'Ours sont repoussées à portée Très proche."
+			},
+			{
+				"name": "Morsure - Action",
+				"text": "**Marquez un Stress** pour faire une attaque contre une cible à portée de Mêlée. En cas de réussite, infligez **3d4+10** dégâts physiques et la cible est _Entravée_ jusqu'à ce qu'elle se libère par un jet de Puissance réussi."
+			},
+			{
+				"name": "Élan - Réaction",
+				"text": "Quand l'Ours réussit une attaque contre un PJ, vous gagnez une Peur."
+			}
+		]
+	},
+	"adv_cave_ogre": {
+		"name": "Ogre des cavernes",
+		"description": "Un humanoïde massif qui voit toute vie sapiente comme de la nourriture.",
+		"motives_and_tactics": "Arracher des têtes, festoyer, déchirer des membres, piétiner, lancer ses ennemis",
+		"experience": "Lancer +2",
+		"attack": "Gourdin",
+		"feature": [
+			{
+				"name": "Montée en puissance - Passive",
+				"text": "Vous devez **dépenser une Peur** pour donner le projecteur à l'Ogre. Tant qu'il a le projecteur, il peut faire son attaque standard contre toutes les cibles à portée."
+			},
+			{
+				"name": "Brise-os - Passive",
+				"text": "Les attaques de l'Ogre infligent des dégâts directs."
+			},
+			{
+				"name": "Grêle de rochers - Action",
+				"text": "**Marquez un Stress** pour ramasser de lourds objets et les lancer sur toutes les cibles devant l'Ogre à portée Loin. Faites une attaque contre ces cibles. Les cibles contre lesquelles l'Ogre réussit subissent **1d10+2** dégâts physiques. S'il réussit contre plus d'une cible, vous gagnez une Peur."
+			},
+			{
+				"name": "Fureur dévastatrice - Réaction",
+				"text": "Quand l'Ogre marque 2 PV ou plus, il peut se déchaîner. Déplacez l'Ogre jusqu'à un point à portée Proche et infligez **2d6+3** dégâts physiques directs à toutes les cibles sur son passage."
+			}
+		]
+	},
+	"adv_construct": {
+		"name": "Golem",
+		"description": "Un être grossièrement humanoïde de pierre et d'acier, assemblé et animé par la magie.",
+		"motives_and_tactics": "Détruire l'environnement, servir son créateur, fracasser une cible, piétiner les groupes",
+		"attack": "Coup de poing écrasant",
+		"feature": [
+			{
+				"name": "Implacable (2) - Passive",
+				"text": "Le Golem peut recevoir le projecteur jusqu'à deux fois par tour du MJ. Dépensez de la Peur normalement pour lui donner le projecteur."
+			},
+			{
+				"name": "Structure fragile - Passive",
+				"text": "Quand le Golem marque des PV à cause de dégâts physiques, il doit marquer un PV supplémentaire."
+			},
+			{
+				"name": "Piétinement - Action",
+				"text": "**Marquez un Stress** pour faire une attaque contre toutes les cibles sur le chemin du Golem quand il se déplace. Les cibles contre lesquelles le Golem réussit subissent **1d8** dégâts physiques."
+			},
+			{
+				"name": "Surcharge - Réaction",
+				"text": "Avant de lancer les dégâts de l'attaque du Golem, vous pouvez **marquer un Stress** pour gagner un bonus de +10 au jet de dégâts. Le Golem peut ensuite reprendre le projecteur."
+			},
+			{
+				"name": "Séisme mortel - Réaction",
+				"text": "Quand le Golem marque son dernier PV, la magie qui l'anime se rompt dans une explosion de force. Faites une attaque avec avantage contre toutes les cibles à portée Très proche. Les cibles contre lesquelles le Golem réussit subissent **1d12+2** dégâts magiques."
+			}
+		]
+	},
+	"adv_courtier": {
+		"name": "Courtisan",
+		"description": "Un mondain ambitieux, vêtu avec ostentation.",
+		"motives_and_tactics": "Discréditer, gagner des faveurs, manœuvrer, comploter",
+		"experience": "Mondain +3",
+		"attack": "Dagues",
+		"feature": [
+			{
+				"name": "Moquerie - Action",
+				"text": "**Marquez un Stress** pour lancer une raillerie et forcer une cible à portée Proche à faire un jet de réaction de Présence (14) pour voir si elle sauve la face. En cas d'échec, la cible doit marquer 2 Stress et est _Vulnérable_ jusqu'à la fin de la scène."
+			},
+			{
+				"name": "Bouc émissaire - Action",
+				"text": "**Dépensez une Peur** et ciblez un PJ. Le Courtisan convainc une foule ou une personnalité que la cible est la cause de leur conflit ou de leur malheur actuel."
+			}
+		]
+	},
+	"adv_deeproot_defender": {
+		"name": "Défenseur de Racine-Profonde",
+		"description": "Un robuste être végétal aux vignes agrippantes.",
+		"motives_and_tactics": "Tendre une embuscade, saisir, protéger, rouer de coups",
+		"experience": "Colossal +3",
+		"attack": "Vignes",
+		"feature": [
+			{
+				"name": "Coup de sol - Action",
+				"text": "Frappez le sol, repoussant toutes les cibles à portée Très proche jusqu'à portée Loin. Chaque cible ainsi repoussée doit marquer un Stress."
+			},
+			{
+				"name": "Saisir et traîner - Action",
+				"text": "Faites une attaque contre une cible à portée Proche. En cas de réussite, **dépensez une Peur** pour l'attirer à portée de Mêlée, lui infliger **1d6+2** dégâts physiques et l'_Entraver_ jusqu'à ce que le Défenseur subisse des dégâts graves."
+			}
+		]
+	},
+	"adv_dire_wolf": {
+		"name": "Loup sanguinaire",
+		"description": "Un grand loup aux crocs menaçants, rarement rencontré seul.",
+		"motives_and_tactics": "Défendre son territoire, harceler, protéger la meute, encercler, pister",
+		"experience": "Sens aiguisés +3",
+		"attack": "Griffes",
+		"feature": [
+			{
+				"name": "Tactique de meute - Passive",
+				"text": "Si le Loup réussit une attaque standard et qu'un autre Loup sanguinaire est à portée de Mêlée de la cible, infligez **1d6+5** dégâts physiques au lieu de ses dégâts standard et vous gagnez une Peur."
+			},
+			{
+				"name": "Morsure invalidante - Action",
+				"text": "**Marquez un Stress** pour faire une attaque contre une cible à portée de Mêlée. En cas de réussite, infligez **3d4+10** dégâts physiques directs et rendez-la _Vulnérable_ jusqu'à ce qu'elle soigne au moins 1 PV."
+			}
+		]
+	},
+	"adv_giant_mosquitoes": {
+		"name": "Moustiques géants",
+		"description": "Des dizaines de moustiques gros comme le poing, volant ensemble pour se protéger.",
+		"motives_and_tactics": "S'envoler, harceler, voler du sang",
+		"experience": "Camouflage +2",
+		"attack": "Trompe",
+		"feature": [
+			{
+				"name": "Horde (1d4+1) - Passive",
+				"text": "Quand les Moustiques ont marqué la moitié ou plus de leurs PV, leur attaque standard inflige à la place **1d4+1** dégâts physiques."
+			},
+			{
+				"name": "Vol - Passive",
+				"text": "En vol, les Moustiques ont un bonus de +2 à leur Difficulté."
+			},
+			{
+				"name": "Suceur de sang - Réaction",
+				"text": "Quand l'attaque des Moustiques fait marquer des PV à une cible, vous pouvez **marquer un Stress** pour forcer la cible à marquer un PV supplémentaire."
+			}
+		]
+	},
+	"adv_giant_rat": {
+		"name": "Rat géant",
+		"description": "Un rongeur gros comme un chat, doué pour la charogne et la survie.",
+		"motives_and_tactics": "Creuser, avoir faim, fouiller, user",
+		"experience": "Sens aiguisés +3",
+		"attack": "Griffes",
+		"feature": [
+			{
+				"name": "Sbire (3) - Passive",
+				"text": "Le Rat est vaincu dès qu'il subit des dégâts. Pour chaque tranche de 3 dégâts qu'un PJ inflige à le Rat, vainquez un Sbire supplémentaire à portée contre lequel l'attaque réussirait."
+			},
+			{
+				"name": "Attaque de groupe - Action",
+				"text": "**Dépensez une Peur** pour choisir une cible et donner le projecteur à tous les Rats géants à portée Proche de celle-ci. Ces Sbires se déplacent à portée de Mêlée de la cible et font un jet d'attaque commun. En cas de réussite, ils infligent 1 dégâts physiques chacun. Additionnez ces dégâts."
+			}
+		]
+	},
+	"adv_giant_scorpion": {
+		"name": "Scorpion géant",
+		"description": "Un arachnide de la taille d'un humain, aux pinces lacérantes et à la queue venimeuse.",
+		"motives_and_tactics": "Tendre une embuscade, se nourrir, agripper, empoisonner",
+		"experience": "Camouflage +2",
+		"attack": "Pinces",
+		"feature": [
+			{
+				"name": "Double frappe - Action",
+				"text": "**Marquez un Stress** pour faire une attaque standard contre deux cibles à portée de Mêlée."
+			},
+			{
+				"name": "Dard venimeux - Action",
+				"text": "Faites une attaque contre une cible à portée Très proche. En cas de réussite, **dépensez une Peur** pour infliger **1d4+4** dégâts physiques et l'_Empoisonner_ jusqu'à son prochain repos ou jusqu'à ce qu'elle réussisse un jet de Connaissance (16). Tant qu'elle est _Empoisonnée_, la cible doit lancer un **d6** avant de faire un jet d'action. Sur un résultat de 4 ou moins, elle doit marquer un Stress."
+			},
+			{
+				"name": "Élan - Réaction",
+				"text": "Quand le Scorpion réussit une attaque contre un PJ, vous gagnez une Peur."
+			}
+		]
+	},
+	"adv_glass_snake": {
+		"name": "Serpent de verre",
+		"description": "Un serpent transparent à la tête massive, qui laisse derrière lui une traînée d'éclats de verre.",
+		"motives_and_tactics": "Grimper, se nourrir, garder ses distances, effrayer",
+		"attack": "Crocs de verre",
+		"feature": [
+			{
+				"name": "Éclats lacérant l'armure - Passive",
+				"text": "Après une attaque réussie contre le Serpent à portée de Mêlée, l'attaquant doit marquer un emplacement d'armure. S'il ne peut pas en marquer, il doit marquer un PV."
+			},
+			{
+				"name": "Serpent tournoyant - Action",
+				"text": "**Marquez un Stress** pour faire une attaque contre toutes les cibles à portée Très proche. Les cibles contre lesquelles le Serpent réussit subissent **1d6+1** dégâts physiques."
+			},
+			{
+				"name": "Cracheur - Action",
+				"text": "**Dépensez une Peur** pour introduire un dé de Cracheur **d6**. Quand le Serpent a le projecteur, lancez ce dé. Sur un résultat de 5 ou plus, toutes les cibles devant le Serpent à portée Loin doivent réussir un jet de réaction d'Agilité, sinon elles subissent **1d4** dégâts physiques. Le Serpent peut reprendre le projecteur une seconde fois pendant ce tour du MJ."
+			}
+		]
+	},
+	"adv_harrier": {
+		"name": "Harceleur",
+		"description": "Un combattant agile armé de javelots.",
+		"motives_and_tactics": "Prendre en tenaille, harceler, garder ses distances, profiter",
+		"experience": "Camouflage +2",
+		"attack": "Javelot",
+		"feature": [
+			{
+				"name": "Garder ses distances - Passive",
+				"text": "Après une attaque standard, le Harceleur peut se déplacer n'importe où à portée Loin."
+			},
+			{
+				"name": "Repli - Réaction",
+				"text": "Quand une créature se déplace à portée de Mêlée pour faire une attaque, vous pouvez **marquer un Stress** avant le jet d'attaque pour vous déplacer n'importe où à portée Proche et faire une attaque contre cette créature. En cas de réussite, infligez **1d10+2** dégâts physiques."
+			}
+		]
+	},
+	"adv_archer_guard": {
+		"name": "Garde archer",
+		"description": "Un grand garde portant un arc long et un carquois de flèches empennées aux couleurs de la colonie.",
+		"motives_and_tactics": "Arrêter, fermer les portes, passer la journée, clouer sur place",
+		"experience": "Connaissance locale +3",
+		"attack": "Arc long",
+		"feature": [
+			{
+				"name": "Tir invalidant - Action",
+				"text": "Faites une attaque contre une cible à portée Loin. En cas de réussite, **marquez un Stress** pour infliger **1d12+3** dégâts physiques. Si la cible marque des PV à cause de cette attaque, elle a un désavantage aux jets d'Agilité jusqu'à ce qu'elle soigne au moins 1 PV."
+			}
+		]
+	},
+	"adv_bladed_guard": {
+		"name": "Garde à l'épée",
+		"description": "Un garde en armure portant une épée et un bouclier peints aux couleurs de la colonie.",
+		"motives_and_tactics": "Arrêter, fermer les portes, passer la journée, clouer sur place",
+		"experience": "Connaissance locale +3",
+		"attack": "Épée longue",
+		"feature": [
+			{
+				"name": "Mur de boucliers - Passive",
+				"text": "Une créature qui tente de se déplacer à portée Très proche du Garde doit réussir un jet d'Agilité. Si d'autres Gardes à l'épée sont alignés avec le premier, chacun à portée de Mêlée d'un autre garde de la ligne, la Difficulté augmente du nombre total de gardes de cette ligne."
+			},
+			{
+				"name": "Retenir - Action",
+				"text": "Faites une attaque contre une cible à portée Très proche. En cas de réussite, **marquez un Stress** pour _Entraver_ la cible jusqu'à ce qu'elle se libère par une attaque, un jet de Finesse ou un jet de Puissance réussi."
+			}
+		]
+	},
+	"adv_head_guard": {
+		"name": "Chef de la garde",
+		"description": "Un garde chevronné armé d'une masse, d'un sifflet et d'une voix tonitruante.",
+		"motives_and_tactics": "Arrêter, fermer les portes, clouer sur place, chercher la gloire",
+		"experience": "Commandement +2, Connaissance locale +2",
+		"attack": "Masse",
+		"feature": [
+			{
+				"name": "Rallier les gardes - Action",
+				"text": "**Dépensez 2 Peur** pour donner le projecteur au Chef de la garde et à jusqu'à **2d4** alliés à portée Loin."
+			},
+			{
+				"name": "Sur mon signal - Réaction : compte à rebours (5)",
+				"text": "Quand le Chef de la garde a le projecteur pour la première fois, activez le compte à rebours. Il avance chaque fois qu'un PJ fait un jet d'attaque. Quand il se déclenche, tous les Gardes archers à portée Loin font une attaque standard avec avantage contre la cible la plus proche à leur portée. Si plusieurs attaques réussissent contre la même cible, additionnez leurs dégâts."
+			},
+			{
+				"name": "Élan - Réaction",
+				"text": "Quand le Chef de la garde réussit une attaque contre un PJ, vous gagnez une Peur."
+			}
+		]
+	},
+	"adv_jagged_knife_bandit": {
+		"name": "Bandit du Couteau Dentelé",
+		"description": "Un criminel rusé dans une cape ornée de l'un des couteaux emblématiques du gang.",
+		"motives_and_tactics": "S'échapper, profiter, voler, lancer de la fumée",
+		"experience": "Voleur +2",
+		"attack": "Dagues",
+		"feature": [
+			{
+				"name": "Grimpeur - Passive",
+				"text": "Le Bandit grimpe aussi facilement qu'il court."
+			},
+			{
+				"name": "Depuis les hauteurs - Passive",
+				"text": "Quand le Bandit réussit une attaque standard depuis une position surplombant la cible, il inflige **1d10+1** dégâts physiques au lieu de ses dégâts standard."
+			}
+		]
+	},
+	"adv_jagged_knife_hexer": {
+		"name": "Jeteur de sorts du Couteau Dentelé",
+		"description": "Un bandit armé d'un bâton, dans une cape ornée de bibelots magiques, qui utilise des malédictions pour tourmenter ses ennemis.",
+		"motives_and_tactics": "Commander, jeter des sorts, profiter",
+		"experience": "Connaissance magique +2",
+		"attack": "Bâton",
+		"feature": [
+			{
+				"name": "Malédiction - Action",
+				"text": "Choisissez une cible à portée Loin et _Maudissez_-la temporairement. Tant que la cible est _Maudite_, vous pouvez **marquer un Stress** quand elle fait un jet avec Espoir pour que ce jet soit fait avec Peur à la place."
+			},
+			{
+				"name": "Flux chaotique - Action",
+				"text": "Faites une attaque contre jusqu'à trois cibles à portée Très proche. **Marquez un Stress** pour infliger **2d6+3** dégâts magiques aux cibles contre lesquelles le Jeteur de sorts a réussi."
+			}
+		]
+	},
+	"adv_jagged_knife_kneebreaker": {
+		"name": "Casseur de genoux du Couteau Dentelé",
+		"description": "Une brute imposante portant un gros gourdin.",
+		"motives_and_tactics": "Agripper, intimider, profiter, voler",
+		"experience": "Voleur +2, Menaces dévoilées +3",
+		"attack": "Gourdin",
+		"feature": [
+			{
+				"name": "Je les tiens - Passive",
+				"text": "Les créatures _Entravées_ par le Casseur de genoux subissent des dégâts doublés des attaques des autres adversaires."
+			},
+			{
+				"name": "Maintenir au sol - Action",
+				"text": "Faites une attaque contre une cible à portée de Mêlée. En cas de réussite, la cible ne subit aucun dégât mais est _Entravée_ et _Vulnérable_. Elle peut se libérer, ce qui efface les deux conditions, par un jet de Puissance réussi, ou est libérée automatiquement si le Casseur de genoux subit des dégâts majeurs ou plus."
+			}
+		]
+	},
+	"adv_jagged_knife_lackey": {
+		"name": "Larbin du Couteau Dentelé",
+		"description": "Un voleur aux vêtements simples et aux petites dagues, impatient de faire ses preuves.",
+		"motives_and_tactics": "S'échapper, profiter, lancer de la fumée",
+		"experience": "Voleur +2",
+		"attack": "Dagues",
+		"feature": [
+			{
+				"name": "Sbire (3) - Passive",
+				"text": "Le Larbin est vaincu dès qu'il subit des dégâts. Pour chaque tranche de 3 dégâts qu'un PJ inflige à le Larbin, vainquez un Sbire supplémentaire à portée contre lequel l'attaque réussirait."
+			},
+			{
+				"name": "Attaque de groupe - Action",
+				"text": "**Dépensez une Peur** pour choisir une cible et donner le projecteur à tous les Larbins du Couteau Dentelé à portée Proche de celle-ci. Ces Sbires se déplacent à portée de Mêlée de la cible et font un jet d'attaque commun. En cas de réussite, ils infligent 2 dégâts physiques chacun. Additionnez ces dégâts."
+			}
+		]
+	},
+	"adv_jagged_knife_lieutenant": {
+		"name": "Lieutenant du Couteau Dentelé",
+		"description": "Un bandit chevronné en cuir de qualité, à la voix forte et au regard rusé.",
+		"motives_and_tactics": "Brutaliser, commander, profiter, renforcer",
+		"experience": "Connaissance locale +2",
+		"attack": "Javelot",
+		"feature": [
+			{
+				"name": "Tacticien - Action",
+				"text": "Quand vous donnez le projecteur au Lieutenant, **marquez un Stress** pour le donner aussi à deux alliés à portée Proche."
+			},
+			{
+				"name": "Il y en a d'autres - Action",
+				"text": "Invoquez trois Larbins du Couteau Dentelé, qui apparaissent à portée Loin."
+			},
+			{
+				"name": "Coup de grâce - Action",
+				"text": "**Dépensez une Peur** pour faire une attaque contre une cible _Vulnérable_ à portée Proche. En cas de réussite, infligez **2d6+12** dégâts physiques et la cible doit marquer un Stress."
+			},
+			{
+				"name": "Élan - Réaction",
+				"text": "Quand le Lieutenant réussit une attaque contre un PJ, vous gagnez une Peur."
+			}
+		]
+	},
+	"adv_jagged_knife_shadow": {
+		"name": "Ombre du Couteau Dentelé",
+		"description": "Un fripon agile portant un couteau cruel et utilisant la magie des ombres pour isoler ses cibles.",
+		"motives_and_tactics": "Tendre une embuscade, dissimuler, diviser, profiter",
+		"experience": "Intrusion +3",
+		"attack": "Dagues",
+		"feature": [
+			{
+				"name": "Coup dans le dos - Passive",
+				"text": "Quand l'Ombre réussit une attaque standard avec avantage, elle inflige **1d6+6** dégâts physiques au lieu de ses dégâts standard."
+			},
+			{
+				"name": "Dissimulée - Action",
+				"text": "Devenez _Cachée_ jusqu'après la prochaine attaque de l'Ombre. Les attaques faites pendant qu'elle est _Cachée_ grâce à ce trait ont l'avantage."
+			}
+		]
+	},
+	"adv_jagged_knife_sniper": {
+		"name": "Tireur d'élite du Couteau Dentelé",
+		"description": "Un bandit dégingandé qui frappe à couvert avec un arc court.",
+		"motives_and_tactics": "Tendre une embuscade, se cacher, profiter, se repositionner",
+		"experience": "Furtivité +2",
+		"attack": "Arc court",
+		"feature": [
+			{
+				"name": "Frappe invisible - Passive",
+				"text": "Si le Tireur d'élite est _Caché_ quand il réussit une attaque standard contre une cible, il inflige **1d10+4** dégâts physiques au lieu de ses dégâts standard."
+			}
+		]
+	},
+	"adv_merchant": {
+		"name": "Marchand",
+		"description": "Un commerçant élégamment vêtu, au flair infaillible pour le profit.",
+		"motives_and_tactics": "Acheter bas et vendre haut, créer la demande, gonfler les prix, chercher le profit",
+		"experience": "Négociateur avisé +3",
+		"attack": "Gourdin",
+		"feature": [
+			{
+				"name": "Traitement de faveur - Passive",
+				"text": "Un PJ qui réussit un jet de Présence contre le Marchand obtient une réduction sur ses achats. Un PJ qui rate un jet de Présence contre le Marchand doit payer plus cher et a un désavantage à ses futurs jets de Présence contre lui."
+			},
+			{
+				"name": "Le tour de passe-passe - Passive",
+				"text": "Quand un PJ obtient 14 ou moins à un jet de Présence fait contre le Marchand, il doit marquer un Stress."
+			}
+		]
+	},
+	"adv_minor_chaos_elemental": {
+		"name": "Élémentaire du chaos mineur",
+		"description": "Une masse scintillante de magie incontrôlable.",
+		"motives_and_tactics": "Déconcerter, déstabiliser, transmuter",
+		"attack": "Souffle distordant",
+		"feature": [
+			{
+				"name": "Forme arcanique - Passive",
+				"text": "L'Élémentaire résiste aux dégâts magiques."
+			},
+			{
+				"name": "Flux écœurant - Action",
+				"text": "**Marquez un PV** pour forcer toutes les cibles à portée Proche à marquer un Stress et à devenir _Vulnérables_ jusqu'à leur prochain repos ou jusqu'à ce qu'elles soignent un PV."
+			},
+			{
+				"name": "Refaire la réalité - Action",
+				"text": "**Dépensez une Peur** pour transformer la zone à portée Très proche en un biome différent. Toutes les cibles dans cette zone subissent **2d6+3** dégâts magiques directs."
+			},
+			{
+				"name": "Réflexion magique - Réaction",
+				"text": "Quand l'Élémentaire subit des dégâts d'une attaque à portée Proche, infligez à l'attaquant des dégâts égaux à la moitié de ceux qu'il a infligés."
+			},
+			{
+				"name": "Élan - Réaction",
+				"text": "Quand l'Élémentaire réussit une attaque contre un PJ, vous gagnez une Peur."
+			}
+		]
+	},
+	"adv_minor_fire_elemental": {
+		"name": "Élémentaire de feu mineur",
+		"description": "Une flamme vivante de la taille d'un grand feu de joie.",
+		"motives_and_tactics": "Encercler les ennemis, grandir, intimider, allumer des feux",
+		"attack": "Souffle élémentaire",
+		"feature": [
+			{
+				"name": "Implacable (2) - Passive",
+				"text": "L'Élémentaire peut recevoir le projecteur jusqu'à deux fois par tour du MJ. Dépensez de la Peur normalement pour lui donner le projecteur."
+			},
+			{
+				"name": "Terre brûlée - Action",
+				"text": "**Marquez un Stress** pour choisir un point à portée Loin. Le sol à portée Très proche de ce point s'embrase aussitôt. Toutes les créatures dans cette zone doivent faire un jet de réaction d'Agilité. Les cibles qui échouent subissent **2d8** dégâts magiques des flammes. Les cibles qui réussissent subissent la moitié des dégâts."
+			},
+			{
+				"name": "Explosion - Action",
+				"text": "**Dépensez une Peur** pour jaillir en une explosion de feu. Faites une attaque contre toutes les cibles à portée Proche. Les cibles contre lesquelles l'Élémentaire réussit subissent **1d8** dégâts magiques et sont repoussées à portée Loin."
+			},
+			{
+				"name": "Consumer le petit bois - Réaction",
+				"text": "Trois fois par scène, quand l'Élémentaire se déplace sur des objets très inflammables, il les consume pour soigner un PV ou un Stress."
+			},
+			{
+				"name": "Élan - Réaction",
+				"text": "Quand l'Élémentaire réussit une attaque contre un PJ, vous gagnez une Peur."
+			}
+		]
+	},
+	"adv_minor_demon": {
+		"name": "Démon mineur",
+		"description": "Une créature vermeille des Cercles d'en Bas, consumée de rage contre tous les mortels.",
+		"motives_and_tactics": "Agir de façon erratique, rabattre les cibles, savourer la douleur, tourmenter",
+		"attack": "Griffes",
+		"feature": [
+			{
+				"name": "Implacable (2) - Passive",
+				"text": "Le Démon peut recevoir le projecteur jusqu'à deux fois par tour du MJ. Dépensez de la Peur normalement pour lui donner le projecteur."
+			},
+			{
+				"name": "Tous doivent tomber - Passive",
+				"text": "Quand un PJ obtient un échec avec Peur à portée Proche du Démon, il perd un Espoir."
+			},
+			{
+				"name": "Feu infernal - Action",
+				"text": "**Dépensez une Peur** pour faire pleuvoir un feu infernal à portée Loin. Toutes les cibles dans la zone doivent faire un jet de réaction d'Agilité. Les cibles qui échouent subissent **1d20+3** dégâts magiques. Les cibles qui réussissent subissent la moitié des dégâts."
+			},
+			{
+				"name": "Faucheur - Réaction",
+				"text": "Avant de lancer les dégâts de l'attaque du Démon, vous pouvez **marquer un Stress** pour gagner au jet de dégâts un bonus égal au nombre actuel de PV marqués du Démon."
+			},
+			{
+				"name": "Élan - Réaction",
+				"text": "Quand le Démon réussit une attaque contre un PJ, vous gagnez une Peur."
+			}
+		]
+	},
+	"adv_minor_treant": {
+		"name": "Tréant mineur",
+		"description": "Un jeune arbre ambulant qui se dresse pour défendre sa forêt.",
+		"motives_and_tactics": "Écraser, submerger, protéger",
+		"attack": "Branche griffue",
+		"feature": [
+			{
+				"name": "Sbire (5) - Passive",
+				"text": "Le Tréant est vaincu dès qu'il subit des dégâts. Pour chaque tranche de 5 dégâts qu'un PJ inflige à le Tréant, vainquez un Sbire supplémentaire à portée contre lequel l'attaque réussirait."
+			},
+			{
+				"name": "Attaque de groupe - Action",
+				"text": "**Dépensez une Peur** pour choisir une cible et donner le projecteur à tous les Tréants mineurs à portée Proche de celle-ci. Ces Sbires se déplacent à portée de Mêlée de la cible et font un jet d'attaque commun. En cas de réussite, ils infligent 4 dégâts physiques chacun. Additionnez ces dégâts."
+			}
+		]
+	},
+	"adv_green_ooze": {
+		"name": "Vase verte",
+		"description": "Un tas mouvant de gelée verte translucide.",
+		"motives_and_tactics": "Se camoufler, consommer et se multiplier, ramper, envelopper",
+		"experience": "Camouflage +3",
+		"attack": "Appendice de vase",
+		"feature": [
+			{
+				"name": "Lent - Passive",
+				"text": "Quand vous donnez le projecteur à la Vase et qu'elle n'a pas de jeton sur sa fiche, elle ne peut pas encore agir. Placez un jeton sur sa fiche et décrivez ce qu'elle prépare. Quand vous donnez le projecteur à la Vase et qu'elle a un jeton sur sa fiche, retirez le jeton : elle peut agir."
+			},
+			{
+				"name": "Forme acide - Passive",
+				"text": "Quand la Vase réussit une attaque, la cible doit marquer un emplacement d'armure sans en recevoir les bénéfices (elle peut toujours utiliser son armure pour réduire les dégâts). Si elle ne peut pas marquer d'emplacement d'armure, elle doit marquer un PV supplémentaire."
+			},
+			{
+				"name": "Envelopper - Action",
+				"text": "Faites une attaque standard contre une cible à portée de Mêlée. En cas de réussite, la Vase l'enveloppe et la cible doit marquer 2 Stress. La cible doit marquer un Stress supplémentaire chaque fois qu'elle fait un jet d'action. Si la Vase subit des dégâts graves, la cible est libérée."
+			},
+			{
+				"name": "Division - Réaction",
+				"text": "Quand la Vase a 3 PV marqués ou plus, vous pouvez **dépenser une Peur** pour la diviser en deux Vases vertes minuscules (sans PV ni Stress marqués). Donnez immédiatement le projecteur aux deux."
+			}
+		]
+	},
+	"adv_tiny_green_ooze": {
+		"name": "Vase verte minuscule",
+		"description": "Un petit tas mouvant de gelée verte translucide.",
+		"motives_and_tactics": "Se camoufler, ramper",
+		"attack": "Appendice de vase",
+		"feature": [
+			{
+				"name": "Forme acide - Passive",
+				"text": "Quand la Vase réussit une attaque, la cible doit marquer un emplacement d'armure sans en recevoir les bénéfices (elle peut toujours utiliser son armure pour réduire les dégâts). Si elle ne peut pas marquer d'emplacement d'armure, elle doit marquer un PV supplémentaire."
+			}
+		]
+	},
+	"adv_red_ooze": {
+		"name": "Vase rouge",
+		"description": "Un tas mouvant de gelée rouge translucide et enflammée.",
+		"motives_and_tactics": "Se camoufler, consommer et se multiplier, enflammer, allumer des feux",
+		"experience": "Camouflage +3",
+		"attack": "Appendice de vase",
+		"feature": [
+			{
+				"name": "Feu rampant - Passive",
+				"text": "La Vase ne peut se déplacer qu'à portée Très proche lors de son déplacement normal. Elle embrase tout objet inflammable qu'elle touche."
+			},
+			{
+				"name": "Enflammer - Action",
+				"text": "Faites une attaque contre une cible à portée Très proche. En cas de réussite, la cible subit **1d8** dégâts magiques et est _Enflammée_ jusqu'à ce qu'elle soit éteinte par un jet de Finesse réussi (14). Tant qu'elle est _Enflammée_, la cible subit **1d4** dégâts magiques chaque fois qu'elle fait un jet d'action."
+			},
+			{
+				"name": "Division - Réaction",
+				"text": "Quand la Vase a 3 PV marqués ou plus, vous pouvez **dépenser une Peur** pour la diviser en deux Vases rouges minuscules (sans PV ni Stress marqués). Donnez immédiatement le projecteur aux deux."
+			}
+		]
+	},
+	"adv_tiny_red_ooze": {
+		"name": "Vase rouge minuscule",
+		"description": "Un petit tas mouvant de gelée rouge translucide et enflammée",
+		"motives_and_tactics": "Flamboyer, se camoufler",
+		"attack": "Appendice de vase",
+		"feature": [
+			{
+				"name": "Brûlure - Réaction",
+				"text": "Quand une créature à portée de Mêlée inflige des dégâts à la Vase, elle subit **1d6** dégâts magiques directs."
+			}
+		]
+	},
+	"adv_petty_noble": {
+		"name": "Petit noble",
+		"description": "Un aristocrate richement vêtu et paré, plein de morgue.",
+		"motives_and_tactics": "Abuser de son pouvoir, rassembler des ressources, mobiliser des sbires",
+		"experience": "Aristocrate +3",
+		"attack": "Rapière",
+		"feature": [
+			{
+				"name": "Mes terres, mes règles - Passive",
+				"text": "Toutes les actions sociales faites contre le Noble sur ses terres ont un désavantage."
+			},
+			{
+				"name": "Gardes, saisissez-les ! - Action",
+				"text": "Une fois par scène, **marquez un Stress** pour invoquer **1d4** Gardes à l'épée, qui apparaissent à portée Loin pour faire respecter la volonté du Noble."
+			},
+			{
+				"name": "Exil - Action",
+				"text": "**Dépensez une Peur** et ciblez un PJ. Le Noble proclame que la cible et ses alliés sont exilés du territoire du noble. Tant qu'ils sont exilés, la cible et ses alliés ont un désavantage dans les situations sociales au sein du domaine du Noble."
+			}
+		]
+	},
+	"adv_pirate_captain": {
+		"name": "Capitaine pirate",
+		"description": "Un loup de mer charismatique au chapeau impressionnant, avide de razzias et de pillage.",
+		"motives_and_tactics": "Commander, faire marcher sur la planche, piller, razzier",
+		"experience": "Commandement +2, Marin +3",
+		"attack": "Coutelas",
+		"feature": [
+			{
+				"name": "Bravache - Passive",
+				"text": "Quand le Capitaine marque 2 PV ou moins à la suite d'une attaque à portée de Mêlée, l'attaquant doit marquer un Stress."
+			},
+			{
+				"name": "Renforts - Action",
+				"text": "Une fois par scène, **marquez un Stress** pour invoquer une Horde de Pillards pirates, qui apparaît à portée Loin."
+			},
+			{
+				"name": "Pas de quartier - Action",
+				"text": "**Dépensez une Peur** pour choisir une cible ayant trois Pirates ou plus à portée de Mêlée. Le Capitaine mène les Pirates dans un concert de menaces et de promesses de tombe aquatique. La cible doit faire un jet de réaction de Présence. En cas d'échec, la cible marque **1d4+1** Stress. En cas de réussite, elle doit marquer un Stress."
+			},
+			{
+				"name": "Élan - Réaction",
+				"text": "Quand le Capitaine réussit une attaque contre un PJ, vous gagnez une Peur."
+			}
+		]
+	},
+	"adv_pirate_raiders": {
+		"name": "Pillards pirates",
+		"description": "Des canailles des mers qui avancent en meute dévastatrice.",
+		"motives_and_tactics": "Se liguer, piller, razzier",
+		"experience": "Marin +3",
+		"attack": "Coutelas",
+		"feature": [
+			{
+				"name": "Horde (1d4+1) - Passive",
+				"text": "Quand les Pillards ont marqué la moitié ou plus de leurs PV, leur attaque standard inflige à la place **1d4+1** dégâts physiques."
+			},
+			{
+				"name": "Bravache - Passive",
+				"text": "Quand les Pillards marquent 2 PV ou moins à la suite d'une attaque à portée de Mêlée, l'attaquant doit marquer un Stress."
+			}
+		]
+	},
+	"adv_pirate_tough": {
+		"name": "Costaud pirate",
+		"description": "Un pirate tatoué, aux muscles épais et aux poings gros comme des melons.",
+		"motives_and_tactics": "Piller, razzier, fracasser, terroriser",
+		"experience": "Marin +2",
+		"attack": "Poings massifs",
+		"feature": [
+			{
+				"name": "Bravache - Passive",
+				"text": "Quand le Costaud marque 2 PV ou moins à la suite d'une attaque à portée de Mêlée, l'attaquant doit marquer un Stress."
+			},
+			{
+				"name": "Faire place nette - Action",
+				"text": "Faites une attaque contre une cible à portée Très proche. En cas de réussite, **marquez un Stress** pour vous déplacer à portée de Mêlée de la cible, lui infliger **3d4** dégâts physiques et la repousser à portée Proche."
+			}
+		]
+	},
+	"adv_sellsword": {
+		"name": "Mercenaire",
+		"description": "Un mercenaire armé qui tente sa chance.",
+		"motives_and_tactics": "Charger, lacérer, submerger, profiter",
+		"attack": "Épée longue",
+		"feature": [
+			{
+				"name": "Sbire (4) - Passive",
+				"text": "Le Mercenaire est vaincu dès qu'il subit des dégâts. Pour chaque tranche de 4 dégâts qu'un PJ inflige à le Mercenaire, vainquez un Sbire supplémentaire à portée contre lequel l'attaque réussirait."
+			},
+			{
+				"name": "Attaque de groupe - Action",
+				"text": "**Dépensez une Peur** pour choisir une cible et donner le projecteur à tous les Mercenaires à portée Proche de celle-ci. Ces Sbires se déplacent à portée de Mêlée de la cible et font un jet d'attaque commun. En cas de réussite, ils infligent 3 dégâts physiques chacun. Additionnez ces dégâts."
+			}
+		]
+	},
+	"adv_skeleton_archer": {
+		"name": "Squelette archer",
+		"description": "Un squelette fragile muni d'un arc court et de flèches.",
+		"motives_and_tactics": "Transpercer les cibles distraites, faire le mort, voler la peau",
+		"attack": "Arc court",
+		"feature": [
+			{
+				"name": "Opportuniste - Passive",
+				"text": "Quand deux adversaires ou plus sont à portée Très proche d'une créature, tous les dégâts que l'Archer inflige à cette créature sont doublés."
+			},
+			{
+				"name": "Tir mortel - Action",
+				"text": "Faites une attaque contre une cible _Vulnérable_ à portée Loin. En cas de réussite, **marquez un Stress** pour infliger **3d4+8** dégâts physiques."
+			}
+		]
+	},
+	"adv_skeleton_dredge": {
+		"name": "Squelette de fond de tombe",
+		"description": "Un tas d'ossements cliquetant.",
+		"motives_and_tactics": "S'effondrer, submerger, faire le mort, voler la peau",
+		"attack": "Griffes d'os",
+		"feature": [
+			{
+				"name": "Sbire (4) - Passive",
+				"text": "Le Squelette est vaincu dès qu'il subit des dégâts. Pour chaque tranche de 4 dégâts qu'un PJ inflige à le Squelette, vainquez un Sbire supplémentaire à portée contre lequel l'attaque réussirait."
+			},
+			{
+				"name": "Attaque de groupe - Action",
+				"text": "**Dépensez une Peur** pour choisir une cible et donner le projecteur à tous les Squelettes de fond de tombe à portée Proche de celle-ci. Ces Sbires se déplacent à portée de Mêlée de la cible et font un jet d'attaque commun. En cas de réussite, ils infligent 1 dégâts physiques chacun. Additionnez ces dégâts."
+			}
+		]
+	},
+	"adv_skeleton_knight": {
+		"name": "Squelette chevalier",
+		"description": "Un grand squelette en armure portant une énorme lame.",
+		"motives_and_tactics": "Faucher les vivants, voler la peau, semer le chaos",
+		"attack": "Espadon rouillé",
+		"feature": [
+			{
+				"name": "Terrifiant - Passive",
+				"text": "Quand le Chevalier réussit une attaque, tous les PJ à portée Proche perdent un Espoir et vous gagnez une Peur."
+			},
+			{
+				"name": "Tailler jusqu'à l'os - Action",
+				"text": "**Marquez un Stress** pour faire une attaque contre toutes les cibles à portée Très proche. Les cibles contre lesquelles le Chevalier réussit subissent **1d8+2** dégâts physiques et doivent marquer un Stress."
+			},
+			{
+				"name": "Creuser deux tombes - Réaction",
+				"text": "Quand le Chevalier est vaincu, il fait une attaque contre une cible à portée Très proche (en priorité la créature qui l'a tué). En cas de réussite, la cible subit **1d4+8** dégâts physiques et perd **1d4** Espoir."
+			}
+		]
+	},
+	"adv_skeleton_warrior": {
+		"name": "Squelette guerrier",
+		"description": "Un squelette couvert de terre, armé d'une lame rouillée.",
+		"motives_and_tactics": "Feindre la mort, se liguer, voler la peau",
+		"attack": "Épée",
+		"feature": [
+			{
+				"name": "Rien que des os - Passive",
+				"text": "Le Guerrier résiste aux dégâts physiques."
+			},
+			{
+				"name": "Ne reste pas mort - Réaction",
+				"text": "Quand le Guerrier est vaincu, vous pouvez lui donner le projecteur et lancer un **d6**. Sur un résultat de 6, s'il y a d'autres adversaires sur le champ de bataille, le Guerrier se reforme sans PV marqué."
+			}
+		]
+	},
+	"adv_spellblade": {
+		"name": "Lame-sorcière",
+		"description": "Un mercenaire alliant escrime et magie pour un effet mortel.",
+		"motives_and_tactics": "Pilonner, commander, endurer",
+		"experience": "Connaissance magique +2",
+		"attack": "Épée longue imprégnée",
+		"feature": [
+			{
+				"name": "Acier arcanique - Passive",
+				"text": "Les dégâts de l'attaque standard de la Lame-sorcière sont considérés à la fois comme physiques et magiques."
+			},
+			{
+				"name": "Tir de suppression - Action",
+				"text": "**Marquez un Stress** et ciblez un groupe à portée Loin. Toutes les cibles doivent réussir un jet de réaction d'Agilité, sinon elles subissent **1d8+2** dégâts magiques. Vous gagnez une Peur pour chaque cible qui a marqué des PV à cause de cette attaque."
+			},
+			{
+				"name": "Avancer en unité - Action",
+				"text": "**Dépensez 2 Peur** pour donner le projecteur à jusqu'à cinq alliés à portée Loin."
+			},
+			{
+				"name": "Élan - Réaction",
+				"text": "Quand la Lame-sorcière réussit une attaque contre un PJ, vous gagnez une Peur."
+			}
+		]
+	},
+	"adv_swarm_of_rats": {
+		"name": "Nuée de rats",
+		"description": "Une masse grouillante de rongeurs ordinaires, se déplaçant d'un seul bloc comme une vague affamée.",
+		"motives_and_tactics": "Dévorer, obscurcir, pulluler",
+		"attack": "Griffes",
+		"feature": [
+			{
+				"name": "Horde (1d4+1) - Passive",
+				"text": "Quand la Nuée a marqué la moitié ou plus de ses PV, son attaque standard inflige à la place **1d4+1** dégâts physiques."
+			},
+			{
+				"name": "En pleine figure - Passive",
+				"text": "Toutes les cibles à portée de Mêlée ont un désavantage aux attaques contre des cibles autres que la Nuée."
+			}
+		]
+	},
+	"adv_sylvan_soldier": {
+		"name": "Soldat sylvestre",
+		"description": "Un guerrier féerique vêtu d'une armure de feuilles et d'écorce.",
+		"motives_and_tactics": "Tendre une embuscade, se cacher, submerger, protéger, pister",
+		"experience": "Pisteur +2",
+		"attack": "Faux",
+		"feature": [
+			{
+				"name": "Tactique de meute - Passive",
+				"text": "Si le Soldat fait une attaque standard et qu'un autre Soldat sylvestre est à portée de Mêlée de la cible, infligez **1d8+5** dégâts physiques au lieu de ses dégâts standard."
+			},
+			{
+				"name": "Maîtrise de la forêt - Action",
+				"text": "**Dépensez une Peur** pour abattre un arbre à portée Proche. Une créature touchée par l'arbre doit réussir un jet de réaction d'Agilité (15), sinon elle subit **1d10** dégâts physiques."
+			},
+			{
+				"name": "Se fondre - Réaction",
+				"text": "Quand le Soldat réussit une attaque, vous pouvez **marquer un Stress** pour devenir _Caché_ jusqu'à la prochaine attaque du Soldat ou jusqu'à ce qu'un PJ réussisse un jet d'Instinct (14) pour le trouver."
+			}
+		]
+	},
+	"adv_tangle_bramble_swarm": {
+		"name": "Nuée de ronces enchevêtrées",
+		"description": "Un amas de buissons mouvants buveurs de sang, gros chacun comme une grande gourde.",
+		"motives_and_tactics": "Digérer, enchevêtrer, immobiliser",
+		"experience": "Camouflage +2",
+		"attack": "Épines",
+		"feature": [
+			{
+				"name": "Horde (1d4+2) - Passive",
+				"text": "Quand la Nuée a marqué la moitié ou plus de ses PV, son attaque standard inflige à la place **1d4+2** dégâts physiques."
+			},
+			{
+				"name": "Écraser - Action",
+				"text": "**Marquez un Stress** pour infliger **2d6+8** dégâts physiques directs à une cible ayant 3 jetons de ronce ou plus."
+			},
+			{
+				"name": "Encombrer - Réaction",
+				"text": "Quand la Nuée réussit une attaque, donnez un jeton de ronce à la cible. Si une cible a au moins un jeton de ronce, elle est _Entravée_. Si une cible a 3 jetons de ronce ou plus, elle est aussi _Vulnérable_. Tous les jetons de ronce peuvent être retirés par un jet de Finesse réussi (12 + le nombre de jetons de ronce) ou en infligeant des dégâts majeurs ou plus à la Nuée. Si des jetons de ronce sont retirés d'une cible par un jet de Finesse, un nombre de Ronces enchevêtrées égal au nombre de jetons retirés apparaît à portée de Mêlée."
+			}
+		]
+	},
+	"adv_tangle_bramble": {
+		"name": "Ronce enchevêtrée",
+		"description": "Un buisson mouvant buveur de sang.",
+		"motives_and_tactics": "Fusionner, drainer, enchevêtrer",
+		"attack": "Épines",
+		"feature": [
+			{
+				"name": "Sbire (4) - Passive",
+				"text": "La Ronce est vaincue dès qu'il subit des dégâts. Pour chaque tranche de 4 dégâts qu'un PJ inflige à la Ronce enchevêtrée, vainquez un Sbire supplémentaire à portée contre lequel l'attaque réussirait."
+			},
+			{
+				"name": "Attaque de groupe - Action",
+				"text": "**Dépensez une Peur** pour choisir une cible et donner le projecteur à tous les Ronces enchevêtrées à portée Proche de celle-ci. Ces Sbires se déplacent à portée de Mêlée de la cible et font un jet d'attaque commun. En cas de réussite, ils infligent 2 dégâts physiques chacun. Additionnez ces dégâts."
+			},
+			{
+				"name": "Drainer et se multiplier - Réaction",
+				"text": "Quand une attaque de la Ronce fait marquer des PV à une cible et qu'il y a trois Ronces enchevêtrées ou plus à portée Proche, vous pouvez fusionner les Sbires en une Horde de Nuée de ronces enchevêtrées. Les PV de la Horde sont égaux au nombre de Sbires fusionnés."
+			}
+		]
+	},
+	"adv_weaponmaster": {
+		"name": "Maître d'armes",
+		"description": "Un maître d'armes brandissant une épée deux fois plus grande que lui.",
+		"motives_and_tactics": "Agir en premier, viser le plus faible, intimider",
+		"attack": "Claymore",
+		"feature": [
+			{
+				"name": "Frappe provocatrice - Action",
+				"text": "Faites une attaque standard contre une cible. En cas de réussite, **marquez un Stress** pour _Provoquer_ la cible jusqu'à sa prochaine attaque réussie. La prochaine fois que la cible _Provoquée_ attaque, elle a un désavantage contre les cibles autres que le Maître d'armes."
+			},
+			{
+				"name": "Poussée d'adrénaline - Action",
+				"text": "Une fois par scène, **dépensez une Peur** pour soigner 2 PV et 2 Stress."
+			},
+			{
+				"name": "Élan - Réaction",
+				"text": "Quand le Maître d'armes réussit une attaque contre un PJ, vous gagnez une Peur."
+			}
+		]
+	},
+	"adv_young_dryad": {
+		"name": "Jeune dryade",
+		"description": "Un être arbre impérieux qui dirige la défense de sa forêt.",
+		"motives_and_tactics": "Commander, nourrir, élaguer les indésirables",
+		"experience": "Leadership +3",
+		"attack": "Faux",
+		"feature": [
+			{
+				"name": "Voix de la forêt - Action",
+				"text": "**Marquez un Stress** pour donner le projecteur à **1d4** alliés à portée d'une cible qu'ils peuvent attaquer sans se déplacer. En cas de réussite, leurs attaques infligent la moitié des dégâts."
+			},
+			{
+				"name": "Cage d'épines - Action",
+				"text": "**Dépensez une Peur** pour former une cage autour d'une cible à portée Très proche et l'_Entraver_ jusqu'à ce qu'elle soit libérée par un jet de Puissance réussi. Quand une créature fait un jet d'action contre la cage, elle doit marquer un Stress."
+			},
+			{
+				"name": "Élan - Réaction",
+				"text": "Quand la Dryade réussit une attaque contre un PJ, vous gagnez une Peur."
+			}
+		]
+	},
+	"adv_brawny_zombie": {
+		"name": "Zombie costaud",
+		"description": "Un grand cadavre, gonflé par la décomposition et furieux.",
+		"motives_and_tactics": "Écraser, détruire, faire pleuvoir des débris, fracasser",
+		"experience": "Dégâts collatéraux +2, Lancer +4",
+		"attack": "Coup écrasant",
+		"feature": [
+			{
+				"name": "Lent - Passive",
+				"text": "Quand vous donnez le projecteur au Zombie et qu'il n'a pas de jeton sur sa fiche, il ne peut pas encore agir. Placez un jeton sur sa fiche et décrivez ce qu'il prépare. Quand vous donnez le projecteur au Zombie et qu'il a un jeton sur sa fiche, retirez le jeton : il peut agir."
+			},
+			{
+				"name": "Mettre en pièces - Action",
+				"text": "Faites une attaque standard avec avantage contre une cible que le Zombie a _Entravée_. En cas de réussite, l'attaque inflige des dégâts directs."
+			},
+			{
+				"name": "Déchirer et lacérer - Réaction",
+				"text": "Quand le Zombie réussit une attaque standard, vous pouvez **marquer un Stress** pour _Entraver_ temporairement la cible et la forcer à marquer 2 Stress."
+			}
+		]
+	},
+	"adv_patchwork_zombie_hulk": {
+		"name": "Colosse zombie rapiécé",
+		"description": "Un assemblage gigantesque de cadavres se mouvant d'un seul bloc, aux membres gros comme des torses et aux poings aussi grands qu'un halfelin adulte.",
+		"motives_and_tactics": "Absorber des cadavres, battre l'air, avoir faim, terrifier",
+		"experience": "Intimidation +2, Mise en pièces +2",
+		"attack": "Trop de bras",
+		"feature": [
+			{
+				"name": "Destructible - Passive",
+				"text": "Quand le Zombie subit des dégâts majeurs ou plus, il marque un PV supplémentaire."
+			},
+			{
+				"name": "Membres battants - Passive",
+				"text": "Quand le Zombie fait une attaque standard, il peut attaquer toutes les cibles à portée Très proche."
+			},
+			{
+				"name": "Un de plus pour le tas - Action",
+				"text": "Quand le Zombie est à portée Très proche d'un cadavre, il peut l'incorporer à lui-même et soigner un PV et un Stress."
+			},
+			{
+				"name": "Hurlements tourmentés - Action",
+				"text": "**Marquez un Stress** pour forcer tous les PJ à portée Loin à faire un jet de réaction de Présence (13). Les cibles qui échouent perdent un Espoir et vous gagnez une Peur pour chacune. Les cibles qui réussissent doivent marquer un Stress."
+			}
+		]
+	},
+	"adv_rotted_zombie": {
+		"name": "Zombie putréfié",
+		"description": "Un cadavre en décomposition qui avance vers sa proie.",
+		"motives_and_tactics": "Manger de la chair, avoir faim, mutiler, encercler",
+		"attack": "Morsure",
+		"feature": [
+			{
+				"name": "Sbire (3) - Passive",
+				"text": "Le Zombie est vaincu dès qu'il subit des dégâts. Pour chaque tranche de 3 dégâts qu'un PJ inflige à le Zombie, vainquez un Sbire supplémentaire à portée contre lequel l'attaque réussirait."
+			},
+			{
+				"name": "Attaque de groupe - Action",
+				"text": "**Dépensez une Peur** pour choisir une cible et donner le projecteur à tous les Zombies putréfiés à portée Proche de celle-ci. Ces Sbires se déplacent à portée de Mêlée de la cible et font un jet d'attaque commun. En cas de réussite, ils infligent 2 dégâts physiques chacun. Additionnez ces dégâts."
+			}
+		]
+	},
+	"adv_shambling_zombie": {
+		"name": "Zombie traînant",
+		"description": "Un cadavre animé qui se meut en titubant, mû par la seule faim.",
+		"motives_and_tactics": "Dévorer, affamé, assaillir en meute, déchiqueter la chair",
+		"attack": "Morsure",
+		"feature": [
+			{
+				"name": "Trop nombreux - Passive",
+				"text": "Quand le Zombie est à portée de Mêlée d'une créature et qu'au moins un autre Zombie est à portée Proche, toutes les attaques contre cette créature ont l'avantage."
+			},
+			{
+				"name": "Horrifiant - Passive",
+				"text": "Les cibles qui marquent des PV à cause des attaques du Zombie doivent aussi marquer un Stress."
+			}
+		]
+	},
+	"adv_zombie_pack": {
+		"name": "Meute de zombies",
+		"description": "Un groupe de cadavres traînant les pieds, qui avancent ensemble d'instinct.",
+		"motives_and_tactics": "Dévorer la chair, avoir faim, mutiler",
+		"attack": "Morsure",
+		"feature": [
+			{
+				"name": "Horde (1d4+2) - Passive",
+				"text": "Quand les Zombies ont marqué la moitié ou plus de leurs PV, leur attaque standard inflige à la place **1d4+2** dégâts physiques."
+			},
+			{
+				"name": "Submerger - Réaction",
+				"text": "Quand les Zombies marquent des PV à cause d'une attaque à portée de Mêlée, vous pouvez **marquer un Stress** pour faire une attaque standard contre l'attaquant."
+			}
+		]
+	}
+}

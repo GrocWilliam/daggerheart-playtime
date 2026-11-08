@@ -88,7 +88,8 @@ test('lang=fr: role and damage type come from the catalog in lang="fr", dice unc
 		const loc = await cards(p, enc, scope);
 		for (const a of enc.adversaries) {
 			const srd = (await api('GET', `/api/srd/adversaries/${a.id}`)).json;
-			const card = loc.filter({ hasText: a.name }).first();
+			const frName = (await api('GET', `/api/srd/adversaries/${a.id}`, undefined, 'fr')).json.name;
+			const card = loc.filter({ hasText: frName }).first();
 			const role = CAT.fr[`adversary.role.${srd.role}`];
 			const l = await langsOf(card, role);
 			assert.ok(l.includes('fr'), `${a.name}: role "${role}" in lang=fr: ${JSON.stringify(l)}`);
@@ -102,20 +103,20 @@ test('lang=fr: role and damage type come from the catalog in lang="fr", dice unc
 	}
 });
 
-test('lang=fr: untranslated adversary name and features are in lang="en"', async () => {
+test('lang=fr: tier 1 adversary name and features are in lang="fr" (translated)', async () => {
 	const { c, enc } = await withEncounter();
 	for (const [url, scope] of [[`/campaigns/${c.id}?step=build`, '[data-testid=scene]'], [`/campaigns/${c.id}`, '[data-testid=current-scene]']]) {
 		const { ctx, p } = await open(url, 'fr');
 		const loc = await cards(p, enc, scope);
 		for (const a of enc.adversaries) {
 			const srd = (await api('GET', `/api/srd/adversaries/${a.id}`, undefined, 'fr')).json;
-			const card = loc.filter({ hasText: a.name }).first();
+			const card = loc.filter({ hasText: srd.name }).first();
 			const n = await langsOf(card, srd.name);
-			assert.ok(n.length > 0 && n.every((x) => x === 'en'), `name ${srd.name}: ${JSON.stringify(n)}`);
+			assert.ok(n.length > 0 && n.every((x) => x === 'fr'), `name ${srd.name}: ${JSON.stringify(n)}`);
 			assert.ok(srd.feature.length > 0);
 			for (const f of srd.feature) {
 				const fl = await langsOf(card, f.name);
-				assert.ok(fl.length > 0 && fl.every((x) => x === 'en'), `feature ${f.name}: ${JSON.stringify(fl)}`);
+				assert.ok(fl.length > 0 && fl.every((x) => x === 'fr'), `feature ${f.name}: ${JSON.stringify(fl)}`);
 			}
 		}
 		await ctx.close();

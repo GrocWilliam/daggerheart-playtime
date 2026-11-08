@@ -45,7 +45,9 @@ test('the overlay files have one non-empty French name per element id of every k
 		}
 	}
 	assert.equal(n, 612);
-	assert.equal(frFiles().reduce((total, d) => total + Object.values(d).filter(hasName).length, 0), 612);
+	// adversary and environment overlays (us-212 and later) are not part of this story's 612
+	const core = new Set(ALL_KINDS.flatMap(idsOf));
+	assert.equal(frFiles().reduce((total, d) => total + Object.entries(d).filter(([id, e]) => core.has(id) && hasName(e)).length, 0), 612);
 });
 
 test('overlay files: classes, domains, ancestries, communities and subclasses have the fixed French names', () => {

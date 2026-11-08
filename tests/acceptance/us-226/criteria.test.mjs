@@ -48,7 +48,9 @@ test('src/lib/srd/fr/ holds 13 overlay files, each a JSON object', () => {
 });
 
 test('the 13 overlay files together hold 612 name entries', () => {
-	const total = overlayFiles().reduce((n, f) => n + Object.values(readJson(`${FR_DIR}/${f}`)).filter(hasName).length, 0);
+	// adversaries.json and environments.json start empty here; later stories add their names, so they are not counted.
+	const counted = overlayFiles().filter((f) => !['adversaries.json', 'environments.json'].includes(f));
+	const total = counted.reduce((n, f) => n + Object.values(readJson(`${FR_DIR}/${f}`)).filter(hasName).length, 0);
 	assert.equal(total, 612);
 });
 
