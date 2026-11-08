@@ -62,7 +62,7 @@ test('no French value of a tier 2 adversary contains Hope, Fear, Spotlight, Coun
 	assert.deepEqual(bad, []);
 });
 
-test("lang=fr: list GET /api/srd/adversaries has nameLang 'fr' for tiers 1 and 2 and 'en' for tiers 3 and 4", async () => {
+test("lang=fr: list GET /api/srd/adversaries has nameLang 'fr' for tiers 1 to 3 and 'en' for tier 4", async () => {
 	const get = async (lang) => (await fetch(`${BASE}/api/srd/adversaries`, { headers: { cookie: `lang=${lang}` } })).json();
 	const fr = await get('fr');
 	const tierOf = new Map(ALL.map((a) => [a.id, Number(a.tier)]));
@@ -70,7 +70,7 @@ test("lang=fr: list GET /api/srd/adversaries has nameLang 'fr' for tiers 1 and 2
 	for (const a of fr) {
 		const t = tierOf.get(a.id);
 		assert.ok(t, `known id ${a.id}`);
-		assert.equal(a.nameLang, t <= 2 ? 'fr' : 'en', `${a.id} (tier ${t})`);
+		assert.equal(a.nameLang, t <= 3 ? 'fr' : 'en', `${a.id} (tier ${t})`);
 	}
 	for (const id of tierOf.keys()) assert.ok(fr.some((a) => a.id === id), `${id} listed`);
 });

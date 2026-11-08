@@ -3,10 +3,10 @@
 # (1) srd-fr vitest passes, DONE.adversaries covers tier <= 2 -> vitest + grep below, "36 ... complete entry", "keep dice and numbers"
 # (2) French name and description differ from English        -> "name and description ... differ"
 # (3) no Hope/Fear/Spotlight/Countdown/Hit Points words      -> "no French value ..."
-# (4) lang=fr list nameLang fr for tiers 1-2, en for 3-4     -> "lang=fr: list ..."
+# (4) lang=fr list nameLang fr for tiers 1-3, en for 4     -> "lang=fr: list ..."
 # (5) TERMS.md keeps its rows (terms.before.md is a copy)    -> "TERMS.md still holds ..."
 # (6) make test: run by CI itself.
-# Frozen test updated (contradicted by this story): us-152 (overlay name count 664 -> 700).
+# Frozen test updated: us-152 (700 -> 723), us-213 (tier 3 nameLang now fr).
 set -uo pipefail
 cd "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/../../.."
 HERE="$PWD/tests/acceptance/us-213"
@@ -16,7 +16,7 @@ if [ -z "${FORGE_PREBUILT:-}" ]; then
   npm run build || { echo "build failed" >&2; exit 1; }
 fi
 npx vitest run src/lib/server/features/srd-fr.test.ts || FAIL=1
-if grep -nE "adversaries:.*<= *2" src/lib/server/features/srd-fr.test.ts; then
+if grep -nE "adversaries:.*<= *[23]" src/lib/server/features/srd-fr.test.ts; then
   echo "ok - DONE.adversaries covers tier <= 2"
 else
   echo "not ok - DONE.adversaries does not cover tier <= 2"; FAIL=1

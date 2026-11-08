@@ -63,3 +63,5 @@ French terminology for every file in this folder; reuse these forms, add a row w
 | Dizzied, Protected, Entranced, Glowing | Désorienté, Protégé, Envoûté, Luminescent |
 | Deathlock / Progress Countdown / Petrification Countdown | Verrou mortel / compte à rebours de progression / compte à rebours de pétrification |
 | Countdown (Loop 1d6) (feature names) | compte à rebours (Boucle 1d6) |
+| Dazed, Chilled, Marked, Rooted, Enveloped | Hébété, Glacé, Marqué, Enraciné, Enveloppé |
+| Long-Term Countdown (8) (feature names) | compte à rebours à long terme (8) |
