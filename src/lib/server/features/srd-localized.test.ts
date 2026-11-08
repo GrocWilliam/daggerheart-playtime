@@ -45,7 +45,7 @@ describe('localizedSrd', () => {
 		expect(t1.element.name).toBe('Fouisseur acide');
 		expect(t1.langs.name).toBe('fr');
 		const all = adversariesByTier(undefined, 'fr');
-		expect(all.filter((a) => a.tier > 3).every((a) => a.nameLang === 'en') && all.filter((a) => a.tier <= 3).every((a) => a.nameLang === 'fr')).toBe(true);
+		expect(all.every((a) => a.nameLang === 'fr')).toBe(true);
 	});
 	it('returns null for an unknown id', () => {
 		expect(localizedSrd('weapons', 'nope', 'fr')).toBeNull();

@@ -2299,5 +2299,487 @@
 				"text": "Quand le Dragon réussit une attaque contre un PJ, vous gagnez une Peur."
 			}
 		]
+	},
+	"adv_arch_necromancer": {
+		"name": "Archi-nécromancien",
+		"description": "Un mage en décomposition vêtu de robes sombres et en lambeaux.",
+		"motives_and_tactics": "Corrompre, faire pourrir, fuir pour combattre un autre jour, ressusciter",
+		"experience": "Savoir interdit +3, Sagesse des siècles +3",
+		"attack": "Rayon nécrotique",
+		"feature": [
+			{
+				"name": "Danse macabre - Action",
+				"text": "**Marquez un Stress** pour donner le projecteur à **1d4** alliés. Les attaques qu'ils font tant qu'ils ont le projecteur de cette façon infligent la moitié des dégâts, ou la totalité si vous **dépensez une Peur**."
+			},
+			{
+				"name": "Rayon de putréfaction - Action",
+				"text": "**Marquez 2 Stress** pour forcer toutes les cibles à portée Loin à faire un jet de réaction de Puissance. Les cibles qui échouent subissent **2d20+12** dégâts magiques et vous gagnez une Peur. Les cibles qui réussissent subissent la moitié des dégâts. Une cible qui marque 2 PV ou plus doit aussi marquer **2 Stress** et devient _Vulnérable_ jusqu'à ce qu'elle fasse un jet avec Espoir."
+			},
+			{
+				"name": "Ouvrir les portes de la mort - Action",
+				"text": "**Dépensez une Peur** pour invoquer une Légion de zombies, qui apparaît à portée Proche et reçoit immédiatement le projecteur."
+			},
+			{
+				"name": "Pas aujourd'hui, mes chers - Réaction",
+				"text": "Quand le Nécromancien a marqué 7 PV ou plus, vous pouvez **dépenser une Peur** pour qu'il se téléporte en lieu sûr afin de récupérer. Un PJ qui réussit un jet d'Instinct peut remonter la trace de la magie de téléportation jusqu'à sa destination."
+			},
+			{
+				"name": "Ta vie m'appartient - Réaction : compte à rebours (Boucle 2d6)",
+				"text": "Quand le Nécromancien a marqué 6 PV ou plus, activez le compte à rebours. Quand il se déclenche, infligez **2d10+6** dégâts magiques directs à une cible à portée Proche. Le Nécromancien **efface ensuite un nombre de Stress ou de PV** égal au nombre de PV que la cible a marqués à cause de cette attaque."
+			}
+		]
+	},
+	"adv_fallen_shock_troop": {
+		"name": "Soldat de choc déchu",
+		"description": "Une âme maudite liée à la volonté des Déchus.",
+		"motives_and_tactics": "Écraser, dominer, mériter le répit, punir",
+		"attack": "Hache maudite",
+		"feature": [
+			{
+				"name": "Sbire (12) - Passive",
+				"text": "Le Soldat de choc est vaincu dès qu'il subit des dégâts. Pour chaque tranche de 12 dégâts qu'un PJ inflige au Soldat de choc, vainquez un Sbire supplémentaire à portée contre lequel l'attaque réussirait."
+			},
+			{
+				"name": "Aura de malheur - Passive",
+				"text": "Quand un PJ marque des PV à cause d'une attaque du Soldat de choc, il perd un Espoir."
+			},
+			{
+				"name": "Attaque de groupe - Action",
+				"text": "**Dépensez une Peur** pour choisir une cible et donner le projecteur à tous les Soldats de choc déchus à portée Proche de celle-ci. Ces Sbires se déplacent à portée de Mêlée de la cible et font un jet d'attaque commun. En cas de réussite, ils infligent 12 dégâts physiques chacun. Additionnez ces dégâts."
+			}
+		]
+	},
+	"adv_fallen_sorcerer": {
+		"name": "Sorcier déchu",
+		"description": "Un puissant mage lié par les marchés qu'il a conclus de son vivant.",
+		"motives_and_tactics": "Acquérir, décourager, dominer, tourmenter",
+		"experience": "Savoir ancien +2",
+		"attack": "Bâton corrompu",
+		"feature": [
+			{
+				"name": "Conflagration - Action",
+				"text": "**Dépensez une Peur** pour déchaîner une tempête de feu dévorante et faire une attaque contre toutes les cibles à portée Proche. Les cibles contre lesquelles le Sorcier réussit subissent **2d10+6** dégâts magiques directs."
+			},
+			{
+				"name": "Tableau cauchemardesque - Action",
+				"text": "**Marquez un Stress** pour piéger une cible à portée Loin dans une puissante illusion de ses pires peurs. Tant qu'elle est piégée, la cible est _Entravée_ et _Vulnérable_ jusqu'à ce qu'elle se libère, ce qui met fin aux deux états, avec un jet d'Instinct réussi."
+			},
+			{
+				"name": "Insaisissable - Réaction",
+				"text": "Quand le Sorcier subit des dégâts d'une attaque, il peut se téléporter jusqu'à portée Loin."
+			},
+			{
+				"name": "Chaînes de la culpabilité - Réaction : compte à rebours (Boucle 2d6)",
+				"text": "Quand le Sorcier reçoit le projecteur pour la première fois, activez le compte à rebours. Quand il se déclenche, toutes les cibles à portée Loin deviennent _Vulnérables_ et doivent marquer un Stress en revivant leurs plus grands regrets. Une cible peut se libérer de son regret avec un jet de Présence ou de Puissance réussi. Quand un PJ échoue à se libérer, il perd un Espoir."
+			}
+		]
+	},
+	"adv_fallen_warlord_realm_breaker": {
+		"name": "Seigneur de guerre déchu : Brise-royaume",
+		"description": "Un Dieu déchu, enveloppé de rage et de ressentiment, riche de millénaires d'expérience à briser le moral des héros.",
+		"motives_and_tactics": "Corrompre, dominer, punir, briser les faibles",
+		"experience": "Conquête +3, Histoire +2, Intimidation +3",
+		"attack": "Fouet barbelé",
+		"feature": [
+			{
+				"name": "Implacable (2) - Passive",
+				"text": "Le Brise-royaume peut recevoir le projecteur jusqu'à deux fois par tour du MJ. Dépensez de la Peur normalement pour lui donner le projecteur."
+			},
+			{
+				"name": "Armure de plates de braise - Passive",
+				"text": "Quand le Brise-royaume subit des dégâts, réduisez-les de **2d10**."
+			},
+			{
+				"name": "Fouet tourmenteur - Action",
+				"text": "**Marquez un Stress** pour faire une attaque standard contre toutes les cibles à portée Très proche. Quand une cible utilise son armure pour réduire les dégâts de cette attaque, elle doit marquer 2 emplacements d'armure."
+			},
+			{
+				"name": "Rage dévorante - Réaction : compte à rebours (décroissant 8)",
+				"text": "Quand le Brise-royaume reçoit le projecteur pour la première fois, activez le compte à rebours. Quand il se déclenche, créez un torrent de rage incarnée qui arrache la chair des os. Toutes les cibles à portée Loin doivent faire un jet de réaction de Présence. Les cibles qui échouent subissent **2d6+10** dégâts magiques directs. Les cibles qui réussissent subissent la moitié des dégâts. Pour chaque PV marqué à cause de ces dégâts, invoquez un Soldat de choc déchu à portée Très proche de la cible qui a marqué ce PV. Si le compte à rebours voit un jour sa valeur maximale tomber à 0, le Brise-royaume marque ses PV restants et toutes les cibles à portée Loin doivent marquer tous leurs PV restants et faire un Dernier souffle."
+			},
+			{
+				"name": "Porteur de malheur - Réaction",
+				"text": "Quand une cible marque des PV à cause d'une attaque du Brise-royaume, tous les PJ à portée Loin de la cible doivent perdre un Espoir."
+			},
+			{
+				"name": "Je n'ai jamais connu la défaite (changement de phase) - Réaction",
+				"text": "Quand le Brise-royaume marque son dernier PV, remplacez-le par le Champion invaincu et donnez-lui immédiatement le projecteur."
+			}
+		]
+	},
+	"adv_fallen_warlord_undefeated_champion": {
+		"name": "Seigneur de guerre déchu : Champion invaincu",
+		"description": "Celui que seuls les plus redoutés ont une chance de craindre.",
+		"motives_and_tactics": "Distribuer une mort sans pitié, punir les rebelles, assurer la victoire à tout prix",
+		"experience": "Conquête +3, Histoire +2, Intimidation +3",
+		"attack": "Épée fracasse-cœur",
+		"feature": [
+			{
+				"name": "Implacable (3) - Passive",
+				"text": "Le Champion invaincu peut recevoir le projecteur jusqu'à trois fois par tour du MJ. Dépensez de la Peur normalement pour lui donner le projecteur."
+			},
+			{
+				"name": "Armure défaillante - Passive",
+				"text": "Quand le Champion invaincu subit des dégâts, réduisez-les de **1d10**."
+			},
+			{
+				"name": "Frappe fracassante - Action",
+				"text": "**Marquez un Stress** pour faire une attaque standard contre toutes les cibles à portée Très proche. Les PJ contre lesquels le Champion réussit perdent un nombre d'Espoir égal aux PV qu'ils ont marqués à cause de cette attaque."
+			},
+			{
+				"name": "Légions infinies - Action",
+				"text": "**Dépensez une Peur** pour invoquer un nombre de Soldats de choc déchus égal au double du nombre de PJ. Les Soldats de choc apparaissent à portée Loin."
+			},
+			{
+				"name": "Cercle de souillure - Réaction : compte à rebours (1d8)",
+				"text": "Quand le Champion invaincu reçoit le projecteur pour la première fois, activez le compte à rebours. Quand il se déclenche, activez un cercle magique couvrant une zone à portée Loin du Champion. Une cible dans cette zone est _Vulnérable_ jusqu'à ce qu'elle quitte le cercle. Le cercle peut être dissipé en infligeant des dégâts graves au Champion invaincu."
+			},
+			{
+				"name": "Élan - Réaction",
+				"text": "Quand le Champion invaincu réussit une attaque contre un PJ, vous gagnez une Peur."
+			},
+			{
+				"name": "Porteur de malheur - Réaction",
+				"text": "Quand une cible marque des PV à cause d'une attaque du Champion invaincu, tous les PJ à portée Loin de la cible perdent un Espoir."
+			}
+		]
+	},
+	"adv_hallowed_archer": {
+		"name": "Archer sanctifié",
+		"description": "Des esprits de soldats armés d'arcs consacrés.",
+		"motives_and_tactics": "Concentrer le tir, obéir, se repositionner, tirer en salve",
+		"attack": "Arc long consacré",
+		"feature": [
+			{
+				"name": "Punir les coupables - Passive",
+				"text": "L'Archer inflige le double de dégâts aux cibles marquées _Coupables_ par un Haut Séraphin."
+			},
+			{
+				"name": "Salve divine - Action",
+				"text": "**Marquez un Stress** pour faire une attaque standard contre jusqu'à trois cibles."
+			}
+		]
+	},
+	"adv_hallowed_soldier": {
+		"name": "Soldat sanctifié",
+		"description": "Des âmes de fidèles, élevées par un armement divin.",
+		"motives_and_tactics": "Obéir, déjouer, punir, submerger",
+		"attack": "Épée et bouclier",
+		"feature": [
+			{
+				"name": "Sbire (13) - Passive",
+				"text": "Le Soldat est vaincu dès qu'il subit des dégâts. Pour chaque tranche de 13 dégâts qu'un PJ inflige au Soldat, vainquez un Sbire supplémentaire à portée contre lequel l'attaque réussirait."
+			},
+			{
+				"name": "Vol divin - Passive",
+				"text": "Tant que le Soldat vole, **dépensez une Peur** pour qu'il se déplace jusqu'à portée Loin au lieu de Proche avant d'agir."
+			},
+			{
+				"name": "Attaque de groupe - Action",
+				"text": "**Dépensez une Peur** pour choisir une cible et donner le projecteur à tous les Soldats sanctifiés à portée Proche de celle-ci. Ces Sbires se déplacent à portée de Mêlée de la cible et font un jet d'attaque commun. En cas de réussite, ils infligent 10 dégâts physiques chacun. Additionnez ces dégâts."
+			}
+		]
+	},
+	"adv_high_seraph": {
+		"name": "Haut Séraphin",
+		"description": "Un champion divin, chef d'une armée sanctifiée de guerriers qui font respecter la volonté de leur dieu.",
+		"motives_and_tactics": "Imposer le dogme, voler, prononcer le jugement, châtier",
+		"experience": "Savoir divin +3",
+		"attack": "Épée sacrée",
+		"feature": [
+			{
+				"name": "Implacable (3) - Passive",
+				"text": "Le Séraphin peut recevoir le projecteur jusqu'à trois fois par tour du MJ. Dépensez de la Peur normalement pour lui donner le projecteur."
+			},
+			{
+				"name": "Vol divin - Passive",
+				"text": "Tant que le Séraphin vole, **dépensez une Peur** pour qu'il se déplace jusqu'à portée Loin au lieu de Proche avant d'agir."
+			},
+			{
+				"name": "Jugement - Action",
+				"text": "**Dépensez une Peur** pour rendre une cible _Coupable_ aux yeux du dieu du Séraphin jusqu'à ce que le Séraphin soit vaincu. Tant qu'elle est _Coupable_, la cible ne gagne pas d'Espoir sur un résultat avec Espoir. Quand le Séraphin réussit une attaque standard contre une cible _Coupable_, il inflige des dégâts graves au lieu de ses dégâts standard. Le Séraphin ne peut marquer qu'une cible à la fois."
+			},
+			{
+				"name": "Rayons divins - Action",
+				"text": "**Marquez un Stress** pour refléter un éclat de divinité sous la forme d'un faisceau de lumière brûlant qui touche jusqu'à vingt cibles à portée Très loin. Les cibles doivent faire un jet de réaction de Présence, avec désavantage si elles sont marquées _Coupables_. Les cibles qui échouent subissent **4d6+12** dégâts magiques. Les cibles qui réussissent subissent la moitié des dégâts."
+			},
+			{
+				"name": "Nous ne faisons qu'un - Action",
+				"text": "Une fois par scène, **dépensez une Peur** pour donner le projecteur à tous les autres adversaires à portée Loin. Les attaques qu'ils font tant qu'ils ont le projecteur de cette façon infligent la moitié des dégâts."
+			}
+		]
+	},
+	"adv_kraken": {
+		"name": "Kraken des profondeurs",
+		"description": "Une bête légendaire des mers, plus grande que le plus grand des galions, dotée de tentacules couverts de ventouses et d'une gueule terrifiante.",
+		"motives_and_tactics": "Dévorer, écraser, noyer, agripper",
+		"experience": "Nage +3",
+		"attack": "Tentacules",
+		"feature": [
+			{
+				"name": "Implacable (3) - Passive",
+				"text": "Le Kraken peut recevoir le projecteur jusqu'à trois fois par tour du MJ. Dépensez de la Peur normalement pour lui donner le projecteur."
+			},
+			{
+				"name": "Tentacules multiples - Passive",
+				"text": "Tant que le Kraken a 7 PV marqués ou moins, il peut faire son attaque standard contre deux cibles à portée."
+			},
+			{
+				"name": "Agripper et noyer - Action",
+				"text": "Faites un jet d'attaque contre une cible à portée Proche. En cas de réussite, **marquez un Stress** pour la saisir avec un tentacule et l'entraîner sous l'eau. La cible est _Entravée_ et _Vulnérable_ jusqu'à ce qu'elle se libère avec un jet de Puissance réussi ou que le Kraken subisse des dégâts majeurs ou plus. Tant qu'elle est _Entravée_ et _Vulnérable_ de cette façon, une cible doit marquer un Stress quand elle fait un jet d'action."
+			},
+			{
+				"name": "Jet d'eau bouillante - Action",
+				"text": "**Dépensez une Peur** pour projeter un jet d'eau bouillante sur un nombre quelconque de cibles alignées jusqu'à portée Loin. Toutes les cibles doivent réussir un jet de réaction d'Agilité, sinon elles subissent **4d6+9** dégâts physiques. Si une cible marque un emplacement d'armure pour réduire les dégâts, elle doit aussi marquer un Stress."
+			},
+			{
+				"name": "Élan - Réaction",
+				"text": "Quand le Kraken réussit une attaque contre un PJ, vous gagnez une Peur."
+			}
+		]
+	},
+	"adv_oracle_of_doom": {
+		"name": "Oracle de la Fatalité",
+		"description": "Un immortel gigantesque, incarnation du destin, maudit de ne voir que les issues funestes.",
+		"motives_and_tactics": "Changer l'environnement, condamner, décourager, rejeter",
+		"experience": "Savoir infini +4",
+		"attack": "Attaque psychique",
+		"feature": [
+			{
+				"name": "Terrifiant - Passive",
+				"text": "Quand l'Oracle réussit une attaque, tous les PJ à portée Loin perdent un Espoir et vous gagnez une Peur."
+			},
+			{
+				"name": "Les murs se referment - Passive",
+				"text": "Quand une créature obtient un échec à portée Très loin de l'Oracle, elle doit marquer un Stress."
+			},
+			{
+				"name": "Prononcer le destin - Action",
+				"text": "**Dépensez une Peur** pour présenter à une cible à portée Loin une vision de son cauchemar personnel. La cible doit faire un jet de réaction de Connaissance. En cas d'échec, elle perd tout son Espoir et subit **2d20+4** dégâts magiques directs. En cas de réussite, elle subit la moitié des dégâts et perd un Espoir."
+			},
+			{
+				"name": "Invoquer les tourmenteurs - Action",
+				"text": "Une fois par jour, **dépensez 2 Peur** pour invoquer **2d4** Sbires de palier 2 ou inférieur en rapport avec l'un des cauchemars personnels d'un PJ. Ils apparaissent à portée Proche de ce PJ."
+			},
+			{
+				"name": "Savoir sinistre - Réaction",
+				"text": "Quand l'Oracle voit une créature mortelle, il connaît instantanément l'un de ses cauchemars personnels."
+			},
+			{
+				"name": "Destin vengeur - Réaction",
+				"text": "Quand l'Oracle marque des PV à cause d'une attaque à portée Très proche, vous pouvez **marquer un Stress** pour repousser l'attaquant à portée Loin et lui infliger **2d10+4** dégâts physiques."
+			}
+		]
+	},
+	"adv_outer_realms_abomination": {
+		"name": "Abomination des Royaumes extérieurs",
+		"description": "Une parodie chaotique de la vie, en perpétuel changement.",
+		"motives_and_tactics": "Démolir, dévorer, saper",
+		"attack": "Pseudopode massif",
+		"feature": [
+			{
+				"name": "Forme chaotique - Passive",
+				"text": "Quand l'Abomination attaque, lancez **2d4** et utilisez le résultat comme modificateur d'attaque."
+			},
+			{
+				"name": "Présence désorientante - Passive",
+				"text": "Quand une cible subit des dégâts de l'Abomination, elle doit faire un jet de réaction d'Instinct. En cas d'échec, elle a un désavantage à son prochain jet d'action et vous gagnez une Peur."
+			},
+			{
+				"name": "Séisme de la réalité - Action",
+				"text": "**Dépensez une Peur** pour ébranler les contours de la réalité à portée Loin de l'Abomination. Toutes les cibles dans cette zone doivent réussir un jet de réaction de Connaissance, sinon elles sont _Désancrées_ de la réalité jusqu'à la fin de la scène. Quand une cible _Désancrée_ dépense de l'Espoir ou marque des emplacements d'armure, des PV ou du Stress, elle doit doubler la quantité dépensée ou marquée."
+			},
+			{
+				"name": "Forme irréelle - Réaction",
+				"text": "Quand l'Abomination subit des dégâts, réduisez-les de **1d20**. Si l'Abomination marque 1 point de vie ou moins à cause d'une attaque réussie contre elle, vous gagnez une Peur."
+			}
+		]
+	},
+	"adv_outer_realms_corruptor": {
+		"name": "Corrupteur des Royaumes extérieurs",
+		"description": "Une masse informe et changeante, apparemment faite de lumière chromatique.",
+		"motives_and_tactics": "Embrouiller, distraire, submerger",
+		"attack": "Pseudopode corrosif",
+		"feature": [
+			{
+				"name": "Toucher brisevolonté - Passive",
+				"text": "Quand un PJ subit des dégâts du Corrupteur, il perd un Espoir."
+			},
+			{
+				"name": "Régurgiter les débris de réalité - Action",
+				"text": "**Marquez un Stress** pour cracher des fragments à demi digérés de réalités consumées sur toutes les cibles à portée Proche. Les cibles doivent réussir un jet de réaction de Connaissance, sinon elles marquent 2 Stress."
+			}
+		]
+	},
+	"adv_outer_realms_thrall": {
+		"name": "Serviteur des Royaumes extérieurs",
+		"description": "Une forme vaguement humanoïde, dépouillée de sa mémoire et de son identité.",
+		"motives_and_tactics": "Détruire, dégoûter, désorienter, intimider",
+		"attack": "Griffes et crocs",
+		"feature": [
+			{
+				"name": "Sbire (13) - Passive",
+				"text": "Le Serviteur est vaincu dès qu'il subit des dégâts. Pour chaque tranche de 13 dégâts qu'un PJ inflige au Serviteur, vainquez un Sbire supplémentaire à portée contre lequel l'attaque réussirait."
+			},
+			{
+				"name": "Attaque de groupe - Action",
+				"text": "**Dépensez une Peur** pour choisir une cible et donner le projecteur à tous les Serviteurs des Royaumes extérieurs à portée Proche de celle-ci. Ces Sbires se déplacent à portée de Mêlée de la cible et font un jet d'attaque commun. En cas de réussite, ils infligent 11 dégâts physiques chacun. Additionnez ces dégâts."
+			}
+		]
+	},
+	"adv_volcanic_dragon_obsidian_predator": {
+		"name": "Dragon volcanique : Prédateur d'obsidienne",
+		"description": "Une immense créature ailée aux écailles d'obsidienne et aux griffes incroyablement acérées.",
+		"motives_and_tactics": "Défendre l'antre, piquer, voler, chasser, intimider",
+		"experience": "Chasse depuis les airs +5",
+		"attack": "Griffes d'obsidienne",
+		"feature": [
+			{
+				"name": "Implacable (2) - Passive",
+				"text": "Le Prédateur d'obsidienne peut recevoir le projecteur jusqu'à deux fois par tour du MJ. Dépensez de la Peur normalement pour lui donner le projecteur."
+			},
+			{
+				"name": "En vol - Passive",
+				"text": "En vol, le Prédateur d'obsidienne gagne un bonus de +3 à sa Difficulté."
+			},
+			{
+				"name": "Écailles d'obsidienne - Passive",
+				"text": "Le Prédateur d'obsidienne résiste aux dégâts physiques."
+			},
+			{
+				"name": "Queue d'avalanche - Action",
+				"text": "**Marquez un Stress** pour faire une attaque contre toutes les cibles à portée Proche. Les cibles contre lesquelles le Prédateur d'obsidienne réussit subissent **4d6+4** dégâts physiques, sont repoussées à portée Loin et sont _Vulnérables_ jusqu'à leur prochain jet avec Espoir."
+			},
+			{
+				"name": "Piqué - Action",
+				"text": "Si le Prédateur d'obsidienne vole, **marquez un Stress** pour choisir un point à portée Loin. Déplacez-vous jusqu'à ce point et faites une attaque contre toutes les cibles à portée Très proche. Les cibles contre lesquelles le Prédateur d'obsidienne réussit subissent **2d10+6** dégâts physiques, doivent marquer un Stress et perdre un Espoir."
+			},
+			{
+				"name": "Rage éruptive (changement de phase) - Réaction",
+				"text": "Quand le Prédateur d'obsidienne marque son dernier PV, remplacez-le par le Fléau en fusion et donnez-lui immédiatement le projecteur."
+			}
+		]
+	},
+	"adv_volcanic_dragon_molten_scourge": {
+		"name": "Dragon volcanique : Fléau en fusion",
+		"description": "Enragé par ses blessures, le dragon explose en lave en fusion.",
+		"motives_and_tactics": "Arroser de lave, incinérer, repousser les envahisseurs, se repositionner",
+		"experience": "Chasse depuis les airs +5",
+		"attack": "Griffes enrobées de lave",
+		"feature": [
+			{
+				"name": "Implacable (3) - Passive",
+				"text": "Le Fléau en fusion peut recevoir le projecteur jusqu'à trois fois par tour du MJ. Dépensez de la Peur normalement pour lui donner le projecteur."
+			},
+			{
+				"name": "Écailles fissurées - Passive",
+				"text": "Quand le Fléau en fusion subit des dégâts, lancez un nombre de **d6** égal aux PV marqués. Pour chaque résultat de 4 ou plus, vous gagnez une Peur."
+			},
+			{
+				"name": "Puissance fracassante - Action",
+				"text": "**Marquez un Stress** pour faire une attaque contre une cible à portée Très proche. En cas de réussite, la cible subit **4d8+1** dégâts physiques, perd un Espoir et est repoussée à portée Proche. Le Fléau en fusion efface un Stress."
+			},
+			{
+				"name": "Éruption - Action",
+				"text": "**Dépensez une Peur** pour faire jaillir de la lave de sous les écailles du Fléau en fusion, remplissant de lave en fusion la zone à portée Très proche. Toutes les cibles dans cette zone doivent réussir un jet de réaction d'Agilité, sinon elles subissent **4d6+6** dégâts physiques et sont repoussées à portée Proche. Cette zone reste couverte de lave. Quand une créature autre que le Fléau en fusion entre dans cette zone ou y agit, elle doit marquer 6 PV."
+			},
+			{
+				"name": "Souffle volcanique - Réaction",
+				"text": "Quand le Fléau en fusion subit des dégâts majeurs, lancez un **d10**. Sur un résultat de 8 ou plus, le Fléau en fusion souffle un flot de lave devant lui jusqu'à portée Loin. Toutes les cibles dans cette zone doivent faire un jet de réaction d'Agilité. Les cibles qui échouent subissent **2d10+4** dégâts physiques, marquent **1d4 Stress** et sont _Vulnérables_ jusqu'à ce qu'elles effacent un Stress. Les cibles qui réussissent subissent la moitié des dégâts et doivent marquer un Stress."
+			},
+			{
+				"name": "Éclaboussure de lave - Réaction",
+				"text": "Quand le Fléau en fusion subit des dégâts graves d'une attaque à portée Très proche, du sang en fusion jaillit de la blessure et inflige **2d10+4** dégâts physiques directs à l'attaquant."
+			},
+			{
+				"name": "Vengeance cendreuse (changement de phase) - Réaction",
+				"text": "Quand le Fléau en fusion marque son dernier PV, remplacez-le par le Tyran cendreux et donnez-lui immédiatement le projecteur."
+			}
+		]
+	},
+	"adv_volcanic_dragon_ashen_tyrant": {
+		"name": "Dragon volcanique : Tyran cendreux",
+		"description": "Aucun ennemi n'avait jamais eu l'insolence de blesser ainsi le dragon. Tandis que la lave se fige, il est réduit en cendres comme les anciens adversaires du dragon.",
+		"motives_and_tactics": "Étouffer, voler, intimider, tuer ou être tué",
+		"experience": "Chasse depuis les airs +5",
+		"attack": "Griffes et crocs",
+		"feature": [
+			{
+				"name": "Implacable (4) - Passive",
+				"text": "Le Tyran cendreux peut recevoir le projecteur jusqu'à quatre fois par tour du MJ. Dépensez de la Peur normalement pour lui donner le projecteur."
+			},
+			{
+				"name": "Acculé - Passive",
+				"text": "**Marquez un Stress** au lieu de dépenser une Peur pour donner le projecteur au Tyran cendreux."
+			},
+			{
+				"name": "Ailes blessées - Passive",
+				"text": "En vol, le Tyran cendreux gagne un bonus de +1 à sa Difficulté."
+			},
+			{
+				"name": "Cendres aux cendres - Passive",
+				"text": "Quand un PJ obtient un échec à portée Proche du Tyran cendreux, il perd un Espoir et vous gagnez une Peur. Si le PJ ne peut pas perdre d'Espoir, il doit marquer un PV."
+			},
+			{
+				"name": "Déchaînement désespéré - Action",
+				"text": "**Marquez un Stress** pour faire une attaque contre toutes les cibles à portée Proche. Les cibles contre lesquelles le Tyran cendreux réussit subissent **2d20+2** dégâts physiques, sont repoussées à portée Proche de leur position initiale et doivent marquer un Stress."
+			},
+			{
+				"name": "Nuage de cendres - Action",
+				"text": "**Dépensez une Peur** pour frapper le sol et soulever des cendres à portée Loin. Dans le nuage de cendres, une cible a un désavantage aux jets d'action. Le nuage de cendres se dissipe la prochaine fois qu'un adversaire reçoit le projecteur."
+			},
+			{
+				"name": "Soubresauts apocalyptiques - Action : compte à rebours (1d12)",
+				"text": "**Dépensez une Peur** pour l'activer. Il avance quand un PJ fait un jet avec Peur. Quand il se déclenche, le Tyran cendreux se débat violemment, causant des dégâts environnementaux (tels qu'un tremblement de terre, une avalanche ou l'effondrement de murs). Toutes les cibles à portée Loin doivent faire un jet de réaction de Puissance. Les cibles qui échouent subissent **2d10+10** dégâts physiques et sont _Entravées_ par les décombres jusqu'à ce qu'elles se libèrent avec un jet de Puissance réussi. Les cibles qui réussissent subissent la moitié des dégâts. Si le Tyran cendreux est vaincu alors que ce compte à rebours est actif, déclenchez-le immédiatement : la destruction causée par ses derniers spasmes."
+			}
+		]
+	},
+	"adv_perfected_zombie": {
+		"name": "Zombie parfait",
+		"description": "Un zombie colossal et musclé, doté d'une force et d'une habileté infusées par la magie.",
+		"motives_and_tactics": "Dévorer, traquer, mutiler, terrifier",
+		"attack": "Grande hache",
+		"feature": [
+			{
+				"name": "Terrifiant - Passive",
+				"text": "Quand le Zombie réussit une attaque, tous les PJ à portée Loin perdent un Espoir et vous gagnez une Peur."
+			},
+			{
+				"name": "Présence effroyable - Passive",
+				"text": "Les PJ ne peuvent pas dépenser d'Espoir pour utiliser des aptitudes contre le Zombie."
+			},
+			{
+				"name": "Frappe parfaite - Action",
+				"text": "**Marquez un Stress** pour faire une attaque standard contre toutes les cibles à portée Très proche. Les cibles contre lesquelles le Zombie réussit sont _Vulnérables_ jusqu'à leur prochain repos."
+			},
+			{
+				"name": "Opportuniste habile - Réaction",
+				"text": "Quand un autre adversaire inflige des dégâts à une cible à portée Très proche du Zombie, vous pouvez **dépenser une Peur** pour ajouter les dégâts d'attaque standard du Zombie au jet de dégâts."
+			}
+		]
+	},
+	"adv_zombie_legion": {
+		"name": "Légion de zombies",
+		"description": "Une grande meute de morts-vivants, toujours puissants malgré leur chair en putréfaction.",
+		"motives_and_tactics": "Dévorer les cerveaux, déchiqueter la chair, encercler",
+		"attack": "Mains de mort-vivant",
+		"feature": [
+			{
+				"name": "Horde (2d6+5) - Passive",
+				"text": "Quand la Légion a marqué la moitié ou plus de ses PV, son attaque standard inflige à la place **2d6+5** dégâts physiques."
+			},
+			{
+				"name": "Inébranlable - Passive",
+				"text": "La Légion résiste aux dégâts physiques."
+			},
+			{
+				"name": "Implacable (2) - Passive",
+				"text": "La Légion peut recevoir le projecteur jusqu'à deux fois par tour du MJ. Dépensez de la Peur normalement pour lui donner le projecteur."
+			},
+			{
+				"name": "Submerger - Réaction",
+				"text": "Quand la Légion subit des dégâts mineurs d'une attaque à portée de Mêlée, vous pouvez **marquer un Stress** pour faire une attaque standard avec avantage contre l'attaquant."
+			}
+		]
 	}
 }

@@ -16,7 +16,7 @@ if [ -z "${FORGE_PREBUILT:-}" ]; then
   npm run build || { echo "build failed" >&2; exit 1; }
 fi
 npx vitest run src/lib/server/features/srd-fr.test.ts || FAIL=1
-if grep -nE "adversaries:.*<= *[23]" src/lib/server/features/srd-fr.test.ts; then
+if grep -nE "adversaries:.*(<= *[23]|\\(\\) *=> *true)" src/lib/server/features/srd-fr.test.ts; then
   echo "ok - DONE.adversaries covers tier <= 2"
 else
   echo "not ok - DONE.adversaries does not cover tier <= 2"; FAIL=1

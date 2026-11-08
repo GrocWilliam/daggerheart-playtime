@@ -77,10 +77,10 @@ test('GET /api/srd/adversaries/<id> returns the element with nameLocalized; unkn
 	}
 });
 
-test('the overlay files still hold exactly 723 names; environment names are the English ones', async () => {
+test('the overlay files still hold exactly 741 names; environment names are the English ones', async () => {
 	const FR_DIR = 'src/lib/srd/fr';
 	const names = fs.readdirSync(FR_DIR).filter((f) => f.endsWith('.json')).reduce((n, f) => n + Object.values(read(`${FR_DIR}/${f}`)).filter((e) => e && 'name' in e).length, 0);
-	assert.equal(names, 723);
+	assert.equal(names, 741);
 	for (const kind of ['adversaries', 'environments']) {
 		const en = await (await get(`/api/srd/${kind}`, 'en')).json();
 		const fr = await (await get(`/api/srd/${kind}`, 'fr')).json();
