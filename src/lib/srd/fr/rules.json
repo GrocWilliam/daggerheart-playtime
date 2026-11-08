@@ -1,44 +1,193 @@
 {
 	"core_rule_action_rolls": {
-		"name": "Jets d’action"
+		"name": "Jets d’action",
+		"description": [
+			{
+				"paragraph": "Tout acte dont la réussite serait triviale ou dont l’échec serait ennuyeux réussit automatiquement, mais tout acte difficile à accomplir ou risqué à tenter déclenche un jet d’action."
+			},
+			{
+				"paragraph": "Tous les jets d’action exigent une paire de d12 appelés dés de Dualité. Ce sont deux dés à douze faces visuellement distincts, l’un représentant l’Espoir et l’autre la Peur."
+			},
+			{
+				"paragraph": "Pour faire un jet d’action, vous lancez les dés de Dualité, additionnez les résultats, appliquez les modificateurs pertinents et comparez le total à un nombre de Difficulté pour déterminer l’issue :"
+			},
+			{
+				"list": [
+					"Réussite avec Espoir - total ≥ Difficulté et dé d’Espoir > dé de Peur : vous réussissez et gagnez 1 Espoir.",
+					"Réussite avec Peur - total ≥ Difficulté et dé de Peur > dé d’Espoir : vous réussissez, mais avec un coût ou une complication, et le MJ gagne 1 Peur.",
+					"Échec avec Espoir - total < Difficulté et dé d’Espoir > dé de Peur : vous échouez avec une conséquence mineure et gagnez 1 Espoir ; le projecteur passe au MJ.",
+					"Échec avec Peur - total < Difficulté et dé d’Espoir > dé de Peur : vous échouez avec une conséquence majeure et le MJ gagne 1 Peur ; le projecteur passe au MJ.",
+					"Réussite critique - les dés de Dualité affichent des résultats identiques : vous réussissez automatiquement avec un bonus, gagnez 1 Espoir et effacez 1 Stress (et infligez des dégâts critiques s’il s’agissait d’un jet d’attaque). Une réussite critique compte comme un jet « avec Espoir »."
+				]
+			},
+			{
+				"paragraph": "Après la résolution du jet d’action, toute la table collabore pour intégrer l’issue au récit, puis la partie continue."
+			}
+		]
 	},
 	"core_rule_reaction_rolls": {
-		"name": "Jets de réaction"
+		"name": "Jets de réaction",
+		"description": [
+			{
+				"paragraph": "Un jet de réaction est fait en réponse à une attaque ou à un danger ; il représente la tentative d’un personnage d’éviter ou de supporter un effet imminent."
+			},
+			{
+				"paragraph": "Les jets de réaction fonctionnent comme les jets d’action, sauf qu’ils ne génèrent ni Espoir ni Peur, ne déclenchent pas d’actions supplémentaires du MJ, et que les autres personnages ne peuvent pas vous aider avec Aider un allié."
+			},
+			{
+				"paragraph": "Si vous réussissez un jet de réaction de façon critique, vous n’effacez pas de Stress et ne gagnez pas d’Espoir, mais vous ignorez tous les effets qui vous auraient touché en cas de réussite, comme subir des dégâts ou cocher du Stress."
+			}
+		]
 	},
 	"core_rule_group_action_rolls": {
-		"name": "Jets d’action de groupe"
+		"name": "Jets d’action de groupe",
+		"description": [
+			{
+				"paragraph": "Quand plusieurs PJ agissent ensemble, le groupe choisit un PJ pour mener l’action. Chacun des autres joueurs décrit alors comment son personnage collabore à la tâche. Le meneur fait un jet d’action comme d’habitude, tandis que les autres joueurs font des jets de réaction avec les traits que eux et le MJ jugent les plus adaptés."
+			},
+			{
+				"paragraph": "Le personnage meneur gagne un bonus de +1 à son jet d’action pour chacun de ces jets de réaction réussis et un malus de −1 pour chacun de ceux qui ont échoué."
+			}
+		]
 	},
 	"core_rule_tag_team_rolls": {
-		"name": "Jets en tandem"
+		"name": "Jets en tandem",
+		"description": [
+			{
+				"paragraph": "Une fois par session, chaque joueur peut initier un jet en tandem entre son personnage et un autre PJ en dépensant 3 Espoirs. Les joueurs décrivent comment ils combinent leurs actions de manière originale et spectaculaire. Les deux joueurs font des jets d’action séparés ; avant de résoudre les jets, choisissez un ensemble de résultats à appliquer aux deux actions. Sur un jet avec Espoir, tous les PJ concernés gagnent 1 Espoir ; sur un jet avec Peur, le MJ gagne 1 jeton de Peur par PJ concerné."
+			},
+			{
+				"paragraph": "Sur un jet d’attaque en tandem réussi, les deux joueurs lancent les dégâts et additionnent les totaux ; les dégâts sont traités comme s’ils provenaient d’une source unique (choisissez le type de dégâts applicable s’il diffère). Un jet en tandem compte comme un seul jet d’action pour les comptes à rebours ou les capacités qui comptabilisent les jets d’action, et bien que chaque joueur ne puisse en initier qu’un par session, un PJ peut participer à plusieurs jets en tandem."
+			}
+		]
 	},
 	"core_rule_advantage_disadvantage": {
-		"name": "Avantage et désavantage"
+		"name": "Avantage et désavantage",
+		"description": [
+			{
+				"paragraph": "Certaines capacités et effets vous permettent de lancer avec avantage ou désavantage un jet d’action ou de réaction :"
+			},
+			{
+				"list": [
+					"L’avantage représente une occasion que vous saisissez pour augmenter vos chances de réussite. Quand vous lancez avec avantage, vous lancez un dé d’avantage (d6) avec votre réserve de dés et ajoutez son résultat à votre total.",
+					"Le désavantage représente une difficulté, une épreuve ou un défi supplémentaire. Quand vous lancez avec désavantage, vous lancez un dé de désavantage (d6) avec votre réserve de dés et soustrayez son résultat de votre total."
+				]
+			},
+			{
+				"paragraph": "L’avantage ou le désavantage peut être accordé ou imposé par des déclencheurs mécaniques ou à la discrétion du MJ. Quand un PJ vous aide avec Aider un allié, il lance son propre dé d’avantage et vous l’ajoutez à votre total."
+			},
+			{
+				"paragraph": "Les dés d’avantage et de désavantage s’annulent un pour un, de sorte que vous ne lancez jamais les deux à la fois. Si vous avez l’avantage ou le désavantage de sources qui n’ajoutent pas de dés à votre réserve (comme l’Aider un allié d’un autre joueur), leurs effets s’ajoutent à vos résultats."
+			}
+		]
 	},
 	"core_rule_help_an_ally": {
-		"name": "Aider un allié"
+		"name": "Aider un allié",
+		"description": [
+			{
+				"paragraph": "Quand vous aidez un allié qui fait un jet d’action, décrivez comment et lancez un dé d’avantage. Plusieurs joueurs peuvent dépenser de l’Espoir pour aider le même joueur, mais celui-ci n’ajoute que le meilleur résultat à son total final."
+			}
+		]
 	},
 	"core_rule_activate_hope_feature": {
-		"name": "Activer une capacité d’Espoir"
+		"name": "Activer une capacité d’Espoir",
+		"description": [
+			{
+				"paragraph": "Une capacité d’Espoir est tout effet qui permet (ou exige) de dépenser une quantité précise d’Espoir pour l’activer. Les capacités d’Espoir de classe sont des capacités propres à la classe, détaillées sur votre feuille de personnage, qui coûtent 3 Espoirs à activer."
+			},
+			{
+				"paragraph": "Note : quand vous utilisez une capacité d’Espoir, si vous avez lancé avec Espoir pour cette action, l’Espoir gagné sur ce jet peut être dépensé pour cette capacité (ou compter pour elle, si elle exige plusieurs Espoirs)."
+			}
+		]
 	},
 	"core_rule_attack_rolls": {
-		"name": "Jets d’attaque"
+		"name": "Jets d’attaque",
+		"description": [
+			{
+				"paragraph": "Quand un PJ utilise une arme pour blesser un adversaire, il fait un jet d’attaque. Le joueur choisit une arme équipée, puis lance les dés de Dualité et applique au total le modificateur d’attaque de l’arme, les modificateurs des capacités, objets ou états, et les éventuels dés d’avantage ou de désavantage. En cas de réussite, l’attaque touche et vous lancez les dégâts avec votre Maîtrise et les dés de dégâts de l’arme. En cas d’échec, l’attaque rate."
+			}
+		]
 	},
 	"core_rule_damage_rolls": {
-		"name": "Jets de dégâts"
+		"name": "Jets de dégâts",
+		"description": [
+			{
+				"paragraph": "Après une attaque réussie ou un sort qui inflige des dégâts, vous lancez un nombre de dés de dégâts égal à votre Maîtrise, en utilisant les dés de dégâts indiqués pour l’arme ou la capacité. Ajoutez les modificateurs fixes indiqués sur l’arme ou la capacité, ainsi que les bonus de réussite critique ou d’autres effets. Quand vous infligez des dégâts critiques, doublez le total de vos dés de dégâts avant d’ajouter les modificateurs."
+			}
+		]
 	},
 	"core_rule_spellcast_rolls": {
-		"name": "Jets de sort"
+		"name": "Jets de sort",
+		"description": [
+			{
+				"paragraph": "Les jets de sort sont des jets de trait qui exigent d’utiliser votre trait de lancement de sorts, déterminé par votre sous-classe."
+			},
+			{
+				"paragraph": "Les jets de sort ne sont faits que lorsqu’un personnage utilise une capacité qui en exige un. Un jet de sort réussi active l’effet décrit par la capacité."
+			},
+			{
+				"paragraph": "Notes"
+			},
+			{
+				"list": [
+					"Un jet de sort qui peut infliger des dégâts à une cible est aussi considéré comme un jet d’attaque.",
+					"Le texte d’un sort indique quand son effet prend fin ; le MJ peut dépenser 1 Peur pour mettre fin à un effet temporaire. Si un sort ne précise rien, il prend fin quand vous le décidez ou à un moment naturel de l’histoire.",
+					"Vous pouvez lancer et maintenir plusieurs sorts en même temps."
+				]
+			}
+		]
 	},
 	"core_rule_evasion": {
-		"name": "Évasion"
+		"name": "Évasion",
+		"description": [
+			{
+				"paragraph": "L’Évasion représente la capacité d’un personnage à éviter les attaques et autres effets indésirables. Tout jet fait contre un PJ a une Difficulté égale à l’Évasion de la cible. L’Évasion de base d’un PJ est déterminée par sa classe, mais elle peut être modifiée par les cartes de domaine, l’équipement, les états et d’autres effets."
+			},
+			{
+				"paragraph": "Note : les attaques contre les adversaires utilisent la Difficulté de la cible plutôt que l’Évasion."
+			}
+		]
 	},
 	"core_rule_conditions_restrained_vulnerable": {
-		"name": "États - Entravé et Vulnérable"
+		"name": "États - Entravé et Vulnérable",
+		"description": [
+			{
+				"paragraph": "ENTRAVÉ - Les personnages Entravés ne peuvent pas se déplacer, mais vous pouvez toujours agir depuis leur position actuelle."
+			},
+			{
+				"paragraph": "VULNÉRABLE - Quand une créature est Vulnérable, tous les jets qui la ciblent ont l’avantage."
+			},
+			{
+				"paragraph": "Sauf indication contraire, un même état ne peut pas être appliqué plus d’une fois à la même cible."
+			}
+		]
 	},
 	"core_rule_range_bands": {
-		"name": "Bandes de portée"
+		"name": "Bandes de portée",
+		"description": [
+			{
+				"list": [
+					"Proche - Tout ce qui se trouve à peu près à un jet de pierre.",
+					"Très proche - À portée de bras ; les attaques de Mêlée peuvent toujours atteindre.",
+					"Loin - Tout ce qui est à portée de voix mais au-delà d’un jet de pierre.",
+					"Très loin - Tout ce qui dépasse la distance de communication."
+				]
+			}
+		]
 	},
 	"core_rule_cover": {
-		"name": "Couvert"
+		"name": "Couvert",
+		"description": [
+			{
+				"paragraph": "Les obstacles physiques, les alliés et le terrain peuvent vous protéger des coups. Il existe trois types de couvert :"
+			},
+			{
+				"list": [
+					"Couvert léger - +1 à l’Évasion contre les attaques à distance.",
+					"Couvert complet - +2 à l’Évasion contre les attaques à distance.",
+					"Couvert total - impossible d’être ciblé par des attaques à distance tant que vous ne bougez pas ou que le couvert n’est pas retiré."
+				]
+			}
+		]
 	}
 }

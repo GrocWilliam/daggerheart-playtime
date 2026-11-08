@@ -1,182 +1,722 @@
 {
 	"core_item_premium_bedroll": {
-		"name": "Couchage de luxe"
+		"name": "Couchage de luxe",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Pendant les temps morts, vous effacez automatiquement 1 Stress."
+					}
+				]
+			}
+		]
 	},
 	"core_item_piper_whistle": {
-		"name": "Sifflet du joueur de flûte"
+		"name": "Sifflet du joueur de flûte",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Ce sifflet artisanal a un son distinctif. Quand vous soufflez dedans, son timbre perçant s’entend dans un rayon de 1 mile."
+					}
+				]
+			}
+		]
 	},
 	"core_item_charging_quiver": {
-		"name": "Carquois chargeur"
+		"name": "Carquois chargeur",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Quand vous réussissez une attaque avec une flèche rangée dans ce carquois, vous gagnez un bonus au jet de dégâts égal à votre palier actuel."
+					}
+				]
+			}
+		]
 	},
 	"core_item_alistairs_torch": {
-		"name": "Torche d’Alistair"
+		"name": "Torche d’Alistair",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Vous pouvez allumer cette torche magique à volonté. La lumière de sa flamme emplit un espace bien plus vaste qu’elle ne devrait, assez pour éclairer une caverne comme en plein jour."
+					}
+				]
+			}
+		]
 	},
 	"core_item_speaking_orbs": {
-		"name": "Orbes parlants"
+		"name": "Orbes parlants",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Cette paire d’orbes permet aux créatures qui les tiennent de communiquer entre elles, quelle que soit la distance."
+					}
+				]
+			}
+		]
 	},
 	"core_item_manacles": {
-		"name": "Menottes"
+		"name": "Menottes",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Cette paire de menottes verrouillables est livrée avec sa clé."
+					}
+				]
+			}
+		]
 	},
 	"core_item_arcane_cloak": {
-		"name": "Cape arcanique"
+		"name": "Cape arcanique",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Une créature dotée d’un trait de lancement de sorts qui porte cette cape peut en modifier à volonté la couleur, la texture et la taille."
+					}
+				]
+			}
+		]
 	},
 	"core_item_woven_net": {
-		"name": "Filet tressé"
+		"name": "Filet tressé",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Vous pouvez faire un jet de Finesse avec ce filet pour piéger une petite créature. Une cible piégée peut se libérer en réussissant un jet d’attaque (16)."
+					}
+				]
+			}
+		]
 	},
 	"core_item_fire_jar": {
-		"name": "Pot de feu"
+		"name": "Pot de feu",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Vous pouvez verser le curieux liquide contenu dans ce pot pour produire instantanément du feu. Le contenu se régénère quand vous faites un repos long."
+					}
+				]
+			}
+		]
 	},
 	"core_item_suspended_rod": {
-		"name": "Tige suspendue"
+		"name": "Tige suspendue",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Cette tige plate est gravée de runes. Quand vous l’activez, elle reste immédiatement suspendue sur place. Tant que la tige n’est pas désactivée, elle ne peut pas bouger, ne respecte pas les lois de la gravité et demeure en place."
+					}
+				]
+			}
+		]
 	},
 	"core_item_glamour_stone": {
-		"name": "Pierre de glamour"
+		"name": "Pierre de glamour",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Activez cette pierre de la taille d’un galet pour mémoriser l’apparence de quelqu’un que vous voyez. Dépensez 1 Espoir pour recréer magiquement cet aspect sur vous sous forme d’illusion."
+					}
+				]
+			}
+		]
 	},
 	"core_item_empty_chest": {
-		"name": "Coffre vide"
+		"name": "Coffre vide",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Ce coffre magique semble vide. Quand vous prononcez un mot ou faites un geste déclencheur précis, puis ouvrez le coffre, vous voyez les objets qu’il renferme."
+					}
+				]
+			}
+		]
 	},
 	"core_item_companion_case": {
-		"name": "Étui de compagnon"
+		"name": "Étui de compagnon",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Cet étui peut contenir un petit animal de compagnie. Tant que le compagnon est à l’intérieur, l’animal et l’étui sont immunisés contre tous les dégâts et effets nuisibles."
+					}
+				]
+			}
+		]
 	},
 	"core_item_piercing_arrows": {
-		"name": "Flèches perforantes"
+		"name": "Flèches perforantes",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Trois fois par repos, quand vous réussissez une attaque avec l’une de ces flèches, vous pouvez ajouter votre Maîtrise au jet de dégâts."
+					}
+				]
+			}
+		]
 	},
 	"core_item_valorstone": {
-		"name": "Pierre de bravoure"
+		"name": "Pierre de bravoure",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Vous pouvez fixer cette pierre à une armure qui n’a pas déjà de capacité. L’armure gagne la capacité suivante : Résistante : avant de cocher votre dernier emplacement d’armure, lancez un d6. Sur un 6, réduisez la gravité d’un seuil sans cocher d’emplacement d’armure."
+					}
+				]
+			}
+		]
 	},
 	"core_item_skeleton_key": {
-		"name": "Passe-partout"
+		"name": "Passe-partout",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Quand vous utilisez cette clé pour ouvrir une porte verrouillée, vous avez l’avantage au jet de Finesse."
+					}
+				]
+			}
+		]
 	},
 	"core_item_arcane_prism": {
-		"name": "Prisme arcanique"
+		"name": "Prisme arcanique",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Placez ce prisme à l’endroit de votre choix et activez-le. Tous les alliés à portée Proche du prisme gagnent un bonus de +1 à leurs jets de sort. Tant qu’il est activé, le prisme ne peut pas être déplacé. Une fois désactivé, il ne peut pas être réactivé avant votre prochain repos long."
+					}
+				]
+			}
+		]
 	},
 	"core_item_minor_stamina_potion_recipe": {
-		"name": "Recette de potion d’endurance mineure"
+		"name": "Recette de potion d’endurance mineure",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Comme action de temps mort, vous pouvez utiliser l’os d’une créature pour fabriquer une potion d’endurance mineure."
+					}
+				]
+			}
+		]
 	},
 	"core_item_minor_health_potion_recipe": {
-		"name": "Recette de potion de santé mineure"
+		"name": "Recette de potion de santé mineure",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Comme action de temps mort, vous pouvez utiliser une fiole de sang pour fabriquer une potion de santé mineure."
+					}
+				]
+			}
+		]
 	},
 	"core_item_homing_compasses": {
-		"name": "Boussoles de retour"
+		"name": "Boussoles de retour",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Ces deux boussoles pointent l’une vers l’autre, quelle que soit la distance qui les sépare."
+					}
+				]
+			}
+		]
 	},
 	"core_item_corrector_sprite": {
-		"name": "Lutin correcteur"
+		"name": "Lutin correcteur",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Ce minuscule lutin se niche dans le creux de votre conduit auditif et vous murmure des conseils utiles pendant le combat. Une fois par repos court, vous pouvez obtenir l’avantage sur un jet d’attaque."
+					}
+				]
+			}
+		]
 	},
 	"core_item_gecko_gloves": {
-		"name": "Gants de gecko"
+		"name": "Gants de gecko",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Vous pouvez grimper sur les surfaces verticales et au plafond."
+					}
+				]
+			}
+		]
 	},
 	"core_item_lorekeeper": {
-		"name": "Gardien du savoir"
+		"name": "Gardien du savoir",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Vous pouvez consigner dans ce livre le nom et les détails de trois créatures hostiles au plus. Vous gagnez un bonus de +1 aux jets d’action contre ces créatures."
+					}
+				]
+			}
+		]
 	},
 	"core_item_vial_of_darksmoke_recipe": {
-		"name": "Recette de fiole de fumée noire"
+		"name": "Recette de fiole de fumée noire",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Comme action de temps mort, vous pouvez cocher 1 Stress pour fabriquer une fiole de fumée noire."
+					}
+				]
+			}
+		]
 	},
 	"core_item_bloodstone": {
-		"name": "Pierre de sang"
+		"name": "Pierre de sang",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Vous pouvez fixer cette pierre à une arme qui n’a pas déjà de capacité. L’arme gagne la capacité suivante : Brutale : quand vous obtenez la valeur maximale sur un dé de dégâts, lancez un dé de dégâts supplémentaire."
+					}
+				]
+			}
+		]
 	},
 	"core_item_greatstone": {
-		"name": "Grande pierre"
+		"name": "Grande pierre",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Vous pouvez fixer cette pierre à une arme qui n’a pas déjà de capacité. L’arme gagne la capacité suivante : Puissante : sur une attaque réussie, lancez un dé de dégâts supplémentaire et écartez le résultat le plus bas."
+					}
+				]
+			}
+		]
 	},
 	"core_item_glider": {
-		"name": "Planeur"
+		"name": "Planeur",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Pendant une chute, vous pouvez cocher 1 Stress pour déployer ce petit parachute et atterrir en douceur."
+					}
+				]
+			}
+		]
 	},
 	"core_item_ring_of_silence": {
-		"name": "Anneau de silence"
+		"name": "Anneau de silence",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Dépensez 1 Espoir pour activer cet anneau. Vos pas sont silencieux jusqu’à votre prochain repos."
+					}
+				]
+			}
+		]
 	},
 	"core_item_calming_pendant": {
-		"name": "Pendentif apaisant"
+		"name": "Pendentif apaisant",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Quand vous devriez cocher votre dernier Stress, lancez un d6. Sur un 5 ou plus, ne le cochez pas."
+					}
+				]
+			}
+		]
 	},
 	"core_item_dual_flask": {
-		"name": "Flasque double"
+		"name": "Flasque double",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Cette gourde peut contenir deux liquides différents. Vous pouvez passer de l’un à l’autre en actionnant un petit interrupteur sur le côté de la gourde."
+					}
+				]
+			}
+		]
 	},
 	"core_item_bag_of_ficklesand": {
-		"name": "Sac de sable capricieux"
+		"name": "Sac de sable capricieux",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Avec un jet de Présence (10) réussi, vous pouvez convaincre ce petit sac de sable de devenir bien plus lourd ou plus léger. De plus, avec un jet de Finesse (10) réussi, vous pouvez souffler un peu de sable au visage d’une cible pour la rendre temporairement Vulnérable."
+					}
+				]
+			}
+		]
 	},
 	"core_item_ring_of_resistance": {
-		"name": "Anneau de résistance"
+		"name": "Anneau de résistance",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Une fois par repos long, vous pouvez activer cet anneau après une attaque réussie contre vous pour diviser les dégâts par deux."
+					}
+				]
+			}
+		]
 	},
 	"core_item_phoenix_feather": {
-		"name": "Plume de phénix"
+		"name": "Plume de phénix",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Si vous avez au moins une plume de phénix sur vous quand vous perdez connaissance, vous gagnez un bonus de +1 au jet qui détermine si vous gagnez une cicatrice."
+					}
+				]
+			}
+		]
 	},
 	"core_item_box_of_many_goods": {
-		"name": "Boîte aux mille biens"
+		"name": "Boîte aux mille biens",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Une fois par repos long, vous pouvez ouvrir cette petite boîte et lancer un d12. Sur un résultat de 1-6, elle est vide. Sur un 7-10, elle contient un consommable commun aléatoire. Sur un 11-12, elle contient deux consommables communs aléatoires."
+					}
+				]
+			}
+		]
 	},
 	"core_item_airblade_charm": {
-		"name": "Charme de lame d’air"
+		"name": "Charme de lame d’air",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Vous pouvez fixer ce porte-bonheur à une arme de portée Mêlée. Trois fois par repos, vous pouvez l’activer et attaquer une cible à portée Proche."
+					}
+				]
+			}
+		]
 	},
 	"core_item_portal_seed": {
-		"name": "Graine de portail"
+		"name": "Graine de portail",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Vous pouvez planter cette graine en terre pour y faire pousser un portail. Le portail est utilisable au bout de 24 heures. Vous pouvez l’emprunter pour voyager vers tout autre endroit où vous avez planté une graine de portail. Un portail peut être détruit en lui infligeant n’importe quelle quantité de dégâts magiques."
+					}
+				]
+			}
+		]
 	},
 	"core_item_paragons_chain": {
-		"name": "Chaîne du parangon"
+		"name": "Chaîne du parangon",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Comme action de temps mort, vous pouvez méditer sur un idéal ou un principe qui vous est cher et concentrer votre volonté dans cette chaîne. Une fois par repos long, vous pouvez dépenser 1 Espoir pour lancer un d20 comme dé d’Espoir lors des jets qui s’accordent directement avec ce principe."
+					}
+				]
+			}
+		]
 	},
 	"core_item_elusive_amulet": {
-		"name": "Amulette insaisissable"
+		"name": "Amulette insaisissable",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Une fois par repos long, vous pouvez activer cette amulette pour devenir Caché jusqu’à ce que vous bougiez. Tant que vous êtes Caché de cette manière, vous restez invisible même si un adversaire se déplace là où il vous verrait normalement."
+					}
+				]
+			}
+		]
 	},
 	"core_item_hopekeeper_locket": {
-		"name": "Médaillon du gardien d’espoir"
+		"name": "Médaillon du gardien d’espoir",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Pendant un repos long, si vous avez 6 Espoirs, vous pouvez dépenser 1 Espoir pour imprégner ce médaillon de votre détermination débordante. Quand vous avez 0 Espoir, vous pouvez utiliser le médaillon pour gagner immédiatement 1 Espoir. Le médaillon doit être imprégné de nouveau avant de pouvoir servir ainsi une autre fois."
+					}
+				]
+			}
+		]
 	},
 	"core_item_infinite_bag": {
-		"name": "Sac infini"
+		"name": "Sac infini",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Les objets que vous rangez dans ce sac sont conservés dans une dimension de poche qui ne manque jamais de place. Vous pouvez en retirer un objet à tout moment."
+					}
+				]
+			}
+		]
 	},
 	"core_item_stride_relic": {
-		"name": "Relique de foulée"
+		"name": "Relique de foulée",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Vous gagnez un bonus de +1 en Agilité. Vous ne pouvez porter qu’une seule relique."
+					}
+				]
+			}
+		]
 	},
 	"core_item_bolster_relic": {
-		"name": "Relique de renforcement"
+		"name": "Relique de renforcement",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Vous gagnez un bonus de +1 en Puissance. Vous ne pouvez porter qu’une seule relique."
+					}
+				]
+			}
+		]
 	},
 	"core_item_control_relic": {
-		"name": "Relique de contrôle"
+		"name": "Relique de contrôle",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Vous gagnez un bonus de +1 en Finesse. Vous ne pouvez porter qu’une seule relique."
+					}
+				]
+			}
+		]
 	},
 	"core_item_attune_relic": {
-		"name": "Relique d’harmonisation"
+		"name": "Relique d’harmonisation",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Vous gagnez un bonus de +1 en Instinct. Vous ne pouvez porter qu’une seule relique."
+					}
+				]
+			}
+		]
 	},
 	"core_item_charm_relic": {
-		"name": "Relique de charme"
+		"name": "Relique de charme",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Vous gagnez un bonus de +1 en Présence. Vous ne pouvez porter qu’une seule relique."
+					}
+				]
+			}
+		]
 	},
 	"core_item_enlighten_relic": {
-		"name": "Relique d’illumination"
+		"name": "Relique d’illumination",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Vous gagnez un bonus de +1 en Connaissance. Vous ne pouvez porter qu’une seule relique."
+					}
+				]
+			}
+		]
 	},
 	"core_item_honing_relic": {
-		"name": "Relique d’affûtage"
+		"name": "Relique d’affûtage",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Vous gagnez un bonus de +1 à une Expérience de votre choix. Vous ne pouvez porter qu’une seule relique."
+					}
+				]
+			}
+		]
 	},
 	"core_item_flickerfly_pendant": {
-		"name": "Pendentif de luciole"
+		"name": "Pendentif de luciole",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Tant que vous portez ce pendentif, vos armes de portée Mêlée qui infligent des dégâts physiques prennent un éclat diaphane et peuvent attaquer des cibles à portée Très proche."
+					}
+				]
+			}
+		]
 	},
 	"core_item_lakestrider_boots": {
-		"name": "Bottes de marche-lac"
+		"name": "Bottes de marche-lac",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Vous pouvez marcher à la surface de l’eau comme s’il s’agissait d’un sol meuble."
+					}
+				]
+			}
+		]
 	},
 	"core_item_clay_companion": {
-		"name": "Compagnon d’argile"
+		"name": "Compagnon d’argile",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Quand vous modelez cette boule d’argile en compagnon animal d’argile, elle se comporte comme cet animal. Par exemple, une araignée d’argile peut tisser des toiles d’argile, tandis qu’un oiseau d’argile peut voler. Le compagnon d’argile conserve sa mémoire et son identité d’une forme à l’autre, mais il peut adopter de nouveaux comportements à chaque forme."
+					}
+				]
+			}
+		]
 	},
 	"core_item_mythic_dust_recipe": {
-		"name": "Recette de poussière mythique"
+		"name": "Recette de poussière mythique",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Comme action de temps mort, vous pouvez utiliser une poignée de fine poussière d’or pour fabriquer de la poussière mythique."
+					}
+				]
+			}
+		]
 	},
 	"core_item_shard_of_memory": {
-		"name": "Éclat de mémoire"
+		"name": "Éclat de mémoire",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Une fois par repos long, vous pouvez dépenser 2 Espoirs pour rappeler une carte de domaine de votre coffre au lieu de payer son coût de rappel."
+					}
+				]
+			}
+		]
 	},
 	"core_item_gem_of_alacrity": {
-		"name": "Gemme d’alacrité"
+		"name": "Gemme d’alacrité",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Vous pouvez fixer cette gemme à une arme, ce qui vous permet d’utiliser votre Agilité pour attaquer avec cette arme."
+					}
+				]
+			}
+		]
 	},
 	"core_item_gem_of_might": {
-		"name": "Gemme de puissance"
+		"name": "Gemme de puissance",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Vous pouvez fixer cette gemme à une arme, ce qui vous permet d’utiliser votre Puissance pour attaquer avec cette arme."
+					}
+				]
+			}
+		]
 	},
 	"core_item_gem_of_precision": {
-		"name": "Gemme de précision"
+		"name": "Gemme de précision",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Vous pouvez fixer cette gemme à une arme, ce qui vous permet d’utiliser votre Finesse pour attaquer avec cette arme."
+					}
+				]
+			}
+		]
 	},
 	"core_item_gem_of_insight": {
-		"name": "Gemme de perspicacité"
+		"name": "Gemme de perspicacité",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Vous pouvez fixer cette gemme à une arme, ce qui vous permet d’utiliser votre Instinct pour attaquer avec cette arme."
+					}
+				]
+			}
+		]
 	},
 	"core_item_gem_of_audacity": {
-		"name": "Gemme d’audace"
+		"name": "Gemme d’audace",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Vous pouvez fixer cette gemme à une arme, ce qui vous permet d’utiliser votre Présence pour attaquer avec cette arme."
+					}
+				]
+			}
+		]
 	},
 	"core_item_gem_of_sagacity": {
-		"name": "Gemme de sagacité"
+		"name": "Gemme de sagacité",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Vous pouvez fixer cette gemme à une arme, ce qui vous permet d’utiliser votre Connaissance pour attaquer avec cette arme."
+					}
+				]
+			}
+		]
 	},
 	"core_item_ring_of_unbreakable_resolve": {
-		"name": "Anneau de résolution inébranlable"
+		"name": "Anneau de résolution inébranlable",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Une fois par session, quand le MJ dépense 1 Peur, vous pouvez dépenser 4 Espoirs pour annuler les effets de cette Peur dépensée."
+					}
+				]
+			}
+		]
 	},
 	"core_item_belt_of_unity": {
-		"name": "Ceinture d’unité"
+		"name": "Ceinture d’unité",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Une fois par session, vous pouvez dépenser 5 Espoirs pour mener un jet en tandem avec trois PJ au lieu de deux."
+					}
+				]
+			}
+		]
 	}
 }

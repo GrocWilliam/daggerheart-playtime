@@ -20,6 +20,14 @@ const lines = (e) => (e.features ?? []).flatMap((f) => {
 	const ps = paras(f.description);
 	return f.name ? [`${f.name['en-US']}: ${ps[0] ?? ''}`.trim(), ...ps.slice(1)] : ps;
 });
+// us-223: in French, items and consumables take their text from the overlay (lang="fr"); other kinds stay English
+const FRO = { ...json('src/lib/srd/fr/consumables.json'), ...json('src/lib/srd/fr/items.json') };
+const plain = (v) => (typeof v === 'string' ? v : v?.['en-US']);
+const linesFr = (e) => FRO[e.id]?.features?.length ? FRO[e.id].features.flatMap((f) => {
+	const ps = (f.description ?? []).map((x) => plain(x.paragraph)).filter(Boolean);
+	const nm = plain(f.name);
+	return nm ? [`${nm}: ${ps[0] ?? ''}`.trim(), ...ps.slice(1)] : ps;
+}) : null;
 const sample = { weapons: SRD.weapons[0], armors: SRD.armors[0], consumables: SRD.consumables[0], items: SRD.items[0] };
 
 let browser;
@@ -170,10 +178,11 @@ test('opened item helper: 44x44 target and the SRD text in a lang="en" block, wi
 			assert.equal(await h.evaluate((d) => d.open), false);
 			await h.locator('> summary').click();
 			assert.equal(await h.evaluate((d) => d.open), true);
-			const blocks = h.locator('[lang="en"]');
-			assert.ok((await blocks.count()) >= 1, 'lang=en block');
+			const frLines = lang === 'fr' ? linesFr(e) : null;
+			const blocks = h.locator(frLines ? '[lang="fr"]' : '[lang="en"]');
+			assert.ok((await blocks.count()) >= 1, 'lang block');
 			const txt = norm((await blocks.allTextContents()).join(' '));
-			for (const l of lines(e)) assert.ok(txt.includes(norm(l)), `${e.id}: ${l.slice(0, 50)}`);
+			for (const l of frLines ?? lines(e)) assert.ok(txt.includes(norm(l)), `${e.id}: ${l.slice(0, 50)}`);
 			await h.locator('> summary').click();
 		}
 		await ctx.close();

@@ -41,3 +41,8 @@ French terminology for every file in this folder; reuse these forms, add a row w
 | Fear Pool / Ward Die | réserve de Peur / dé de garde |
 | Tag Team Roll / Tend to Wounds / Help an Ally | jet en tandem / Soigner les blessures / Aider un allié |
 | bag / handful of gold | bourse / poignée d’or |
+| GM / PC | MJ / PJ |
+| scar | cicatrice |
+| Cover (Light / Full / Total) | Couvert (léger / complet / total) |
+| downtime move | action de temps mort |
+| Tag Team Roll (rules) / advantage die | jet en tandem / dé d’avantage |

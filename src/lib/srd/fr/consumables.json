@@ -1,182 +1,722 @@
 {
 	"core_consumable_stride_potion": {
-		"name": "Potion de foulée"
+		"name": "Potion de foulée",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Vous gagnez un bonus de +1 à votre prochain jet d’Agilité."
+					}
+				]
+			}
+		]
 	},
 	"core_consumable_bolster_potion": {
-		"name": "Potion de renforcement"
+		"name": "Potion de renforcement",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Vous gagnez un bonus de +1 à votre prochain jet de Puissance."
+					}
+				]
+			}
+		]
 	},
 	"core_consumable_control_potion": {
-		"name": "Potion de contrôle"
+		"name": "Potion de contrôle",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Vous gagnez un bonus de +1 à votre prochain jet de Finesse."
+					}
+				]
+			}
+		]
 	},
 	"core_consumable_attune_potion": {
-		"name": "Potion d’harmonisation"
+		"name": "Potion d’harmonisation",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Vous gagnez un bonus de +1 à votre prochain jet d’Instinct."
+					}
+				]
+			}
+		]
 	},
 	"core_consumable_charm_potion": {
-		"name": "Potion de charme"
+		"name": "Potion de charme",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Vous gagnez un bonus de +1 à votre prochain jet de Présence."
+					}
+				]
+			}
+		]
 	},
 	"core_consumable_enlighten_potion": {
-		"name": "Potion d’illumination"
+		"name": "Potion d’illumination",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Vous gagnez un bonus de +1 à votre prochain jet de Connaissance."
+					}
+				]
+			}
+		]
 	},
 	"core_consumable_minor_health_potion": {
-		"name": "Potion de santé mineure"
+		"name": "Potion de santé mineure",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Effacez 1d4 PV."
+					}
+				]
+			}
+		]
 	},
 	"core_consumable_minor_stamina_potion": {
-		"name": "Potion d’endurance mineure"
+		"name": "Potion d’endurance mineure",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Effacez 1d4 Stress."
+					}
+				]
+			}
+		]
 	},
 	"core_consumable_grindletooth_venom": {
-		"name": "Venin de grincedent"
+		"name": "Venin de grincedent",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Vous pouvez appliquer ce venin sur une arme qui inflige des dégâts physiques pour ajouter un d6 à votre prochain jet de dégâts avec cette arme."
+					}
+				]
+			}
+		]
 	},
 	"core_consumable_varik_leaves": {
-		"name": "Feuilles de varik"
+		"name": "Feuilles de varik",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Vous pouvez manger ces feuilles jumelées pour gagner immédiatement 2 Espoirs."
+					}
+				]
+			}
+		]
 	},
 	"core_consumable_vial_of_moondrip": {
-		"name": "Fiole de goutte-lune"
+		"name": "Fiole de goutte-lune",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Quand vous buvez le contenu de cette fiole, vous voyez dans l’obscurité totale jusqu’à votre prochain repos."
+					}
+				]
+			}
+		]
 	},
 	"core_consumable_unstable_arcane_shard": {
-		"name": "Éclat arcanique instable"
+		"name": "Éclat arcanique instable",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Vous pouvez faire un jet de Finesse pour lancer cet éclat sur un groupe d’adversaires à portée Loin. Les cibles contre lesquelles vous réussissez subissent 1d20 dégâts magiques."
+					}
+				]
+			}
+		]
 	},
 	"core_consumable_potion_of_stability": {
-		"name": "Potion de stabilité"
+		"name": "Potion de stabilité",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Vous pouvez boire cette potion pour choisir une action de temps mort supplémentaire."
+					}
+				]
+			}
+		]
 	},
 	"core_consumable_improved_grindletooth_venom": {
-		"name": "Venin de grincedent amélioré"
+		"name": "Venin de grincedent amélioré",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Vous pouvez appliquer ce venin sur une arme qui inflige des dégâts physiques pour ajouter un d8 à votre prochain jet de dégâts avec cette arme."
+					}
+				]
+			}
+		]
 	},
 	"core_consumable_morphing_clay": {
-		"name": "Argile métamorphe"
+		"name": "Argile métamorphe",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Vous pouvez dépenser 1 Espoir pour utiliser cette argile et modifier votre visage au point de vous rendre méconnaissable jusqu’à votre prochain repos."
+					}
+				]
+			}
+		]
 	},
 	"core_consumable_vial_of_darksmoke": {
-		"name": "Fiole de fumée noire"
+		"name": "Fiole de fumée noire",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Quand un adversaire vous attaque, utilisez cette fiole et lancez un nombre de d6 égal à votre Agilité. Ajoutez le meilleur résultat à votre Évasion contre l’attaque."
+					}
+				]
+			}
+		]
 	},
 	"core_consumable_jumping_root": {
-		"name": "Racine sauteuse"
+		"name": "Racine sauteuse",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Mangez cette racine pour bondir une fois jusqu’à portée Loin sans avoir à faire de jet."
+					}
+				]
+			}
+		]
 	},
 	"core_consumable_snap_powder": {
-		"name": "Poudre claquante"
+		"name": "Poudre claquante",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Cochez 1 Stress et effacez 1 PV."
+					}
+				]
+			}
+		]
 	},
 	"core_consumable_health_potion": {
-		"name": "Potion de santé"
+		"name": "Potion de santé",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Effacez 1d4+1 PV."
+					}
+				]
+			}
+		]
 	},
 	"core_consumable_stamina_potion": {
-		"name": "Potion d’endurance"
+		"name": "Potion d’endurance",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Effacez 1d4+1 Stress."
+					}
+				]
+			}
+		]
 	},
 	"core_consumable_armor_stitcher": {
-		"name": "Recoud-armure"
+		"name": "Recoud-armure",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Vous pouvez utiliser ce ravaudeur pour dépenser autant d’Espoirs que vous voulez et effacer autant d’emplacements d’armure."
+					}
+				]
+			}
+		]
 	},
 	"core_consumable_gill_salve": {
-		"name": "Baume de branchies"
+		"name": "Baume de branchies",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Vous pouvez appliquer cet onguent sur votre cou pour respirer sous l’eau pendant un nombre de minutes égal à votre niveau."
+					}
+				]
+			}
+		]
 	},
 	"core_consumable_replication_parchment": {
-		"name": "Parchemin de réplication"
+		"name": "Parchemin de réplication",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "En touchant un autre parchemin avec celui-ci, vous pouvez copier à la perfection le contenu du second. Une fois utilisé, ce parchemin redevient un simple papier ordinaire."
+					}
+				]
+			}
+		]
 	},
 	"core_consumable_improved_arcane_shard": {
-		"name": "Éclat arcanique amélioré"
+		"name": "Éclat arcanique amélioré",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Vous pouvez faire un jet de Finesse pour lancer cet éclat sur un groupe d’adversaires à portée Loin. Les cibles contre lesquelles vous réussissez subissent 2d20 dégâts magiques."
+					}
+				]
+			}
+		]
 	},
 	"core_consumable_major_stride_potion": {
-		"name": "Potion de foulée majeure"
+		"name": "Potion de foulée majeure",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Vous gagnez un bonus de +1 en Agilité jusqu’à votre prochain repos."
+					}
+				]
+			}
+		]
 	},
 	"core_consumable_major_bolster_potion": {
-		"name": "Potion de renforcement majeure"
+		"name": "Potion de renforcement majeure",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Vous gagnez un bonus de +1 en Puissance jusqu’à votre prochain repos."
+					}
+				]
+			}
+		]
 	},
 	"core_consumable_major_control_potion": {
-		"name": "Potion de contrôle majeure"
+		"name": "Potion de contrôle majeure",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Vous gagnez un bonus de +1 en Finesse jusqu’à votre prochain repos."
+					}
+				]
+			}
+		]
 	},
 	"core_consumable_major_attune_potion": {
-		"name": "Potion d’harmonisation majeure"
+		"name": "Potion d’harmonisation majeure",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Vous gagnez un bonus de +1 en Instinct jusqu’à votre prochain repos."
+					}
+				]
+			}
+		]
 	},
 	"core_consumable_major_charm_potion": {
-		"name": "Potion de charme majeure"
+		"name": "Potion de charme majeure",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Vous gagnez un bonus de +1 en Présence jusqu’à votre prochain repos."
+					}
+				]
+			}
+		]
 	},
 	"core_consumable_major_enlighten_potion": {
-		"name": "Potion d’illumination majeure"
+		"name": "Potion d’illumination majeure",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Vous gagnez un bonus de +1 en Connaissance jusqu’à votre prochain repos."
+					}
+				]
+			}
+		]
 	},
 	"core_consumable_blood_of_the_yorgi": {
-		"name": "Sang des Yorgi"
+		"name": "Sang des Yorgi",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Vous pouvez boire ce sang pour disparaître de là où vous êtes et réapparaître immédiatement en un point que vous voyez à portée Très loin."
+					}
+				]
+			}
+		]
 	},
 	"core_consumable_homet_s_secret_potion": {
-		"name": "Potion secrète de Homet"
+		"name": "Potion secrète de Homet",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Après avoir bu cette potion, la prochaine attaque réussie que vous faites est une réussite critique."
+					}
+				]
+			}
+		]
 	},
 	"core_consumable_redthorn_saliva": {
-		"name": "Salive d’épine-rouge"
+		"name": "Salive d’épine-rouge",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Vous pouvez appliquer cette salive sur une arme qui inflige des dégâts physiques pour ajouter un d12 à votre prochain jet de dégâts avec cette arme."
+					}
+				]
+			}
+		]
 	},
 	"core_consumable_channelstone": {
-		"name": "Pierre de canalisation"
+		"name": "Pierre de canalisation",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Vous pouvez utiliser cette pierre pour prendre un sort ou un grimoire de votre coffre, l’utiliser une fois, puis le remettre dans votre coffre."
+					}
+				]
+			}
+		]
 	},
 	"core_consumable_mythic_dust": {
-		"name": "Poussière mythique"
+		"name": "Poussière mythique",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Vous pouvez appliquer cette poussière sur une arme qui inflige des dégâts magiques pour ajouter un d12 à votre prochain jet de dégâts avec cette arme."
+					}
+				]
+			}
+		]
 	},
 	"core_consumable_acidpaste": {
-		"name": "Pâte acide"
+		"name": "Pâte acide",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Cette pâte ronge les murs et autres surfaces dans de vifs éclats de lumière."
+					}
+				]
+			}
+		]
 	},
 	"core_consumable_hopehold_flare": {
-		"name": "Fusée de l’Espoir"
+		"name": "Fusée de l’Espoir",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Quand vous utilisez cette fusée éclairante, les alliés à portée Proche lancent un d6 chaque fois qu’ils dépensent 1 Espoir. Sur un 6, ils gagnent l’effet de cet Espoir sans le dépenser. La fusée dure jusqu’à la fin de la scène."
+					}
+				]
+			}
+		]
 	},
 	"core_consumable_major_arcane_shard": {
-		"name": "Éclat arcanique majeur"
+		"name": "Éclat arcanique majeur",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Vous pouvez faire un jet de Finesse pour lancer cet éclat sur un groupe d’adversaires à portée Loin. Les cibles contre lesquelles vous réussissez subissent 3d20 dégâts magiques."
+					}
+				]
+			}
+		]
 	},
 	"core_consumable_featherbone": {
-		"name": "Os-plume"
+		"name": "Os-plume",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Vous pouvez utiliser cet os pour contrôler votre vitesse de chute pendant un nombre de minutes égal à votre niveau."
+					}
+				]
+			}
+		]
 	},
 	"core_consumable_circle_of_the_void": {
-		"name": "Cercle du vide"
+		"name": "Cercle du vide",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Cochez 1 Stress pour créer un vide qui s’étend jusqu’à portée Loin. Aucune magie ne peut être lancée dans le vide, et les créatures qui s’y trouvent sont immunisées contre les dégâts magiques."
+					}
+				]
+			}
+		]
 	},
 	"core_consumable_sun_tree_sap": {
-		"name": "Sève d’arbre-soleil"
+		"name": "Sève d’arbre-soleil",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Consommez cette sève pour lancer un d6. Sur un résultat de 1–2, effacez 2 PV. Sur un résultat de 3–5, effacez 3 Stress. Sur un 6, vous voyez au-delà du voile de la mort et revenez transformé, en gagnant une cicatrice."
+					}
+				]
+			}
+		]
 	},
 	"core_consumable_dripfang_poison": {
-		"name": "Poison de croc-goutte"
+		"name": "Poison de croc-goutte",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Une créature qui consomme ce poison subit 8d10 dégâts magiques directs."
+					}
+				]
+			}
+		]
 	},
 	"core_consumable_major_health_potion": {
-		"name": "Potion de santé majeure"
+		"name": "Potion de santé majeure",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Effacez 1d4+2 PV."
+					}
+				]
+			}
+		]
 	},
 	"core_consumable_major_stamina_potion": {
-		"name": "Potion d’endurance majeure"
+		"name": "Potion d’endurance majeure",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Effacez 1d4+2 Stress."
+					}
+				]
+			}
+		]
 	},
 	"core_consumable_ogre_musk": {
-		"name": "Musc d’ogre"
+		"name": "Musc d’ogre",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Vous pouvez utiliser ce musc pour empêcher quiconque de vous pister par des moyens ordinaires ou magiques jusqu’à votre prochain repos."
+					}
+				]
+			}
+		]
 	},
 	"core_consumable_wingsprout": {
-		"name": "Pousse-aile"
+		"name": "Pousse-aile",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Vous gagnez des ailes magiques qui vous permettent de voler pendant un nombre de minutes égal à votre niveau."
+					}
+				]
+			}
+		]
 	},
 	"core_consumable_jar_of_lost_voices": {
-		"name": "Bocal des voix perdues"
+		"name": "Bocal des voix perdues",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Vous pouvez ouvrir ce pot pour libérer un écho assourdissant de voix pendant un nombre de minutes égal à votre Instinct. Les créatures à portée Loin qui ne sont pas préparées à ce bruit subissent 6d8 dégâts magiques."
+					}
+				]
+			}
+		]
 	},
 	"core_consumable_dragonbloom_tea": {
-		"name": "Thé de fleur-dragon"
+		"name": "Thé de fleur-dragon",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Vous pouvez boire ce thé pour déchaîner un souffle de feu. Faites un jet d’Instinct contre tous les adversaires devant vous à portée Proche. Les cibles contre lesquelles vous réussissez subissent d20 dégâts physiques en utilisant votre Maîtrise."
+					}
+				]
+			}
+		]
 	},
 	"core_consumable_bridge_seed": {
-		"name": "Graine-pont"
+		"name": "Graine-pont",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "D’épaisses lianes poussent depuis votre position jusqu’à un point de votre choix à portée Loin, ce qui vous permet de grimper dessus ou de les traverser. Les lianes se dissipent à votre prochain repos court."
+					}
+				]
+			}
+		]
 	},
 	"core_consumable_sleeping_sap": {
-		"name": "Sève soporifique"
+		"name": "Sève soporifique",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Vous pouvez boire cette potion pour vous endormir et profiter d’une nuit de repos complète. Vous effacez tout votre Stress au réveil."
+					}
+				]
+			}
+		]
 	},
 	"core_consumable_feast_of_xuria": {
-		"name": "Festin de Xuria"
+		"name": "Festin de Xuria",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Vous pouvez manger ce repas pour effacer tous vos PV et tout votre Stress, et gagner 1d4 Espoirs."
+					}
+				]
+			}
+		]
 	},
 	"core_consumable_bonding_honey": {
-		"name": "Miel de lien"
+		"name": "Miel de lien",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Ce miel permet de coller deux objets ensemble de façon permanente."
+					}
+				]
+			}
+		]
 	},
 	"core_consumable_shrinking_potion": {
-		"name": "Potion de rétrécissement"
+		"name": "Potion de rétrécissement",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Vous pouvez boire cette potion pour réduire votre taille de moitié jusqu’à ce que vous choisissiez de quitter cette forme ou jusqu’à votre prochain repos. Sous cette forme, vous avez un bonus de +2 en Agilité et un malus de -1 à votre Maîtrise."
+					}
+				]
+			}
+		]
 	},
 	"core_consumable_growing_potion": {
-		"name": "Potion de croissance"
+		"name": "Potion de croissance",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Vous pouvez boire cette potion pour doubler votre taille jusqu’à ce que vous choisissiez de quitter cette forme ou jusqu’à votre prochain repos. Sous cette forme, vous avez un bonus de +2 en Puissance et un bonus de +1 à votre Maîtrise."
+					}
+				]
+			}
+		]
 	},
 	"core_consumable_knowledge_stone": {
-		"name": "Pierre de savoir"
+		"name": "Pierre de savoir",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Si vous mourez en tenant cette pierre, un allié peut prendre une carte de votre équipement pour la placer dans son équipement ou son coffre. Après qu’il a pris ce savoir, la pierre s’effrite."
+					}
+				]
+			}
+		]
 	},
 	"core_consumable_sweet_moss": {
-		"name": "Mousse douce"
+		"name": "Mousse douce",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Vous pouvez consommer cette mousse pendant un repos pour effacer 1d10 PV ou 1d10 Stress."
+					}
+				]
+			}
+		]
 	},
 	"core_consumable_blinding_orb": {
-		"name": "Orbe aveuglant"
+		"name": "Orbe aveuglant",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Vous pouvez activer cet orbe pour créer un éclair de lumière vive. Toutes les cibles à portée Proche deviennent Vulnérables jusqu’à ce qu’elles cochent des PV."
+					}
+				]
+			}
+		]
 	},
 	"core_consumable_death_tea": {
-		"name": "Thé de mort"
+		"name": "Thé de mort",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Après avoir bu ce thé, vous tuez instantanément votre cible quand vous réussissez une attaque de façon critique. Si vous ne réussissez pas d’attaque critique avant votre prochain repos long, vous mourez."
+					}
+				]
+			}
+		]
 	},
 	"core_consumable_mirror_of_marigold": {
-		"name": "Miroir de souci"
+		"name": "Miroir de souci",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Quand vous subissez des dégâts, vous pouvez dépenser 1 Espoir pour annuler ces dégâts, après quoi le miroir se brise."
+					}
+				]
+			}
+		]
 	},
 	"core_consumable_stardrop": {
-		"name": "Goutte d’étoile"
+		"name": "Goutte d’étoile",
+		"features": [
+			{
+				"description": [
+					{
+						"paragraph": "Vous pouvez utiliser cette goutte d’étoile pour invoquer une pluie de comètes qui inflige 8d20 dégâts physiques à toutes les cibles à portée Très loin."
+					}
+				]
+			}
+		]
 	}
 }

@@ -143,6 +143,10 @@ test('GET /api/srd/<kind>/<id> in French returns the file object unchanged plus 
 				delete body.features;
 				delete expected.features;
 			}
+			// us-223: items, consumables and rules are translated too; compare the rest
+			if (['consumables', 'items', 'rules'].includes(kind)) {
+				for (const k of ['features', 'description']) { delete body[k]; delete expected[k]; }
+			}
 			assert.deepEqual(body, expected);
 			const en = await (await get(`/api/srd/${kind}/${e.id}`, 'en')).json();
 			assert.deepEqual(en, { ...e, nameLocalized: enName(kind, e) });

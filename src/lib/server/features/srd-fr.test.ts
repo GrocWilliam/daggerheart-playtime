@@ -5,6 +5,9 @@ import { frEntries, listSrd, localizedSrd, sameShape, SRD_KINDS, TRANSLATED_FIEL
 /** Kinds (and ids, by filter) whose translation is complete. Translation stories fill it in. */
 const DONE: Partial<Record<SrdKind, (id: string) => boolean>> = {
 	'domain-cards': () => true,
+	items: () => true,
+	consumables: () => true,
+	rules: () => true,
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
