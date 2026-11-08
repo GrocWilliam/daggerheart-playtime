@@ -104,8 +104,9 @@ test('changing a count updates the budget, over budget is flagged, removing upda
 	const before = await budget(p);
 	const color = () => scene(p).locator('[data-testid=encounter-budget]').evaluate((e) => getComputedStyle(e).color);
 	const normal = await color();
-	const card = scene(p).locator('[data-testid=encounter-adversary]').first();
 	const name = (await stored(c, s)).adversaries[0].name;
+	const byName = (n) => scene(p).locator('[data-testid=encounter-adversary]').filter({ hasText: new RegExp('^\\s*' + n.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ' ×') }).first();
+	const card = byName(name);
 	await card.locator('input[type=number]').fill('30');
 	await press(p, card.getByRole('button', { name: /update/i }));
 	const enc = await stored(c, s);
@@ -116,7 +117,7 @@ test('changing a count updates the budget, over budget is flagged, removing upda
 	assert.ok(after.spent > after.budget);
 	assert.notEqual(await color(), normal, 'over budget is visibly flagged');
 	// remove
-	const target = scene(p).locator('[data-testid=encounter-adversary]').filter({ hasText: name }).first();
+	const target = byName(name);
 	await press(p, target.getByRole('button', { name: /remove/i }));
 	const enc2 = await stored(c, s);
 	assert.ok(!enc2.adversaries.some((a) => a.name === name));

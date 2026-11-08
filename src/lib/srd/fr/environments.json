@@ -314,5 +314,231 @@
         "text": "Quand les PJ entrent dans le col, activez le compte à rebours. Quand il se déclenche, tous les personnages qui traversent le col doivent réussir un jet de réaction de Puissance, sinon ils cochent un Stress. Un PJ portant des vêtements adaptés au froid extrême a l'avantage à ces jets. _Quelles parties du corps des PJ s'engourdissent en premier ? Comment tentent-ils de se garder au chaud en avançant ?_"
       }
     ]
+  },
+  "env_burning_heart_of_the_woods": {
+    "name": "Cœur ardent des bois",
+    "description": "Une épaisse cendre indigo emplit l'air autour d'un arbre colossal couvert de mousse, qui brûle éternellement de flammes d'un bleu maladif.",
+    "impulses": "Imposer un rythme étrange que tous suivent, corrompre les bois",
+    "potential_adversaries": "Bêtes (Ours, Serpent de verre), Élémentaires (Étincelle élémentaire), Défenseurs verdoyants (Dryade, Tréant de chêne, Chevalier cerf)",
+    "feature": [
+      {
+        "name": "Foyer de magie chaotique - Passive",
+        "question": "Qu'est-ce que cela fait de manier la magie dans ce lieu touché par le chaos ? Que craignez-vous qu'il arrive si vous perdez le contrôle du sort ?",
+        "text": "Quand un PJ effectue un jet de sort, il doit lancer deux dés de Peur et garder le meilleur résultat. _Qu'est-ce que cela fait de manier la magie dans ce lieu touché par le chaos ? Que craignez-vous qu'il arrive si vous perdez le contrôle du sort ?_"
+      },
+      {
+        "name": "La flamme indigo - Passive",
+        "question": "Quelle secte de Déchus a corrompu ces bois ? Qu'a-t-elle déjà fait du bois maudit et de la sève de cet arbre ?",
+        "text": "Les PJ qui s'approchent de l'arbre central peuvent faire un jet de Connaissance pour tenter d'identifier la magie qui a consumé cet environnement. _Quelle secte de Déchus a corrompu ces bois ? Qu'a-t-elle déjà fait du bois maudit et de la sève de cet arbre ?_\n\n- **En cas de réussite** : ils apprennent trois des détails ci-dessous. En cas de réussite avec Peur, ils en apprennent deux.\n- **En cas d'échec** : ils peuvent cocher un Stress pour en apprendre un et obtenir l'avantage au prochain jet d'action pour examiner cet environnement.\n- **Détails :** il s'agit d'un effet de la magie des Déchus. La corruption se propage par la mousse cendrée. Elle ne peut être purifiée que par un rituel de magie de la nature avec un compte à rebours de progression (8)."
+      },
+      {
+        "name": "Vignes agrippantes - Action",
+        "question": "Quels souvenirs douloureux les vignes font-elles remonter à la surface en transperçant la chair ?",
+        "text": "Des vignes animées, hérissées d'épines, jaillissent des sous-bois pour piéger les PJ. Une cible doit réussir un jet de réaction d'Agilité, sinon elle devient _Entravée_ et _Vulnérable_ jusqu'à ce qu'elle se libère, ce qui retire les deux états, grâce à un jet de Finesse ou de Puissance réussi ou en infligeant 10 dégâts aux vignes. Quand la cible fait un jet pour s'échapper, elle subit **1d8+4** dégâts physiques et perd un Espoir. _Quels souvenirs douloureux les vignes font-elles remonter à la surface en transperçant la chair ?_"
+      },
+      {
+        "name": "Créatures de charbon - Action",
+        "question": "Ces animaux sont-ils réels, consumés par la flamme, ou de simples créations de la magie corruptrice ?",
+        "text": "Des animaux difformes, enveloppés de flammes indigo, piétinent un point de votre choix. Toutes les cibles à portée proche de ce point doivent faire un jet de réaction d'Agilité. Celles qui échouent subissent **3d12+3** dégâts physiques. Celles qui réussissent subissent la moitié des dégâts. _Ces animaux sont-ils réels, consumés par la flamme, ou de simples créations de la magie corruptrice ?_"
+      },
+      {
+        "name": "Cendres suffocantes - Réaction : compte à rebours (Boucle 6)",
+        "question": "Quelles hallucinations la cendre provoque-t-elle ? Quel goût incongru possède-t-elle ?",
+        "text": "Quand les PJ entrent dans le Cœur ardent des bois, activez le compte à rebours. Quand il se déclenche, tous les personnages doivent faire un jet de réaction de Puissance ou d'Instinct. Les cibles qui échouent subissent **4d6+5** dégâts physiques directs. Celles qui réussissent subissent la moitié des dégâts. Des masques ou des vêtements de protection donnent l'avantage au jet de réaction. _Quelles hallucinations la cendre provoque-t-elle ? Quel goût incongru possède-t-elle ?_"
+      }
+    ]
+  },
+  "env_castle_siege": {
+    "name": "Siège de château",
+    "description": "Un siège en cours, où une force assaillante se bat pour pénétrer dans un château fortifié.",
+    "impulses": "Saigner à blanc la volonté de combattre, enfoncer les murailles, faire monter la tension",
+    "potential_adversaries": "Mercenaires (Harceleur, Mercenaire, Lame-sorcière, Maître d'armes), Forces nobles (Escouade d'archers, Conscrit, Soldat d'élite, Chevalier du royaume)",
+    "feature": [
+      {
+        "name": "Entrée secrète - Passive",
+        "question": "Comment entrent-ils sans révéler le passage aux assaillants ? Des défenseurs surveillent-ils ce chemin ?",
+        "text": "Un PJ peut trouver ou se rappeler un passage secret vers le château avec un jet d'Instinct ou de Connaissance réussi. _Comment entrent-ils sans révéler le passage aux assaillants ? Des défenseurs surveillent-ils ce chemin ?_"
+      },
+      {
+        "name": "Engins de siège (changement d'environnement) - Action",
+        "question": "Quels engins de siège sont déployés ? Sont-ils magiques, ordinaires ou un mélange des deux ? Quelles défenses les personnages doivent-ils franchir pour prendre le château d'assaut ?",
+        "text": "_Compte à rebours de conséquence (6)._ La force assaillante déploie des engins de siège pour tenter de raser les fortifications des défenseurs. Activez le compte à rebours quand le siège commence (pour un siège prolongé, faites-en plutôt un compte à rebours à long terme). Quand il se déclenche, les fortifications des défenseurs sont enfoncées et les assaillants s'y engouffrent. Vous gagnez 2 Peur, puis passez à l'environnement Bataille rangée et donnez-lui le projecteur. _Quels engins de siège sont déployés ? Sont-ils magiques, ordinaires ou un mélange des deux ? Quelles défenses les personnages doivent-ils franchir pour prendre le château d'assaut ?_"
+      },
+      {
+        "name": "Renforts ! - Action",
+        "question": "Qui prennent-ils pour cible en premier ? Quelle formation adoptent-ils ?",
+        "text": "Invoquez comme renforts un Chevalier du royaume, un nombre de Sbires de palier 3 égal au nombre de PJ, et deux adversaires de votre choix à portée lointaine d'un PJ choisi. Le Chevalier du royaume prend immédiatement le projecteur. _Qui prennent-ils pour cible en premier ? Quelle formation adoptent-ils ?_"
+      },
+      {
+        "name": "Dégâts collatéraux - Réaction",
+        "question": "Quels débris l'attaque disperse-t-elle ? Qu'est-ce que le coup brise qui ne pourra pas être facilement réparé ?",
+        "text": "Quand un adversaire est vaincu, vous pouvez **dépenser une Peur** pour qu'un tir perdu d'un engin de siège frappe un point du champ de bataille. Toutes les cibles à portée très proche de ce point doivent faire un jet de réaction d'Agilité. _Quels débris l'attaque disperse-t-elle ? Qu'est-ce que le coup brise qui ne pourra pas être facilement réparé ?_\n\n- Les cibles qui échouent subissent **3d8+3** dégâts physiques ou magiques et doivent cocher un Stress.\n- Les cibles qui réussissent doivent cocher un Stress."
+      }
+    ]
+  },
+  "env_pitched_battle": {
+    "name": "Bataille rangée",
+    "description": "Un combat massif entre deux grands groupes de combattants armés.",
+    "impulses": "S'emparer des gens, des terres et des richesses, verser le sang par cupidité et pour la gloire",
+    "potential_adversaries": "Mercenaires (Mercenaire, Harceleur, Lame-sorcière, Maître d'armes), Forces nobles (Escouade d'archers, Conscrit, Soldat d'élite, Chevalier du royaume)",
+    "feature": [
+      {
+        "name": "À la dérive sur une mer d'acier - Passive",
+        "question": "Les combattants vous prennent-ils pour l'ennemi ou pour des intrus ? Parvenez-vous à distinguer l'ami de l'ennemi dans la mêlée ?",
+        "text": "Traverser un champ de bataille en plein combat est extrêmement dangereux. Un PJ doit réussir un jet d'Agilité pour se déplacer, et ne peut aller que jusqu'à portée proche en cas de réussite. Si un adversaire est à portée de mêlée, il doit cocher un Stress pour faire un jet d'Agilité afin de se déplacer. _Les combattants vous prennent-ils pour l'ennemi ou pour des intrus ? Parvenez-vous à distinguer l'ami de l'ennemi dans la mêlée ?_"
+      },
+      {
+        "name": "Raser et piller - Action",
+        "question": "Qu'y a-t-il de précieux ici ? Qui est le plus vulnérable ?",
+        "text": "La force assaillante augmente la mise en mettant le feu, en volant un bien de valeur, en enlevant une personne importante ou en tuant la population. _Qu'y a-t-il de précieux ici ? Qui est le plus vulnérable ?_"
+      },
+      {
+        "name": "Magie de guerre - Action",
+        "question": "Quelle forme l'attaque prend-elle : boule de feu, pluie d'acide, tempête de lames ? Quel objectif tactique cette attaque doit-elle atteindre, et que se passe-t-il ensuite ?",
+        "text": "**Dépensez une Peur** quand un mage d'un camp recourt à une magie destructrice à grande échelle. Choisissez un point du champ de bataille à portée très lointaine du mage. Toutes les cibles à portée proche de ce point doivent faire un jet de réaction d'Agilité. Celles qui échouent subissent **3d12+8** dégâts magiques et doivent cocher un Stress. _Quelle forme l'attaque prend-elle : boule de feu, pluie d'acide, tempête de lames ? Quel objectif tactique cette attaque doit-elle atteindre, et que se passe-t-il ensuite ?_"
+      },
+      {
+        "name": "Renforts ! - Action",
+        "question": "Qui prennent-ils pour cible en premier ? Quelle formation adoptent-ils ?",
+        "text": "Invoquez comme renforts un Chevalier du royaume, un nombre de Sbires de palier 3 égal au nombre de PJ, et deux adversaires de votre choix à portée lointaine d'un PJ choisi. Le Chevalier du royaume prend immédiatement le projecteur. _Qui prennent-ils pour cible en premier ? Quelle formation adoptent-ils ?_"
+      }
+    ]
+  },
+  "env_chaos_realm": {
+    "name": "Royaume du chaos",
+    "description": "Un espace d'un autre monde où les lois de la réalité sont instables et dangereuses.",
+    "impulses": "Anéantir les certitudes, consumer le pouvoir, défier la logique",
+    "potential_adversaries": "Monstruosités des Royaumes extérieurs (Abomination, Corrupteur, Serviteur)",
+    "feature": [
+      {
+        "name": "Architecture impossible - Passive",
+        "question": "Qu'est-ce que cela fait de se déplacer dans un espace si étranger au Royaume mortel ? Sur quel repère ou quel point fixez-vous votre attention pour garder l'équilibre ? Quels repères bizarres traversez-vous au cours de votre voyage ?",
+        "text": "Le haut est le bas, le bas est la droite, la droite est vers les étoiles. La gravité et l'orientation elles-mêmes sont en flux, et toute tentative de se déplacer dans ce royaume est une odyssée en soi, qui exige un compte à rebours de progression (8). En cas d'échec, un PJ doit cocher un Stress en plus des autres conséquences du jet. _Qu'est-ce que cela fait de se déplacer dans un espace si étranger au Royaume mortel ? Sur quel repère ou quel point fixez-vous votre attention pour garder l'équilibre ? Quels repères bizarres traversez-vous au cours de votre voyage ?_"
+      },
+      {
+        "name": "Tout ce que vous êtes, ce lieu vous le prendra - Action : compte à rebours (Boucle 1d4)",
+        "question": "Comment ce lieu tente-t-il de vous voler ce qui fait de vous une légende ? Qu'est-ce que cela fait de se voir arracher ce pouvoir ?",
+        "text": "Activez le compte à rebours. Quand il se déclenche, tous les PJ doivent réussir un jet de réaction de Présence, sinon leur meilleur trait est temporairement réduit de **1d4**, à moins qu'ils ne cochent un nombre de Stress égal à cette valeur. Les points de trait perdus sont regagnés si le PJ obtient une réussite critique ou s'échappe du Royaume du chaos. _Comment ce lieu tente-t-il de vous voler ce qui fait de vous une légende ? Qu'est-ce que cela fait de se voir arracher ce pouvoir ?_"
+      },
+      {
+        "name": "Défaire - Action",
+        "question": "Quel aperçu d'autres mondes entrevoyez-vous pendant que ce lieu tente de vous défaire ? Quelle facette essentielle de votre personnalité cet effacement tente-t-il de gommer ?",
+        "text": "**Dépensez une Peur** pour forcer un PJ à faire un jet de réaction de Puissance. En cas d'échec, il subit **4d10** dégâts magiques directs. En cas de réussite, il doit cocher un Stress. _Quel aperçu d'autres mondes entrevoyez-vous pendant que ce lieu tente de vous défaire ? Quelle facette essentielle de votre personnalité cet effacement tente-t-il de gommer ?_"
+      },
+      {
+        "name": "Prédateurs des Royaumes extérieurs - Action",
+        "question": "Quels vestiges à moitié dévorés du monde brisé ces monstruosités rejettent-elles dans leur traque de chair vivante ? Quels reflets déchiquetés de leur ancienne humanité apercevez-vous entre deux instants de malveillance aveugle ?",
+        "text": "**Dépensez une Peur** pour invoquer une Abomination des Royaumes extérieurs, un Corrupteur des Royaumes extérieurs et **2d6** Serviteurs des Royaumes extérieurs, qui apparaissent à portée proche d'un PJ choisi au mépris de la logique et de la causalité. Donnez immédiatement le projecteur à l'un de ces adversaires, et vous pouvez **dépenser une Peur supplémentaire** pour que l'attaque standard de cet adversaire réussisse automatiquement. _Quels vestiges à moitié dévorés du monde brisé ces monstruosités rejettent-elles dans leur traque de chair vivante ? Quels reflets déchiquetés de leur ancienne humanité apercevez-vous entre deux instants de malveillance aveugle ?_"
+      },
+      {
+        "name": "Réalité désorientante - Réaction",
+        "question": "Quel moment voient-ils ? Sera-t-il difficile de s'accrocher au véritable souvenir ?",
+        "text": "Sur un résultat avec Peur, vous pouvez demander au PJ de décrire laquelle de ses peurs le Royaume du chaos évoque, tandis qu'une vision de la réalité se défait et se reconstruit sous ses yeux. Le PJ perd un Espoir. Si c'était son dernier Espoir, vous gagnez une Peur. _Quel moment voient-ils ? S'il s'agit d'un souvenir, comment ce lieu le déforme-t-il ? Sera-t-il difficile de s'accrocher au véritable souvenir ?_"
+      }
+    ]
+  },
+  "env_divine_usurpation": {
+    "name": "Usurpation divine",
+    "description": "Un rituel colossal destiné à forcer les portes des Hauts Sanctuaires et à renverser les Nouveaux Dieux eux-mêmes.",
+    "impulses": "Accumuler le pouvoir, intimider, étouffer la dissidence",
+    "potential_adversaries": "Archi-nécromancien, Soldats de choc déchus, Chasseur mortel, Oracle de la Fatalité, Zombie parfait",
+    "feature": [
+      {
+        "name": "Derniers préparatifs - Passive",
+        "question": "De quoi l'Usurpateur a-t-il encore besoin : du cœur d'un Haut Séraphin ?",
+        "text": "Quand l'environnement prend le projecteur pour la première fois, désignez un adversaire comme l'Usurpateur qui cherche à renverser les dieux. Activez un compte à rebours à long terme (8) pendant que l'Usurpateur rassemble ce dont il a besoin pour accomplir le rituel. Quand il se déclenche, donnez le projecteur à cet environnement pour utiliser la fonctionnalité « Le commencement de la fin ». Tant que cet environnement reste en jeu, vous pouvez conserver jusqu'à 15 Peur. _De quoi l'Usurpateur a-t-il encore besoin : du cœur d'un Haut Séraphin ? De la pierre d'aimant d'une ancienne porte spatiale ? De la loyauté de deux ennemis jurés ? Des larmes déchirantes d'une âme pure ?_"
+      },
+      {
+        "name": "Bénédiction divine - Passive",
+        "question": "Quel dieu vous favorise dans votre lutte contre cette usurpation ? Comment votre pouvoir renouvelé reflète-t-il son influence ?",
+        "text": "Quand un PJ obtient une réussite critique, il peut dépenser 2 Espoir pour rafraîchir une capacité normalement limitée par des utilisations (comme une fois par repos, une fois par session). _Quel dieu vous favorise dans votre lutte contre cette usurpation ? Comment votre pouvoir renouvelé reflète-t-il son influence ?_"
+      },
+      {
+        "name": "Les profanateurs affluent - Action",
+        "question": "À quel Haut Déchu ces troupes sont-elles asservies ? De la chair de quel dieu veulent-elles se repaître ?",
+        "text": "**Dépensez 2 Peur** pour invoquer **1d4+2** Soldats de choc déchus qui apparaissent à portée proche de l'Usurpateur pour appuyer son siège divin. Donnez immédiatement le projecteur aux Soldats de choc pour utiliser une action « Attaque de groupe ». _À quel Haut Déchu ces troupes sont-elles asservies ? De la chair de quel dieu veulent-elles se repaître ?_"
+      },
+      {
+        "name": "Tueur de dieux - Action",
+        "question": "Quel dieu rencontre sa fin ? Quelles sont ses dernières paroles ? Comment le nouveau pouvoir volé de l'Usurpateur se manifeste-t-il ?",
+        "text": "Si le compte à rebours du siège divin (voir « Le commencement de la fin ») s'est déclenché, vous pouvez **dépenser 3 Peur** pour décrire l'Usurpateur massacrant l'un des dieux des Hauts Sanctuaires, se repaissant de son pouvoir et gagnant en force. L'Usurpateur efface 2 PV. Augmentez sa Difficulté, ses dégâts ou son modificateur d'attaque, ou donnez-lui une nouvelle fonctionnalité du dieu tué. _Quel dieu rencontre sa fin ? Quelles sont ses dernières paroles ? Comment le nouveau pouvoir volé de l'Usurpateur se manifeste-t-il ?_"
+      },
+      {
+        "name": "Le commencement de la fin - Réaction",
+        "question": "Comment le Royaume mortel se tord-il sous la violation de l'ordre naturel ? Quels mortels assistent à ce blasphème de loin ?",
+        "text": "Quand le compte à rebours à long terme « Derniers préparatifs » se déclenche, l'Usurpateur se met à marteler les portes des Sanctuaires eux-mêmes. Activez un compte à rebours du siège divin (10). Donnez le projecteur à l'Usurpateur pour décrire son assaut et faites avancer ce compte à rebours de 1. Si l'Usurpateur subit des dégâts majeurs ou plus, faites reculer le compte à rebours de 1. Quand il se déclenche, l'Usurpateur brise la barrière entre le Royaume mortel et les Hauts Sanctuaires pour tuer les dieux et prendre leur place. Vous gagnez une Peur pour chaque PV non coché de l'Usurpateur. Vous pouvez immédiatement utiliser la fonctionnalité « Tueur de dieux » sans dépenser de Peur pour faire une action supplémentaire de MJ. _Comment le Royaume mortel se tord-il sous la violation de l'ordre naturel ? Quels mortels assistent à ce blasphème de loin ?_"
+      },
+      {
+        "name": "Nexus rituel - Réaction",
+        "question": "Quelles visions d'échecs passés vous tourmentent quand vos efforts n'aboutissent pas ? Comment l'Usurpateur déforme-t-il ces souvenirs ?",
+        "text": "Sur tout échec avec Peur contre l'Usurpateur, le PJ doit cocher **1d4** Stress à cause du contrecoup de la puissance magique. _Quelles visions d'échecs passés vous tourmentent quand vos efforts n'aboutissent pas ? Comment l'Usurpateur déforme-t-il ces souvenirs ?_"
+      }
+    ]
+  },
+  "env_imperial_court": {
+    "name": "Cour impériale",
+    "description": "Le domaine majestueux d'un empire puissant, richement décoré de trésors volés.",
+    "impulses": "Justifier et perpétuer le règne impérial, séduire les rivaux par des promesses de pouvoir et de confort",
+    "potential_adversaries": "Garde à l'épée, Courtisane, Chevalier du royaume, Monarque, Espion",
+    "feature": [
+      {
+        "name": "Tous les chemins mènent ici - Passive",
+        "question": "Comment l'usage de la langue rend-il difficile ne serait-ce que d'évoquer d'autres façons de vivre ? Quels avantages évidents de la loyauté créent des frictions quand vous tentez d'en discuter ?",
+        "text": "À la Cour impériale, un PJ a le désavantage aux jets de Présence faits pour accomplir des actions qui ne cadrent pas avec le mode de vie impérial ou qui ne soutiennent pas la domination de l'empire. _Comment l'usage de la langue rend-il difficile ne serait-ce que d'évoquer d'autres façons de vivre ? Quels avantages évidents de la loyauté créent des frictions quand vous tentez d'en discuter ?_"
+      },
+      {
+        "name": "Vassaux rivaux - Passive",
+        "question": "Quel avantage tirent-ils de la vassalité, et que leur a-t-elle coûté ? Quelle exploitation les pousse à envisager de s'opposer à l'invincible ?",
+        "text": "Les PJ peuvent trouver à la cour des sujets de l'empire, des vassaux et des solliciteurs, chacun cherchant les faveurs, la proximité du pouvoir, échangeant des services contre de la loyauté et s'élevant au-dessus des autres. Certains peuvent être prêts à tout pour saper leurs rivaux, tandis que d'autres peuvent même se montrer ouverts à des discussions frôlant la sédition. _Quel avantage tirent-ils de la vassalité, et que leur a-t-elle coûté ? Quelle exploitation les pousse à envisager de s'opposer à l'invincible ?_"
+      },
+      {
+        "name": "La gravité de l'empire - Action",
+        "question": "Que veulent les PJ si désespérément qu'ils pourraient envisager de se rallier à ce pouvoir impitoyable ? Comment les agents impériaux ont-ils découvert les plus grands désirs du PJ ?",
+        "text": "**Dépensez une Peur** pour présenter à un PJ une occasion en or ou lui offrir de satisfaire un objectif majeur en échange de son obéissance ou de son soutien à l'empire. La cible doit faire un jet de réaction de Présence. En cas d'échec, elle doit cocher tout son Stress ou accepter l'offre. Si elle a déjà coché tout son Stress, elle doit accepter l'offre ou s'exiler de l'empire. En cas de réussite, elle doit cocher **1d4** Stress, éprouvée par la tentation. _Que veulent les PJ si désespérément qu'ils pourraient envisager de se rallier à ce pouvoir impitoyable ? Comment les agents impériaux ont-ils découvert les plus grands désirs du PJ ?_"
+      },
+      {
+        "name": "Décret impérial - Action",
+        "question": "Quelle démonstration de pouvoir ou quel transfert de richesse a-t-il fallu pour accélérer ce plan ?",
+        "text": "**Dépensez une Peur** pour faire avancer de **1d4** un compte à rebours à long terme lié au programme de l'empire. S'il se déclenche, une proclamation liée à ce programme est annoncée à la cour tandis que le plan est exécuté. _Quelle démonstration de pouvoir ou quel transfert de richesse a-t-il fallu pour accélérer ce plan ? Quelles vies ont été perturbées ou bouleversées pour y parvenir ?_"
+      },
+      {
+        "name": "Des yeux partout - Réaction",
+        "question": "Comment l'empire a-t-il compromis ce témoin ? Pourquoi son premier réflexe est-il de protéger l'empire, même s'il ne le traite pas bien ?",
+        "text": "Sur un résultat avec Peur, vous pouvez **dépenser une Peur** pour qu'une personne loyale à l'empire surprenne des propos séditieux à la cour. Un PJ doit réussir un jet de réaction d'Instinct pour remarquer que le groupe a été entendu et tenter d'intercepter le témoin avant que les PJ ne soient démasqués. _Comment l'empire a-t-il compromis ce témoin ? Pourquoi son premier réflexe est-il de protéger l'empire, même s'il ne le traite pas bien ?_"
+      }
+    ]
+  },
+  "env_necromancer_s_ossuary": {
+    "name": "Ossuaire du nécromancien",
+    "description": "Une crypte poussiéreuse dotée d'une bibliothèque, de couloirs sinueux et de sarcophages en abondance, éclaboussée du sang d'envahisseurs au destin funeste.",
+    "impulses": "Déconcerter les intrus, sonder des secrets qu'il vaudrait mieux laisser enfouis, manifester la non-vie, déchaîner une marée de morts-vivants",
+    "potential_adversaries": "Cohorte de l'Archi-nécromancien (Zombie parfait, Légion de zombies)",
+    "feature": [
+      {
+        "name": "Pas un endroit pour les vivants - Passive",
+        "question": "Qu'est-ce que cela fait d'essayer de guérir dans un lieu si contraire à la vie ?",
+        "text": "Une fonctionnalité ou une action qui efface des PV exige de dépenser un Espoir pour être utilisée. Si elle coûte déjà de l'Espoir, un PJ doit dépenser un Espoir supplémentaire. _Qu'est-ce que cela fait d'essayer de guérir dans un lieu si contraire à la vie ?_"
+      },
+      {
+        "name": "Des siècles de savoir - Passive",
+        "question": "Quels sont les titres des tomes ? Sur quel projet le nécromancien travaille-t-il et que révèle-t-il de ses plans ?",
+        "text": "Un PJ peut fouiller la bibliothèque et le laboratoire et faire un jet de Connaissance pour apprendre des informations sur les arcanes, l'histoire locale et les plans du Nécromancien. _Quels sont les titres des tomes ? Sur quel projet le nécromancien travaille-t-il et que révèle-t-il de ses plans ?_"
+      },
+      {
+        "name": "Explosion de squelettes - Action",
+        "question": "Quelle ancienne architecture de squelettes est détruite ? Quels os se plantent dans votre armure ?",
+        "text": "Toutes les cibles à portée proche d'un point de votre choix dans cet environnement doivent réussir un jet de réaction d'Agilité, sinon elles subissent **4d8+8** dégâts physiques causés par des éclats d'ossements quand une partie de l'ossuaire explose autour d'elles. _Quelle ancienne architecture de squelettes est détruite ? Quels os se plantent dans votre armure ?_"
+      },
+      {
+        "name": "Aura de mort - Action",
+        "question": "Comment leur vigueur retrouvée se manifeste-t-elle ? Paraissent-ils plus vivants ou, paradoxalement, plus décomposés mais vigoureux ?",
+        "text": "Une fois par scène, lancez un **d4**. Chaque mort-vivant à portée lointaine du Nécromancien peut effacer des PV et du Stress à hauteur du résultat obtenu. Le mort-vivant choisit comment répartir ce nombre entre PV et Stress. _Comment leur vigueur retrouvée se manifeste-t-elle ? Paraissent-ils plus vivants ou, paradoxalement, plus décomposés mais vigoureux ?_"
+      },
+      {
+        "name": "Ils ne cessent d'arriver ! - Action",
+        "question": "Qui étaient ces gens avant de devenir les pions du nécromancien ? Quels vestiges de ces vies les héros peuvent-ils encore voir ?",
+        "text": "**Dépensez une Peur** pour invoquer **1d6** Zombies putréfiés, deux Zombies parfaits ou une Légion de zombies, qui apparaissent à portée proche d'un PJ choisi. _Qui étaient ces gens avant de devenir les pions du nécromancien ? Quels vestiges de ces vies les héros peuvent-ils encore voir ?_"
+      }
+    ]
   }
 }
