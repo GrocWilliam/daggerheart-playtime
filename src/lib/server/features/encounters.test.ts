@@ -11,6 +11,7 @@ import {
 	maxHp,
 	battleDamageSchema,
 	battleHpSchema,
+	battleAddSchema,
 	type Adjustment
 } from './encounters';
 import { adversariesByTier } from './srd';
@@ -103,6 +104,15 @@ describe('battle rules', () => {
 		expect(m({ ...ok, amount: 0 })).toBe('amount must be an integer from 1 to 999');
 		expect(m({ ...ok, amount: 1000 })).toBe('amount must be an integer from 1 to 999');
 	});
+	it('battleAddSchema messages', () => {
+		const m = (v: unknown) => battleAddSchema.safeParse(v).error?.issues[0].message;
+		expect(battleAddSchema.safeParse({ adversaryId: 'adv_giant_rat', count: 20 }).success).toBe(true);
+		expect(m({ adversaryId: 'a', count: 0 })).toBe('count must be an integer from 1 to 20');
+		expect(m({ adversaryId: 'a', count: 21 })).toBe('count must be an integer from 1 to 20');
+		expect(m({ adversaryId: 1, count: 1 })).toBe('adversaryId must be a string');
+		expect(m(null)).toBe('body must be a JSON object');
+	});
+
 	it('battleHpSchema messages', () => {
 		const m = (v: unknown) => battleHpSchema.safeParse(v).error?.issues[0].message;
 		const ok = { adversaryId: 'adv_giant_rat', index: 0, delta: -1 };

@@ -204,6 +204,12 @@ export const battleHpSchema = z.object(
 );
 export type BattleHp = z.infer<typeof battleHpSchema>;
 
+export const battleAddSchema = z.object(
+	{ adversaryId: z.string({ error: 'adversaryId must be a string' }), count: intField('count', 1, 20) },
+	{ error: OBJECT_ERROR }
+);
+export type BattleAdd = z.infer<typeof battleAddSchema>;
+
 async function conn() {
 	const { getDrizzle } = await import('../db');
 	return getDrizzle();
@@ -284,6 +290,29 @@ export async function generateSceneEncounter(campaignId: string, sceneId: string
 	enc.adversaries.sort((a, b) => costOf(a.role, 1, partySize) - costOf(b.role, 1, partySize));
 	await db.update(scenes).set({ encounter: enc }).where(eq(scenes.id, sceneId));
 	return enc;
+}
+
+/** Adds copies of an SRD adversary (any tier) to the stored encounter, keeping marks; recomputes budget and spent. */
+export async function addSceneAdversaries(campaignId: string, sceneId: string, body: unknown): Promise<Encounter> {
+	const f = parse(battleAddSchema, body);
+	const db = await conn();
+	return db.transaction(async (tx) => {
+		const encounter = await lockEncounter(tx, campaignId, sceneId);
+		const srd = adversariesByTier(undefined, 'en').find((a) => a.id === f.adversaryId);
+		if (!srd) throw new ApiError(400, `adversaries contains an unknown adversary: ${f.adversaryId}`);
+		const list = encounter.adversaries.map(({ id, name, role, count }) => ({ id, name, role, count }));
+		const found = list.find((a) => a.id === f.adversaryId);
+		if (found) found.count += f.count;
+		else list.push({ id: srd.id, name: srd.name, role: srd.role, count: f.count });
+		const e = evaluate(encounter.partySize, encounter.adjustments, list);
+		const adversaries: EncounterEntry[] = e.adversaries.map((a) => {
+			const marks = resizeMarks(encounter.adversaries.find((o) => o.id === a.id)?.hpMarked, a.count);
+			return marks ? { ...a, hpMarked: marks } : a;
+		});
+		const next: Encounter = { ...encounter, ...e, adversaries };
+		await tx.update(scenes).set({ encounter: next }).where(eq(scenes.id, sceneId));
+		return next;
+	});
 }
 
 /** Replaces the adversaries of the stored encounter; recomputes budget and spent and resizes kept marks. */
