@@ -238,9 +238,10 @@
 		</thead>
 		<tbody>
 			{#each c.items as it (it.id)}
+				{@const shown = it.srdId && data.itemPicks[it.srdId]?.nameLang === data.lang ? data.itemPicks[it.srdId].name : it.name}
 				<tr data-testid="item-row">
 					<td>
-						<span data-testid="item" lang={it.srdId ? data.storedItemLang : undefined}>{it.name} ×{n(it.quantity)}</span>
+						<span data-testid="item" lang={shown === it.name ? undefined : data.lang}>{shown}{shown === it.name ? '' : ` (${it.name})`} ×{n(it.quantity)}</span>
 						{#if it.srdId && data.itemPicks[it.srdId]}
 							{@const pick = data.itemPicks[it.srdId]}
 							<Help id={it.srdId} name={pick.name} nameLang={pick.nameLang} lang={data.lang} lines={pick.lines} />

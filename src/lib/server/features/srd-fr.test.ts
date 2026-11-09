@@ -2,22 +2,6 @@
 import { describe, expect, it } from 'vitest';
 import { frEntries, listSrd, localizedSrd, sameShape, SRD_KINDS, TRANSLATED_FIELDS, type SrdKind } from './srd';
 
-/** Kinds (and ids, by filter) whose translation is complete. Translation stories fill it in. */
-const DONE: Partial<Record<SrdKind, (id: string) => boolean>> = {
-	classes: () => true,
-	subclasses: () => true,
-	ancestries: () => true,
-	communities: () => true,
-	'domain-cards': () => true,
-	items: () => true,
-	consumables: () => true,
-	rules: () => true,
-	weapons: () => true,
-	armors: () => true,
-	adversaries: () => true,
-	environments: () => true,
-};
-
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const english = (kind: SrdKind, id: string): Record<string, any> | undefined => localizedSrd(kind, id, 'en')?.element;
 
@@ -39,6 +23,20 @@ const empty = (v: unknown): boolean =>
 /** Dice expressions and standalone integers of a text. */
 const numbers = (s: string): string[] => s.match(/\d+d\d+(\+\d+)?|\b\d+\b/g) ?? [];
 
+// Every kind, every id is accepted (no allow-list):
+// adversaries: () => true
+// environments: () => true
+// 'domain-cards': () => true
+// domains: () => true
+// rules: () => true
+// consumables: () => true
+// items: () => true
+// armors: () => true
+// weapons: () => true
+// subclasses: () => true
+// classes: () => true
+// communities: () => true
+// ancestries: () => true
 describe.each(SRD_KINDS)('French overlay %s', (kind) => {
 	const fr = frEntries(kind);
 	it('is a JSON object', () => {
@@ -59,10 +57,9 @@ describe.each(SRD_KINDS)('French overlay %s', (kind) => {
 		expect(bad).toEqual([]);
 	});
 
-	const done = DONE[kind];
-	if (done) {
-		it('translates every field of every done element, keeping dice and numbers', () => {
-			const ids = listSrd(kind, 'en').map((e) => e.id).filter(done);
+	{
+		it('translates every field of every element, keeping dice and numbers', () => {
+			const ids = listSrd(kind, 'en').map((e) => e.id);
 			const problems: string[] = [];
 			for (const id of ids) {
 				const entry = fr[id];

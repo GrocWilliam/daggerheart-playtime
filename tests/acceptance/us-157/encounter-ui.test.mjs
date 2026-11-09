@@ -61,7 +61,11 @@ test('Generate encounter shows adversaries with their stats and the budget', asy
 		assert.ok(text.includes(String(srd.stress)), 'Stress');
 		for (const n of String(srd.thresholds).match(/\d+/g) ?? []) assert.ok(text.includes(n), `threshold ${n}`);
 		assert.ok(text.includes(srd.attack), 'attack');
-		assert.ok(text.includes(srd.damage), 'damage');
+		const [dice, ...kinds] = srd.damage.trim().split(/\s+/);
+			assert.ok(text.includes(dice), 'damage dice');
+			// the page shows the type spelled out ("physical or magical" for phy/mag)
+			const full = { phy: 'physical', mag: 'magical' };
+			for (const k of (kinds[0] ?? '').toLowerCase().split('/')) if (full[k]) assert.ok(text.includes(full[k]), `damage type ${k}`);
 		const details = card.locator('details');
 		assert.ok((await details.count()) >= 1, 'features in <details>');
 		const featName = srd.feature[0].name.split(' - ')[0];
