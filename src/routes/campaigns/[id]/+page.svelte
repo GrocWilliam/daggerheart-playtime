@@ -50,6 +50,34 @@
 	const cs = $derived(data.scenes.find((x) => x.status === 'current'));
 </script>
 
+{#snippet battleUnits(a: Adversary & { units: { index: number; marked: number; max: number; defeated: boolean }[] }, sceneId: string)}
+	{#each a.units as u (u.index)}
+		{@const label = a.count > 1 ? `${a.name} ${u.index + 1}` : a.name}
+		<div class="mt-2 flex flex-wrap gap-2 {u.defeated ? 'text-muted' : ''}" data-testid="battle-unit" data-adversary={a.id} data-index={u.index}>
+			<span lang={a.nameLang}>{label}</span>
+			<span data-testid="unit-hp">{u.marked}/{u.max}</span>
+			{#if u.defeated}<span data-testid="unit-defeated">{t('battle.defeated')}</span>{:else}
+				<form use:enhance={busy} class="mb-0! flex gap-2 bg-transparent! border-0! p-0!" method="POST" action="?/battleDamage">
+					<input type="hidden" name="sceneId" value={sceneId} />
+					<input type="hidden" name="adversaryId" value={a.id} />
+					<input type="hidden" name="index" value={u.index} />
+					<input class="w-20" type="number" name="amount" min="1" max="999" required data-testid="unit-damage" aria-label={translate(data.lang, 'battle.amount', { name: label })} />
+					<button type="submit" data-testid="unit-hit">{t('battle.hit')}</button>
+				</form>
+			{/if}
+			{#each [{ id: 'unit-hp-plus', d: 1, k: 'battle.hpUp', tx: '+1' }, { id: 'unit-hp-minus', d: -1, k: 'battle.hpDown', tx: '-1' }] as b (b.id)}
+				<form use:enhance={busy} class="mb-0! bg-transparent! border-0! p-0!" method="POST" action="?/battleHp">
+					<input type="hidden" name="sceneId" value={sceneId} />
+					<input type="hidden" name="adversaryId" value={a.id} />
+					<input type="hidden" name="index" value={u.index} />
+					<input type="hidden" name="delta" value={b.d} />
+					<button type="submit" class="min-h-11 min-w-11" data-testid={b.id} aria-label={translate(data.lang, b.k, { name: label })}>{b.tx}</button>
+				</form>
+			{/each}
+		</div>
+	{/each}
+{/snippet}
+
 {#snippet adversaryStats(a: Adversary)}
 	<p><strong lang={a.nameLang}>{a.name}</strong> ×{a.count} · <span lang={data.lang}>{cap(t(`adversary.role.${a.role}`))}</span></p>
 	<ul class="list-none pl-0!">
@@ -289,6 +317,7 @@
 		{#each cs.encounter.adversaries as a (a.id)}
 			<div class="mb-2 rounded-[0.5rem] border-2 border-solid border-muted p-3" data-testid="encounter-adversary">
 				{@render adversaryStats(a)}
+				{@render battleUnits(a, cs.id)}
 			</div>
 		{/each}
 	{/if}

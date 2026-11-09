@@ -260,5 +260,10 @@
 	"srd.field.experience": "Expérience",
 	"srd.field.impulses": "Impulsions",
 	"srd.field.potential_adversaries": "Adversaires potentiels",
-	"srd.field.description": "Description"
+	"srd.field.description": "Description",
+	"battle.defeated": "Vaincu",
+	"battle.amount": "Dégâts infligés à {name}",
+	"battle.hit": "Infliger",
+	"battle.hpUp": "Marquer un PV sur {name}",
+	"battle.hpDown": "Effacer un PV sur {name}"
 }

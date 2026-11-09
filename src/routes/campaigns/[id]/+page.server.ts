@@ -3,7 +3,7 @@ import { listSrd, localizedSrd, pickOf, type Line } from '$lib/server/features/s
 import type { Scene } from '$lib/server/features/scenes';
 import type { LootEntry } from '$lib/server/features/loot';
 import type { Lang } from '$lib/i18n';
-import { partyDefaults, ADJUSTMENTS, type Encounter } from '$lib/server/features/encounters';
+import { partyDefaults, ADJUSTMENTS, marksOf, type Encounter } from '$lib/server/features/encounters';
 import { trackerFieldSchema } from '$lib/server/features/characters';
 import { splitDamage } from './damage';
 type Actions = import('./$types').Actions;
@@ -64,18 +64,20 @@ function lootView(l: LootEntry, lang: Lang) {
 type Feature = { name: string; text: string };
 
 /** An encounter entry with its SRD stats in `lang` (the stored English name and role stay in the database). */
-function adversaryView(a: { id: string; name: string; role: string; count: number; cost: number }, lang: Lang) {
+function adversaryView(a: { id: string; name: string; role: string; count: number; cost: number; hpMarked?: number[] }, lang: Lang) {
 	const r = localizedSrd('adversaries', a.id, lang);
 	const d = (r?.element ?? {}) as Record<string, unknown>;
 	const s = (k: string) => String(d[k] ?? '');
 	const featLang: Lang = r?.langs.feature ?? SOURCE_LANG;
 	const features = ((d.feature as Feature[] | undefined) ?? []).map((f) => ({ name: f.name, text: f.text, lang: featLang }));
 	const dmg = splitDamage(s('damage'));
+	const max = Number(s('hp'));
+	const units = marksOf(a).map((marked, index) => ({ index, marked, max, defeated: max > 0 && marked === max }));
 	return {
 		id: a.id, name: r ? String(d.nameLocalized) : a.name, nameLang: r?.langs.name ?? SOURCE_LANG,
 		role: s('role') || a.role, count: a.count, cost: a.cost,
 		attack: s('attack'), attackLang: r?.langs.attack ?? SOURCE_LANG, dice: dmg.dice, damageType: dmg.type,
-		difficulty: s('difficulty'), hp: s('hp'), stress: s('stress'), thresholds: s('thresholds'), features
+		difficulty: s('difficulty'), hp: s('hp'), stress: s('stress'), thresholds: s('thresholds'), features, units
 	};
 }
 
@@ -257,6 +259,14 @@ add: async (e) => {
 		const gone = text(f.get('remove'));
 		const counts = f.getAll('id').map((id, i) => ({ id: text(id), count: Number(f.getAll('count')[i]) })).filter((a) => a.id !== gone);
 		return run(e, 'PATCH', encPath(e, f), { adversaries: counts });
+	},
+	battleDamage: async (e) => {
+		const f = await e.request.formData();
+		return run(e, 'POST', `${encPath(e, f)}/damage`, { adversaryId: text(f.get('adversaryId')), index: Number(f.get('index')), amount: Number(f.get('amount')) });
+	},
+	battleHp: async (e) => {
+		const f = await e.request.formData();
+		return run(e, 'POST', `${encPath(e, f)}/hp`, { adversaryId: text(f.get('adversaryId')), index: Number(f.get('index')), delta: Number(f.get('delta')) });
 	},
 	deleteEncounter: async (e) => {
 		const f = await e.request.formData();

@@ -260,5 +260,10 @@
 	"srd.field.experience": "experience",
 	"srd.field.impulses": "impulses",
 	"srd.field.potential_adversaries": "potential adversaries",
-	"srd.field.description": "description"
+	"srd.field.description": "description",
+	"battle.defeated": "Defeated",
+	"battle.amount": "Damage to {name}",
+	"battle.hit": "Apply damage",
+	"battle.hpUp": "Mark one HP on {name}",
+	"battle.hpDown": "Clear one HP on {name}"
 }

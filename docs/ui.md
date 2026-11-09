@@ -60,11 +60,14 @@ Test ids: `tunnel-progress` (step indicator), `tunnel-next`, `tunnel-back`, `tun
 - Reference: static, no forms; empty sections are not shown.
 - Load errors (unknown id, server) go through `+error.svelte`, which translates by status.
 
+## Battle tracker (Run step)
+Each `encounter-adversary` card of the current scene lists one `battle-unit` row per copy (name with copy number when count > 1, `unit-hp` `marked/max`). A live copy has a damage form (`unit-damage`, `unit-hit`); a defeated one shows `unit-defeated` and is muted. `unit-hp-plus`/`unit-hp-minus` (44px) always adjust one HP. Forms post to `?/battleDamage` and `?/battleHp`. The Build step has none.
+
 ## Test ids
 Stable: keep them when restyling.
 
 Existing:
-`build`, `run`, `campaign-link`, `campaign-name`, `campaign-run-link`, `card`, `character-card`, `character-name`, `condition-hidden`, `condition-restrained`, `condition-vulnerable`, `current-scene`, `divider`, `domain`, `down`, `encounter-adversary`, `encounter-budget`, `evasion`, `experience`, `fear`, `gold`, `help`, `inventory`, `item`, `item-row`, `journal`, `journal-entry`, `lang-en`, `lang-fr`, `language-switcher`, `loot-entry`, `nav-home`, `nav-reference`, `notes`, `notes-status`, `party-member`, `ref-item`, `scene`, `scene-environment`, `scene-notes`, `scene-status`, `secondary-blocked`, `sigil`, `srd-licence`, `thresholds`.
+`build`, `run`, `campaign-link`, `campaign-name`, `campaign-run-link`, `card`, `character-card`, `character-name`, `condition-hidden`, `condition-restrained`, `condition-vulnerable`, `current-scene`, `divider`, `domain`, `down`, `encounter-adversary`, `encounter-budget`, `evasion`, `experience`, `fear`, `gold`, `help`, `inventory`, `item`, `item-row`, `journal`, `journal-entry`, `lang-en`, `lang-fr`, `language-switcher`, `loot-entry`, `nav-home`, `nav-reference`, `notes`, `notes-status`, `party-member`, `ref-item`, `scene`, `scene-environment`, `scene-notes`, `scene-status`, `secondary-blocked`, `sigil`, `srd-licence`, `thresholds`, `battle-unit`, `unit-hp`, `unit-defeated`, `unit-damage`, `unit-hit`, `unit-hp-plus`, `unit-hp-minus`.
 
 Dynamic: `ref-<kind>` (reference sections), `step-<k>` (`step-build`, `step-run`), `trait-<k>` (one per trait), `<name>-pips` (e.g. `fear-pips`), tracker values by key (e.g. `hp`, `hope`), subclass/ancestry/community from `Chosen`, and the equipment blocks `primary-weapon`, `secondary-weapon`, `equipped-armor`.
 
