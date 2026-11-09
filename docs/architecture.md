@@ -18,10 +18,10 @@
 
 ## UI patterns
 - Every POST form uses `use:enhance={busy}`; `busy` also closes an enclosing `<dialog>` on success.
-- Creation forms for campaign, scene, item, experience and domain card open in `src/lib/components/Modal.svelte` (`kind`, `title`, children). It renders the opener `new-<kind>` (`href="?new=<kind>"`, other params kept) and `<dialog data-testid="modal-<kind>">`, open when `?new=<kind>` or `form.modal === kind`. Actions behind a modal return `fail(status, { error: <catalog key>, modal: '<kind>', values })`. No other dialog implementation.
+- Creation forms for campaign, scene, item, experience and domain card open in `src/lib/components/Modal.svelte` (`kind`, `title`, children). It renders the opener `new-<kind>` (`href="?new=<kind>"`, other params kept) and `<dialog data-testid="modal-<kind>">`, open when `?new=<kind>` or `form.modal === kind`. Actions behind a modal return `fail(status, { error: <catalog key>, modal: '<kind>', values })`. No other dialog implementation, except help panels below.
 - Character creation is the tunnel at `/campaigns/:id/characters/new?step=1..4`: steps 1–3 are GET forms carrying values in the query string, step 4 posts to the route's `default` action, which calls `POST /api/campaigns/:id/characters`. Validation reuses `createFields`/`thresholdsOk` from `characters.ts`; errors come back as `?step=N&invalid=<field>`. No server-side draft state.
-- SRD help text is shown through `src/lib/components/Help.svelte` with `lines: Line[]`.
-- Inline on purpose: journal quick add, encounter Generate, loot Roll, character edit.
+- Help text (glossary, catalog or SRD `lines: Line[]`) is shown only through `src/lib/components/Help.svelte`: a "?" button (`help-open`, `popovertarget`) and a native `popover="auto"` panel (`help-panel`, id from `$props.id()`) with a `help-close` button. Native attributes only, no click handlers: it works without JavaScript, never submits an enclosing form, one panel open at a time, and opening it does not move the page. Its markup is inline-level only (it sits inside `<p>` and `<form>`). Panels look like the `Modal` panel: centred, `bg-surface`, backdrop `bg-bg` at 0.8, at most 32rem wide and 80dvh high.
+- Inline on purpose: journal quick add, encounter Generate, loot Roll, character edit, and the `<details>` feature lists of scenes, encounters and loot.
 - Layout is mobile first with `md:` (768px) and `lg:` (1024px) only, plus `min-[600px]:` for the modal size; no `max-width` queries. Every page has no sideways scroll and 44×44 px targets at 375, 768, 1024 and 1180 px wide; nothing depends on hover.
 
 ## Data model

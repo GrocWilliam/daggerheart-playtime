@@ -27,7 +27,7 @@ test('architecture.md has the SRD content and its translation section with its r
     'TRANSLATED_FIELDS[kind]',
     'src/lib/srd/fr/TERMS.md',
     'data-testid="srd-licence"',
-    'SRD help text is shown through',
+    'Help text (glossary, catalog or SRD',
   ]) {
     assert.ok(architecture.includes(s), `missing ${s}`);
   }
