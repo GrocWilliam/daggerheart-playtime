@@ -4,7 +4,7 @@ import { characters, scenes } from '../schema';
 import { ApiError, parse } from '../errors';
 import { intField, OBJECT_ERROR } from '../../utils/validation';
 import { seededRandom } from '../../utils/prng';
-import { adversariesByTier } from './srd';
+import { adversariesByTier, getAdversary } from './srd';
 
 export const ADJUSTMENTS = ['easier', 'damageBoost', 'harder'] as const;
 export type Adjustment = (typeof ADJUSTMENTS)[number];
@@ -76,7 +76,8 @@ export async function campaignPartyDefaults(campaignId: string) {
 }
 
 export type PoolAdversary = { id: string; name: string; role: string };
-export type EncounterEntry = PoolAdversary & { count: number; cost: number };
+/** `hpMarked`, when present, holds marked HP per copy (`length === count`); absent means all zeros. */
+export type EncounterEntry = PoolAdversary & { count: number; cost: number; hpMarked?: number[] };
 export type Encounter = {
 	partySize: number;
 	tier: number;
@@ -154,6 +155,55 @@ const countsSchema = z.object(
 	{ error: OBJECT_ERROR }
 );
 
+/** HP marked by `amount` damage against `thresholds` ("Major/Severe", Severe may be "None"; anything else: 1). */
+export function damageMarks(amount: number, thresholds: string): number {
+	if (!(amount > 0)) return 0;
+	const m = /^(\d+)\/(\d+|None)$/.exec(thresholds);
+	if (!m) return 1;
+	const major = Number(m[1]);
+	if (amount < major) return 1;
+	if (m[2] === 'None') return 2;
+	return amount < Number(m[2]) ? 2 : 3;
+}
+
+/** Marked HP per copy of an entry (zeros when never marked). */
+export function marksOf(entry: { count: number; hpMarked?: number[] }): number[] {
+	return entry.hpMarked ?? Array(entry.count).fill(0);
+}
+
+/** Cuts or pads marks with zeros to `count` copies; `undefined` stays `undefined`. */
+export function resizeMarks(marks: number[] | undefined, count: number): number[] | undefined {
+	if (!marks) return undefined;
+	return Array.from({ length: count }, (_, i) => marks[i] ?? 0);
+}
+
+/** HP maximum of an SRD adversary (English data). */
+export function maxHp(id: string): number {
+	return Number(getAdversary(id, 'en')!.hp);
+}
+
+const INDEX_ERROR = 'index must be a copy of that adversary';
+const battleTarget = {
+	adversaryId: z.string({ error: 'adversaryId must be a string' }),
+	index: z.number({ error: INDEX_ERROR }).refine((n) => Number.isSafeInteger(n) && n >= 0, { error: INDEX_ERROR })
+};
+
+export const battleDamageSchema = z.object(
+	{ ...battleTarget, amount: intField('amount', 1, 999) },
+	{ error: OBJECT_ERROR }
+);
+export type BattleDamage = z.infer<typeof battleDamageSchema>;
+
+const DELTA_ERROR = 'delta must be 1 or -1';
+export const battleHpSchema = z.object(
+	{
+		...battleTarget,
+		delta: z.number({ error: DELTA_ERROR }).refine((n) => n === 1 || n === -1, { error: DELTA_ERROR })
+	},
+	{ error: OBJECT_ERROR }
+);
+export type BattleHp = z.infer<typeof battleHpSchema>;
+
 async function conn() {
 	const { getDrizzle } = await import('../db');
 	return getDrizzle();
@@ -167,6 +217,58 @@ async function sceneRow(campaignId: string, sceneId: string) {
 		.where(and(eq(scenes.id, sceneId), eq(scenes.campaignId, campaignId)));
 	if (!row) throw new ApiError(404, 'scene not found');
 	return { db, encounter: row.encounter as Encounter | null };
+}
+
+type Db = Awaited<ReturnType<typeof conn>>;
+type Tx = Parameters<Parameters<Db['transaction']>[0]>[0];
+
+/** Locks the scene row and returns its encounter; 404 when the scene or its encounter is absent. */
+async function lockEncounter(tx: Tx, campaignId: string, sceneId: string): Promise<Encounter> {
+	const [row] = await tx
+		.select({ encounter: scenes.encounter })
+		.from(scenes)
+		.where(and(eq(scenes.id, sceneId), eq(scenes.campaignId, campaignId)))
+		.for('update');
+	if (!row) throw new ApiError(404, 'scene not found');
+	if (!row.encounter) throw new ApiError(404, 'encounter not found');
+	return row.encounter as Encounter;
+}
+
+/** Locks the encounter and finds the targeted copy: its entry, marks, SRD element and HP maximum. */
+async function targetCopy(tx: Tx, campaignId: string, sceneId: string, adversaryId: string, index: number) {
+	const encounter = await lockEncounter(tx, campaignId, sceneId);
+	const srd = getAdversary(adversaryId, 'en');
+	if (!srd) throw new ApiError(400, `adversaries contains an unknown adversary: ${adversaryId}`);
+	const entry = encounter.adversaries.find((a) => a.id === adversaryId);
+	if (!entry || index >= entry.count) throw new ApiError(400, INDEX_ERROR);
+	return { encounter, entry, marks: marksOf(entry), max: maxHp(adversaryId), thresholds: String(srd.thresholds ?? '') };
+}
+
+/** Marks HP on one copy from a damage amount; returns the HP actually marked and the encounter. */
+export async function damageSceneAdversary(campaignId: string, sceneId: string, body: unknown) {
+	const f = parse(battleDamageSchema, body);
+	const db = await conn();
+	return db.transaction(async (tx) => {
+		const { encounter, entry, marks, max, thresholds } = await targetCopy(tx, campaignId, sceneId, f.adversaryId, f.index);
+		const hpHit = Math.max(0, Math.min(damageMarks(f.amount, thresholds), max - marks[f.index]));
+		marks[f.index] += hpHit;
+		entry.hpMarked = marks;
+		await tx.update(scenes).set({ encounter }).where(eq(scenes.id, sceneId));
+		return { hpHit, encounter };
+	});
+}
+
+/** Marks (+1) or clears (-1) one HP on one copy, within 0..hp; returns the encounter. */
+export async function markSceneAdversary(campaignId: string, sceneId: string, body: unknown): Promise<Encounter> {
+	const f = parse(battleHpSchema, body);
+	const db = await conn();
+	return db.transaction(async (tx) => {
+		const { encounter, entry, marks, max } = await targetCopy(tx, campaignId, sceneId, f.adversaryId, f.index);
+		marks[f.index] = Math.min(max, Math.max(0, marks[f.index] + f.delta));
+		entry.hpMarked = marks;
+		await tx.update(scenes).set({ encounter }).where(eq(scenes.id, sceneId));
+		return encounter;
+	});
 }
 
 /** Generates and stores (replacing any previous) the scene's encounter. */
@@ -184,22 +286,28 @@ export async function generateSceneEncounter(campaignId: string, sceneId: string
 	return enc;
 }
 
-/** Replaces the adversaries of the stored encounter; recomputes budget and spent. */
+/** Replaces the adversaries of the stored encounter; recomputes budget and spent and resizes kept marks. */
 export async function patchSceneEncounter(campaignId: string, sceneId: string, body: unknown) {
 	const { adversaries } = parse(countsSchema, body);
-	const { db, encounter } = await sceneRow(campaignId, sceneId);
-	if (!encounter) throw new ApiError(404, 'encounter not found');
-	const all = new Map(adversariesByTier(undefined, 'en').map((a) => [a.id, a]));
-	const merged = new Map<string, number>();
-	for (const a of adversaries) {
-		if (!all.has(a.id)) throw new ApiError(400, `adversaries contains an unknown adversary: ${a.id}`);
-		merged.set(a.id, (merged.get(a.id) ?? 0) + a.count);
-	}
-	const list = [...merged].map(([id, count]) => ({ id, name: all.get(id)!.name, role: all.get(id)!.role, count }));
-	const e = evaluate(encounter.partySize, encounter.adjustments, list);
-	const next: Encounter = { ...encounter, ...e };
-	await db.update(scenes).set({ encounter: next }).where(eq(scenes.id, sceneId));
-	return { ...next, over: next.spent > next.budget };
+	const db = await conn();
+	return db.transaction(async (tx) => {
+		const encounter = await lockEncounter(tx, campaignId, sceneId);
+		const all = new Map(adversariesByTier(undefined, 'en').map((a) => [a.id, a]));
+		const merged = new Map<string, number>();
+		for (const a of adversaries) {
+			if (!all.has(a.id)) throw new ApiError(400, `adversaries contains an unknown adversary: ${a.id}`);
+			merged.set(a.id, (merged.get(a.id) ?? 0) + a.count);
+		}
+		const list = [...merged].map(([id, count]) => ({ id, name: all.get(id)!.name, role: all.get(id)!.role, count }));
+		const e = evaluate(encounter.partySize, encounter.adjustments, list);
+		const adversariesWithMarks: EncounterEntry[] = e.adversaries.map((a) => {
+			const marks = resizeMarks(encounter.adversaries.find((o) => o.id === a.id)?.hpMarked, a.count);
+			return marks ? { ...a, hpMarked: marks } : a;
+		});
+		const next: Encounter = { ...encounter, ...e, adversaries: adversariesWithMarks };
+		await tx.update(scenes).set({ encounter: next }).where(eq(scenes.id, sceneId));
+		return { ...next, over: next.spent > next.budget };
+	});
 }
 
 export async function deleteSceneEncounter(campaignId: string, sceneId: string): Promise<void> {

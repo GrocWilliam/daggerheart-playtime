@@ -4,7 +4,7 @@
 
 ## Layers and dependencies
 - `src/routes/api/**/+server.ts` → `src/lib/server/features/*` → `src/lib/server/{db,schema,errors}.ts`.
-- Pages (`src/routes/**/+page.server.ts`) read and write through the JSON API with `fetch`; they may import Zod schemas, pure rule helpers and SRD lookups (`getSrd`, `localizedSrd`, `pickOf`, `pickOptions`, `idByName`) from features, never queries. The home page's direct `createCampaign`/`listCampaigns` calls are the one existing exception; add no others.
+- Pages (`src/routes/**/+page.server.ts`) read and write through the JSON API with `fetch`; they may import Zod schemas, pure rule helpers (e.g. `marksOf`, `partyDefaults`) and SRD lookups (`getSrd`, `localizedSrd`, `pickOf`, `pickOptions`, `idByName`, `adversariesByTier`) from features, never queries. The home page's direct `createCampaign`/`listCampaigns` calls are the one existing exception; add no others.
 - A feature never imports another feature's helpers; shared code goes to `src/lib/server/errors.ts` or the pure `src/lib/utils/`.
 - Route-local pure helpers live next to their route (e.g. `campaigns/[id]/characters/new/tunnel.ts`) with a colocated test.
 
@@ -16,13 +16,21 @@
 - Every rendered piece of SRD text carries the `lang` of the text shown (`Line = { text, lang }`, `nameLang`); no literal `lang="en"` on SRD content. The only English block on a French page is the footer licence notice (`data-testid="srd-licence"`).
 - `src/lib/server/features/srd-fr.test.ts` enforces completeness and shape of the French files.
 
+## Encounters and battle tracking
+- `src/lib/server/features/encounters.ts` owns everything stored in `scenes.encounter`: generation, budget (`evaluate`), counts, and battle state. Routes under `api/campaigns/[id]/scenes/[sceneId]/encounter`: `POST`/`PATCH`/`DELETE` on the encounter, `POST damage` (`{adversaryId, index, amount}` → `{hpHit, encounter}`), `POST hp` (`{adversaryId, index, delta}` → encounter), `POST adversaries` (`{adversaryId, count}` → 201 encounter).
+- Every write that reads the stored encounter first locks the scene row (`.for('update')` in a transaction).
+- `EncounterEntry.hpMarked?: number[]` holds marked HP per copy (`length === count`, each in `0..hp`). Absent means all zeros; it is written only when a copy is first marked, so unmarked encounters keep their JSON. Count changes (`PATCH`, `POST adversaries`) cut or pad it with zeros (`resizeMarks`); regeneration resets it. A copy is defeated when marked equals the SRD `hp`.
+- HP maximum and damage thresholds are read from the English SRD at request time (`getAdversary(id, 'en')`), never copied into the stored entry. `damageMarks(amount, thresholds)` is the only damage-to-HP rule.
+- The Build step edits counts; battle tracking (damage, ±1 HP, adding adversaries) is on the Run step only.
+
 ## UI patterns
-- Every POST form uses `use:enhance={busy}`; `busy` also closes an enclosing `<dialog>` on success.
-- Creation forms for campaign, scene, item, experience and domain card open in `src/lib/components/Modal.svelte` (`kind`, `title`, children). It renders the opener `new-<kind>` (`href="?new=<kind>"`, other params kept) and `<dialog data-testid="modal-<kind>">`, open when `?new=<kind>` or `form.modal === kind`. Actions behind a modal return `fail(status, { error: <catalog key>, modal: '<kind>', values })`. No other dialog implementation, except help panels below.
+- Every POST form uses `use:enhance={busy}` and works without JavaScript; `busy` also closes an enclosing `<dialog>` on success.
+- Creation forms for campaign, scene, item, experience and domain card open in `src/lib/components/Modal.svelte` (`kind`, `title`, children). It renders the opener `new-<kind>` (`href="?new=<kind>"`, other params kept) and `<dialog data-testid="modal-<kind>">`, open when `?new=<kind>` or `form.modal === kind`. Actions behind a modal return `fail(status, { error: <catalog key>, modal: '<kind>', values })`. No other dialog implementation.
 - Character creation is the tunnel at `/campaigns/:id/characters/new?step=1..4`: steps 1–3 are GET forms carrying values in the query string, step 4 posts to the route's `default` action, which calls `POST /api/campaigns/:id/characters`. Validation reuses `createFields`/`thresholdsOk` from `characters.ts`; errors come back as `?step=N&invalid=<field>`. No server-side draft state.
-- Help text (glossary, catalog or SRD `lines: Line[]`) is shown only through `src/lib/components/Help.svelte`: a "?" button (`help-open`, `popovertarget`) and a native `popover="auto"` panel (`help-panel`, id from `$props.id()`) with a `help-close` button. Native attributes only, no click handlers: it works without JavaScript, never submits an enclosing form, one panel open at a time, and opening it does not move the page. Its markup is inline-level only (it sits inside `<p>` and `<form>`). Panels look like the `Modal` panel: centred, `bg-surface`, backdrop `bg-bg` at 0.8, at most 32rem wide and 80dvh high.
-- Inline on purpose: journal quick add, encounter Generate, loot Roll, character edit, and the `<details>` feature lists of scenes, encounters and loot.
-- Layout is mobile first with `md:` (768px) and `lg:` (1024px) only, plus `min-[600px]:` for the modal size; no `max-width` queries. Every page has no sideways scroll and 44×44 px targets at 375, 768, 1024 and 1180 px wide; nothing depends on hover.
+- SRD help text is shown through `src/lib/components/Help.svelte` with `lines: Line[]`.
+- Inline on purpose: journal quick add, encounter Generate, loot Roll, character edit, battle damage/HP/add on the Run step.
+- Selects listing SRD names on the DM screen use `<option value={id} lang={nameLang} label={name}></option>` (empty body), so page text never contains other adversaries' or environments' names.
+- Layout is mobile first with `md:` (768px) and `lg:` (1024px) only, plus `min-[600px]:` for the modal size; no `max-width` queries. Every page has no sideways scroll and 44×44 px targets at 360, 375, 768, 1024 and 1180 px wide; nothing depends on hover.
 
 ## Data model
-Unchanged by the UI: campaigns, characters (with items, experiences, cards), scenes (encounter, loot), journal entries. Stored SRD references are ids or English names. Schema changes follow `CLAUDE.md` (Drizzle, `drizzle/`, frozen `migrations/`).
+Campaigns, characters (with items, experiences, cards), scenes (encounter jsonb including per-copy `hpMarked`, loot jsonb), journal entries. Stored SRD references are ids or English names. Schema changes follow `CLAUDE.md` (Drizzle, `drizzle/`, frozen `migrations/`); jsonb shape changes need no migration but must keep older stored values readable (new fields optional, absent = default).

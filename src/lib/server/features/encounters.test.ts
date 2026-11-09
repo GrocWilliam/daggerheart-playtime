@@ -1,5 +1,18 @@
 import { describe, it, expect } from 'vitest';
-import { budgetFor, costOf, partyDefaults, generateRequestSchema, generateEncounter, type Adjustment } from './encounters';
+import {
+	budgetFor,
+	costOf,
+	partyDefaults,
+	generateRequestSchema,
+	generateEncounter,
+	damageMarks,
+	marksOf,
+	resizeMarks,
+	maxHp,
+	battleDamageSchema,
+	battleHpSchema,
+	type Adjustment
+} from './encounters';
 import { adversariesByTier } from './srd';
 
 const one = (...roles: string[]) => roles.map((role) => ({ role, count: 1 }));
@@ -47,5 +60,57 @@ describe('encounters', () => {
 						expect(generateEncounter({ partySize: p, tier, adjustments, seed }, pool)).toEqual(e);
 					}
 			}
+	});
+});
+
+describe('battle rules', () => {
+	it('damageMarks with 8/15', () => {
+		const cases: [number, number][] = [[0, 0], [-3, 0], [1, 1], [7, 1], [8, 2], [14, 2], [15, 3], [40, 3]];
+		for (const [a, m] of cases) expect(damageMarks(a, '8/15'), String(a)).toBe(m);
+	});
+	it('damageMarks with 4/None', () => {
+		const cases: [number, number][] = [[0, 0], [3, 1], [4, 2], [30, 2]];
+		for (const [a, m] of cases) expect(damageMarks(a, '4/None'), String(a)).toBe(m);
+	});
+	it('damageMarks with None or anything else', () => {
+		const cases: [number, number][] = [[0, 0], [1, 1], [50, 1]];
+		for (const [a, m] of cases) expect(damageMarks(a, 'None'), String(a)).toBe(m);
+		expect(damageMarks(5, '')).toBe(1);
+	});
+	it('marksOf', () => {
+		const e = { id: 'adv_giant_rat', name: 'Giant Rat', role: 'Minion', count: 3, cost: 1 };
+		expect(marksOf(e)).toEqual([0, 0, 0]);
+		expect(marksOf({ ...e, hpMarked: [1, 0, 1] })).toEqual([1, 0, 1]);
+	});
+	it('resizeMarks', () => {
+		expect(resizeMarks([1, 2, 3], 2)).toEqual([1, 2]);
+		expect(resizeMarks([1], 3)).toEqual([1, 0, 0]);
+		expect(resizeMarks(undefined, 4)).toBeUndefined();
+	});
+	it('maxHp reads the English SRD', () => {
+		expect(maxHp('adv_acid_burrower')).toBe(8);
+		expect(maxHp('adv_giant_rat')).toBe(1);
+	});
+	it('battleDamageSchema messages', () => {
+		const m = (v: unknown) => battleDamageSchema.safeParse(v).error?.issues[0].message;
+		const ok = { adversaryId: 'adv_giant_rat', index: 0, amount: 5 };
+		expect(m(ok)).toBeUndefined();
+		expect(m([])).toBe('body must be a JSON object');
+		expect(m({ ...ok, adversaryId: 3 })).toBe('adversaryId must be a string');
+		expect(m({ ...ok, index: -1 })).toBe('index must be a copy of that adversary');
+		expect(m({ ...ok, index: 1.5 })).toBe('index must be a copy of that adversary');
+		expect(m({ ...ok, index: '0' })).toBe('index must be a copy of that adversary');
+		expect(m({ ...ok, amount: 0 })).toBe('amount must be an integer from 1 to 999');
+		expect(m({ ...ok, amount: 1000 })).toBe('amount must be an integer from 1 to 999');
+	});
+	it('battleHpSchema messages', () => {
+		const m = (v: unknown) => battleHpSchema.safeParse(v).error?.issues[0].message;
+		const ok = { adversaryId: 'adv_giant_rat', index: 0, delta: -1 };
+		expect(m(ok)).toBeUndefined();
+		expect(m(null)).toBe('body must be a JSON object');
+		expect(m({ ...ok, adversaryId: undefined })).toBe('adversaryId must be a string');
+		expect(m({ ...ok, index: -2 })).toBe('index must be a copy of that adversary');
+		expect(m({ ...ok, delta: 2 })).toBe('delta must be 1 or -1');
+		expect(m({ ...ok, delta: 0 })).toBe('delta must be 1 or -1');
 	});
 });
