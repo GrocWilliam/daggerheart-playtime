@@ -437,22 +437,61 @@ export async function getCharacter(id: string) {
 	return jsonOf(await db.select(characterSelect).from(characters).where(eq(characters.id, id)));
 }
 
+export type CharacterJson = NonNullable<ReturnType<typeof characterJson>>;
+
+const clampEvasion = (n: number) => Math.min(30, Math.max(0, n));
+
+/** Thresholds, Evasion and armor slots that follow from an armor or level change (pure). Explicit fields are merged by the caller. */
+export function recomputeOnPatch(
+	cur: CharacterJson,
+	p: PatchCharacter
+): Partial<{ majorThreshold: number; severeThreshold: number; evasion: number; armorSlots: number }> {
+	const level = p.level ?? cur.level;
+	if (typeof p.armorId === 'string') {
+		const a = armorStats(p.armorId, level);
+		return {
+			majorThreshold: a.majorThreshold,
+			severeThreshold: a.severeThreshold,
+			armorSlots: a.armorMax,
+			evasion: clampEvasion(cur.evasion + armorEvasionModifier(p.armorId) - armorEvasionModifier(cur.armorId))
+		};
+	}
+	if (p.armorId === null) {
+		if (!cur.armorId) return {};
+		return {
+			majorThreshold: level,
+			severeThreshold: 2 * level,
+			armorSlots: 0,
+			evasion: clampEvasion(cur.evasion - armorEvasionModifier(cur.armorId))
+		};
+	}
+	if (p.level !== undefined && p.level !== cur.level) {
+		if (cur.armorId) {
+			const a = armorStats(cur.armorId, p.level);
+			return { majorThreshold: a.majorThreshold, severeThreshold: a.severeThreshold };
+		}
+		if (cur.majorThreshold === cur.level && cur.severeThreshold === 2 * cur.level)
+			return { majorThreshold: p.level, severeThreshold: 2 * p.level };
+	}
+	return {};
+}
+
 /** Applies the supplied PATCH fields; lowering a max also lowers the marked value. Undefined when not found. */
-export async function patchCharacter(id: string, p: PatchCharacter) {
+export async function patchCharacter(id: string, p: PatchCharacter, current?: CharacterJson) {
+	const cur = current ?? (await getCharacter(id));
+	if (!cur) return undefined;
+	const r = recomputeOnPatch(cur, p);
+	const q: PatchCharacter = {
+		...p,
+		majorThreshold: p.majorThreshold ?? r.majorThreshold,
+		severeThreshold: p.severeThreshold ?? r.severeThreshold,
+		evasion: p.evasion ?? r.evasion,
+		armorSlots: p.armorSlots ?? r.armorSlots
+	};
+	p = q;
 	const set: Record<string, unknown> = {};
 	const plain = ['name', 'class', 'level', 'evasion', 'majorThreshold', 'severeThreshold', 'notes', 'subclass', 'ancestry', 'community', 'primaryWeapon', 'secondaryWeapon', 'armorId'] as const;
 	for (const k of plain) if (p[k] !== undefined) set[k] = p[k];
-	if (p.armorId) {
-		const level = p.level ?? (await getCharacter(id))?.level;
-		if (level === undefined) return undefined;
-		const a = armorStats(p.armorId, level);
-		set.majorThreshold = p.majorThreshold ?? a.majorThreshold;
-		set.severeThreshold = p.severeThreshold ?? a.severeThreshold;
-		if (p.armorSlots === undefined) {
-			set.armorMax = a.armorMax;
-			set.armorMarked = sql`LEAST(${characters.armorMarked}, ${a.armorMax}::int)`;
-		}
-	}
 	if (p.traits) Object.assign(set, p.traits);
 	if (p.maxHp !== undefined) {
 		set.hpMax = p.maxHp;
