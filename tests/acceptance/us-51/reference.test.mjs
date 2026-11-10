@@ -56,30 +56,30 @@ for (const lang of ['en', 'fr']) {
 	});
 }
 
-test('every ref-item has a helper (details data-testid=help)', async () => {
+test('every ref-item has a helper (data-testid=help)', async () => {
 	const ctx = await browser.newContext();
 	const p = await ctx.newPage();
 	await p.goto(`${BASE}/reference`);
 	const n = await p.locator('[data-testid="ref-item"]').count();
 	assert.ok(n > 500);
-	const without = await p.locator('[data-testid="ref-item"]').evaluateAll((els) => els.filter((e) => !e.querySelector('details[data-testid="help"]')).length);
+	const without = await p.locator('[data-testid="ref-item"]').evaluateAll((els) => els.filter((e) => !e.querySelector('[data-testid="help"]')).length);
 	assert.equal(without, 0, 'items without helper');
 	await ctx.close();
 });
 
-test('helpers open and explain the element with lang="en" SRD text; summary is at least 44x44', async () => {
+test('helpers open and explain the element with lang="en" SRD text; help-open is at least 44x44', async () => {
 	for (const lang of ['en', 'fr']) {
 		const ctx = await browser.newContext();
 		await ctx.addCookies([{ name: 'lang', value: lang, url: BASE }]);
 		const p = await ctx.newPage();
 		await p.goto(`${BASE}/reference?kind=weapons&q=sword`);
 		const item = p.locator('[data-testid="ref-item"]').first();
-		const sum = item.locator('details[data-testid="help"] > summary');
+		const sum = item.locator('[data-testid="help"] [data-testid="help-open"]');
 		const box = await sum.boundingBox();
-		assert.ok(box.width >= 44 && box.height >= 44, `${lang} summary ${box.width}x${box.height}`);
+		assert.ok(box.width >= 44 && box.height >= 44, `${lang} help-open ${box.width}x${box.height}`);
 		await sum.click();
-		assert.equal(await item.locator('details[data-testid="help"]').evaluate((d) => d.open), true);
-		const en = await item.locator(`details[data-testid="help"] [lang="${lang}"]`).first().innerText();
+		assert.equal(await item.locator('[data-testid="help"]').locator('[data-testid="help-panel"]').evaluate((e) => e.matches(':popover-open')), true);
+		const en = await item.locator(`[data-testid="help"] [lang="${lang}"]`).first().innerText();
 		assert.ok(en.trim().length > 5, `SRD text in a lang="${lang}" block`);
 		await ctx.close();
 	}

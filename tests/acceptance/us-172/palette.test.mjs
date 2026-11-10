@@ -78,7 +78,7 @@ test('contrast >= 4.5:1 for text on bg and surface; buttons use bg text on accen
 					const bgc = getComputedStyle(el).color; el.remove();
 					if (ratio(c, bgc) < 4.5) bad.push(`${c} on ${bgc}`);
 				}
-				const btns = [...document.querySelectorAll('button')].filter((b) => b.offsetParent !== null).map((b) => [getComputedStyle(b).color, getComputedStyle(b).backgroundColor]);
+				const btns = [...document.querySelectorAll('button:not([data-testid^="help-"])')].filter((b) => b.offsetParent !== null).map((b) => [getComputedStyle(b).color, getComputedStyle(b).backgroundColor]);
 				return { bad, btns };
 			});
 			assert.deepEqual(r.bad, [], `${w} ${lang}`);

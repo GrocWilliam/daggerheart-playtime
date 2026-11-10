@@ -31,7 +31,7 @@ async function interfaceTexts(page) {
 		const out = [];
 		const skip = (el) => el.closest('[data-testid="campaign-link"]');
 		for (const el of document.querySelectorAll('h1,h2,h3,h4,h5,h6,label,button,summary,legend,th,[role="button"]')) {
-			if (skip(el) || el.closest('[lang="en"]:not(html)') || el.matches('[data-testid="help"] > summary')) continue; // US-45
+			if (skip(el) || el.closest('[lang="en"]:not(html)') || el.matches('[data-testid="help-open"]')) continue; // US-45
 			const clone = el.cloneNode(true);
 			clone.querySelectorAll('input,select,textarea').forEach((i) => i.remove());
 			const t = clone.textContent.replace(/\s+/g, ' ').trim();

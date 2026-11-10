@@ -7,9 +7,9 @@
 # (4) sheet add form: a select "from the SRD" next to the free-text name input, with 4 optgroups
 #     (weapons, armors, consumables, items), every SRD entry as an option (value = id), labels in the page language (en + fr);
 # (5) submitting the form with only the SRD select (no JS) adds the item (name in English, srdId) to the sheet and the API;
-# (6) an item with an srdId shows its helper (details data-testid=help, data-help=<id>, summary "?" named
+# (6) an item with an srdId shows its helper (data-testid=help, data-help=<id>, help-open "?" named
 #     "Help: ..." / "Aide : ..."), a free-text item has none;
-# (7) opened helper: >=44x44 target, SRD text of the entry in a lang="en" block, no JavaScript;
+# (7) opened helper (us-246: help-panel popover, closed with help-close): >=44x44 target, SRD text of the entry in a lang="en" block, no JavaScript;
 # (8) 375px wide: no horizontal overflow, the SRD select is within the viewport.
 # Builds the app, starts `node build` on a free port with PGLITE_DATA_DIR=memory:// (no Docker).
 set -uo pipefail

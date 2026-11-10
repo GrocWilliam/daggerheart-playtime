@@ -104,7 +104,7 @@ for (const [name, w, h] of [['phone', 375, 667], ['desktop', 1280, 800]]) {
 			const pick = (el, props) => Object.fromEntries(props.map((p) => [p, cs(el)[p]]));
 			const rect = (el) => el.getBoundingClientRect();
 			const trk = q('[data-testid=hp]').closest('form');
-			const trkBtns = [...trk.querySelectorAll('button')];
+			const trkBtns = [...trk.querySelectorAll('button:not([data-testid^="help-"])')];
 			const stats = q('[data-testid=evasion]').closest('ul');
 			const edit = q('form[action="?/edit"]');
 			const kids = [...edit.children];
@@ -279,8 +279,8 @@ test('focus outline stays teal, 2px, offset 2px on the character sheet', async (
 	const ctx = await browser.newContext({ viewport: { width: 375, height: 667 } });
 	const page = await ctx.newPage();
 	await page.goto(BASE + `/characters/${id}`);
-	for (const sel of ['[data-testid=hp]', 'form[action="?/edit"] button', 'form[action="?/edit"] input[name=name]']) {
-		const el = sel === '[data-testid=hp]' ? page.locator(sel).locator('xpath=..').locator('button').first() : page.locator(sel).first();
+	for (const sel of ['[data-testid=hp]', 'form[action="?/edit"] button:not([data-testid^="help-"])', 'form[action="?/edit"] input[name=name]']) {
+		const el = sel === '[data-testid=hp]' ? page.locator(sel).locator('xpath=..').locator('button:not([data-testid^="help-"])').first() : page.locator(sel).first();
 		await el.focus();
 		await page.keyboard.press('Shift+Tab');
 		await page.keyboard.press('Tab');

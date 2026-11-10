@@ -223,7 +223,7 @@ const LAYOUT = `(() => {
 			const scope = span.closest('[data-testid="character-card"]') || document;
 			const pips = scope.querySelector('[data-testid="' + t + '-pips"]');
 			const form = span.closest('form');
-			const btns = [...form.querySelectorAll('button')];
+			const btns = [...form.querySelectorAll('button:not([data-testid^="help-"])')];
 			const r = (e) => e.getBoundingClientRect();
 			out.push({
 				t, text: span.textContent, buttons: btns.length, pips: !!pips,

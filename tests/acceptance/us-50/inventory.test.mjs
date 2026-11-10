@@ -151,16 +151,16 @@ test('an item with an srdId shows its helper, a free-text item does not (en + fr
 		const { ctx, page } = await open(lang, `/characters/${id}`);
 		const rows = page.locator('[data-testid="item"]');
 		assert.equal(await rows.count(), 2);
-		const h = page.locator(`details[data-testid="help"][data-help="${e.id}"]`);
+		const h = page.locator(`[data-testid="help"][data-help="${e.id}"]`);
 		assert.equal(await h.count(), 1);
-		const sm = h.locator('> summary');
+		const sm = h.locator('[data-testid="help-open"]');
 		assert.equal(norm(await sm.textContent()), '?');
 		const label = await sm.getAttribute('aria-label');
 		const prefix = lang === 'fr' ? 'Aide : ' : 'Help: ';
 		assert.ok(label.startsWith(prefix) && (label.includes(en(e)) || label.includes(nameIn(e, lang))), label);
 		// the free-text item has no helper next to it
 		const lucky = page.locator('tr:has([data-testid="item"]):has-text("Lucky coin")');
-		assert.equal(await lucky.locator('details[data-testid="help"]').count(), 0);
+		assert.equal(await lucky.locator('[data-testid="help"]').count(), 0);
 		await ctx.close();
 	}
 });
@@ -172,18 +172,19 @@ test('opened item helper: 44x44 target and the SRD text in a lang="en" block, wi
 	for (const lang of ['en', 'fr']) {
 		const { ctx, page } = await open(lang, `/characters/${id}`, { js: false });
 		for (const e of picks) {
-			const h = page.locator(`details[data-testid="help"][data-help="${e.id}"]`);
-			const box = await h.locator('> summary').boundingBox();
+			const h = page.locator(`[data-testid="help"][data-help="${e.id}"]`);
+			const box = await h.locator('[data-testid="help-open"]').boundingBox();
 			assert.ok(box.width >= 44 && box.height >= 44, `${e.id} target ${box.width}x${box.height}`);
-			assert.equal(await h.evaluate((d) => d.open), false);
-			await h.locator('> summary').click();
-			assert.equal(await h.evaluate((d) => d.open), true);
+			assert.equal(await h.locator('[data-testid="help-panel"]').evaluate((e) => e.matches(':popover-open')), false);
+			await h.locator('[data-testid="help-open"]').click();
+			assert.equal(await h.locator('[data-testid="help-panel"]').evaluate((e) => e.matches(':popover-open')), true);
 			const frLines = lang === 'fr' ? linesFr(e) : null;
 			const blocks = h.locator(frLines ? '[lang="fr"]' : '[lang="en"]');
 			assert.ok((await blocks.count()) >= 1, 'lang block');
 			const txt = norm((await blocks.allTextContents()).join(' '));
 			for (const l of frLines ?? lines(e)) assert.ok(txt.includes(norm(l)), `${e.id}: ${l.slice(0, 50)}`);
-			await h.locator('> summary').click();
+			await h.locator('[data-testid="help-close"]').click();
+			assert.equal(await h.locator('[data-testid="help-panel"]').evaluate((e) => e.matches(':popover-open')), false);
 		}
 		await ctx.close();
 	}

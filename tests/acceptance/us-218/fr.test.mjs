@@ -47,10 +47,10 @@ test('fr /reference: help of a CODEX card shows its lines with lang="fr"', async
 	const p = await ctx.newPage();
 	const r = await p.goto(`${BASE}/reference?kind=domain-cards&q=${encodeURIComponent(c.name['en-US'])}`);
 	assert.equal(r.status(), 200);
-	const details = p.locator(`[data-testid="ref-domain-cards"] [data-testid="ref-item"] details[data-testid="help"][data-help="${c.id}"]`);
+	const details = p.locator(`[data-testid="ref-domain-cards"] [data-testid="ref-item"] [data-testid="help"][data-help="${c.id}"]`);
 	assert.equal(await details.count(), 1);
 	const lines = await details.evaluate((d) =>
-		[...d.querySelectorAll('[lang]')].filter((e) => !e.closest('summary') && !e.querySelector('[lang]')).map((e) => ({ lang: e.getAttribute('lang'), text: e.textContent.trim() })).filter((l) => l.text));
+		[...d.querySelectorAll('[lang]')].filter((e) => !e.closest('[data-testid="help-open"]') && !e.querySelector('[lang]')).map((e) => ({ lang: e.getAttribute('lang'), text: e.textContent.trim() })).filter((l) => l.text));
 	assert.ok(lines.length >= 2, JSON.stringify(lines));
 	for (const l of lines) assert.equal(l.lang, 'fr', JSON.stringify(l));
 	await ctx.close();

@@ -87,7 +87,7 @@ for (const [name, w, h, cols] of [['phone', 375, 667, 1], ['tablet', 700, 800, 1
 			const cards = [...document.querySelectorAll('[data-testid=character-card]')];
 			const card = cards[0], party = card.parentElement;
 			const trk = q('[data-testid=hp]', card).closest('form');
-			const trkBtns = [...trk.querySelectorAll('button')];
+			const trkBtns = [...trk.querySelectorAll('button:not([data-testid^="help-"])')];
 			const fearForm = q('[data-testid=fear]').closest('form');
 			const pipInfo = (tid) => {
 				const box = q(`[data-testid=${tid}-pips]`);

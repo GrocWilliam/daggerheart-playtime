@@ -52,7 +52,7 @@ const CAMPAIGN = { path: () => `/campaigns/${camp}`, scope: (p) => p.locator('[d
 const SHEET = { path: () => `/characters/${rook}`, scope: (p) => p.locator('body'), fear: false,
 	ids: ['hp', 'stress', 'hope', 'armor', 'evasion', 'thresholds', 'level', 'vulnerable', 'restrained', 'hidden', 'gold'] };
 const PAGES = { 'campaign page': CAMPAIGN, 'sheet': SHEET };
-const helper = (scope, id) => scope.locator(`details[data-testid="help"][data-help="${id}"]`).first();
+const helper = (scope, id) => scope.locator(`[data-testid="help"][data-help="${id}"]`).first();
 
 for (const [label, P] of Object.entries(PAGES)) {
 	test(`${label}: every tracker and term (${P.ids.join(', ')}${P.fear ? ', fear' : ''}) has a glossary helper, with no JavaScript`, async () => {
@@ -67,13 +67,13 @@ for (const [label, P] of Object.entries(PAGES)) {
 		}
 	});
 
-	test(`${label}: the helper is a <details> whose <summary> is "?" named "Help: <name>" / "Aide : <nom>"`, async () => {
+	test(`${label}: the helper's help-open button is "?" named "Help: <name>" / "Aide : <nom>"`, async () => {
 		for (const lang of ['en', 'fr']) {
 			const { ctx, page } = await open(lang, P.path());
 			const ids = P.fear ? [...P.ids, 'fear'] : P.ids;
 			for (const id of ids) {
-				const s = helper(page.locator('body'), id).locator('> summary');
-				assert.equal(await s.count(), 1, `${id} summary`);
+				const s = helper(page.locator('body'), id).locator('[data-testid="help-open"]');
+				assert.equal(await s.count(), 1, `${id} help-open`);
 				assert.equal(norm(await s.textContent()), '?', `${id} text`);
 				const aria = await s.getAttribute('aria-label');
 				assert.ok(aria && eqName(aria, helpName(id, lang)), `${lang} ${id}: aria-label "${aria}" should be "${helpName(id, lang)}"`);
@@ -82,10 +82,10 @@ for (const [label, P] of Object.entries(PAGES)) {
 		}
 	});
 
-	test(`${label}: each helper summary is at least 44 x 44 px`, async () => {
+	test(`${label}: each helper help-open is at least 44 x 44 px`, async () => {
 		const { ctx, page } = await open('en', P.path());
-		const boxes = await page.locator('details[data-testid="help"] > summary').evaluateAll((els) =>
-			els.map((e) => { const r = e.getBoundingClientRect(); return [e.parentElement.dataset.help, r.width, r.height]; }));
+		const boxes = await page.locator('[data-testid="help"] [data-testid="help-open"]').evaluateAll((els) =>
+			els.map((e) => { const r = e.getBoundingClientRect(); return [e.closest('[data-testid="help"]').dataset.help, r.width, r.height]; }));
 		assert.ok(boxes.length >= P.ids.length, 'helpers present');
 		for (const [id, w, h] of boxes) assert.ok(w >= 43.99 && h >= 43.99, `${id}: ${w}x${h}`);
 		await ctx.close();
@@ -97,16 +97,19 @@ for (const [label, P] of Object.entries(PAGES)) {
 			const ids = P.fear ? [...P.ids.filter((i) => i !== 'level' && i !== 'gold'), 'fear'] : P.ids.filter((i) => i !== 'level' && i !== 'gold');
 			for (const id of ids) {
 				const h = helper(page.locator('body'), id);
-				assert.equal(await h.evaluate((e) => e.open), false, `${id} closed by default`);
-				await h.locator('> summary').click();
-				assert.equal(await h.evaluate((e) => e.open), true, `${id} opens`);
-				const text = norm(await h.evaluate((e) => e.innerText));
+				const panel = h.locator('[data-testid="help-panel"]');
+				assert.equal(await panel.evaluate((e) => e.matches(':popover-open')), false, `${id} closed by default`);
+				await h.locator('[data-testid="help-open"]').click();
+				assert.equal(await panel.evaluate((e) => e.matches(':popover-open')), true, `${id} opens`);
+				const text = norm(await panel.evaluate((e) => e.innerText));
 				const body = gloss[id][lang];
 				const iText = text.indexOf(norm(body));
 				assert.ok(iText >= 0, `${lang} ${id}: glossary text missing in "${text}"`);
 				const iName = text.toLowerCase().indexOf(nameOf(id, lang).toLowerCase());
 				assert.ok(iName >= 0 && iName < iText, `${lang} ${id}: name must come before the text`);
 				assert.equal(await h.evaluate((e) => !!e.closest('[lang="en"]:not(html)') || !!e.querySelector('[lang="en"]')), false, `${id}: glossary text must not be lang=en`);
+				await panel.locator('[data-testid="help-close"]').click();
+				assert.equal(await panel.evaluate((e) => e.matches(':popover-open')), false, `${id} closes`);
 			}
 			await ctx.close();
 		}
@@ -143,16 +146,16 @@ test('each tracker/stat helper is next to its own label (same row as its data-te
 		for (const id of ids) {
 			const ok = await scope.locator(`[data-testid="${id}"]`).first().evaluate((v, id) => {
 				const row = v.closest('form, p, li, tr');
-				return !!row && !!row.querySelector(`details[data-testid="help"][data-help="${id}"]`) && !row.contains(document.querySelector(`details[data-help="${id === 'hp' ? 'stress' : 'hp'}"]`));
+				return !!row && !!row.querySelector(`[data-testid="help"][data-help="${id}"]`) && !row.contains(document.querySelector(`[data-testid="help"][data-help="${id === 'hp' ? 'stress' : 'hp'}"]`));
 			}, id);
 			assert.ok(ok, `${id} helper must be in the same row as its value`);
 		}
 		await ctx.close();
 	}
 	const { ctx, page } = await open('en', CAMPAIGN.path());
-	assert.equal(await page.locator('[data-testid="fear"]').evaluate((v) => !!v.closest('form, p, div').querySelector('details[data-help="fear"]')), true);
+	assert.equal(await page.locator('[data-testid="fear"]').evaluate((v) => !!v.closest('form, p, div').querySelector('[data-testid="help"][data-help="fear"]')), true);
 	for (const c of ['vulnerable', 'restrained', 'hidden']) {
-		assert.equal(await CAMPAIGN.scope(page).locator(`[data-testid="condition-${c}"]`).evaluate((v, c) => !!v.closest('p, li, div').querySelector(`details[data-help="${c}"]`), c), true, c);
+		assert.equal(await CAMPAIGN.scope(page).locator(`[data-testid="condition-${c}"]`).evaluate((v, c) => !!v.closest('p, li, div').querySelector(`[data-testid="help"][data-help="${c}"]`), c), true, c);
 	}
 	await ctx.close();
 });
@@ -176,14 +179,22 @@ test('existing data-testid values and content are unchanged by the helpers', asy
 	}
 });
 
-test('mobile: at 360 px wide there is no horizontal overflow, even with every helper open', async () => {
+test('mobile: at 360 px wide there is no horizontal overflow, with each helper open in turn', async () => {
 	for (const path of [CAMPAIGN.path(), SHEET.path()]) {
 		for (const lang of ['en', 'fr']) {
 			const { ctx, page } = await open(lang, path, { width: 360, height: 740 });
-			const n = await page.locator('details[data-testid="help"]').count();
-			for (let i = 0; i < n; i++) await page.locator('details[data-testid="help"] > summary').nth(i).click();
-			const over = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
-			assert.ok(over <= 0, `${lang} ${path}: overflow ${over}px`);
+			const n = await page.locator('[data-testid="help"]').count();
+			assert.ok(n > 0, 'helpers present');
+			for (let i = 0; i < n; i++) {
+				const h = page.locator('[data-testid="help"]').nth(i);
+				const panel = h.locator('[data-testid="help-panel"]');
+				await h.locator('[data-testid="help-open"]').click();
+				assert.equal(await panel.evaluate((e) => e.matches(':popover-open')), true, `${lang} ${path}: helper ${i} opens`);
+				const over = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
+				assert.ok(over <= 0, `${lang} ${path}: helper ${i} open, overflow ${over}px`);
+				await panel.locator('[data-testid="help-close"]').click();
+				assert.equal(await panel.evaluate((e) => e.matches(':popover-open')), false, `${lang} ${path}: helper ${i} closes`);
+			}
 			await ctx.close();
 		}
 	}

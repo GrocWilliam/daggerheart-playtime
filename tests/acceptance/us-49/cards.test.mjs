@@ -93,9 +93,9 @@ test('each held card has a helper named after it (en + fr)', async () => {
 		const { ctx, page } = await open(lang, `/characters/${id}`);
 		for (let i = 0; i < 3; i++) {
 			const card = page.locator('[data-testid="card"]').nth(i);
-			const h = card.locator(`details[data-testid="help"][data-help="${pick[i].id}"]`);
+			const h = card.locator(`[data-testid="help"][data-help="${pick[i].id}"]`);
 			assert.equal(await h.count(), 1, `${lang} helper of ${pick[i].id}`);
-			const sm = h.locator('> summary');
+			const sm = h.locator('[data-testid="help-open"]');
 			assert.equal(norm(await sm.textContent()), '?');
 			assert.equal(await sm.getAttribute('aria-label'), `${lang === 'fr' ? 'Aide : ' : 'Help: '}${cardName(pick[i], lang)}`);
 		}
@@ -108,12 +108,12 @@ test('opened card helper: 44x44 target, name, SRD text in a lang="en" block, wit
 	for (const lang of ['en', 'fr']) {
 		const { ctx, page } = await open(lang, `/characters/${id}`, { js: false });
 		for (const c of pick) {
-			const h = page.locator(`[data-testid="card"] details[data-testid="help"][data-help="${c.id}"]`);
-			const box = await h.locator('> summary').boundingBox();
+			const h = page.locator(`[data-testid="card"] [data-testid="help"][data-help="${c.id}"]`);
+			const box = await h.locator('[data-testid="help-open"]').boundingBox();
 			assert.ok(box.width >= 44 && box.height >= 44, `${c.id} target ${box.width}x${box.height}`);
-			assert.equal(await h.evaluate((d) => d.open), false);
-			await h.locator('> summary').click();
-			assert.equal(await h.evaluate((d) => d.open), true);
+			assert.equal(await h.locator('[data-testid="help-panel"]').evaluate((e) => e.matches(':popover-open')), false);
+			await h.locator('[data-testid="help-open"]').click();
+			assert.equal(await h.locator('[data-testid="help-panel"]').evaluate((e) => e.matches(':popover-open')), true);
 			assert.ok(norm(await h.textContent()).includes(cardName(c, lang)));
 			const exp = linesIn(c, lang);
 			const en = h.locator(`[lang="${exp.lang}"]`);
@@ -122,8 +122,8 @@ test('opened card helper: 44x44 target, name, SRD text in a lang="en" block, wit
 			const ls = exp.ls;
 			assert.ok(ls.length > 0);
 			for (const l of ls) assert.ok(txt.includes(norm(l)), `${c.id}: ${l.slice(0, 50)}`);
-			await h.locator('> summary').click();
-			assert.equal(await h.evaluate((d) => d.open), false);
+			await h.locator('[data-testid="help-close"]').click();
+			assert.equal(await h.locator('[data-testid="help-panel"]').evaluate((e) => e.matches(':popover-open')), false);
 		}
 		await ctx.close();
 	}
@@ -168,7 +168,7 @@ test('submitting the add form holds the card: on the sheet with its helper, and 
 	const card = page.locator('[data-testid="card"]');
 	assert.equal(await card.count(), 1);
 	assert.ok(norm(await card.textContent()).includes(cardEn(c)));
-	assert.equal(await card.locator(`details[data-help="${c.id}"]`).count(), 1);
+	assert.equal(await card.locator(`[data-testid="help"][data-help="${c.id}"]`).count(), 1);
 	await ctx.close();
 });
 
@@ -176,7 +176,7 @@ test('the remove control of a card removes it from the sheet and the API', async
 	const id = await mk('Ranger', pick);
 	const { ctx, page } = await open('en', `/characters/${id}`);
 	const second = page.locator('[data-testid="card"]').nth(1);
-	await Promise.all([page.waitForNavigation(), second.locator('button:not(summary)').first().click()]);
+	await Promise.all([page.waitForNavigation(), second.locator('button:not([data-testid^="help-"])').first().click()]);
 	assert.deepEqual(await held(id), [pick[0].id, pick[2].id]);
 	const cards = page.locator('[data-testid="card"]');
 	assert.equal(await cards.count(), 2);
@@ -194,7 +194,7 @@ test('375px wide: no horizontal overflow with cards held, remove controls are 44
 		assert.ok(over <= 0, `overflow ${over}px`);
 		const cards = page.locator('[data-testid="card"]');
 		for (let i = 0; i < 3; i++) {
-			const b = await cards.nth(i).locator('button:not(summary)').first().boundingBox();
+			const b = await cards.nth(i).locator('button:not([data-testid^="help-"])').first().boundingBox();
 			assert.ok(b.width >= 44 && b.height >= 44, `remove ${b.width}x${b.height}`);
 		}
 		await ctx.close();

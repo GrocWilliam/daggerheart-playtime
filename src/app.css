@@ -107,5 +107,5 @@ thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rec
 @media (min-width: 1024px) {
 	body { max-width: 72rem; }
 }
-/* The help "?" summary: utilities cannot hide the engine's disclosure marker. */
+/* Scene, encounter and loot <details> summaries: utilities cannot hide the engine's disclosure marker. */
 summary::-webkit-details-marker { display: none; }

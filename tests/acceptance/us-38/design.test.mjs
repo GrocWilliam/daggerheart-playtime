@@ -126,7 +126,7 @@ test('character-card has surface background and 3px double accent border', async
 
 test('every button has accent background and bg text colour', async () => {
 	await eachCombo(async (page, id) => {
-		const bs = await page.evaluate(() => [...document.querySelectorAll('button')].map((b) => {
+		const bs = await page.evaluate(() => [...document.querySelectorAll('button:not([data-testid^="help-"])')].map((b) => { // us-246: the help buttons have their own look
 			const c = getComputedStyle(b); return [c.backgroundColor, c.color];
 		}));
 		for (const b of bs) assert.deepEqual(b, [rgb('#d4a050'), rgb('#0f1a15')], id);

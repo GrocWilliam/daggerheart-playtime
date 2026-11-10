@@ -205,9 +205,9 @@ for (const [label, mkScope] of Object.entries(SCOPES)) {
 				const t = S.scope(page).locator(`[data-testid="${k}"]`);
 				assert.equal(await t.count(), 1, `${lang} ${label} ${k}`);
 				assert.ok(norm(await t.textContent()).includes(nameIn(e, lang)), `${lang} ${k}: name ${nameIn(e, lang)}`);
-				const h = S.scope(page).locator(`details[data-testid="help"][data-help="${e.id}"]`);
+				const h = S.scope(page).locator(`[data-testid="help"][data-help="${e.id}"]`);
 				assert.equal(await h.count(), 1, `${lang} ${k} helper`);
-				const sm = h.locator('> summary');
+				const sm = h.locator('[data-testid="help-open"]');
 				assert.equal(norm(await sm.textContent()), '?');
 				assert.equal(await sm.getAttribute('aria-label'), `${lang === 'fr' ? 'Aide : ' : 'Help: '}${nameIn(e, lang)}`);
 			}
@@ -235,12 +235,12 @@ for (const [label, mkScope] of Object.entries(SCOPES)) {
 		for (const lang of ['en', 'fr']) {
 			const { ctx, page } = await open(lang, S.path, { js: false });
 			for (const e of Object.values(x.els)) {
-				const h = S.scope(page).locator(`details[data-testid="help"][data-help="${e.id}"]`);
-				const box = await h.locator('> summary').boundingBox();
+				const h = S.scope(page).locator(`[data-testid="help"][data-help="${e.id}"]`);
+				const box = await h.locator('[data-testid="help-open"]').boundingBox();
 				assert.ok(box.width >= 44 && box.height >= 44, `${e.id} target ${box.width}x${box.height}`);
-				assert.equal(await h.evaluate((d) => d.open), false);
-				await h.locator('> summary').click();
-				assert.equal(await h.evaluate((d) => d.open), true);
+				assert.equal(await h.locator('[data-testid="help-panel"]').evaluate((e) => e.matches(':popover-open')), false);
+				await h.locator('[data-testid="help-open"]').click();
+				assert.equal(await h.locator('[data-testid="help-panel"]').evaluate((e) => e.matches(':popover-open')), true);
 				const body = norm(await h.textContent());
 				assert.ok(body.includes(nameIn(e, lang)), `${e.id} name`);
 				const frSub = lang === 'fr' && e.id.startsWith('core_subclass_') ? FR_SUBS[e.id] : undefined;
@@ -255,9 +255,9 @@ for (const [label, mkScope] of Object.entries(SCOPES)) {
 					assert.ok(txt.includes(`${n}: ${norm(ps[0] ?? '')}`), `${e.id} feature "${n}: ..."`);
 					for (const p of ps) assert.ok(txt.includes(norm(p)), `${e.id} feature text`);
 				}
-				// the summary is the only thing hidden when closed
-				await h.locator('> summary').click();
-				assert.equal(await h.evaluate((d) => d.open), false);
+				// help-close closes the panel
+				await h.locator('[data-testid="help-close"]').click();
+				assert.equal(await h.locator('[data-testid="help-panel"]').evaluate((e) => e.matches(':popover-open')), false);
 			}
 			await ctx.close();
 		}

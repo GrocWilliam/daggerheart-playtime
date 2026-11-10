@@ -33,10 +33,10 @@ Per page:
 In `src/lib/components/`:
 - `Divider`: the h1 flourish (`divider`).
 - `Pips`: filled/empty pips for a tracker (`<name>-pips`).
-- `Help`: a glossary `id`, a `text` prop (a catalog string) or `lines: Line[]` (SRD text, each line rendered with its own `lang`; `nameLang` for the name); `help`.
+- `Help`: a glossary `id`, a `text` prop (a catalog string) or `lines: Line[]` (SRD text, each line rendered with its own `lang`; `nameLang` for the name); `help`. It uses the native Popover API: a "?" `help-open` button (`popovertarget`) opens a `popover="auto"` `help-panel` (`<span>`, inline-level markup only) styled like the `Modal` panel, closed by Escape, an outside click or `help-close`. It is the one exception to `Modal` being the only dialog.
 - `Chosen`: subclass, ancestry and community of a character.
 - `LanguageSwitcher`: `language-switcher`, `lang-en`, `lang-fr`.
-- `Modal.svelte`: the only dialog implementation.
+- `Modal.svelte`: the only dialog implementation, except the `Help` popover panel.
   - Props: `kind`, `title`, `lang`, children.
   - Renders the opener `new-<kind>` (`href="?new=<kind>"`, other params kept) and `<dialog data-testid="modal-<kind>" aria-labelledby="modal-<kind>-title">`, open when `?new=<kind>` or `form.modal === kind`.
   - The Cancel link is `data-testid="modal-cancel"`.
@@ -67,7 +67,7 @@ Each `encounter-adversary` card of the current scene lists one `battle-unit` row
 Stable: keep them when restyling.
 
 Existing:
-`build`, `run`, `campaign-link`, `campaign-name`, `campaign-run-link`, `card`, `character-card`, `character-name`, `condition-hidden`, `condition-restrained`, `condition-vulnerable`, `current-scene`, `divider`, `domain`, `down`, `encounter-adversary`, `encounter-budget`, `evasion`, `experience`, `fear`, `gold`, `help`, `inventory`, `item`, `item-row`, `journal`, `journal-entry`, `lang-en`, `lang-fr`, `language-switcher`, `loot-entry`, `nav-home`, `nav-reference`, `notes`, `notes-status`, `party-member`, `ref-item`, `scene`, `scene-environment`, `scene-notes`, `scene-status`, `secondary-blocked`, `sigil`, `srd-licence`, `thresholds`, `battle-unit`, `unit-hp`, `unit-defeated`, `unit-damage`, `unit-hit`, `unit-hp-plus`, `unit-hp-minus`, `battle-add`, `battle-add-adversary`, `battle-add-count`, `battle-add-submit`.
+`build`, `run`, `campaign-link`, `campaign-name`, `campaign-run-link`, `card`, `character-card`, `character-name`, `condition-hidden`, `condition-restrained`, `condition-vulnerable`, `current-scene`, `divider`, `domain`, `down`, `encounter-adversary`, `encounter-budget`, `evasion`, `experience`, `fear`, `gold`, `help`, `help-close`, `help-open`, `help-panel`, `inventory`, `item`, `item-row`, `journal`, `journal-entry`, `lang-en`, `lang-fr`, `language-switcher`, `loot-entry`, `nav-home`, `nav-reference`, `notes`, `notes-status`, `party-member`, `ref-item`, `scene`, `scene-environment`, `scene-notes`, `scene-status`, `secondary-blocked`, `sigil`, `srd-licence`, `thresholds`, `battle-unit`, `unit-hp`, `unit-defeated`, `unit-damage`, `unit-hit`, `unit-hp-plus`, `unit-hp-minus`, `battle-add`, `battle-add-adversary`, `battle-add-count`, `battle-add-submit`.
 
 Dynamic: `ref-<kind>` (reference sections), `step-<k>` (`step-build`, `step-run`), `trait-<k>` (one per trait), `<name>-pips` (e.g. `fear-pips`), tracker values by key (e.g. `hp`, `hope`), subclass/ancestry/community from `Chosen`, and the equipment blocks `primary-weapon`, `secondary-weapon`, `equipped-armor`.
 

@@ -41,10 +41,10 @@ test('fr sheet: Chosen ancestry and community show name and help lines in lang="
 		assert.equal(await name.count(), 1);
 		assert.equal(await name.textContent(), fr);
 		assert.equal(await name.evaluate((e) => e.closest('[lang]')?.getAttribute('lang')), 'fr');
-		const details = p.locator(`details[data-testid="help"][data-help="${id}"]`);
+		const details = p.locator(`[data-testid="help"][data-help="${id}"]`);
 		assert.equal(await details.count(), 1, `help of ${id}`);
 		const lines = await details.evaluate((d) =>
-			[...d.querySelectorAll('[lang]')].filter((e) => !e.closest('summary') && !e.querySelector('[lang]')).map((e) => ({ lang: e.getAttribute('lang'), text: e.textContent.trim() })).filter((l) => l.text));
+			[...d.querySelectorAll('[lang]')].filter((e) => !e.closest('[data-testid="help-open"]') && !e.querySelector('[lang]')).map((e) => ({ lang: e.getAttribute('lang'), text: e.textContent.trim() })).filter((l) => l.text));
 		assert.ok(lines.length >= 2, JSON.stringify(lines));
 		for (const l of lines) assert.equal(l.lang, 'fr', `${id}: ${JSON.stringify(l)}`);
 	}

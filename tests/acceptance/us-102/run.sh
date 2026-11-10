@@ -3,6 +3,7 @@
 # (1) src/app.css under 150 lines and only import/palette/@theme/@layer base/pips/help marker rules;
 # (2) no <style> block and no style= attribute in any .svelte under src;
 # (3) computed styles unchanged on /reference (search form, kind filter, results, Help) at 375px and 1280px;
+#     us-246: Help is now inline-level with a 44x44 bold "?" help-open and a fixed, centred, surface help-panel popover;
 # (4) the us-38 colour scan passes; Help keeps the escaped word;
 # (5) ui-style skill no longer describes the old app.css page rules;
 # (6) make test / make build / other acceptance scripts are run by CI (not repeated here).

@@ -66,8 +66,8 @@ async function measure(path, w, h, cardScope) {
 					const value = scope.querySelector(`[data-testid="${key}"]`);
 					if (!value) return { key, missing: true };
 					let p = value.parentElement;
-					while (p && p.querySelectorAll('button').length < 2) p = p.parentElement;
-					const btns = p ? [...p.querySelectorAll('button')] : [];
+					while (p && p.querySelectorAll('button:not([data-testid^="help-"])').length < 2) p = p.parentElement;
+					const btns = p ? [...p.querySelectorAll('button:not([data-testid^="help-"])')] : [];
 					return {
 						key,
 						value: box(value),

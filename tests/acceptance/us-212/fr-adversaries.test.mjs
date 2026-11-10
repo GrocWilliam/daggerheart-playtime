@@ -94,9 +94,9 @@ test('lang=fr: /reference shows the French name and feature lines of adv_acid_bu
 	const p = await ctx.newPage();
 	p.setDefaultTimeout(8000);
 	await p.goto(`${BASE}/reference?kind=adversaries&q=${encodeURIComponent(fr.name)}`);
-	const item = p.locator('[data-testid="ref-adversaries"] [data-testid="ref-item"]').filter({ has: p.locator('details[data-testid="help"][data-help="adv_acid_burrower"]') });
+	const item = p.locator('[data-testid="ref-adversaries"] [data-testid="ref-item"]').filter({ has: p.locator('[data-testid="help"][data-help="adv_acid_burrower"]') });
 	assert.equal(await item.count(), 1);
-	await item.locator('details[data-testid="help"] > summary').click();
+	await item.locator('[data-testid="help"] [data-testid="help-open"]').click();
 	const langsOf = (text) => item.evaluate((el, text) => {
 		const out = [];
 		const w = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);

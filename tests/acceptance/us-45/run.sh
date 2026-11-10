@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 # Criteria (tests in helpers.test.mjs, browser with JavaScript DISABLED so "works without JS" is covered):
 # (1) campaign page and sheet: each tracker/term (HP, Stress, Hope, Fear, Armor, Evasion, Thresholds,
-#     Vulnerable/Restrained/Hidden badges, Gold, Level) has a <details data-testid="help" data-help="<glossary id>">;
-# (2) its <summary> is "?" with aria-label "Help: <name>" / "Aide : <nom>";
-# (3) summary box >= 44 x 44 px;
-# (4) opened: name then glossary text in the page language (not inside lang="en");
+#     Vulnerable/Restrained/Hidden badges, Gold, Level) has a <span data-testid="help" data-help="<glossary id>"> (us-246: was a <details>);
+# (2) its help-open button is "?" with aria-label "Help: <name>" / "Aide : <nom>";
+# (3) help-open box >= 44 x 44 px;
+# (4) opened (help-panel popover, closed with help-close): name then glossary text in the page language (not inside lang="en");
 # (5) helper sits next to its label; (6) existing data-testid values unchanged; (7) no horizontal overflow at 360px.
-# Also: us-20/21/22 i18n tests updated to ignore text inside lang="en" elements (and the "?" summaries).
+# Also: us-20/21/22 i18n tests updated to ignore text inside lang="en" elements (and the "?" help-open buttons).
 # SRD-element helpers belong to later stories and are not tested here.
 set -uo pipefail
 cd "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/../../.."

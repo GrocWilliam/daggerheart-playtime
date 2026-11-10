@@ -34,7 +34,7 @@
 				{#each s.items as item (item.id)}
 					<li data-testid="ref-item" class="mb-3 flex flex-wrap items-center gap-2 rounded-lg border-l-3 border-accent bg-surface px-3 py-2 wrap-anywhere last:mb-0">
 						<span lang={item.nameLang}>{item.name}</span>
-						<Help id={item.id} name={item.name} nameLang={item.nameLang} lang={data.lang} lines={item.lines} />
+						<span><Help id={item.id} name={item.name} nameLang={item.nameLang} lang={data.lang} lines={item.lines} /></span>
 					</li>
 				{/each}
 			</ul>

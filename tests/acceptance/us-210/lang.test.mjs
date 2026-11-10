@@ -43,17 +43,17 @@ const langsOf = (root, text) =>
 		return out;
 	}, text);
 
-// Help lines: innermost elements with a lang attribute inside the help's content (not its summary), excluding the
+// Help lines: innermost elements with a lang attribute inside the help's content (not its help-open button), excluding the
 // element's name. Returns [{ lang, text }] in document order.
 const helpLinesOf = (details, name) =>
 	details.evaluate((d, name) => {
-		const els = [...d.querySelectorAll('[lang]')].filter((e) => !e.closest('summary') && !e.querySelector('[lang]'));
+		const els = [...d.querySelectorAll('[lang]')].filter((e) => !e.closest('[data-testid="help-open"]') && !e.querySelector('[lang]'));
 		return els.map((e) => ({ lang: e.getAttribute('lang'), text: e.textContent.trim() })).filter((l) => l.text !== name && l.text !== '');
 	}, name);
 
 async function refHelp(lang, kind, id, q) {
 	const { ctx, p } = await open(lang, `/reference?kind=${kind}&q=${encodeURIComponent(q)}`);
-	const details = p.locator(`[data-testid="ref-${kind}"] [data-testid="ref-item"] details[data-testid="help"][data-help="${id}"]`);
+	const details = p.locator(`[data-testid="ref-${kind}"] [data-testid="ref-item"] [data-testid="help"][data-help="${id}"]`);
 	assert.equal(await details.count(), 1, `${id} help on /reference`);
 	const lines = await helpLinesOf(details, await srdName(kind, id, lang));
 	assert.ok(lines.length > 0, `${id}: help has lines with a lang attribute`);
@@ -69,7 +69,7 @@ after(async () => {
 
 test('French reference: core_class_bard shows Barde with lang="fr", its translated description with lang="fr"', async () => {
 	const { ctx, p } = await open('fr', '/reference?q=Barde');
-	const item = p.locator('[data-testid="ref-classes"] [data-testid="ref-item"]').filter({ has: p.locator('details[data-help="core_class_bard"]') });
+	const item = p.locator('[data-testid="ref-classes"] [data-testid="ref-item"]').filter({ has: p.locator('[data-testid="help"][data-help="core_class_bard"]') });
 	assert.equal(await item.count(), 1, 'one ref-item for core_class_bard');
 	const name = await langsOf(item, 'Barde');
 	assert.ok(name.some((x) => !x.page && x.lang === 'fr'), `Barde inside an element with lang="fr": ${JSON.stringify(name)}`);

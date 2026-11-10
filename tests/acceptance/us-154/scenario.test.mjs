@@ -136,9 +136,10 @@ test('a scene with an environment shows its name, type, difficulty, impulses and
 		assert.ok(text.includes(String(full.type)), 'type');
 		assert.ok(text.includes(String(full.difficulty)), 'difficulty');
 		assert.ok(text.includes(String(shown.impulses).split(',')[0].trim()), 'impulses');
-		assert.ok(await el.locator('details').count() >= 1, 'features in details');
+		// us-246: features sit in the Help popover (formerly a <details>) or a plain <details>.
+		assert.ok(await el.locator('[data-testid="help"], details').count() >= 1, 'features in a helper or details');
 		assert.ok(text.includes(shown.feature[0].name.trim()), 'feature name');
-		assert.equal(await scene(p, 'Plain').locator('details').count(), 0);
+		assert.equal(await scene(p, 'Plain').locator('[data-testid="help"], details').count(), 0);
 	}
 });
 

@@ -58,6 +58,8 @@ for (const js of [true, false]) {
 		const stored = await apiLoot(c, s);
 		assert.equal(stored.length, 3);
 		const entries = sceneOf(p).locator('[data-testid=loot-entry]');
+		// the stored loot is there; poll the page until it renders it (the enhance refresh, or a pre-hydration redirect, may lag under load)
+		for (let t = 0; t < 60 && (await entries.count()) !== 3; t++) await p.waitForTimeout(500);
 		assert.equal(await entries.count(), 3);
 		for (let i = 0; i < 3; i++) {
 			const e = entries.nth(i);

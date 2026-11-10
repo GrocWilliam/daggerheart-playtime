@@ -17,11 +17,29 @@ describe('help', () => {
 			expect(g?.fr).toBeTruthy();
 		}
 	});
-	it('renders a details/summary with data-help and an aria-label', () => {
+	it('has a close label in both languages', () => {
+		expect(en['help.close']).toBe('Close');
+		expect(fr['help.close']).toBe('Fermer');
+	});
+	it('renders a help-open button and a native popover help-panel with help-close', () => {
 		const src = readFileSync(new URL('./Help.svelte', import.meta.url), 'utf8');
-		expect(src).toContain('<details data-testid="help" data-help={id}');
-		expect(src).toContain('aria-label=');
-		expect(src).toContain('lang={line.lang}');
-		expect(src).not.toContain('lang="en"');
+		for (const s of [
+			'data-testid="help" data-help={id}',
+			'data-testid="help-open"',
+			'data-testid="help-panel"',
+			'data-testid="help-close"',
+			'popover="auto"',
+			'popovertarget={panelId}',
+			'popovertargetaction="hide"',
+			'$props.id()',
+			'aria-label=',
+			'lang={line.lang}'
+		])
+			expect(src).toContain(s);
+		for (const s of ['<details', '<summary', 'onclick', '<div', 'lang="en"', '<style', ' style='])
+			expect(src).not.toContain(s);
+		// the name comes first in the panel, help-close last
+		const panel = src.slice(src.indexOf('data-testid="help-panel"'));
+		expect(panel.indexOf('<strong')).toBeLessThan(panel.indexOf('data-testid="help-close"'));
 	});
 });

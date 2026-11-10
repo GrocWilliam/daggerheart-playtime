@@ -89,7 +89,7 @@ test('at 375x667 the fear value and its - and + buttons are visible without scro
 		const boxes = await v.page.evaluate(() => {
 			const fear = document.querySelector('[data-testid="fear"]');
 			const form = fear.closest('form');
-			const els = [fear, ...(form ? form.querySelectorAll('button') : [])];
+			const els = [fear, ...(form ? form.querySelectorAll('button:not([data-testid^="help-"])') : [])];
 			return els.map((e) => {
 				const r = e.getBoundingClientRect();
 				return { t: e.textContent.trim(), top: r.top, bottom: r.bottom, w: r.width, h: r.height };

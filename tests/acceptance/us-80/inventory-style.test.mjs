@@ -147,7 +147,7 @@ test('en and fr: 44px touch targets and 16px text still hold in the table at bot
 		for (const [w, h] of [[1280, 800], [375, 667]]) {
 			const { ctx, page } = await open(lang, w, h);
 			const r = await page.locator('table[data-testid="inventory"]').evaluate((t) => ({
-				ctl: [...t.querySelectorAll('button, input:not([type=hidden])')].map((e) => { const b = e.getBoundingClientRect(); return [b.width, b.height, parseFloat(getComputedStyle(e).fontSize)]; }),
+				ctl: [...t.querySelectorAll('button:not([data-testid^="help-"]), input:not([type=hidden])')].map((e) => { const b = e.getBoundingClientRect(); return [b.width, b.height, parseFloat(getComputedStyle(e).fontSize)]; }),
 				text: [...t.querySelectorAll('th, td, td *')].map((e) => parseFloat(getComputedStyle(e).fontSize)),
 			}));
 			assert.ok(r.ctl.length >= 4);

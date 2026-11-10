@@ -90,7 +90,7 @@ let browser;
 before(async () => { browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH }); });
 after(async () => { await browser?.close(); });
 
-const SURFACE = 'rgb(26, 42, 34)', ACCENT = 'rgb(212, 160, 80)', MUTED = 'rgb(185, 176, 143)';
+const SURFACE = 'rgb(26, 42, 34)', ACCENT = 'rgb(212, 160, 80)';
 
 for (const [name, w, h] of [['phone', 375, 667], ['desktop', 1280, 800]]) {
 	test(`computed styles unchanged on the reference page and Help at ${name} (${w}px)`, async () => {
@@ -101,18 +101,22 @@ for (const [name, w, h] of [['phone', 375, 667], ['desktop', 1280, 800]]) {
 			const q = (s) => document.querySelector(s), cs = (e) => getComputedStyle(e), rc = (e) => e.getBoundingClientRect();
 			const pick = (e, ps) => Object.fromEntries(ps.map((x) => [x, cs(e)[x]]));
 			const f = q('form[action="/reference"]');
-			const li = q('[data-testid=ref-item]'), ul = li.parentElement, det = li.querySelector('details'), sum = det.querySelector('summary');
+			const li = q('[data-testid=ref-item]'), ul = li.parentElement, help = li.querySelector('[data-testid=help]'), btn = help.querySelector('[data-testid=help-open]'), panel = help.querySelector('[data-testid=help-panel]');
 			const o = {};
 			o.form = pick(f, ['display', 'flexWrap', 'columnGap', 'rowGap', 'paddingTop', 'paddingLeft', 'backgroundColor']);
 			o.heights = [rc(q('form[action="/reference"] select')).height, rc(q('form[action="/reference"] input[name=q]')).height, rc(q('form[action="/reference"] button')).height];
 			o.ul = pick(ul, ['listStyleType', 'paddingLeft', 'marginBottom', 'marginTop']);
 			o.li = pick(li, ['display', 'flexWrap', 'alignItems', 'columnGap', 'rowGap', 'overflowWrap', 'paddingTop', 'paddingLeft', 'backgroundColor', 'borderLeftWidth', 'borderLeftColor', 'borderTopLeftRadius', 'marginBottom']);
-			o.help = pick(det, ['display', 'verticalAlign']);
-			o.sum = pick(sum, ['display', 'alignItems', 'justifyContent', 'minWidth', 'minHeight', 'cursor', 'listStyleType', 'fontWeight']);
-			o.sumR = [rc(sum).width, rc(sum).height];
-			det.open = true;
-			o.open = pick(det, ['minWidth', 'flexShrink']);
-			o.body = pick(det.querySelector('summary ~ span'), ['display', 'paddingTop', 'paddingLeft', 'borderLeftWidth', 'borderLeftStyle', 'borderLeftColor']);
+			o.help = cs(help).display;
+			o.btn = pick(btn, ['display', 'alignItems', 'justifyContent', 'minWidth', 'minHeight', 'fontWeight']);
+			o.btnText = btn.textContent.trim();
+			o.btnR = [rc(btn).width, rc(btn).height];
+			panel.showPopover();
+			o.open = panel.matches(':popover-open');
+			o.panel = pick(panel, ['position', 'backgroundColor']);
+			const pr = rc(panel);
+			o.panelW = pr.width;
+			o.centre = pr.left + pr.width / 2 - document.documentElement.clientWidth / 2;
 			o.scroll = document.documentElement.scrollWidth - document.documentElement.clientWidth;
 			return o;
 		});
@@ -120,11 +124,15 @@ for (const [name, w, h] of [['phone', 375, 667], ['desktop', 1280, 800]]) {
 		for (const hh of r.heights) assert.ok(hh >= 43.5, `control height ${hh}`);
 		assert.deepEqual(r.ul, { listStyleType: 'none', paddingLeft: '0px', marginBottom: '12px', marginTop: '0px' });
 		assert.deepEqual(r.li, { display: 'flex', flexWrap: 'wrap', alignItems: 'center', columnGap: '8px', rowGap: '8px', overflowWrap: 'anywhere', paddingTop: '8px', paddingLeft: '12px', backgroundColor: SURFACE, borderLeftWidth: '3px', borderLeftColor: ACCENT, borderTopLeftRadius: '8px', marginBottom: '12px' });
-		assert.deepEqual(r.help, { display: 'block', verticalAlign: 'middle' });
-		assert.deepEqual(r.sum, { display: 'inline-flex', alignItems: 'center', justifyContent: 'center', minWidth: '44px', minHeight: '44px', cursor: 'pointer', listStyleType: 'none', fontWeight: '700' });
-		assert.deepEqual(r.sumR, [44, 44]);
-		assert.deepEqual(r.open, { minWidth: '0px', flexShrink: '1' });
-		assert.deepEqual(r.body, { display: 'block', paddingTop: '4px', paddingLeft: '8px', borderLeftWidth: '3px', borderLeftStyle: 'solid', borderLeftColor: MUTED });
+		// us-246: Help is an inline-level span with a "?" button and a popover panel
+		assert.ok(r.help.startsWith('inline'), `help display ${r.help} is inline-level`);
+		assert.deepEqual(r.btn, { display: 'inline-flex', alignItems: 'center', justifyContent: 'center', minWidth: '44px', minHeight: '44px', fontWeight: '700' });
+		assert.equal(r.btnText, '?');
+		assert.ok(r.btnR[0] >= 44 && r.btnR[1] >= 44, `help-open ${r.btnR}`);
+		assert.equal(r.open, true, 'help-panel opens');
+		assert.deepEqual(r.panel, { position: 'fixed', backgroundColor: SURFACE });
+		assert.ok(r.panelW <= 512 + 0.5, `panel width ${r.panelW}`);
+		assert.ok(Math.abs(r.centre) <= 2, `panel off centre by ${r.centre}px`);
 		assert.equal(r.scroll, 0);
 		await ctx.close();
 	});
