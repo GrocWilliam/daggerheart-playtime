@@ -2,7 +2,7 @@ import { and, eq, sql } from 'drizzle-orm';
 import * as z from 'zod';
 import { characters, experiences, items } from '../schema';
 import { OBJECT_ERROR, intField, safeIntField, strField } from '../../utils/validation';
-import { domainsOfClass, getSrd } from './srd';
+import { domainsOfClass, getSrd, idByName } from './srd';
 
 /** Drizzle select shape giving the snake_case row that `characterJson` reads. */
 const characterSelect = {
@@ -78,6 +78,7 @@ export async function insertCharacter(campaignId: string, f: CreateCharacter) {
 			hpMax: f.maxHp,
 			stressMax: f.maxStress,
 			armorMax: f.armorSlots,
+			armorId: f.armorId ?? null,
 			ancestry: f.ancestry ?? null,
 			community: f.community ?? null,
 			...f.traits
@@ -179,12 +180,15 @@ export const createFields = z.object(
 			armorSlots: intField('armorSlots', 0, 12),
 			ancestry: srdId('ancestry', 'ancestries').optional(),
 			community: srdId('community', 'communities').optional(),
-			traits: traitsSchema.optional()
+			traits: traitsSchema.optional(),
+			armorId: gearField('armorId must be an armor', (e) => e.baseScore !== undefined).optional()
 		},
 		{ error: OBJECT_ERROR }
 );
-export const createSchema = createFields.refine((f) => thresholdsOk(f.majorThreshold, f.severeThreshold), {
-	error: THRESHOLDS_ERROR
+export const createSchema = createFields.superRefine((f, ctx) => {
+	const issue = gearTierIssue('armorId', 'armors', f.armorId, f.level);
+	if (issue) return void ctx.addIssue({ code: 'custom', message: issue });
+	if (!thresholdsOk(f.majorThreshold, f.severeThreshold)) ctx.addIssue({ code: 'custom', message: THRESHOLDS_ERROR });
 });
 export type CreateCharacter = z.infer<typeof createSchema>;
 
@@ -214,14 +218,63 @@ const patchFields = z.object(
 	{ error: OBJECT_ERROR }
 );
 
-/** Base armor thresholds plus the level, as set by equipping the armor. */
-export function armorStats(armorId: string, level: number) {
-	const a = getSrd('armors', armorId, 'en')!;
+/** Armor thresholds plus the level, as set by equipping the armor; unarmored (null) gives level-based ones. */
+export function armorStats(armorId: string | null, level: number) {
+	const a = armorId ? getSrd('armors', armorId, 'en') : null;
+	if (!a) return { armorMax: 0, majorThreshold: level, severeThreshold: 2 * level };
 	return {
 		armorMax: a.baseScore as number,
 		majorThreshold: (a.baseMajorThreshold as number) + level,
 		severeThreshold: (a.baseSevereThreshold as number) + level
 	};
+}
+
+const FEATURE_EVASION: Record<string, number> = { Flexible: 1, Heavy: -1, 'Very Heavy': -2, Difficult: -1 };
+
+/** Evasion modifier of an armor, from its features matched by English name. */
+export function armorEvasionModifier(armorId: string | null) {
+	const a = armorId ? getSrd('armors', armorId, 'en') : null;
+	let sum = 0;
+	for (const f of (a?.features as any[] | undefined) ?? []) sum += FEATURE_EVASION[f?.name?.['en-US']] ?? 0;
+	return sum;
+}
+
+export const TRAIT_ARRAY = [2, 1, 1, 0, 0, -1] as const;
+export function traitsFollowArray(values: number[]) {
+	const a = [...values].sort((x, y) => x - y);
+	const b = [...TRAIT_ARRAY].sort((x, y) => x - y);
+	return a.length === b.length && a.every((v, i) => v === b[i]);
+}
+
+export const MAX_STRESS = 6;
+
+/** Starting Evasion and HP of an SRD class by English name; null when unknown. */
+export function classStart(className: string) {
+	const id = idByName('classes', className);
+	const c = id ? getSrd('classes', id, 'en') : null;
+	if (!c) return null;
+	return { evasion: c.startingEvasion as number, hp: c.startingHitPoints as number };
+}
+
+export function derivedStats(className: string, level: number, armorId: string | null) {
+	const start = classStart(className);
+	if (!start) return null;
+	const armor = armorStats(armorId, level);
+	return {
+		evasion: Math.min(30, Math.max(0, start.evasion + armorEvasionModifier(armorId))),
+		majorThreshold: armor.majorThreshold,
+		severeThreshold: armor.severeThreshold,
+		maxHp: start.hp,
+		maxStress: MAX_STRESS,
+		armorSlots: armor.armorMax
+	};
+}
+
+/** Message when the gear's tier is above the character's tier at this level; null when fine. */
+export function gearTierIssue(field: string, kind: 'weapons' | 'armors', id: string | null | undefined, level: number) {
+	const tier = tierOfLevel(level);
+	const gearTier = id ? (getSrd(kind, id, 'en')?.tier as number) : 0;
+	return gearTier > tier ? `${field} is tier ${gearTier}, above the character's tier ${tier}` : null;
 }
 
 /** PATCH body schema; returns only supplied fields. `current` supplies the other threshold and the class. */
@@ -242,12 +295,10 @@ export function patchSchema(current: {
 			}
 		}
 		const level = p.level ?? current.level ?? 1;
-		const tier = tierOfLevel(level);
 		for (const [field, kind] of [['primaryWeapon', 'weapons'], ['secondaryWeapon', 'weapons'], ['armorId', 'armors']] as const) {
-			const id = p[field];
-			const gearTier = id ? (getSrd(kind, id, 'en')?.tier as number) : 0;
-			if (gearTier > tier) {
-				ctx.addIssue({ code: 'custom', message: `${field} is tier ${gearTier}, above the character's tier ${tier}` });
+			const issue = gearTierIssue(field, kind, p[field], level);
+			if (issue) {
+				ctx.addIssue({ code: 'custom', message: issue });
 				return;
 			}
 		}

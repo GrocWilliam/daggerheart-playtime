@@ -407,3 +407,29 @@ describe('patchSchema equipped gear', () => {
 		expect(armorStats('core_armor_gambeson_armor', 1)).toEqual({ armorMax: 3, majorThreshold: 6, severeThreshold: 12 });
 	});
 });
+
+describe('derived statistics rules', () => {
+	it('armorStats handles unarmored', () => {
+		expect(m.armorStats('core_armor_chainmail_armor', 3)).toEqual({ armorMax: 4, majorThreshold: 10, severeThreshold: 18 });
+		expect(m.armorStats(null, 10)).toEqual({ armorMax: 0, majorThreshold: 10, severeThreshold: 20 });
+	});
+	it('armorEvasionModifier', () => {
+		expect(m.armorEvasionModifier('core_armor_chainmail_armor')).toBe(-1);
+		expect(m.armorEvasionModifier(null)).toBe(0);
+	});
+	it('traitsFollowArray', () => {
+		expect(m.traitsFollowArray([0, -1, 2, 1, 0, 1])).toBe(true);
+		expect(m.traitsFollowArray([2, 2, 1, 0, 0, -1])).toBe(false);
+		expect(m.traitsFollowArray([2, 1, 1, 0, 0])).toBe(false);
+	});
+	it('classStart and derivedStats', () => {
+		expect(m.classStart('Bard')).toEqual({ evasion: 10, hp: 5 });
+		expect(m.classStart('Pirate')).toBeNull();
+		expect(m.derivedStats('Warrior', 3, 'core_armor_chainmail_armor')).toEqual({ evasion: 10, majorThreshold: 10, severeThreshold: 18, maxHp: 6, maxStress: 6, armorSlots: 4 });
+		expect(m.derivedStats('Warrior', 3, null)).toEqual({ evasion: 11, majorThreshold: 3, severeThreshold: 6, maxHp: 6, maxStress: 6, armorSlots: 0 });
+		expect(m.derivedStats('Pirate', 1, null)).toBeNull();
+	});
+	it('gearTierIssue', () => {
+		expect(m.gearTierIssue('armorId', 'armors', null, 1)).toBeNull();
+	});
+});
