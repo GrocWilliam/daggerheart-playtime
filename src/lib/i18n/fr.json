@@ -264,6 +264,9 @@
 	"battle.defeated": "Vaincu",
 	"battle.amount": "Dégâts infligés à {name}",
 	"battle.hit": "Infliger",
+	"battle.add": "Ajouter un adversaire",
+	"battle.addQuantity": "Quantité",
+	"battle.addWhich": "Adversaire à ajouter",
 	"battle.hpUp": "Marquer un PV sur {name}",
 	"battle.hpDown": "Effacer un PV sur {name}"
 }

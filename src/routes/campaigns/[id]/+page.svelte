@@ -314,12 +314,31 @@
 		<button type="submit">{t('run.nextScene')}</button>
 	</form>
 	{#if cs.encounter}
+		<p data-testid="encounter-budget" class="font-bold {cs.encounter.over ? 'text-danger' : ''}">
+			{t('encounter.budget')}: {cs.encounter.spent} / {cs.encounter.budget}
+			{#if cs.encounter.over}<span>({t('encounter.over')})</span>{/if}
+		</p>
 		{#each cs.encounter.adversaries as a (a.id)}
-			<div class="mb-2 rounded-[0.5rem] border-2 border-solid border-muted p-3" data-testid="encounter-adversary">
+			<div class="mb-2 rounded-[0.5rem] border-2 border-solid border-muted p-3" data-testid="encounter-adversary" data-adversary={a.id}>
 				{@render adversaryStats(a)}
 				{@render battleUnits(a, cs.id)}
 			</div>
 		{/each}
+		<form use:enhance={busy} class="mb-2 bg-transparent! border-0! p-0!" method="POST" action="?/battleAdd" data-testid="battle-add">
+			<input type="hidden" name="sceneId" value={cs.id} />
+			<label>{t('battle.addWhich')}
+				<select name="adversaryId" required data-testid="battle-add-adversary">
+					<option value=""></option>
+					{#each data.battleOptions as g (g.tier)}
+						<optgroup label="{t('encounter.tier')} {g.tier}">
+							{#each g.adversaries as o (o.id)}<option value={o.id} lang={o.nameLang} label={o.name}></option>{/each}
+						</optgroup>
+					{/each}
+				</select>
+			</label>
+			<label>{t('battle.addQuantity')} <input type="number" name="count" value="1" min="1" max="20" data-testid="battle-add-count" /></label>
+			<button type="submit" class="min-h-[44px] min-w-[44px]" data-testid="battle-add-submit">{t('battle.add')}</button>
+		</form>
 	{/if}
 	{#each cs.loot as l (l.id)}
 		<div class="mb-2 rounded-[0.5rem] border-2 border-solid border-muted p-3" data-testid="loot-entry" data-given={l.given}>

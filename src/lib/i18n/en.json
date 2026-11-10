@@ -264,6 +264,9 @@
 	"battle.defeated": "Defeated",
 	"battle.amount": "Damage to {name}",
 	"battle.hit": "Apply damage",
+	"battle.add": "Add adversary",
+	"battle.addQuantity": "Quantity",
+	"battle.addWhich": "Adversary to add",
 	"battle.hpUp": "Mark one HP on {name}",
 	"battle.hpDown": "Clear one HP on {name}"
 }

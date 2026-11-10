@@ -1,5 +1,5 @@
 import { error, fail, redirect } from '@sveltejs/kit';
-import { listSrd, localizedSrd, pickOf, type Line } from '$lib/server/features/srd';
+import { adversariesByTier, listSrd, localizedSrd, pickOf, type Line } from '$lib/server/features/srd';
 import type { Scene } from '$lib/server/features/scenes';
 import type { LootEntry } from '$lib/server/features/loot';
 import type { Lang } from '$lib/i18n';
@@ -133,7 +133,17 @@ const scenes = scenesRaw.map((s) => {
 	const raw = (r.data.characters ?? []) as { id: string; name: string; level?: number }[];
 	const characters = raw.map((ch) => ({ id: ch.id, name: ch.name }));
 	const party = partyDefaults(raw.map((ch) => (typeof ch.level === 'number' ? ch.level : 1)));
+	const battleOptions: { tier: number; adversaries: { id: string; name: string; nameLang: Lang }[] }[] = [];
+	if ((current as { encounter?: unknown } | undefined)?.encounter) {
+		for (const a of adversariesByTier(undefined, lang)) {
+			let g = battleOptions.find((o) => o.tier === a.tier);
+			if (!g) battleOptions.push((g = { tier: a.tier, adversaries: [] }));
+			g.adversaries.push({ id: a.id, name: a.name, nameLang: a.nameLang });
+		}
+		battleOptions.sort((x, y) => x.tier - y.tier);
+	}
 	return {
+		battleOptions,
 		campaign: r.data, chosen, currentScene: (current?.title as string | undefined) ?? null,
 		step: url?.searchParams.get('step') === 'build' ? ('build' as const) : ('run' as const),
 		scenes, journal, characters, party, environments: listSrd('environments', lang)
@@ -267,6 +277,10 @@ add: async (e) => {
 	battleHp: async (e) => {
 		const f = await e.request.formData();
 		return run(e, 'POST', `${encPath(e, f)}/hp`, { adversaryId: text(f.get('adversaryId')), index: Number(f.get('index')), delta: Number(f.get('delta')) });
+	},
+	battleAdd: async (e) => {
+		const f = await e.request.formData();
+		return run(e, 'POST', `${encPath(e, f)}/adversaries`, { adversaryId: text(f.get('adversaryId')), count: Number(f.get('count')) });
 	},
 	deleteEncounter: async (e) => {
 		const f = await e.request.formData();
