@@ -104,7 +104,9 @@ test('the current scene title is in data-testid=current-scene on the campaign pa
 	const a = await addScene(c.id, 'Quiet');
 	const b = await addScene(c.id, 'Showdown');
 	let p = await open(`/campaigns/${c.id}`);
-	assert.equal(await p.locator('[data-testid=current-scene]').count(), 0);
+	// #307: with no current scene the block is a one-line notice, without any scene title
+	assert.ok(!((await p.locator('[data-testid=current-scene]').textContent()) ?? '').match(/Quiet|Showdown/));
+	assert.equal(await p.locator('[data-testid=current-scene] h2').count(), 0);
 	await api('PATCH', `/api/campaigns/${c.id}/scenes/${b.id}`, { status: 'current' });
 	for (const lang of ['en', 'fr']) {
 		p = await open(`/campaigns/${c.id}`, lang);
@@ -114,7 +116,9 @@ test('the current scene title is in data-testid=current-scene on the campaign pa
 	}
 	await api('PATCH', `/api/campaigns/${c.id}/scenes/${b.id}`, { status: 'done' });
 	p = await open(`/campaigns/${c.id}`);
-	assert.equal(await p.locator('[data-testid=current-scene]').count(), 0);
+	// #307: with no current scene the block is a one-line notice, without any scene title
+	assert.ok(!((await p.locator('[data-testid=current-scene]').textContent()) ?? '').match(/Quiet|Showdown/));
+	assert.equal(await p.locator('[data-testid=current-scene] h2').count(), 0);
 	void a;
 });
 

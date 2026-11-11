@@ -11,7 +11,6 @@
 	import { translate } from '$lib/i18n';
 
 	import Help from '$lib/components/Help.svelte';
-	import Chosen from '$lib/components/Chosen.svelte';
 	const ADJUSTMENTS = ['easier', 'damageBoost', 'harder'] as const;
 	const badge: Record<string, string> = { planned: 'bg-muted', current: 'bg-accent', done: 'bg-calm' };
 	let { data, form: rawForm } = $props();
@@ -55,20 +54,20 @@
 {#snippet battleUnits(a: Adversary & { units: { index: number; marked: number; max: number; defeated: boolean }[] }, sceneId: string)}
 	{#each a.units as u (u.index)}
 		{@const label = a.count > 1 ? `${a.name} ${u.index + 1}` : a.name}
-		<div class="mt-2 flex flex-wrap gap-2 {u.defeated ? 'text-muted' : ''}" data-testid="battle-unit" data-adversary={a.id} data-index={u.index}>
+		<div class="mt-2 flex flex-wrap items-center gap-2 {u.defeated ? 'text-muted' : ''}" data-testid="battle-unit" data-adversary={a.id} data-index={u.index}>
 			<span lang={a.nameLang}>{label}</span>
 			<span data-testid="unit-hp">{u.marked}/{u.max}</span>
 			{#if u.defeated}<span data-testid="unit-defeated">{t('battle.defeated')}</span>{:else}
-				<form use:enhance={busy} class="flex gap-2" method="POST" action="?/battleDamage">
+				<form use:enhance={busy} class="mb-0 flex items-center gap-2" method="POST" action="?/battleDamage">
 					<input type="hidden" name="sceneId" value={sceneId} />
 					<input type="hidden" name="adversaryId" value={a.id} />
 					<input type="hidden" name="index" value={u.index} />
-					<input class="w-20" type="number" name="amount" min="1" max="999" required data-testid="unit-damage" aria-label={translate(data.lang, 'battle.amount', { name: label })} />
-					<button type="submit" data-testid="unit-hit">{t('battle.hit')}</button>
+					<input class="mb-0! w-20" type="number" name="amount" min="1" max="999" required data-testid="unit-damage" aria-label={translate(data.lang, 'battle.amount', { name: label })} />
+					<button type="submit" class="min-h-11 min-w-11" data-testid="unit-hit">{t('battle.hit')}</button>
 				</form>
 			{/if}
 			{#each [{ id: 'unit-hp-plus', d: 1, k: 'battle.hpUp', tx: '+1' }, { id: 'unit-hp-minus', d: -1, k: 'battle.hpDown', tx: '-1' }] as b (b.id)}
-				<form use:enhance={busy} method="POST" action="?/battleHp">
+				<form use:enhance={busy} class="mb-0" method="POST" action="?/battleHp">
 					<input type="hidden" name="sceneId" value={sceneId} />
 					<input type="hidden" name="adversaryId" value={a.id} />
 					<input type="hidden" name="index" value={u.index} />
@@ -140,7 +139,7 @@
 {#if form?.error && form.modal !== 'scene'}<p role="alert">{t(form.error)}</p>{/if}
 
 {#if data.step === 'build'}
-<section class="rounded-[0.5rem] border-2 border-solid border-muted p-3" data-testid="build">
+<section class="border-none! p-0!" data-testid="build">
 <div class="grid grid-cols-1 gap-4 md:grid-cols-3 md:items-start">
 <div class="min-w-0 md:col-span-1" data-testid="build-party">
 <h2 class="mt-4 mb-2">{t('campaign.party')}</h2>
@@ -148,7 +147,7 @@
 	{#each c.characters as ch (ch.id)}
 		<li class="flex min-h-11 flex-wrap items-center gap-2" data-testid="party-member">
 			<a data-testid="character-name" href="/characters/{ch.id}">{ch.name}</a>
-			<span class="muted">{ch.class}, {t('character.level')} {ch.level}</span>
+			<span class="muted inline-flex items-center gap-1">{ch.class}, {t('character.level')} {ch.level}</span>
 		</li>
 	{:else}
 		<li>{t('campaign.none')}</li>
@@ -177,10 +176,27 @@
 {#each data.scenes as s, i (s.id)}
 	<article class="mb-4 rounded-[0.5rem] border-2 border-solid p-3 {s.status === 'current' ? 'border-accent' : 'border-muted'}"
 		data-testid="scene" data-status={s.status} aria-current={s.status === 'current' ? 'true' : undefined}>
-		<h3>
-			{s.title}
+		<div class="flex flex-wrap items-center gap-x-1 gap-y-0 [&_button]:px-2! [&_button]:text-[0.875rem]">
+			<h3 class="m-0! mr-1!">{s.title}</h3>
 			<span class="inline-block rounded-[999px] px-[0.6rem] text-[0.875rem] text-bg {badge[s.status]}" data-testid="scene-status">{t(`scenario.status.${s.status}`)}</span>
-		</h3>
+			<form use:enhance={busy} class="mb-0" method="POST" action="?/move&step=build">
+				<input type="hidden" name="sceneId" value={s.id} />
+				<button type="submit" name="position" value={i - 1} disabled={i === 0}>{t('scenario.moveUp')}</button>
+			</form>
+			<form use:enhance={busy} class="mb-0" method="POST" action="?/move&step=build">
+				<input type="hidden" name="sceneId" value={s.id} />
+				<button type="submit" name="position" value={i + 1} disabled={i === data.scenes.length - 1}>{t('scenario.moveDown')}</button>
+			</form>
+			<form use:enhance={busy} class="mb-0" method="POST" action="?/status&step=build">
+				<input type="hidden" name="sceneId" value={s.id} />
+				{#if s.status !== 'current'}<button type="submit" name="status" value="current">{t('scenario.setCurrent')}</button>{/if}
+				{#if s.status !== 'done'}<button type="submit" name="status" value="done">{t('scenario.markDone')}</button>{/if}
+			</form>
+			<form use:enhance={busy} class="mb-0" method="POST" action="?/delete&step=build">
+				<input type="hidden" name="sceneId" value={s.id} />
+				<button type="submit">{t('scenario.delete')}</button>
+			</form>
+		</div>
 		{#if s.notes}<p class="whitespace-pre-line">{s.notes}</p>{/if}
 		{#if s.environment}
 			{@const env = s.environment}
@@ -194,40 +210,21 @@
 				</ul>
 			</div>
 		{/if}
-		<div class="flex flex-wrap gap-2">
-			<form use:enhance={busy} method="POST" action="?/move&step=build">
-				<input type="hidden" name="sceneId" value={s.id} />
-				<button type="submit" name="position" value={i - 1} disabled={i === 0}>{t('scenario.moveUp')}</button>
-			</form>
-			<form use:enhance={busy} method="POST" action="?/move&step=build">
-				<input type="hidden" name="sceneId" value={s.id} />
-				<button type="submit" name="position" value={i + 1} disabled={i === data.scenes.length - 1}>{t('scenario.moveDown')}</button>
-			</form>
-			<form use:enhance={busy} method="POST" action="?/status&step=build">
-				<input type="hidden" name="sceneId" value={s.id} />
-				{#if s.status !== 'current'}<button type="submit" name="status" value="current">{t('scenario.setCurrent')}</button>{/if}
-				{#if s.status !== 'done'}<button type="submit" name="status" value="done">{t('scenario.markDone')}</button>{/if}
-			</form>
-			<form use:enhance={busy} method="POST" action="?/delete&step=build">
-				<input type="hidden" name="sceneId" value={s.id} />
-				<button type="submit">{t('scenario.delete')}</button>
-			</form>
-		</div>
 		<h4>{t('loot.title')}</h4>
-		<form use:enhance={busy} method="POST" action="?/roll&step=build">
+		<form use:enhance={busy} class="flex flex-wrap items-end gap-2" method="POST" action="?/roll&step=build">
 			<input type="hidden" name="sceneId" value={s.id} />
-			<label>{t('loot.table')}
+			<label class="mb-0!">{t('loot.table')}
 				<select name="table">
 					<option value="items">{t('loot.table.items')}</option>
 					<option value="consumables">{t('loot.table.consumables')}</option>
 				</select>
 			</label>
-			<label>{t('loot.rarity')}
+			<label class="mb-0!">{t('loot.rarity')}
 				<select name="rarity">
 					{#each ['common', 'uncommon', 'rare', 'legendary'] as r (r)}<option value={r}>{t(`loot.rarity.${r}`)}</option>{/each}
 				</select>
 			</label>
-			<label>{t('loot.count')} <input name="count" type="number" min="1" max="10" value="1" required /></label>
+			<label class="mb-0!">{t('loot.count')} <input name="count" type="number" min="1" max="10" value="1" required /></label>
 			<button type="submit">{t('loot.roll')}</button>
 		</form>
 		{#each s.loot as l (l.id)}
@@ -244,12 +241,12 @@
 			</div>
 		{/each}
 		<h4>{t('encounter.title')}</h4>
-		<form use:enhance={busy} method="POST" action="?/generate&step=build">
+		<form use:enhance={busy} class="flex flex-wrap items-end gap-2" method="POST" action="?/generate&step=build">
 			<input type="hidden" name="sceneId" value={s.id} />
-			<label>{t('encounter.partySize')} <input name="partySize" type="number" min="1" max="8" value={s.encounter?.partySize ?? data.party.partySize} required /></label>
-			<label>{t('encounter.tier')} <input name="tier" type="number" min="1" max="4" value={s.encounter?.tier ?? data.party.tier} required /></label>
+			<label class="mb-0!">{t('encounter.partySize')} <input name="partySize" type="number" min="1" max="8" value={s.encounter?.partySize ?? data.party.partySize} required /></label>
+			<label class="mb-0!">{t('encounter.tier')} <input name="tier" type="number" min="1" max="4" value={s.encounter?.tier ?? data.party.tier} required /></label>
 			{#each ADJUSTMENTS as a (a)}
-				<label><input type="checkbox" name="adjustments" value={a} checked={s.encounter?.adjustments.includes(a) ?? false} /> {t(`encounter.adjust.${a}`)}</label>
+				<label class="mb-0!"><input type="checkbox" name="adjustments" value={a} checked={s.encounter?.adjustments.includes(a) ?? false} /> {t(`encounter.adjust.${a}`)}</label>
 			{/each}
 			<button type="submit">{s.encounter ? t('encounter.regenerate') : t('encounter.generate')}</button>
 		</form>
@@ -367,18 +364,17 @@
 <h2 class="mt-4 mb-0 md:col-span-2 lg:col-span-1">{t('campaign.characters')}</h2>
 {#each c.characters as ch (ch.id)}
 	<article class="mb-0! min-w-0" data-testid="character-card">
-		<h3>
-			<a data-testid="character-name" href="/characters/{ch.id}">{ch.name}</a>
+		<div class="flex flex-wrap items-center gap-x-1 gap-y-0 [&_button]:px-2! [&_button]:text-[0.875rem]">
+			<h3 class="m-0!"><a class="block" data-testid="character-name" href="/characters/{ch.id}">{ch.name}</a></h3>
 			{#if ch.hp.marked === ch.hp.max}<span class="inline-block rounded-[999px] px-[0.6rem] text-[0.875rem] text-bg bg-danger" data-testid="down">{t('badge.down')}</span>{/if}
-		</h3>
-		<div class="muted">{ch.class}, {t('character.level')} {ch.level} <Help id="level" name={t('character.level')} lang={data.lang} /></div>
-		<Chosen chosen={(data.chosen as Record<string, never>)[ch.id]} lang={data.lang} />
+			<span class="muted inline-flex items-center gap-1">{ch.class}, {t('character.level')} {ch.level} <Help id="level" name={t('character.level')} lang={data.lang} /></span>
+		</div>
+		<ConditionBadges conditions={ch.conditions} lang={data.lang} />
 		{#each TRACKERS as key (key)}
 			<Tracker name={key} label={t(`tracker.${key}`)} helpId={key} action="?/tracker" hidden={{ characterId: ch.id, tracker: key }} lang={data.lang}
 				{...trackerValues(ch[key])} />
 		{/each}
 		<DefenseLine evasion={ch.evasion} major={ch.majorThreshold} severe={ch.severeThreshold} lang={data.lang} />
-		<ConditionBadges conditions={ch.conditions} lang={data.lang} />
 		<DamageForm action="?/damage" characterId={ch.id} lang={data.lang} />
 	</article>
 {:else}
