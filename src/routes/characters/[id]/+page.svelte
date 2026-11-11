@@ -16,6 +16,7 @@
 	const t = (key: string, params?: Record<string, string | number>) => translate(data.lang, key, params);
 	const n = (v: number) => formatNumber(data.lang, v);
 	const valuesOf = (kind: string): Record<string, any> => (form?.modal === kind ? (form?.values ?? {}) : {});
+	const editValues = $derived(valuesOf('edit'));
 	const expValues = $derived(valuesOf('experience'));
 	const itemValues = $derived(valuesOf('item'));
 	const cardValues = $derived(valuesOf('card'));
@@ -43,7 +44,61 @@
 	{#if c.hp.marked === c.hp.max}<span class="inline-block rounded-[999px] px-[0.6rem] text-[0.875rem] text-bg bg-danger" data-testid="down">{t('badge.down')}</span>{/if}
 </h1>
 <Divider />
-<p><a data-testid="campaign-run-link" href="/campaigns/{c.campaignId}?step=run">{t('character.runLink')}</a></p>
+<div><a data-testid="campaign-run-link" href="/campaigns/{c.campaignId}?step=run">{t('character.runLink')}</a> <Modal kind="edit" title={t('section.edit')} lang={data.lang}>
+<form use:enhance={busy} method="POST" action="?/edit" class="grid grid-cols-[minmax(0,1fr)] gap-x-4 *:min-w-0 min-[600px]:grid-cols-[repeat(2,minmax(0,1fr))]" class:form-grid={true}>
+	{#if form?.modal === 'edit' && form.error}<p role="alert" class="col-span-full">{t(form.error)}</p>{/if}
+	{#each fields.slice(0, 1) as [name, label, type, value] (name)}
+		<label>{t(label)} <input {type} {name} value={editValues[name] ?? value} required /></label>
+	{/each}
+	<label>
+		{t('field.class')}
+		<select name="class">
+			{#if !data.picks.classes.some((p: { value: string }) => p.value === c.class)}
+				<option value={c.class} selected={(editValues.class ?? c.class) === c.class}>{c.class}</option>
+			{/if}
+			{#each data.picks.classes as p (p.id)}
+				<option value={p.value} selected={p.value === (editValues.class ?? c.class)}>{p.name}</option>
+			{/each}
+		</select>
+	</label>
+	<label>
+		{t('field.subclass')}
+		<select name="subclass">
+			<option value="" selected={!(editValues.subclass ?? c.subclass)}>{t('option.none')}</option>
+			{#if c.subclass && !data.picks.subclasses.some((p: { id: string }) => p.id === c.subclass)}
+				<option value={c.subclass} selected={(editValues.subclass ?? c.subclass) === c.subclass}>{c.subclass}</option>
+			{/if}
+			{#each data.picks.subclasses as p (p.id)}
+				<option value={p.id} selected={p.id === (editValues.subclass ?? c.subclass)}>{p.name}</option>
+			{/each}
+		</select>
+	</label>
+	{#each [{ k: 'ancestry' as const, list: data.picks.ancestries }, { k: 'community' as const, list: data.picks.communities }] as { k, list } (k)}
+		<label>
+			{t(`field.${k}`)}
+			<select name={k}>
+				<option value="" selected={!(editValues[k] ?? c[k])}>{t('option.none')}</option>
+				{#if c[k] && !list.some((p: { id: string }) => p.id === c[k])}
+					<option value={c[k]} selected={(editValues[k] ?? c[k]) === c[k]}>{c[k]}</option>
+				{/if}
+				{#each list as p (p.id)}
+					<option value={p.id} selected={p.id === (editValues[k] ?? c[k])}>{p.name}</option>
+				{/each}
+			</select>
+		</label>
+	{/each}
+	{#each fields.slice(1) as [name, label, type, value] (name)}
+		<label>{t(label)} <input {type} {name} value={editValues[name] ?? value} required /></label>
+	{/each}
+	{#each traits as k (k)}
+		<div>
+			<label>{t(`trait.${k}`)} <input type="number" name="traits.{k}" min="-5" max="5" step="1" value={editValues[`traits.${k}`] ?? c.traits[k]} required /></label>
+			<Help id={k} name={t(`trait.${k}`)} text={t(`trait.help.${k}`)} lang={data.lang} />
+		</div>
+	{/each}
+	<button type="submit" class="[justify-self:start] min-[600px]:col-start-1">{t('action.save')}</button>
+</form>
+</Modal></div>
 <div class="muted">{c.class}, {t('character.level')} {c.level} <Help id="level" name={t('character.level')} lang={data.lang} /></div>
 {#if data.domains.length}
 	<ul class="mt-0 mb-3 flex list-none flex-wrap gap-x-4 pl-0!">
@@ -284,60 +339,5 @@
 </form>
 </div>
 
-<div class="md:col-span-2">
-<h2 class="mt-4 mb-2">{t('section.edit')}</h2>
-<form use:enhance={busy} method="POST" action="?/edit" class="grid grid-cols-[minmax(0,1fr)] gap-x-4 *:min-w-0 md:grid-cols-[repeat(2,minmax(0,1fr))]" class:form-grid={true}>
-	{#each fields.slice(0, 1) as [name, label, type, value] (name)}
-		<label>{t(label)} <input {type} {name} {value} required /></label>
-	{/each}
-	<label>
-		{t('field.class')}
-		<select name="class">
-			{#if !data.picks.classes.some((p: { value: string }) => p.value === c.class)}
-				<option value={c.class} selected>{c.class}</option>
-			{/if}
-			{#each data.picks.classes as p (p.id)}
-				<option value={p.value} selected={p.value === c.class}>{p.name}</option>
-			{/each}
-		</select>
-	</label>
-	<label>
-		{t('field.subclass')}
-		<select name="subclass">
-			<option value="" selected={!c.subclass}>{t('option.none')}</option>
-			{#if c.subclass && !data.picks.subclasses.some((p: { id: string }) => p.id === c.subclass)}
-				<option value={c.subclass} selected>{c.subclass}</option>
-			{/if}
-			{#each data.picks.subclasses as p (p.id)}
-				<option value={p.id} selected={p.id === c.subclass}>{p.name}</option>
-			{/each}
-		</select>
-	</label>
-	{#each [{ k: 'ancestry' as const, list: data.picks.ancestries }, { k: 'community' as const, list: data.picks.communities }] as { k, list } (k)}
-		<label>
-			{t(`field.${k}`)}
-			<select name={k}>
-				<option value="" selected={!c[k]}>{t('option.none')}</option>
-				{#if c[k] && !list.some((p: { id: string }) => p.id === c[k])}
-					<option value={c[k]} selected>{c[k]}</option>
-				{/if}
-				{#each list as p (p.id)}
-					<option value={p.id} selected={p.id === c[k]}>{p.name}</option>
-				{/each}
-			</select>
-		</label>
-	{/each}
-	{#each fields.slice(1) as [name, label, type, value] (name)}
-		<label>{t(label)} <input {type} {name} {value} required /></label>
-	{/each}
-	{#each traits as k (k)}
-		<div>
-			<label>{t(`trait.${k}`)} <input type="number" name="traits.{k}" min="-5" max="5" step="1" value={c.traits[k]} required /></label>
-			<Help id={k} name={t(`trait.${k}`)} text={t(`trait.help.${k}`)} lang={data.lang} />
-		</div>
-	{/each}
-	<button type="submit" class="[justify-self:start] md:col-start-1">{t('action.save')}</button>
-</form>
-</div>
 
 </div>

@@ -96,7 +96,7 @@ test('sheet shows signed traits in trait-<name> elements', async () => {
 test('edit form has six number inputs min -5 max 5 and saves new values', async () => {
 	const { r } = await mk();
 	const page = await browser.newPage();
-	await page.goto(BASE + `/characters/${r.json.id}`);
+	await page.goto(BASE + `/characters/${r.json.id}?new=edit`);
 	for (const n of NAMES) {
 		const inp = page.locator(`form[action="?/edit"] input[type=number][name$="${n}"]`);
 		assert.equal(await inp.count(), 1, n);

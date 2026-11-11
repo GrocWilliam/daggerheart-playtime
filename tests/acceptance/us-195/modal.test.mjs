@@ -233,14 +233,14 @@ for (const k of KINDS) {
 	});
 }
 
-test('the edit form is not inside any dialog', async () => {
+test('the edit form is inside the modal-edit dialog', async () => {
 	const id = await mk();
 	for (const js of [false, true]) {
 		const { p, close } = await open(`/characters/${id}`, { js });
 		try {
 			const f = p.locator('form[action="?/edit"]');
 			assert.equal(await f.count(), 1);
-			assert.equal(await f.evaluate((e) => e.closest('dialog') === null), true);
+			assert.equal(await f.evaluate((e) => e.closest('dialog')?.dataset.testid), 'modal-edit');
 		} finally { await close(); }
 	}
 });

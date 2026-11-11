@@ -98,7 +98,7 @@ for (const [name, w, h] of [['phone', 375, 667], ['desktop', 1280, 800]]) {
 		const id = await setup(name);
 		const ctx = await browser.newContext({ viewport: { width: w, height: h } });
 		const page = await ctx.newPage();
-		await page.goto(BASE + `/characters/${id}`);
+		await page.goto(BASE + `/characters/${id}?new=edit`);
 		const r = await page.evaluate(() => {
 			const q = (s, r = document) => r.querySelector(s);
 			const cs = (el) => getComputedStyle(el);
@@ -142,7 +142,7 @@ for (const [name, w, h] of [['phone', 375, 667], ['desktop', 1280, 800]]) {
 				th: pick(q('th', table), ['color', 'borderBottomWidth', 'borderBottomColor', 'textAlign']),
 				row: pick(row, ['display', 'backgroundColor', 'borderTopWidth', 'borderTopColor', 'borderTopStyle', 'borderBottomWidth', 'borderTopLeftRadius', 'marginBottom']),
 				td: pick(q('td', row), ['display', 'paddingTop', 'textAlign', 'verticalAlign', 'overflowWrap']),
-				tdForm: pick(q('td form', row), ['display', 'flexWrap', 'alignItems', 'columnGap', 'backgroundColor', 'paddingTop', 'marginBottom']),
+				tdForm: pick(q('td form[action="?/removeItem"]', row), ['display', 'flexWrap', 'alignItems', 'columnGap', 'backgroundColor', 'paddingTop', 'marginBottom']),
 				cards: pick(cards, ['listStyleType', 'paddingLeft']),
 				cardLi: pick(q('[data-testid=card]'), ['overflowWrap']),
 				cardMuted: cs(q('[data-testid=card] span:nth-of-type(2)')).color,
@@ -279,8 +279,8 @@ test('focus outline stays teal, 2px, offset 2px on the character sheet', async (
 	const id = await setup('focus');
 	const ctx = await browser.newContext({ viewport: { width: 375, height: 667 } });
 	const page = await ctx.newPage();
-	await page.goto(BASE + `/characters/${id}`);
 	for (const sel of ['[data-testid=hp]', 'form[action="?/edit"] button:not([data-testid^="help-"])', 'form[action="?/edit"] input[name=name]']) {
+		await page.goto(BASE + `/characters/${id}${sel === '[data-testid=hp]' ? '' : '?new=edit'}`);
 		const el = sel === '[data-testid=hp]' ? page.locator(sel).locator('xpath=..').locator('button:not([data-testid^="help-"])').first() : page.locator(sel).first();
 		await el.focus();
 		await page.keyboard.press('Shift+Tab');

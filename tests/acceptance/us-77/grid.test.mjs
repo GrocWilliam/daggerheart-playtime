@@ -13,7 +13,7 @@ before(async () => {
 		name: 'Hero', class: 'Guardian', level: 2, evasion: 10, majorThreshold: 5, severeThreshold: 10, maxHp: 6, maxStress: 6, armorSlots: 2
 	}))).json();
 	targets = [
-		{ label: 'edit', path: `/characters/${ch.id}`, action: '?/edit' }
+		{ label: 'edit', path: `/characters/${ch.id}?new=edit`, action: '?/edit' }
 	];
 	browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH });
 });

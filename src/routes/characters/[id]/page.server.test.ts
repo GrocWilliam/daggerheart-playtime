@@ -11,9 +11,13 @@ function recorder(status = 200, body: unknown = {}) {
 	}) as unknown as typeof fetch;
 	return { calls, f };
 }
-const run = (name: keyof typeof actions, fields: Record<string, string>, f: typeof fetch) =>
+const run = (name: keyof typeof actions, fields: Record<string, string>, f: typeof fetch, enhanced = true) =>
 	(actions[name] as never as Act)({
-		request: new Request('http://x', { method: 'POST', body: new URLSearchParams(fields) }),
+		request: new Request('http://x', {
+			method: 'POST',
+			body: new URLSearchParams(fields),
+			headers: enhanced ? { 'x-sveltekit-action': 'true' } : {}
+		}),
 		params: { id: 'c1' },
 		fetch: f
 	});
@@ -22,6 +26,19 @@ describe('character page server', () => {
 	it('load 404s for unknown character', async () => {
 		const { f } = recorder(404, { error: 'nf' });
 		await expect(load({ params: { id: 'x' }, fetch: f } as never)).rejects.toMatchObject({ status: 404 });
+	});
+
+	it('edit redirects 303 without enhance and fails with the modal and typed values', async () => {
+		await expect(run('edit', { name: 'A', class: 'B' }, recorder().f, false)).rejects.toMatchObject({
+			status: 303,
+			location: '/characters/c1'
+		});
+		const r = (await run('edit', { name: '', class: 'B', level: '4', 'traits.agility': '1' }, recorder(400, { error: 'x' }).f)) as {
+			status: number;
+			data: { error: string; modal: string; values: Record<string, string> };
+		};
+		expect(r.status).toBe(400);
+		expect(r.data).toMatchObject({ error: 'error.invalid', modal: 'edit', values: { name: '', level: '4', 'traits.agility': '1' } });
 	});
 
 	it('edit patches numeric fields as numbers', async () => {

@@ -1,4 +1,4 @@
-import { error, fail } from '@sveltejs/kit';
+import { error, fail, redirect } from '@sveltejs/kit';
 import { pickList, pickOf, subclassesOf, getSrd, cardsByIds, cardGroups, domainsOfClass, itemGroups, itemPicks, weaponGroups, armorGroups, gearDetail } from '$lib/server/features/srd';
 import { TRAITS, tierOfLevel, conditionFieldSchema, trackerFieldSchema } from '$lib/server/features/characters';
 type Actions = import('./$types').Actions;
@@ -106,7 +106,8 @@ export const actions: Actions = {
 			class: form.get('class') ?? ''
 		};
 		for (const k of NUMERIC) body[k] = num(form.get(k));
-		body.traits = Object.fromEntries(TRAITS.map((k) => [k, num(form.get(`traits.${k}`))]));
+		if (TRAITS.some((k) => form.has(`traits.${k}`)))
+			body.traits = Object.fromEntries(TRAITS.map((k) => [k, num(form.get(`traits.${k}`))]));
 		const KINDS = { subclass: 'subclasses', ancestry: 'ancestries', community: 'communities' } as const;
 		let stored: Record<string, unknown> | null | undefined;
 		for (const k of Object.keys(KINDS) as (keyof typeof KINDS)[]) {
@@ -140,7 +141,13 @@ export const actions: Actions = {
 			if (sc && String(sc.class) !== String(body.class).toUpperCase()) body.subclass = null;
 		}
 		const r = await call(fetch, 'PATCH', `/api/characters/${enc(params.id)}`, body);
-		return r.ok ? { ok: true } : failure(r);
+		if (r.ok) {
+			if (!request.headers.has('x-sveltekit-action')) redirect(303, `/characters/${enc(params.id)}`);
+			return { ok: true };
+		}
+		const values: Record<string, string> = {};
+		for (const [k, v] of form.entries()) if (typeof v === 'string') values[k] = v;
+		return failure(r, { modal: 'edit', values });
 	},
 	condition: async ({ request, params, fetch }) => {
 		const form = await request.formData();

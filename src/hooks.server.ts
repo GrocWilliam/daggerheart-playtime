@@ -28,6 +28,18 @@ export const handle: Handle = async ({ event, resolve }) => {
 			return new Response('Cross-site form submissions are forbidden', { status: 403 });
 		}
 	}
+	// A plain form post that accepts anything (`*/*`, no enhance header) is a no-JS post: SvelteKit would answer it with
+	// a JSON redirect envelope, so ask for HTML to get a real 303.
+	if (
+		request.method === 'POST' &&
+		isForm &&
+		!request.headers.has('x-sveltekit-action') &&
+		(request.headers.get('accept') ?? '*/*').trim() === '*/*'
+	) {
+		const headers = new Headers(request.headers);
+		headers.set('accept', 'text/html');
+		event.request = new Request(request, { headers });
+	}
 	const lang = resolveLang(event.cookies.get('lang'), request.headers.get('accept-language'));
 	event.locals.lang = lang;
 	return resolve(event, {

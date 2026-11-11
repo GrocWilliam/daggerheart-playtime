@@ -30,7 +30,7 @@ async function edit(id, fill, { lang = 'en', js = false } = {}) {
 	await ctx.addCookies([{ name: 'lang', value: lang, url: BASE }]);
 	const page = await ctx.newPage();
 	try {
-		await page.goto(`${BASE}/characters/${id}`);
+		await page.goto(`${BASE}/characters/${id}?new=edit`);
 		const form = page.locator('form[action="?/edit"]');
 		for (const [k, v] of Object.entries(fill)) await form.locator(`input[name="${k}"]`).fill(String(v));
 		await Promise.all([page.waitForLoadState('load'), form.locator('button[type="submit"]').click()]);

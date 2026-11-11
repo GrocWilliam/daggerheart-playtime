@@ -27,6 +27,7 @@ Per page:
 - Home: campaign grid with 1, 2 and 3 columns.
 - Run step: below 768px one column. From 768px, Fear and `current-scene` side by side, then `party` as a 2-column grid, then `journal`. From 1024px two columns: scene, notes and journal on the left; Fear and `party` on the right, party in 1 column.
 - Build step: from 768px `build-party` takes 1/3 and `build-scenes` 2/3, side by side; below that they stack.
+- The character sheet's edit form is in `<Modal kind="edit">` (opener `new-edit` in the header next to `campaign-run-link`; no Edit section); grid 1 column, 2 from `min-[600px]:`; `edit` fails with `modal: 'edit'` and `values`, redirects 303 to `/characters/:id` on success without enhance.
 - The Add scene form is in `<Modal kind="scene">` inside `build-scenes` (opener `new-scene`); its `add` action fails with `modal: 'scene'` and `values`, and redirects 303 to `?step=build` on success unless the request is an enhance one (`x-sveltekit-action`).
 - Character sheet: `sheet-sections` is a 2-column grid from 768px. `sheet-trackers` and `sheet-inventory` span both columns.
 - Reference: entries in 2 columns from 768px.
@@ -82,5 +83,5 @@ New (*planned*):
 - Layout: `party`, `build-party`, `build-scenes`.
 - Sheet: `sheet-sections`, `sheet-trackers`, `sheet-traits`, `sheet-equipment`, `sheet-experiences`, `sheet-inventory`, `sheet-cards`, `sheet-notes`.
 - Openers: `new-campaign`, `new-scene`, `new-item`, `new-experience`, `new-card`, `new-character`.
-- Modals: `modal-campaign`, `modal-scene`, `modal-item`, `modal-experience`, `modal-card`, `modal-cancel`.
+- Modals: `modal-campaign`, `modal-scene`, `modal-item`, `modal-experience`, `modal-card`, `modal-edit`, `new-edit`, `modal-cancel`.
 - Tunnel: `tunnel-progress`, `tunnel-next`, `tunnel-back`, `tunnel-cancel`, `tunnel-summary`, `tunnel-edit-1`, `tunnel-edit-2`, `tunnel-edit-3`, `tunnel-derived`, `derived-evasion`, `derived-thresholds`, `derived-maxHp`, `derived-maxStress`, `derived-armorSlots`, `tunnel-create`.
