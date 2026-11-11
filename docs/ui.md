@@ -20,6 +20,7 @@ Links between them:
 - Body max width: 60rem from 768px, 72rem from 1024px.
 - Breakpoints: `md:` 768px, `lg:` 1024px, and `min-[600px]:` (modal only). Mobile first, no `max-width` queries.
 - Forms carry no box (`form` is only `margin-bottom: 0.75rem`); only `article`, `encounter-adversary`, `loot-entry` and the Modal panel keep the card look (surface background, `3px double` accent border, `0.5rem` radius). Sheet/DM-screen/Modal `h2` use `mt-4 mb-2`; the `Divider` stays under the page `h1` only.
+- One-row form (one field plus its submit): `flex flex-wrap items-end gap-2` on the `form`; a wrapping `label` is a flex item with `mb-0!` (the global `label` margin would misalign the button) and keeps its input `block`, so the button lines up with the input's bottom. Used by gold, equip selects, experience value, inventory quantity and the journal form (textarea label `flex-1`, full width below 768px).
 - Target viewports (width × height): 375×812, 768×1024, 1024×768 and 1180×820.
 
 Per page:

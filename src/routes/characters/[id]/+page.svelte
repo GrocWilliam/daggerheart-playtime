@@ -76,8 +76,8 @@
 	</div>
 {/snippet}
 {#snippet picker(name: string, label: string, groups: { tier: number; picks: { id: string; name: string }[] }[], current: string | null)}
-	<form use:enhance={busy} method="POST" action="?/equip">
-		<label>
+	<form use:enhance={busy} class="flex flex-wrap items-end gap-2" method="POST" action="?/equip">
+		<label class="mb-0!">
 			{t(label)}
 			<select {name}>
 				<option value="" selected={!current}>{t('option.none')}</option>
@@ -144,8 +144,8 @@
 <h2 class="mt-4 mb-2">{t('section.gold')}</h2>
 <Help id="gold" name={t('section.gold')} lang={data.lang} />
 <p data-testid="gold">{n(c.gold.chests)} {t('gold.chests')}, {n(c.gold.bags)} {t('gold.bags')}, {n(c.gold.handfuls)} {t('gold.handfuls')}</p>
-<form use:enhance={busy} method="POST" action="?/gold">
-	<label>{t('gold.adjust')} <input type="number" name="handfuls" step="1" required /></label>
+<form use:enhance={busy} class="flex flex-wrap items-end gap-2" method="POST" action="?/gold">
+	<label class="mb-0!">{t('gold.adjust')} <input type="number" name="handfuls" step="1" required /></label>
 	<button type="submit">{t('action.updateGold')}</button>
 </form>
 </div>
@@ -164,7 +164,7 @@
 	{#each c.experiences as ex (ex.id)}
 		<li data-testid="experience">
 			<span>{ex.name} +{ex.modifier}</span>
-			<form use:enhance={busy} method="POST" action="?/setExperience">
+			<form use:enhance={busy} class="flex flex-wrap items-end gap-2" method="POST" action="?/setExperience">
 				<input type="hidden" name="expId" value={ex.id} />
 				<input type="number" name="modifier" min="1" max="5" step="1" value={ex.modifier} required aria-label={t('experience.modifier')} />
 				<button type="submit">{t('action.update')}</button>
@@ -222,7 +222,7 @@
 						{/if}
 					</td>
 					<td>
-						<form use:enhance={busy} class="flex flex-nowrap items-center gap-2" method="POST" action="?/setQuantity">
+						<form use:enhance={busy} class="flex flex-wrap items-end gap-2" method="POST" action="?/setQuantity">
 							<input type="hidden" name="itemId" value={it.id} />
 							<input type="number" name="quantity" min="0" value={it.quantity} required />
 							<button type="submit">{t('action.update')}</button>

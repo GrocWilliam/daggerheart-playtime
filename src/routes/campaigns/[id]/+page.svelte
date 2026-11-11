@@ -401,8 +401,8 @@
 </div>
 <section class="min-w-0 rounded-[0.5rem] border-2 border-solid border-muted p-3 md:col-span-2 md:row-start-3 lg:col-span-1 lg:col-start-1 lg:row-start-2" data-testid="journal">
 <h2 class="mt-4 mb-2">{t('journal.title')}</h2>
-<form use:enhance={busy} method="POST" action="?/addJournal">
-	<label>{t('journal.text')} <textarea name="text" maxlength="2000"></textarea></label>
+<form use:enhance={busy} class="flex flex-wrap items-end gap-2" method="POST" action="?/addJournal">
+	<label class="mb-0! min-w-0 flex-1 basis-full md:basis-0">{t('journal.text')} <textarea name="text" maxlength="2000"></textarea></label>
 	<button type="submit">{t('journal.add')}</button>
 </form>
 {#each data.journal as j (j.id)}
