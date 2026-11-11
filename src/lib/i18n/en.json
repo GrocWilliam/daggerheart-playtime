@@ -270,5 +270,8 @@
 	"battle.addQuantity": "Quantity",
 	"battle.addWhich": "Adversary to add",
 	"battle.hpUp": "Mark one HP on {name}",
-	"battle.hpDown": "Clear one HP on {name}"
+	"battle.hpDown": "Clear one HP on {name}",
+	"tab.play": "Play",
+	"tab.gear": "Gear",
+	"tab.cards": "Cards"
 }

@@ -5,7 +5,13 @@
 	import { goto } from '$app/navigation';
 	import { translate, type Lang } from '$lib/i18n';
 
-	let { kind, title, lang, children }: { kind: string; title: string; lang: Lang; children: Snippet } = $props();
+	let {
+		kind,
+		title,
+		lang,
+		params: extra,
+		children
+	}: { kind: string; title: string; lang: Lang; params?: Record<string, string>; children: Snippet } = $props();
 
 	let dialog: HTMLDialogElement | undefined = $state();
 	let reopening = false;
@@ -13,6 +19,7 @@
 
 	const href = (u: URL, add: boolean): string => {
 		const params = new URLSearchParams(u.searchParams);
+		for (const [k, v] of Object.entries(extra ?? {})) params.set(k, v);
 		if (add) params.set('new', kind);
 		else params.delete('new');
 		const q = params.toString();

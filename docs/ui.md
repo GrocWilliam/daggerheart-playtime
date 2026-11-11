@@ -44,7 +44,7 @@ In `src/lib/components/`:
 - `DamageForm`: the damage form on one row (`flex flex-wrap items-end gap-2`): amount, "use armor", submit; props `action`, `characterId?`, `lang`.
 - These four import only `$lib/i18n`, `$app/forms`, `$lib/forms/busy`, `Help` and `Pips`, take `lang` and translate themselves; they never import routes.
 - `LanguageSwitcher`: `language-switcher`, `lang-en`, `lang-fr`.
-- `Modal.svelte`: the only dialog implementation, except the `Help` popover panel.
+- `Modal.svelte` (props `kind`, `title`, `lang`, optional `params: Record<string, string>` set on the opener and Cancel hrefs, e.g. `{ tab: 'gear' }`): the only dialog implementation, except the `Help` popover panel.
   - Props: `kind`, `title`, `lang`, children.
   - Renders the opener `new-<kind>` (`href="?new=<kind>"`, other params kept) and `<dialog data-testid="modal-<kind>" aria-labelledby="modal-<kind>-title">`, open when `?new=<kind>` or `form.modal === kind`.
   - The Cancel link is `data-testid="modal-cancel"`.

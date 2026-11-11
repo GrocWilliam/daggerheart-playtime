@@ -270,5 +270,8 @@
 	"battle.addQuantity": "Quantité",
 	"battle.addWhich": "Adversaire à ajouter",
 	"battle.hpUp": "Marquer un PV sur {name}",
-	"battle.hpDown": "Effacer un PV sur {name}"
+	"battle.hpDown": "Effacer un PV sur {name}",
+	"tab.play": "Jeu",
+	"tab.gear": "Équipement",
+	"tab.cards": "Cartes"
 }
