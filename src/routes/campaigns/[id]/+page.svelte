@@ -9,7 +9,6 @@
 	import DamageForm from '$lib/components/DamageForm.svelte';
 	import { TRACKERS, trackerValues } from '$lib/utils/trackers';
 	import { translate } from '$lib/i18n';
-	import Pips from '$lib/components/Pips.svelte';
 
 	import Help from '$lib/components/Help.svelte';
 	import Chosen from '$lib/components/Chosen.svelte';
@@ -301,12 +300,11 @@
 {/each}
 </section>
 {:else}
-<section class="rounded-[0.5rem] border-2 border-solid border-muted p-3" data-testid="run">
-<div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)] lg:grid-rows-[auto_1fr] lg:items-start">
-<div class="min-w-0 md:col-start-2 md:row-start-1 lg:col-start-1">
-<section>
+<div data-testid="run">
+<Tracker name="fear" label={t('campaign.fear')} helpId="fear" value={String(c.fear)} filled={c.fear} max={12} action="?/fear" lang={data.lang} />
+<div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] lg:grid-rows-[auto_1fr] lg:items-start">
 {#if cs}
-<div class="flow-root md:mt-[15px] lg:mt-0" data-testid="current-scene">
+<div class="flow-root min-w-0 md:col-span-2 lg:col-span-1 lg:col-start-1 lg:row-start-1" data-testid="current-scene">
 	<h2 class="mt-4 mb-2">{t('campaign.currentScene')}: {cs.title}</h2>
 	{#if cs.environment}
 		<div data-testid="scene-environment"><strong lang={cs.environment.nameLang}>{cs.environment.name}</strong> <span lang={data.lang}>{envType(cs.environment.type)}</span>
@@ -361,23 +359,12 @@
 	</form>
 </div>
 {:else}
-	<p>{t('run.noScene')} <a href="?step=build">{t('run.goBuild')}</a></p>
+<div class="min-w-0 md:col-span-2 lg:col-span-1 lg:col-start-1 lg:row-start-1" data-testid="current-scene">
+	<p class="m-0">{t('run.noScene')} <a href="?step=build">{t('run.goBuild')}</a></p>
+</div>
 {/if}
-</section>
-</div>
-<div class="min-w-0 md:col-start-1 md:row-start-1 lg:col-start-2">
-<form use:enhance={busy} class="flex flex-wrap items-center gap-2" method="POST" action="?/fear">
-	{t('campaign.fear')}:
-	<Help id="fear" name={t('campaign.fear')} lang={data.lang} />
-	<button type="submit" name="delta" value="-1">{t('action.decrease')}</button>
-	<span class="order-first -ml-[15px] min-w-[2ch] self-start text-center" data-testid="fear">{c.fear}</span>
-	<button type="submit" name="delta" value="1">{t('action.increase')}</button>
-</form>
-<Pips name="fear" max={12} filled={c.fear} />
-</div>
-<div class="min-w-0 md:col-span-2 md:row-start-2 lg:col-span-1 lg:col-start-2">
-<h2 class="mt-4 mb-2">{t('campaign.characters')}</h2>
-<div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-1" data-testid="party">
+<div class="grid min-w-0 grid-cols-1 gap-4 md:col-span-2 md:grid-cols-2 lg:col-span-1 lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:grid-cols-1" data-testid="party">
+<h2 class="mt-4 mb-0 md:col-span-2 lg:col-span-1">{t('campaign.characters')}</h2>
 {#each c.characters as ch (ch.id)}
 	<article class="mb-0! min-w-0" data-testid="character-card">
 		<h3>
@@ -398,8 +385,7 @@
 	<p>{t('campaign.none')}</p>
 {/each}
 </div>
-</div>
-<section class="min-w-0 rounded-[0.5rem] border-2 border-solid border-muted p-3 md:col-span-2 md:row-start-3 lg:col-span-1 lg:col-start-1 lg:row-start-2" data-testid="journal">
+<section class="min-w-0 rounded-[0.5rem] border-2 border-solid border-muted p-3 md:col-span-2 lg:col-span-1 lg:col-start-1 lg:row-start-2" data-testid="journal">
 <h2 class="mt-4 mb-2">{t('journal.title')}</h2>
 <form use:enhance={busy} class="flex flex-wrap items-end gap-2" method="POST" action="?/addJournal">
 	<label class="mb-0! min-w-0 flex-1 basis-full md:basis-0">{t('journal.text')} <textarea name="text" maxlength="2000"></textarea></label>
@@ -419,6 +405,5 @@
 {/each}
 </section>
 </div>
-
-</section>
+</div>
 {/if}
