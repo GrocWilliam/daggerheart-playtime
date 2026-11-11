@@ -248,7 +248,8 @@ test('value text and − / + buttons are unchanged and the pips sit on their own
 				assert.equal(r.text, r.t === 'hope' ? String(e[1]) : `${e[1]}/${e[0]}`, `${id} ${r.t} text`);
 			}
 			assert.ok(r.pipsH > 0, `${id} ${r.t}: pips visible`);
-			assert.ok(r.pipsTop >= r.spanBottom - 0.5 && r.pipsTop >= r.btnBottom - 0.5,
+			// us-301: HP/Stress/Hope/Armor pips now share the tracker row (Tracker.svelte); only Fear keeps them below.
+			if (r.t === 'fear') assert.ok(r.pipsTop >= r.spanBottom - 0.5 && r.pipsTop >= r.btnBottom - 0.5,
 				`${id} ${r.t}: pips (top ${r.pipsTop}) below value/buttons (bottom ${Math.max(r.spanBottom, r.btnBottom)})`);
 			// value and buttons still on one line
 			assert.ok(r.spanTop < r.btnBottom && r.btnTop < r.spanBottom, `${id} ${r.t}: value and buttons on one line`);

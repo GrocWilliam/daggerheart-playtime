@@ -95,7 +95,7 @@ test('body has a fixed radial-gradient background', async () => {
 	});
 });
 
-test('article and card form have a 3px double accent border, radius 8px; character cards 3px double', async () => {
+test('article has a 3px double accent border, radius 8px; forms have no box (us-300); character cards 3px double', async () => {
 	for (const w of [375, 1280])
 		await withPage(campaignPath, w, async (page) => {
 			const r = await page.evaluate(() => {
@@ -110,9 +110,10 @@ test('article and card form have a 3px double accent border, radius 8px; charact
 				if (bgToo) assert.deepEqual(p[4], ['8px', '8px', rgb(PALETTE['--surface'])], name);
 			};
 			assert.ok(r.cards.length >= 2);
-			assert.ok(r.form.length >= 1, 'a card form on the campaign page');
+			assert.ok(r.form.length >= 1, 'a form on the campaign page');
 			for (const p of r.article) check(p, 'article', true);
-			for (const p of r.form) check(p, 'form', true);
+			// us-300 removed the box around forms: no border, transparent background
+			for (const p of r.form) { for (let i = 0; i < 4; i++) assert.equal(p[i][0], 'none', 'form'); assert.equal(p[4][2], 'rgba(0, 0, 0, 0)', 'form'); }
 			for (const p of r.cards) check(p, 'character-card', false);
 		});
 });

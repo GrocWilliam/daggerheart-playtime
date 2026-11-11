@@ -48,7 +48,8 @@ for (const path of [0, 1, 2]) for (const lang of ['en', 'fr']) for (const vp of 
 const name = (m, what) => `${what} [${['/', 'campaign', 'character'][m.path]} ${m.lang} ${m.vp.width}px]`;
 
 for (const m of matrix) {
-	test(name(m, 'each non-tracker form is a card: --surface background, radius >= 8px, padding >= 12px'), async () => {
+	// us-300 removed the box around forms (superseding the card look): no background, no border
+	test(name(m, 'each non-tracker form has no box: transparent background, no border'), async () => {
 		const { page, close } = await open(paths[m.path], m.lang, m.vp);
 		try {
 			const r = await page.evaluate(`(() => {
@@ -57,14 +58,13 @@ for (const m of matrix) {
 				return [...document.querySelectorAll('form:not(.tracker)')].filter((f) => !f.closest('table') && f.offsetParent !== null).map((f) => {
 					const s = getComputedStyle(f);
 					return { bg: s.backgroundColor, surface, radius: Math.min(...['TopLeft','TopRight','BottomLeft','BottomRight'].map((c) => parseFloat(s['border' + c + 'Radius']))),
-						pad: Math.min(...['Top','Right','Bottom','Left'].map((c) => parseFloat(s['padding' + c]) + parseFloat(s['border' + c + 'Width']))), action: f.getAttribute('action') };
+						pad: Math.min(...['Top','Right','Bottom','Left'].map((c) => parseFloat(s['padding' + c]) + parseFloat(s['border' + c + 'Width']))), border: s.borderTopStyle, action: f.getAttribute('action') };
 				});
 			})()`);
 			assert.ok(r.length > 0);
 			for (const f of r) {
-				assert.equal(f.bg, f.surface, `bg ${f.action}`);
-				assert.ok(f.radius >= 8, `radius ${f.radius} ${f.action}`);
-				assert.ok(f.pad >= 12, `padding ${f.pad} ${f.action}`);
+				assert.equal(f.bg, 'rgba(0, 0, 0, 0)', `bg ${f.action}`);
+				assert.equal(f.border, 'none', `border ${f.action}`);
 			}
 		} finally { await close(); }
 	});
@@ -117,6 +117,8 @@ for (const m of matrix) {
 					const s = getComputedStyle(f);
 					const content = f.clientWidth - parseFloat(s.paddingLeft) - parseFloat(s.paddingRight);
 					for (const el of f.querySelectorAll('label input[type=text], label input[type=number], label input[type=search], label select, textarea')) {
+						// us-301: the damage form is one row (amount, use armor, button), so its amount field is not full width
+						if (el.name === 'amount' && /damage/i.test(f.getAttribute('action') || '')) continue;
 						out.push({ n: el.name, ta: el.tagName === 'TEXTAREA', w: el.getBoundingClientRect().width, content });
 					}
 				}

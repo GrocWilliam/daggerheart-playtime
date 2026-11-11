@@ -36,6 +36,11 @@ In `src/lib/components/`:
 - `Pips`: filled/empty pips for a tracker (`<name>-pips`).
 - `Help`: a glossary `id`, a `text` prop (a catalog string) or `lines: Line[]` (SRD text, each line rendered with its own `lang`; `nameLang` for the name); `help`. It uses the native Popover API: a "?" `help-open` button (`popovertarget`) opens a `popover="auto"` `help-panel` (`<span>`, inline-level markup only) styled like the `Modal` panel, closed by Escape, an outside click or `help-close`. It is the one exception to `Modal` being the only dialog.
 - `Chosen`: subclass, ancestry and community of a character.
+- `Tracker`: one POST form per tracker (`.tracker` marker class), props `name`, `label`, `helpId`, `value`, `filled`, `max`, `action`, `hidden` (hidden fields), `lang`. One row (`flex flex-wrap items-center gap-2`): a `flex-nowrap` group with the label, `Help`, −, the value (`<name>`) and +, then `Pips` (`<name>-pips`, the only part that may wrap). Used for HP, Stress, Hope and Armor on the sheet and on Run cards; Fear keeps its own form.
+- `DefenseLine`: `Evasion 9 · Thresholds 7/14` on one `ul.stats` line of inline `li`s, each part with its `Help` (`evasion`, `thresholds`). Props `evasion`, `major`, `severe`, `lang`.
+- `ConditionBadges`: the condition pills with their `Help` (`condition-vulnerable`, `condition-restrained`, `condition-hidden`). Props `conditions`, `lang`.
+- `DamageForm`: the damage form on one row (`flex flex-wrap items-end gap-2`): amount, "use armor", submit; props `action`, `characterId?`, `lang`.
+- These four import only `$lib/i18n`, `$app/forms`, `$lib/forms/busy`, `Help` and `Pips`, take `lang` and translate themselves; they never import routes.
 - `LanguageSwitcher`: `language-switcher`, `lang-en`, `lang-fr`.
 - `Modal.svelte`: the only dialog implementation, except the `Help` popover panel.
   - Props: `kind`, `title`, `lang`, children.

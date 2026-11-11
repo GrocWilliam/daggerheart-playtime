@@ -3,8 +3,11 @@
 	import { busy } from '$lib/forms/busy';
 	import Divider from '$lib/components/Divider.svelte';
 	import Modal from '$lib/components/Modal.svelte';
-	// Tracker value colours (hp danger, hope calm); the others keep the text colour.
-	const valColour: Record<string, string> = { hp: 'text-danger', hope: 'text-calm' };
+	import Tracker from '$lib/components/Tracker.svelte';
+	import DefenseLine from '$lib/components/DefenseLine.svelte';
+	import ConditionBadges from '$lib/components/ConditionBadges.svelte';
+	import DamageForm from '$lib/components/DamageForm.svelte';
+	import { TRACKERS, trackerValues } from '$lib/utils/trackers';
 	import { translate } from '$lib/i18n';
 	import Pips from '$lib/components/Pips.svelte';
 
@@ -383,40 +386,13 @@
 		</h3>
 		<div class="muted">{ch.class}, {t('character.level')} {ch.level} <Help id="level" name={t('character.level')} lang={data.lang} /></div>
 		<Chosen chosen={(data.chosen as Record<string, never>)[ch.id]} lang={data.lang} />
-		{#each [['hp', 'tracker.hp'], ['stress', 'tracker.stress'], ['hope', 'tracker.hope'], ['armor', 'tracker.armor']] as [key, label] (key)}
-			<form use:enhance={busy} class="mb-3 flex flex-nowrap items-center gap-2"
-				class:tracker={true} method="POST" action="?/tracker">
-				<input type="hidden" name="characterId" value={ch.id} />
-				<input type="hidden" name="tracker" value={key} />
-				{t(label)}:
-				<Help id={key} name={t(label)} lang={data.lang} />
-				<button type="submit" name="delta" value="-1">{t('action.decrease')}</button>
-				<span class="min-w-[2ch] text-center {valColour[key]}" data-testid={key}
-					>{typeof ch[key] === 'number' ? ch[key] : `${ch[key].marked}/${ch[key].max}`}</span
-				>
-				<button type="submit" name="delta" value="1">{t('action.increase')}</button>
-			</form>
-			{#if typeof ch[key] === 'number'}
-				<Pips name={key} max={6} filled={ch[key]} />
-			{:else}
-				<Pips name={key} max={ch[key].max} filled={ch[key].marked} />
-			{/if}
+		{#each TRACKERS as key (key)}
+			<Tracker name={key} label={t(`tracker.${key}`)} helpId={key} action="?/tracker" hidden={{ characterId: ch.id, tracker: key }} lang={data.lang}
+				{...trackerValues(ch[key])} />
 		{/each}
-		<ul class="mt-0 mb-3 list-none pl-0!">
-			<li>{t('stat.evasion')}: <Help id="evasion" name={t('stat.evasion')} lang={data.lang} /> <span data-testid="evasion">{ch.evasion}</span></li>
-			<li>{t('stat.thresholds')}: <Help id="thresholds" name={t('stat.thresholds')} lang={data.lang} /> <span data-testid="thresholds">{ch.majorThreshold}/{ch.severeThreshold}</span></li>
-		</ul>
-		<div>
-			{#if ch.conditions.vulnerable}<span class="inline-block rounded-[999px] px-[0.6rem] text-[0.875rem] text-bg bg-danger" data-testid="condition-vulnerable">{t('badge.vulnerable')}</span><Help id="vulnerable" name={t('badge.vulnerable')} lang={data.lang} />{/if}
-			{#if ch.conditions.restrained}<span class="inline-block rounded-[999px] px-[0.6rem] text-[0.875rem] text-bg bg-accent" data-testid="condition-restrained">{t('badge.restrained')}</span><Help id="restrained" name={t('badge.restrained')} lang={data.lang} />{/if}
-			{#if ch.conditions.hidden}<span class="inline-block rounded-[999px] px-[0.6rem] text-[0.875rem] text-bg bg-calm" data-testid="condition-hidden">{t('badge.hidden')}</span><Help id="hidden" name={t('badge.hidden')} lang={data.lang} />{/if}
-		</div>
-		<form use:enhance={busy} method="POST" action="?/damage">
-			<input type="hidden" name="characterId" value={ch.id} />
-			<label>{t('damage.label')} <input type="number" name="amount" min="0" required /></label>
-			<label><input type="checkbox" name="useArmor" /> {t('damage.useArmor')}</label>
-			<button type="submit">{t('damage.apply')}</button>
-		</form>
+		<DefenseLine evasion={ch.evasion} major={ch.majorThreshold} severe={ch.severeThreshold} lang={data.lang} />
+		<ConditionBadges conditions={ch.conditions} lang={data.lang} />
+		<DamageForm action="?/damage" characterId={ch.id} lang={data.lang} />
 	</article>
 {:else}
 	<p>{t('campaign.none')}</p>

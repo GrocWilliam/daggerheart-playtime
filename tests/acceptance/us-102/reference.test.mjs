@@ -120,7 +120,7 @@ for (const [name, w, h] of [['phone', 375, 667], ['desktop', 1280, 800]]) {
 			o.scroll = document.documentElement.scrollWidth - document.documentElement.clientWidth;
 			return o;
 		});
-		assert.deepEqual(r.form, { display: 'flex', flexWrap: 'wrap', columnGap: '8px', rowGap: '8px', paddingTop: '8px', paddingLeft: '8px', backgroundColor: SURFACE });
+		assert.deepEqual(r.form, { display: 'flex', flexWrap: 'wrap', columnGap: '8px', rowGap: '8px', paddingTop: '8px', paddingLeft: '8px', backgroundColor: 'rgba(0, 0, 0, 0)' }); // us-300: forms carry no box
 		for (const hh of r.heights) assert.ok(hh >= 43.5, `control height ${hh}`);
 		assert.deepEqual(r.ul, { listStyleType: 'none', paddingLeft: '0px', marginBottom: '12px', marginTop: '0px' });
 		assert.deepEqual(r.li, { display: 'flex', flexWrap: 'wrap', alignItems: 'center', columnGap: '8px', rowGap: '8px', overflowWrap: 'anywhere', paddingTop: '8px', paddingLeft: '12px', backgroundColor: SURFACE, borderLeftWidth: '3px', borderLeftColor: ACCENT, borderTopLeftRadius: '8px', marginBottom: '12px' });

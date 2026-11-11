@@ -40,10 +40,11 @@ test('character page and Chosen use utilities: no <style>, no style=, no old cla
 			assert.ok(!/-(white|black|teal|gray|red|blue|green)-\d{2,3}$/.test(c), `${f}: default palette ${c}`);
 		}
 	}
-	const src = read(PAGE);
+	// us-301: tracker, defense line and condition markup moved to shared components.
+	const src = read(PAGE) + ['Tracker', 'DefenseLine', 'ConditionBadges'].map((c) => read(`src/lib/components/${c}.svelte`)).join('');
 	for (const id of ['character-name', 'down', 'evasion', 'thresholds', 'condition-vulnerable', 'condition-restrained', 'condition-hidden', 'notes', 'gold', 'inventory', 'item-row', 'item', 'card'])
 		assert.ok(src.includes(`data-testid="${id}"`), `data-testid ${id} kept`);
-	assert.ok(src.includes('data-testid={key}'), 'tracker testid kept');
+	assert.ok(src.includes('data-testid={key}') || src.includes('data-testid={name}'), 'tracker testid kept');
 	assert.ok(read('src/lib/components/Chosen.svelte').includes('data-testid={k}'), 'chosen testid kept');
 });
 
@@ -153,7 +154,7 @@ for (const [name, w, h] of [['phone', 375, 667], ['desktop', 1280, 800]]) {
 			};
 		});
 		assert.equal(r.trk.display, 'flex');
-		assert.equal(r.trk.flexWrap, 'nowrap');
+		assert.equal(r.trk.flexWrap, 'wrap'); // us-301: Tracker is flex-wrap (only the pips wrap)
 		assert.equal(r.trk.alignItems, 'center');
 		assert.equal(r.trk.columnGap, '8px');
 		assert.equal(r.trk.marginBottom, '12px');
