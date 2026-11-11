@@ -1,6 +1,6 @@
 import { afterAll, describe, expect, it } from 'vitest';
 import { ApiError, parse } from '../errors';
-import { cardIdSchema, characterJson, conditionsSchema, createSchema, damageSchema, deltaSchema, goldSchema, itemCreateSchema, itemQuantitySchema, armorStats, patchSchema, tierOfLevel, trackerSchema } from './characters';
+import { cardIdSchema, characterJson, conditionsSchema, createSchema, damageSchema, deltaSchema, goldSchema, itemCreateSchema, itemQuantitySchema, armorStats, armorEvasionModifier, recomputeOnPatch, patchSchema, tierOfLevel, trackerSchema } from './characters';
 
 /** The 400 message `parse` gives for `body`, or null when valid. */
 function msg(schema: Parameters<typeof parse>[0], body: unknown): string | null {
@@ -405,5 +405,49 @@ describe('patchSchema equipped gear', () => {
 	});
 	it('computes armor stats from the level', () => {
 		expect(armorStats('core_armor_gambeson_armor', 1)).toEqual({ armorMax: 3, majorThreshold: 6, severeThreshold: 12 });
+	});
+});
+
+describe('derived statistics rules', () => {
+	it('armorStats handles unarmored', () => {
+		expect(m.armorStats('core_armor_chainmail_armor', 3)).toEqual({ armorMax: 4, majorThreshold: 10, severeThreshold: 18 });
+		expect(m.armorStats(null, 10)).toEqual({ armorMax: 0, majorThreshold: 10, severeThreshold: 20 });
+	});
+	it('armorEvasionModifier', () => {
+		expect(m.armorEvasionModifier('core_armor_chainmail_armor')).toBe(-1);
+		expect(m.armorEvasionModifier(null)).toBe(0);
+	});
+	it('traitsFollowArray', () => {
+		expect(m.traitsFollowArray([0, -1, 2, 1, 0, 1])).toBe(true);
+		expect(m.traitsFollowArray([2, 2, 1, 0, 0, -1])).toBe(false);
+		expect(m.traitsFollowArray([2, 1, 1, 0, 0])).toBe(false);
+	});
+	it('classStart and derivedStats', () => {
+		expect(m.classStart('Bard')).toEqual({ evasion: 10, hp: 5 });
+		expect(m.classStart('Pirate')).toBeNull();
+		expect(m.derivedStats('Warrior', 3, 'core_armor_chainmail_armor')).toEqual({ evasion: 10, majorThreshold: 10, severeThreshold: 18, maxHp: 6, maxStress: 6, armorSlots: 4 });
+		expect(m.derivedStats('Warrior', 3, null)).toEqual({ evasion: 11, majorThreshold: 3, severeThreshold: 6, maxHp: 6, maxStress: 6, armorSlots: 0 });
+		expect(m.derivedStats('Pirate', 1, null)).toBeNull();
+	});
+	it('gearTierIssue', () => {
+		expect(m.gearTierIssue('armorId', 'armors', null, 1)).toBeNull();
+	});
+});
+
+describe('recomputeOnPatch', () => {
+	const cur: any = { level: 3, evasion: 12, armorId: null, majorThreshold: 3, severeThreshold: 6 };
+	it('covers each rule', () => {
+		expect(recomputeOnPatch(cur, {})).toEqual({});
+		expect(recomputeOnPatch(cur, { armorId: null })).toEqual({});
+		const id = 'core_armor_chainmail_armor';
+		const a = armorStats(id, 3);
+		const mod = armorEvasionModifier(id);
+		expect(recomputeOnPatch(cur, { armorId: id })).toEqual({ majorThreshold: a.majorThreshold, severeThreshold: a.severeThreshold, armorSlots: a.armorMax, evasion: 12 + mod });
+		const worn = { ...cur, armorId: id, evasion: 10 };
+		expect(recomputeOnPatch(worn, { armorId: null })).toEqual({ majorThreshold: 3, severeThreshold: 6, armorSlots: 0, evasion: 10 - mod });
+		expect(recomputeOnPatch(worn, { level: 5 })).toEqual({ majorThreshold: armorStats(id, 5).majorThreshold, severeThreshold: armorStats(id, 5).severeThreshold });
+		expect(recomputeOnPatch(cur, { level: 5 })).toEqual({ majorThreshold: 5, severeThreshold: 10 });
+		expect(recomputeOnPatch({ ...cur, majorThreshold: 5, severeThreshold: 10 }, { level: 4 })).toEqual({});
+		expect(recomputeOnPatch({ ...worn, evasion: 30 }, { armorId: null })).toMatchObject({ evasion: Math.min(30, 30 - mod) });
 	});
 });

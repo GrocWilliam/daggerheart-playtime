@@ -45,12 +45,12 @@ In `src/lib/components/`:
 
 ## Character tunnel
 `/campaigns/:id/characters/new?step=1..4`. Steps 1–3 are GET forms carrying values in the query string; step 4 posts to the `default` action. Errors come back as `?step=N&invalid=<field>`.
-1. Identity: name, class, level.
+1. Identity: name, class (must be an SRD class), level.
 2. Heritage: ancestry, community (subclass *planned*).
-3. Statistics: evasion, thresholds (must pass `thresholdsOk`), max HP, max stress, armor slots (the six traits *planned*).
-4. Review: summary of all values, then Create.
+3. Statistics: the six traits, one required select each (blank, `+2`, `+1`, `+0`, `-1`), which must use the array +2, +1, +1, +0, +0, -1 exactly (else `invalid=traits`, `tunnel.traitsArray` alert), and an armor (`armorId`, `option.none` then option groups per tier up to the level's tier, else `invalid=armorId`).
+4. Review: summary of all values (traits signed, armor's localized name or `option.none`), then `tunnel-derived`: Evasion, thresholds `major/severe`, max HP, max stress and Armor computed with `derivedStats`, then Create.
 
-Test ids: `tunnel-progress` (step indicator), `tunnel-next`, `tunnel-back`, `tunnel-cancel`, `tunnel-summary` (step 4), `tunnel-edit-1` to `tunnel-edit-3` (jump back to a step from the review), `tunnel-create`.
+Test ids: `tunnel-progress` (step indicator), `tunnel-next`, `tunnel-back`, `tunnel-cancel`, `tunnel-summary` (step 4), `tunnel-edit-1` to `tunnel-edit-3` (jump back to a step from the review), `tunnel-derived` (step 4) with `derived-evasion`, `derived-thresholds`, `derived-maxHp`, `derived-maxStress`, `derived-armorSlots`, `tunnel-create`.
 
 ## Screen states
 - Home: empty (no campaigns, an empty-state text); loading (the submit button is busy, `aria-busy`); error (`[role=alert]`); success (the campaign appears in the grid).
@@ -76,4 +76,4 @@ New (*planned*):
 - Sheet: `sheet-sections`, `sheet-trackers`, `sheet-traits`, `sheet-equipment`, `sheet-experiences`, `sheet-inventory`, `sheet-cards`, `sheet-notes`.
 - Openers: `new-campaign`, `new-scene`, `new-item`, `new-experience`, `new-card`, `new-character`.
 - Modals: `modal-campaign`, `modal-scene`, `modal-item`, `modal-experience`, `modal-card`, `modal-cancel`.
-- Tunnel: `tunnel-progress`, `tunnel-next`, `tunnel-back`, `tunnel-cancel`, `tunnel-summary`, `tunnel-edit-1`, `tunnel-edit-2`, `tunnel-edit-3`, `tunnel-create`.
+- Tunnel: `tunnel-progress`, `tunnel-next`, `tunnel-back`, `tunnel-cancel`, `tunnel-summary`, `tunnel-edit-1`, `tunnel-edit-2`, `tunnel-edit-3`, `tunnel-derived`, `derived-evasion`, `derived-thresholds`, `derived-maxHp`, `derived-maxStress`, `derived-armorSlots`, `tunnel-create`.

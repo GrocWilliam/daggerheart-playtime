@@ -98,8 +98,9 @@ test('creating a character through the tunnel in French with class Barde still s
 		await field('ancestry').selectOption({ label: 'Clank' });
 		await field('community').selectOption({ label: 'Haut-né' });
 		await Promise.all([waitStep(3), tid('tunnel-next').click()]);
-		for (const [k, v] of Object.entries({ evasion: 10, majorThreshold: 5, severeThreshold: 10, maxHp: 6, maxStress: 6, armorSlots: 3 }))
-			await field(k).fill(String(v));
+		// us-252: step 3 picks the six traits instead of typing the statistics.
+		for (const [k, v] of Object.entries({ agility: '2', strength: '1', finesse: '1', instinct: '0', presence: '0', knowledge: '-1' }))
+			await field(k).selectOption(v);
 		await Promise.all([waitStep(4), tid('tunnel-next').click()]);
 		await Promise.all([p.waitForURL(/\/characters\/[^/?]+$/), tid('tunnel-create').click()]);
 		const id = new URL(p.url()).pathname.split('/').pop();

@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { THRESHOLDS_ERROR, createFields, createSchema, thresholdsOk } from '$lib/server/features/characters';
-import { RANGES, characterBody, fieldOfMessage, firstInvalid, parseStep, readValues, stepOfField, tunnelHref } from './tunnel';
+import { createFields, createSchema, thresholdsOk } from '$lib/server/features/characters';
+import { RANGES, TRAIT_OPTIONS, characterBody, fieldOfMessage, firstInvalid, parseStep, readValues, stepOfField, tunnelHref } from './tunnel';
 
 const s1 = { name: 'Ari', class: 'Bard', level: '1' };
-const s3 = { evasion: '10', majorThreshold: '5', severeThreshold: '10', maxHp: '6', maxStress: '6', armorSlots: '3' };
+const s3 = { agility: '2', strength: '1', finesse: '1', instinct: '0', presence: '0', knowledge: '-1' };
 
 describe('tunnel', () => {
 	it('parseStep', () => {
@@ -22,6 +22,10 @@ describe('tunnel', () => {
 		expect(firstInvalid({ ...s1, name: '' }, 1)).toEqual({ step: 1, field: 'name' });
 		expect(firstInvalid(s1, 0)).toBeNull();
 	});
+	it('firstInvalid step 1 rejects a non-SRD class', () => {
+		expect(firstInvalid({ ...s1, class: 'Pirate' }, 2)).toEqual({ step: 1, field: 'class' });
+		expect(firstInvalid({ ...s1, class: 'Warrior' }, 2)).toBeNull();
+	});
 	it('firstInvalid step 2', () => {
 		expect(firstInvalid({ ...s1, ancestry: 'Nope' }, 2)).toEqual({ step: 2, field: 'ancestry' });
 		expect(firstInvalid(s1, 2)).toBeNull();
@@ -29,16 +33,22 @@ describe('tunnel', () => {
 	});
 	it('firstInvalid step 3', () => {
 		expect(firstInvalid({ ...s1, ...s3 }, 3)).toBeNull();
-		expect(firstInvalid({ ...s1, ...s3, majorThreshold: '10', severeThreshold: '5' }, 3)).toEqual({ step: 3, field: 'severeThreshold' });
-		expect(firstInvalid({ ...s1, ...s3, maxHp: '' }, 3)).toEqual({ step: 3, field: 'maxHp' });
+		expect(firstInvalid({ ...s1, ...s3, agility: '1' }, 3)).toEqual({ step: 3, field: 'traits' });
+		expect(firstInvalid({ ...s1, ...s3, agility: ' ' }, 3)).toEqual({ step: 3, field: 'traits' });
+		expect(firstInvalid({ ...s1, ...s3, agility: '-2' }, 3)).toEqual({ step: 3, field: 'traits' });
+		expect(firstInvalid({ ...s1, ...s3, armorId: 'core_armor_gambeson_armor' }, 3)).toBeNull();
+		expect(firstInvalid({ ...s1, ...s3, armorId: 'core_armor_improved_gambeson_armor' }, 3)).toEqual({ step: 3, field: 'armorId' });
+		expect(TRAIT_OPTIONS).toEqual([2, 1, 0, -1]);
 	});
 	it('stepOfField / fieldOfMessage', () => {
 		expect(stepOfField('community')).toBe(2);
-		expect(stepOfField('maxHp')).toBe(3);
+		expect(stepOfField('traits')).toBe(3);
+		expect(stepOfField('armorId')).toBe(3);
 		expect(stepOfField('zzz')).toBe(4);
-		expect(fieldOfMessage(THRESHOLDS_ERROR)).toBe('severeThreshold');
-		expect(fieldOfMessage('level must be an integer from 1 to 10')).toBe('level');
-		expect(fieldOfMessage('boom')).toBeNull();
+		expect(fieldOfMessage('traits has an unknown trait: luck')).toBe('traits');
+		expect(fieldOfMessage('armorId must be an armor')).toBe('armorId');
+		expect(fieldOfMessage('level must be an integer from 1 to 10')).toBe('review');
+		expect(fieldOfMessage('boom')).toBe('review');
 	});
 	it('tunnelHref encodes spaces as +', () => {
 		expect(tunnelHref('c1', 2, { name: 'A B', level: '1' }, 'name')).toBe('/campaigns/c1/characters/new?step=2&name=A+B&level=1&invalid=name');
@@ -60,12 +70,15 @@ describe('tunnel', () => {
 			expect(one.safeParse({ [f]: max + 1 }).success, `${f} ${max + 1}`).toBe(false);
 		}
 	});
-	it('characterBody: SRD names to ids, numbers converted, blanks and junk kept for the API to reject', () => {
-		const b = characterBody({ ...s1, ...s3, ancestry: 'Clank', community: '', level: 'x', maxHp: '' });
-		expect(b).toMatchObject({ name: 'Ari', class: 'Bard', level: 'x', evasion: 10, maxHp: '', armorSlots: 3 });
+	it('characterBody: SRD names to ids, derived stats, traits as numbers, armorId omitted when unarmored', () => {
+		const b = characterBody({ ...s1, ...s3, ancestry: 'Clank', community: '' });
+		expect(b).toMatchObject({ name: 'Ari', class: 'Bard', level: 1, evasion: 10, maxHp: 5, maxStress: 6, armorSlots: 0, majorThreshold: 1, severeThreshold: 2 });
+		expect(b.traits).toEqual({ agility: 2, strength: 1, finesse: 1, instinct: 0, presence: 0, knowledge: -1 });
 		expect(typeof b.ancestry).toBe('string');
 		expect(b.ancestry).not.toBe('Clank');
 		expect('community' in b).toBe(false);
+		expect('armorId' in b).toBe(false);
+		expect(characterBody({ ...s1, ...s3, armorId: 'core_armor_gambeson_armor' }).armorId).toBe('core_armor_gambeson_armor');
 		expect(characterBody({})).toMatchObject({ name: '', class: '', level: '' });
 	});
 });

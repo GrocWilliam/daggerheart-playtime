@@ -6,6 +6,10 @@
 	let { data, form } = $props();
 	const t = (key: string, params?: Params) => translate(data.lang, key, params);
 	const SELECTS = new Set(['class', 'ancestry', 'community']);
+	const TRAIT_FIELDS = new Set(['agility', 'strength', 'finesse', 'instinct', 'presence', 'knowledge']);
+	/** Label key of a tunnel field. */
+	const labelKey = (f: string) => (TRAIT_FIELDS.has(f) ? `trait.${f}` : f === 'armorId' ? 'equipment.armor' : `field.${f}`);
+	const signed = (v: number) => (v >= 0 ? `+${v}` : String(v));
 	type PickKey = 'class' | 'ancestry' | 'community';
 	// Static class names per step so Tailwind sees them.
 	const BAR = ['w-1/4', 'w-2/4', 'w-3/4', 'w-full'];
@@ -20,14 +24,24 @@
 	/** Localized label of a picked SRD name; the raw value for free text. */
 	const shown = (f: string) => {
 		const v = data.values[f] ?? '';
+		if (TRAIT_FIELDS.has(f)) return v === '' ? v : signed(Number(v));
+		if (f === 'armorId') return data.armor?.name ?? '';
 		if (!SELECTS.has(f)) return v;
 		return data.picks[f as PickKey].find((o) => o.value === v)?.label ?? v;
 	};
 	/** Language of a picked SRD label; none (the page's) for free text. */
 	const shownLang = (f: string) =>
-		SELECTS.has(f) ? data.picks[f as PickKey].find((o) => o.value === (data.values[f] ?? ''))?.lang : undefined;
+		f === 'armorId'
+			? data.armor?.nameLang
+			: SELECTS.has(f) ? data.picks[f as PickKey].find((o) => o.value === (data.values[f] ?? ''))?.lang : undefined;
 	const invalidText = $derived(
-		data.invalid === null ? null : data.invalid === 'review' ? t('error.invalid') : t('tunnel.invalid', { field: t(`field.${data.invalid}`) })
+		data.invalid === null
+			? null
+			: data.invalid === 'review'
+				? t('error.invalid')
+				: data.invalid === 'traits'
+					? t('tunnel.traitsArray')
+					: t('tunnel.invalid', { field: t(labelKey(data.invalid)) })
 	);
 </script>
 
@@ -61,8 +75,26 @@
 		{#each others as f (f)}<input type="hidden" name={f} value={data.values[f]} />{/each}
 		{#each fields as f (f)}
 			<label class="min-w-0">
-				{t(`field.${f}`)}
-				{#if SELECTS.has(f)}
+				{t(labelKey(f))}
+				{#if TRAIT_FIELDS.has(f)}
+					<select name={f} required>
+						<option value=""></option>
+						{#each data.traitOptions as v (v)}
+							<option value={String(v)} selected={String(v) === valueOf(f)}>{signed(v)}</option>
+						{/each}
+					</select>
+				{:else if f === 'armorId'}
+					<select name={f}>
+						<option value="" selected={!valueOf(f)}>{t('option.none')}</option>
+						{#each data.armors as g (g.tier)}
+							<optgroup label={t('equipment.tier', { tier: g.tier })}>
+								{#each g.picks as p (p.id)}
+									<option value={p.id} lang={p.nameLang} selected={p.id === valueOf(f)}>{p.name}</option>
+								{/each}
+							</optgroup>
+						{/each}
+					</select>
+				{:else if SELECTS.has(f)}
 					<select name={f} required={f === 'class'}>
 						{#if f !== 'class'}<option value="">{t('option.none')}</option>{/if}
 						{#each data.picks[f as PickKey] as o (o.value)}
@@ -95,13 +127,29 @@
 				</div>
 				<dl class="m-0 grid grid-cols-[auto_1fr] gap-x-4 gap-y-1">
 					{#each s.fields as f (f)}
-						<dt class="text-muted">{t(`field.${f}`)}</dt>
+						<dt class="text-muted">{t(labelKey(f))}</dt>
 						<dd class="m-0"><span lang={shownLang(f)}>{shown(f) || t('option.none')}</span></dd>
 					{/each}
 				</dl>
 			</section>
 		{/each}
 	</div>
+	{#if data.derived}
+		<section data-testid="tunnel-derived" class="mb-4 rounded-[0.5rem] border-2 border-solid border-muted p-3">
+			<dl class="m-0 grid grid-cols-[auto_1fr] gap-x-4 gap-y-1">
+				<dt class="text-muted">{t('stat.evasion')}</dt>
+				<dd class="m-0" data-testid="derived-evasion">{data.derived.evasion}</dd>
+				<dt class="text-muted">{t('stat.thresholds')}</dt>
+				<dd class="m-0" data-testid="derived-thresholds">{data.derived.majorThreshold}/{data.derived.severeThreshold}</dd>
+				<dt class="text-muted">{t('field.maxHp')}</dt>
+				<dd class="m-0" data-testid="derived-maxHp">{data.derived.maxHp}</dd>
+				<dt class="text-muted">{t('field.maxStress')}</dt>
+				<dd class="m-0" data-testid="derived-maxStress">{data.derived.maxStress}</dd>
+				<dt class="text-muted">{t('tracker.armor')}</dt>
+				<dd class="m-0" data-testid="derived-armorSlots">{data.derived.armorSlots}</dd>
+			</dl>
+		</section>
+	{/if}
 	{#if form?.error}<p role="alert" class="text-danger">{t(form.error)}</p>{/if}
 	<form method="POST" use:enhance={busy} class="flex flex-wrap items-center gap-4">
 		{#each TUNNEL_STEPS.flatMap((s) => [...s.fields] as string[]) as f (f)}<input type="hidden" name={f} value={data.values[f] ?? ''} />{/each}

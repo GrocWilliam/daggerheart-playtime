@@ -27,8 +27,31 @@ describe('character page server', () => {
 	it('edit patches numeric fields as numbers', async () => {
 		const { calls, f } = recorder();
 		await run('edit', { name: 'A', class: 'B', level: '3', evasion: '-1' }, f);
-		expect(calls[0]).toMatchObject({ method: 'PATCH', url: '/api/characters/c1' });
-		expect(calls[0].body).toMatchObject({ name: 'A', level: 3, evasion: -1, maxHp: '' });
+		const patch = calls.find((c) => c.method === 'PATCH')!;
+		expect(patch).toMatchObject({ url: '/api/characters/c1' });
+		expect(patch.body).toMatchObject({ name: 'A', level: 3, evasion: -1, maxHp: '' });
+	});
+
+	describe('edit thresholds on a level change', () => {
+		const stored = { level: 1, majorThreshold: 8, severeThreshold: 16 };
+		const patchOf = async (fields: Record<string, string>) => {
+			const { calls, f } = recorder(200, stored);
+			await run('edit', { name: 'A', class: 'Wizard', ...fields }, f);
+			return calls.find((c) => c.method === 'PATCH')!.body as Record<string, unknown>;
+		};
+		it('drops untouched thresholds when the level changed', async () => {
+			const b = await patchOf({ level: '3', majorThreshold: '8', severeThreshold: '16' });
+			expect(b).not.toHaveProperty('majorThreshold');
+			expect(b).not.toHaveProperty('severeThreshold');
+		});
+		it('keeps a threshold changed in the same submit', async () => {
+			const b = await patchOf({ level: '3', majorThreshold: '9', severeThreshold: '16' });
+			expect(b).toMatchObject({ majorThreshold: 9, severeThreshold: 16 });
+		});
+		it('keeps thresholds when the level is unchanged', async () => {
+			const b = await patchOf({ level: '1', majorThreshold: '8', severeThreshold: '16' });
+			expect(b).toMatchObject({ majorThreshold: 8, severeThreshold: 16 });
+		});
 	});
 
 	it('edit leaves an unchanged legacy ancestry, community and subclass out of the PATCH', async () => {

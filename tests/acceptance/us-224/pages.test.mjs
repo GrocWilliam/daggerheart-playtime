@@ -56,7 +56,7 @@ async function pages() {
 		['/reference', 'reference'],
 		[`/campaigns/${camp}?step=build`, 'build'],
 		[`/campaigns/${camp}?step=run`, 'run'],
-		...[1, 2, 3, 4].map((s) => [`/campaigns/${camp}/characters/new?step=${s}&name=Zed&class=Wizard&level=1&ancestry=Dwarf&community=Highborne&evasion=10&majorThreshold=5&severeThreshold=10&maxHp=5&maxStress=6&armorSlots=3`, `tunnel step ${s}`]),
+		...[1, 2, 3, 4].map((s) => [`/campaigns/${camp}/characters/new?step=${s}&name=Zed&class=Wizard&level=1&ancestry=Dwarf&community=Highborne&agility=2&strength=1&finesse=1&instinct=0&presence=0&knowledge=-1`, `tunnel step ${s}`]), // us-252: traits replace the typed statistics
 		[`/characters/${ch}`, 'sheet']
 	];
 }

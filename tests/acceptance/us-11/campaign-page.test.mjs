@@ -169,12 +169,13 @@ test('Fear + button (plain POST) increases fear by 1, clamped at 12', async () =
 
 test('add-character form creates a new character-card', async () => {
 	// us-197: the Build step's inline form became the character tunnel; its step 4 posts every value as hidden inputs.
-	const values = { name: 'Nova', class: 'Wizard', level: 1, evasion: 11, majorThreshold: 4, severeThreshold: 9, maxHp: 5, maxStress: 6, armorSlots: 1 };
+	// us-252: step 3 picks the six traits; HP and thresholds are derived (Wizard level 1 unarmored: 5 HP, 1/2).
+	const values = { name: 'Nova', class: 'Wizard', level: 1, agility: 2, strength: 1, finesse: 1, instinct: 0, presence: 0, knowledge: -1 };
 	const url = `${BASE}/campaigns/${cid}/characters/new?${new URLSearchParams({ step: '4', ...values })}`;
 	const html = await (await fetch(url)).text();
 	const f = forms(html).find((x) => /<form\b[^>]*method=["']?post/i.test(x.html));
 	assert.ok(f, 'tunnel step 4 POST form');
-	for (const n of ['name', 'class', 'level', 'evasion', 'majorThreshold', 'severeThreshold', 'maxHp', 'maxStress', 'armorSlots']) {
+	for (const n of ['name', 'class', 'level', 'agility', 'strength', 'finesse', 'instinct', 'presence', 'knowledge']) {
 		assert.match(f.html, new RegExp(`name=["']${n}["']`), `input ${n}`);
 	}
 	const r = await post(url, f.html);
@@ -184,7 +185,7 @@ test('add-character form creates a new character-card', async () => {
 	assert.ok(testid(cs[0], 'character-name').includes('Rook'));
 	assert.ok(testid(cs[1], 'character-name').includes('Nova'));
 	assert.equal(testid(cs[1], 'hp'), '0/5');
-	assert.equal(testid(cs[1], 'thresholds'), '4/9');
+	assert.equal(testid(cs[1], 'thresholds'), '1/2');
 });
 
 test('damage form above severeThreshold without armor increases hp by 3', async () => {

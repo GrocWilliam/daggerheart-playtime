@@ -17,8 +17,10 @@ const postForm = (path, fields) =>
 	fetch(BASE + path, { method: 'POST', redirect: 'manual', headers: { 'content-type': 'application/x-www-form-urlencoded', origin: ORIGIN, accept: 'text/html' }, body: new URLSearchParams(fields).toString() });
 const campaign = async (name = 'Tunnelcamp') => (await api('POST', '/api/campaigns', { name })).json.id;
 
-// A complete, valid set of the 11 tunnel values (ancestry/community are English SRD names, as the selects post them).
-const VALUES = { name: 'Mira', class: 'Bard', level: '2', ancestry: 'Clank', community: 'Highborne', evasion: '10', majorThreshold: '5', severeThreshold: '10', maxHp: '6', maxStress: '6', armorSlots: '3' };
+// A complete, valid set of tunnel values (ancestry/community are English SRD names, as the selects post them).
+// us-252: step 3 picks the six traits (and an optional armor) instead of typing the statistics.
+const TRAITS = { agility: '2', strength: '1', finesse: '1', instinct: '0', presence: '0', knowledge: '-1' };
+const VALUES = { name: 'Mira', class: 'Bard', level: '2', ancestry: 'Clank', community: 'Highborne', ...TRAITS };
 const tunnel = (cid, q = '') => `/campaigns/${cid}/characters/new${q}`;
 const stepUrl = (cid, step, values = VALUES) => tunnel(cid, '?' + new URLSearchParams({ step: String(step), ...values }));
 
@@ -114,12 +116,11 @@ test('without JS: steps 1 to 4 with Next, then Create, lead to the new character
 	assert.equal(q.get('ancestry'), 'Clank');
 	assert.equal(q.get('community'), 'Highborne');
 	// step 3
-	for (const [k, v] of Object.entries({ evasion: 10, majorThreshold: 5, severeThreshold: 10, maxHp: 6, maxStress: 6, armorSlots: 3 }))
-		await field(p, k).fill(String(v));
+	for (const [k, v] of Object.entries(TRAITS)) await field(p, k).selectOption(v);
 	await Promise.all([waitStep(p, 4), tid(p, 'tunnel-next').click()]);
 	await assertStep(p, 4);
 	const summary = await tid(p, 'tunnel-summary').innerText();
-	for (const s of ['Mira', 'Bard', '2', 'Clank', 'Highborne', '10', '6']) assert.ok(summary.includes(s), `summary contains ${s}: ${summary}`);
+	for (const s of ['Mira', 'Bard', '2', 'Clank', 'Highborne', '+2', '-1']) assert.ok(summary.includes(s), `summary contains ${s}: ${summary}`);
 	// create
 	await Promise.all([p.waitForURL(/\/characters\/[^/?]+$/), tid(p, 'tunnel-create').click()]);
 	const newId = new URL(p.url()).pathname.split('/').pop();
@@ -193,11 +194,10 @@ test('each step\'s inputs carry required, plus min and max on the numbers', asyn
 		assert.equal(await field(p, n).locator('option[value=""]').count(), 1, `${n} empty option`);
 	}
 	await ctx.close();
-	// step 3
+	// step 3 (us-252): required trait selects, optional armor select
 	({ p, ctx } = await open(stepUrl(cid, 3, { name: 'Mira', class: 'Bard', level: '2' })));
-	const ranges = { evasion: ['0', '30'], majorThreshold: ['1', '100'], severeThreshold: ['1', '100'], maxHp: ['1', '12'], maxStress: ['1', '12'], armorSlots: ['0', '12'] };
-	for (const [n, [min, max]] of Object.entries(ranges)) assert.deepEqual(await attrs(field(p, n)), { required: true, min, max }, n);
-	assert.equal(await field(p, 'maxStress').inputValue(), '6', 'maxStress defaults to 6');
+	for (const n of Object.keys(TRAITS)) assert.equal((await attrs(field(p, n))).required, true, `${n} required`);
+	assert.equal((await attrs(field(p, 'armorId'))).required, false, 'armorId optional');
 	await ctx.close();
 });
 
@@ -228,33 +228,35 @@ test('boundary: ?step=3 with level=10 is valid and shows step 3 (no redirect)', 
 	assert.equal(r.status, 200);
 });
 
-test('?step=4 with majorThreshold=10&severeThreshold=5 redirects to step=3&invalid=severeThreshold with an alert', async () => {
+// us-252: thresholds are derived now; an invalid step 3 is a trait set that breaks the array.
+test('?step=4 with traits 2,2,1,0,0,-1 redirects to step=3&invalid=traits with an alert', async () => {
 	const cid = await campaign();
-	const url = stepUrl(cid, 4, { ...VALUES, majorThreshold: '10', severeThreshold: '5' });
+	const url = stepUrl(cid, 4, { ...VALUES, strength: '2' });
 	const r = await fetch(BASE + url, { redirect: 'manual' });
 	assert.equal(r.status, 303);
 	const loc = new URL(r.headers.get('location'), BASE);
 	assert.equal(loc.searchParams.get('step'), '3');
-	assert.equal(loc.searchParams.get('invalid'), 'severeThreshold');
+	assert.equal(loc.searchParams.get('invalid'), 'traits');
 	const { p, ctx } = await open(url);
 	await assertStep(p, 3);
-	assert.equal(await p.locator('[role=alert]').filter({ hasText: 'Severe threshold' }).count(), 1);
+	assert.equal(await p.locator('[role=alert]').filter({ hasText: 'Assign +2, +1, +1, +0, +0 and -1, each exactly once.' }).count(), 1);
 	await ctx.close();
 });
 
-test('a step-4 POST the API rejects with 400 (maxHp=99) redirects to step=3&invalid=maxHp with an alert', async () => {
+// us-252: the form no longer posts maxHp; an invalid step-4 POST is one whose traits break the array.
+test('a step-4 POST with invalid traits redirects to step=3&invalid=traits with an alert', async () => {
 	const cid = await campaign();
-	const r = await postForm(stepUrl(cid, 4), { ...VALUES, maxHp: '99' });
+	const r = await postForm(stepUrl(cid, 4), { ...VALUES, agility: '1' });
 	assert.equal(r.status, 303);
 	const loc = new URL(r.headers.get('location'), BASE);
 	assert.equal(loc.pathname, tunnel(cid));
 	assert.equal(loc.searchParams.get('step'), '3');
-	assert.equal(loc.searchParams.get('invalid'), 'maxHp');
+	assert.equal(loc.searchParams.get('invalid'), 'traits');
 	assert.equal(loc.searchParams.get('name'), 'Mira', 'values kept');
 	assert.equal((await api('GET', `/api/campaigns/${cid}`)).json.characters.length, 0, 'nothing created');
 	const { p, ctx } = await open(loc.pathname + loc.search);
 	await assertStep(p, 3);
-	assert.equal(await p.locator('[role=alert]').filter({ hasText: 'Max HP' }).count(), 1);
+	assert.equal(await p.locator('[role=alert]').filter({ hasText: 'Assign +2, +1, +1, +0, +0 and -1, each exactly once.' }).count(), 1);
 	await ctx.close();
 });
 
@@ -277,8 +279,7 @@ test('with JS: steps 1→4 with Next and Back are client-side navigations (windo
 	assert.equal(await field(p, 'ancestry').inputValue(), 'Clank');
 	await Promise.all([waitStep(p, 3), tid(p, 'tunnel-next').click()]);
 	await p.waitForFunction(() => document.querySelector('[data-testid=tunnel-progress]')?.textContent.includes('Step 3 of 4'));
-	for (const [k, v] of Object.entries({ evasion: 10, majorThreshold: 5, severeThreshold: 10, maxHp: 6, maxStress: 6, armorSlots: 3 }))
-		await field(p, k).fill(String(v));
+	for (const [k, v] of Object.entries(TRAITS)) await field(p, k).selectOption(v);
 	await Promise.all([waitStep(p, 4), tid(p, 'tunnel-next').click()]);
 	await tid(p, 'tunnel-summary').waitFor();
 	assert.equal(query(p).get('step'), '4');

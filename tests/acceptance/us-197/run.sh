@@ -5,10 +5,10 @@
 # (3) /campaigns/unknown/characters/new -> 404 with the +error.svelte page
 # (4) no-JS walk: step 1 -> 2 (URL, progress), 2 -> 3 -> 4 (summary), Create -> /characters/:newId
 # (5) tunnel-back on step 3, tunnel-edit-1 on step 4, tunnel-cancel on step 1
-# (6) required/min/max on each step's inputs (and defaults level 1, maxStress 6)
+# (6) required/min/max on each step's inputs (and default level 1); us-252: step 3 trait selects required
 # (7) ?step=3&level=11 -> 303 step=1&invalid=level, alert with the label, level prefilled (boundary: level=10 is fine)
-# (8) ?step=4 with major 10 / severe 5 -> step=3&invalid=severeThreshold, alert
-# (9) POST with maxHp=99 -> 303 step=3&invalid=maxHp, alert
+# (8) us-252: ?step=4 with traits 2,2,1,0,0,-1 -> step=3&invalid=traits, alert (was thresholds)
+# (9) us-252: POST with invalid traits -> 303 step=3&invalid=traits, alert (was maxHp=99)
 # (10) with JS: Next/Back keep window.__marker; (11) with JS: Create lands on the sheet
 # (12) en/fr texts of Next, Back, Cancel, Edit, Create
 # (13) layout rules at 375x812, 768x1024, 1024x768, 1180x820 on steps 1-4

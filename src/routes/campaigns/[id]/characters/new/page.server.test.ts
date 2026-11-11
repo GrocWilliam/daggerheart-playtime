@@ -9,7 +9,7 @@ const fake = (status: number, body: unknown, calls: Call[] = []) =>
 	}) as unknown as typeof fetch;
 const url = (q: string) => new URL(`http://x/campaigns/c1/characters/new${q}`);
 const ok = fake(200, { id: 'c1', name: 'Camp', fear: 0, characters: [] });
-const valid = { name: 'Mira', class: 'Bard', level: '2', evasion: '10', majorThreshold: '5', severeThreshold: '10', maxHp: '6', maxStress: '6', armorSlots: '3' };
+const valid = { name: 'Mira', class: 'Bard', level: '2', agility: '2', strength: '1', finesse: '1', instinct: '0', presence: '0', knowledge: '-1' };
 const run = (q: string, fetch = ok) => load({ params: { id: 'c1' }, fetch, url: url(q), locals: { lang: 'en' } } as never) as Promise<Record<string, unknown>>;
 const post = (fields: Record<string, string>, fetch: typeof globalThis.fetch) => {
 	const fd = new FormData();
@@ -34,25 +34,39 @@ describe('tunnel page server', () => {
 	it('load: invalid earlier steps redirect with 303', async () => {
 		await expect(run('?step=3&name=Mira&class=Bard&level=11')).rejects.toMatchObject({ status: 303, location: expect.stringContaining('step=1') });
 		await expect(run('?step=3&name=Mira&class=Bard&level=11')).rejects.toMatchObject({ location: expect.stringContaining('invalid=level') });
-		const q = new URLSearchParams({ step: '4', ...valid, majorThreshold: '10', severeThreshold: '5' });
-		await expect(run(`?${q}`)).rejects.toMatchObject({ status: 303, location: expect.stringMatching(/step=3.*invalid=severeThreshold/) });
-		expect((await run(`?${new URLSearchParams({ step: '4', ...valid })}`)).step).toBe(4);
+		const q = new URLSearchParams({ step: '4', ...valid, agility: '1' });
+		await expect(run(`?${q}`)).rejects.toMatchObject({ status: 303, location: expect.stringMatching(/step=3.*invalid=traits/) });
+		const r = await run(`?${new URLSearchParams({ step: '4', ...valid, armorId: 'core_armor_gambeson_armor' })}`);
+		expect(r.step).toBe(4);
+		expect(r.derived).toMatchObject({ evasion: 11, maxHp: 5, armorSlots: 3 });
+		expect(r.armor).toEqual({ name: 'Gambeson Armor', nameLang: 'en' });
+		expect((await run(`?${new URLSearchParams({ step: '4', ...valid })}`)).armor).toBeNull();
+		expect((await run(`?${new URLSearchParams({ step: '3', ...valid, level: '1' })}`)).armors).toEqual([expect.objectContaining({ tier: 1 })]);
+		expect((await run('?invalid=traits')).invalid).toBe('traits');
 	});
 	it('action: 201 redirects to the sheet with the API body', async () => {
 		const calls: Call[] = [];
 		await expect(post({ ...valid, ancestry: 'Clank', community: '' }, fake(201, { id: 'n1' }, calls))).rejects.toMatchObject({ status: 303, location: '/characters/n1' });
 		expect(calls[0].url).toBe('/api/campaigns/c1/characters');
 		const body = JSON.parse(String(calls[0].init?.body));
-		expect(body).toMatchObject({ name: 'Mira', level: 2, maxHp: 6 });
+		expect(body).toMatchObject({ name: 'Mira', level: 2, maxHp: 5, evasion: 10, traits: { agility: 2 } });
 		expect(body.ancestry).toBeTruthy();
 		expect('community' in body).toBe(false);
 	});
 	it('action: 400 redirects to the step of the field, or review', async () => {
-		await expect(post({ ...valid, maxHp: '99' }, fake(400, { error: 'maxHp must be an integer from 1 to 12' }))).rejects.toMatchObject({
+		await expect(post(valid, fake(400, { error: 'armorId must be an armor' }))).rejects.toMatchObject({
 			status: 303,
-			location: expect.stringMatching(/step=3.*name=Mira.*invalid=maxHp/)
+			location: expect.stringMatching(/step=3.*name=Mira.*invalid=armorId/)
 		});
 		await expect(post(valid, fake(400, { error: 'body must be a JSON object' }))).rejects.toMatchObject({ location: expect.stringMatching(/step=4.*invalid=review/) });
+	});
+	it('action: invalid traits redirect to step 3 without calling the API', async () => {
+		const calls: Call[] = [];
+		await expect(post({ ...valid, knowledge: '' }, fake(201, { id: 'n1' }, calls))).rejects.toMatchObject({
+			status: 303,
+			location: expect.stringMatching(/step=3.*invalid=traits/)
+		});
+		expect(calls).toHaveLength(0);
 	});
 	it('action: other statuses fail with a catalog key', async () => {
 		expect(await post(valid, fake(404, { error: 'campaign not found' }))).toMatchObject({ status: 404, data: { error: 'error.notFound' } });

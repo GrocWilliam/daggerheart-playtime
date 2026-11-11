@@ -47,7 +47,8 @@ describe('tunnel', () => {
 		expect(TUNNEL_STEPS).toEqual([
 			{ key: 'identity', fields: ['name', 'class', 'level'] },
 			{ key: 'heritage', fields: ['ancestry', 'community'] },
-			{ key: 'statistics', fields: ['evasion', 'majorThreshold', 'severeThreshold', 'maxHp', 'maxStress', 'armorSlots'] },
+			// us-252: step 3 picks the six traits and an armor; the statistics are derived.
+			{ key: 'statistics', fields: ['agility', 'strength', 'finesse', 'instinct', 'presence', 'knowledge', 'armorId'] },
 			{ key: 'review', fields: [] }
 		]);
 	});
@@ -64,7 +65,7 @@ describe('tunnel', () => {
 		expect(readValues(fd)).toEqual({ class: 'Bard' });
 	});
 	const s1 = { name: 'Ari', class: 'Bard', level: '1' };
-	const s3 = { evasion: '10', majorThreshold: '5', severeThreshold: '10', maxHp: '6', maxStress: '6', armorSlots: '3' };
+	const s3 = { agility: '2', strength: '1', finesse: '1', instinct: '0', presence: '0', knowledge: '-1' };
 	it('firstInvalid step 1', () => {
 		expect(firstInvalid(s1, 1)).toBeNull();
 		expect(firstInvalid({ ...s1, level: '11' }, 1)).toEqual({ step: 1, field: 'level' });
@@ -75,9 +76,9 @@ describe('tunnel', () => {
 		expect(firstInvalid(s1, 2)).toBeNull();
 		expect(firstInvalid({ ...s1, ancestry: '', community: '' }, 2)).toBeNull();
 	});
-	it('firstInvalid step 3 thresholds', () => {
+	it('firstInvalid step 3 traits (us-252)', () => {
 		expect(firstInvalid({ ...s1, ...s3 }, 3)).toBeNull();
-		expect(firstInvalid({ ...s1, ...s3, majorThreshold: '10', severeThreshold: '5' }, 3)).toEqual({ step: 3, field: 'severeThreshold' });
+		expect(firstInvalid({ ...s1, ...s3, strength: '2' }, 3)).toEqual({ step: 3, field: 'traits' });
 	});
 	it('firstInvalid upTo 0', () => {
 		expect(firstInvalid({}, 0)).toBeNull();
@@ -85,15 +86,16 @@ describe('tunnel', () => {
 	});
 	it('stepOfField', () => {
 		expect(stepOfField('community')).toBe(2);
-		expect(stepOfField('maxHp')).toBe(3);
+		expect(stepOfField('agility')).toBe(3);
 		expect(stepOfField('name')).toBe(1);
 		expect(stepOfField('zzz')).toBe(4);
 	});
 	it('fieldOfMessage', () => {
-		expect(fieldOfMessage(THRESHOLDS_ERROR)).toBe('severeThreshold');
+		// us-252: only armorId/traits messages map to a field; anything else goes to review.
+		expect(fieldOfMessage(THRESHOLDS_ERROR)).toBe('review');
 		const lvl = firstMsg(createSchema.safeParse({ ...body, level: 11 }));
-		expect(fieldOfMessage(lvl)).toBe('level');
-		expect(fieldOfMessage('boom')).toBeNull();
+		expect(fieldOfMessage(lvl)).toBe('review');
+		expect(fieldOfMessage('boom')).toBe('review');
 	});
 	it('tunnelHref (accepts + or %20 for a space)', () => {
 		const h = tunnelHref('c1', 2, { name: 'A B', level: '1' }, 'name');

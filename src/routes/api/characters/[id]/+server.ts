@@ -16,7 +16,7 @@ export const PATCH: RequestHandler = api(async ({ params, request }) => {
 	const cur = await getCharacter(id);
 	if (!cur) throw new ApiError(404, 'character not found');
 	const p = parse(patchSchema(cur), body);
-	const updated = await patchCharacter(id, p);
+	const updated = await patchCharacter(id, p, cur);
 	if (!updated) throw new ApiError(404, 'character not found');
 	return json(updated);
 });

@@ -91,8 +91,9 @@ async function fillAndSubmit(page, sel, id) {
 	await f.locator('select[name=community]').selectOption(sel.community);
 	await next(3);
 	f = form(page);
-	const nums = { evasion: 10, majorThreshold: 5, severeThreshold: 10, maxHp: 6, maxStress: 6, armorSlots: 3 };
-	for (const [k, v] of Object.entries(nums)) await f.locator(`input[name=${k}]:not([type=hidden])`).fill(String(v));
+	// us-252: step 3 picks the six traits instead of typing the statistics.
+	const traits = { agility: '2', strength: '1', finesse: '1', instinct: '0', presence: '0', knowledge: '-1' };
+	for (const [k, v] of Object.entries(traits)) await f.locator(`select[name=${k}]`).selectOption(v);
 	await next(4);
 	await Promise.all([page.waitForURL(/\/characters\/[^/?]+$/), page.locator('[data-testid=tunnel-create]').click()]);
 	await page.goto(`${BASE}/campaigns/${id}`);

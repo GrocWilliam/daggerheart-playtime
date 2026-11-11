@@ -95,7 +95,7 @@ test('a two-handed primary leaves no hand for a secondary', async () => {
 	assert.equal(g.secondaryWeapon, null);
 });
 
-test('equipping armor sets armor max and thresholds; marked armor is capped; unequip keeps numbers', async () => {
+test('equipping armor sets armor max and thresholds; marked armor is capped; unequip resets them', async () => {
 	const ch = await mk(); // armor max 6, thresholds 5/10, level 1
 	assert.equal((await call('POST', `/api/characters/${ch.id}/armor`, { delta: 5 })).status, 200);
 	const g = (await call('GET', `/api/characters/${ch.id}`)).json;
@@ -107,8 +107,8 @@ test('equipping armor sets armor max and thresholds; marked armor is capped; une
 	r = await patch(ch.id, { armorId: null });
 	assert.equal(r.status, 200, r.text);
 	assert.equal(r.json.armorId, null);
-	assert.deepEqual(r.json.armor, { marked: 3, max: 3 });
-	assert.deepEqual([r.json.majorThreshold, r.json.severeThreshold], [6, 12]);
+	assert.deepEqual(r.json.armor, { marked: 0, max: 0 });
+	assert.deepEqual([r.json.majorThreshold, r.json.severeThreshold], [1, 2]);
 });
 
 test('armor thresholds use the new level; explicit values win; validation still applies', async () => {

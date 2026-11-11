@@ -121,6 +121,19 @@ export const actions: Actions = {
 				body[k] = v;
 			} else body[k] = null;
 		}
+		// a level change with untouched thresholds lets the API recompute them
+		if (form.get('level') !== null) {
+			stored ??= (await call(fetch, 'GET', `/api/characters/${enc(params.id)}`)).data ?? null;
+			if (
+				stored &&
+				body.level !== stored.level &&
+				body.majorThreshold === stored.majorThreshold &&
+				body.severeThreshold === stored.severeThreshold
+			) {
+				delete body.majorThreshold;
+				delete body.severeThreshold;
+			}
+		}
 		// a subclass belongs to one class: drop it when the class changed
 		if (typeof body.subclass === 'string') {
 			const sc = getSrd('subclasses', body.subclass, 'en');

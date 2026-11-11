@@ -14,7 +14,8 @@ const api = async (method, path, body) => {
 };
 const postForm = (path, fields) =>
 	fetch(BASE + path, { method: 'POST', redirect: 'manual', headers: { 'content-type': 'application/x-www-form-urlencoded', origin: ORIGIN, accept: 'text/html' }, body: new URLSearchParams(fields).toString() });
-const VALUES = { name: 'Mira', class: 'Bard', level: '2', ancestry: 'Clank', community: 'Highborne', evasion: '10', majorThreshold: '5', severeThreshold: '10', maxHp: '6', maxStress: '6', armorSlots: '3' };
+// us-252: step 3 values are the six traits; the statistics are derived.
+const VALUES = { name: 'Mira', class: 'Bard', level: '2', ancestry: 'Clank', community: 'Highborne', agility: '2', strength: '1', finesse: '1', instinct: '0', presence: '0', knowledge: '-1' };
 const campaign = async () => (await api('POST', '/api/campaigns', { name: 'Removal' })).json.id;
 const count = async (cid) => (await api("GET", `/api/campaigns/${cid}`)).json.characters.length;
 

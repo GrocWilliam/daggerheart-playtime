@@ -220,6 +220,7 @@
 	"tunnel.step.statistics": "Statistics",
 	"tunnel.step.review": "Review",
 	"tunnel.invalid": "Check this field: {field}.",
+	"tunnel.traitsArray": "Assign +2, +1, +1, +0, +0 and -1, each exactly once.",
 	"tunnel.next": "Next",
 	"tunnel.back": "Back",
 	"tunnel.cancel": "Cancel",

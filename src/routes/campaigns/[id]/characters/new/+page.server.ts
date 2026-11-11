@@ -1,7 +1,8 @@
 import { error, fail, redirect } from '@sveltejs/kit';
-import { listSrd, pickOptions } from '$lib/server/features/srd';
+import { armorGroups, gearDetail, listSrd, pickOptions } from '$lib/server/features/srd';
+import { tierOfLevel } from '$lib/server/features/characters';
 import type { Lang } from '$lib/i18n';
-import { DEFAULTS, RANGES, TUNNEL_STEPS, characterBody, fieldOfMessage, firstInvalid, parseStep, readValues, stepOfField, tunnelHref } from './tunnel';
+import { DEFAULTS, RANGES, TRAIT_OPTIONS, TUNNEL_STEPS, characterBody, fieldOfMessage, firstInvalid, parseStep, readValues, stepOfField, tunnelDerived, tunnelHref } from './tunnel';
 type Actions = import('./$types').Actions;
 type PageServerLoad = import('./$types').PageServerLoad;
 
@@ -19,7 +20,7 @@ async function call(fetchFn: typeof fetch, method: string, path: string, body?: 
 
 /** `invalid` names a field (or `review`); anything else is ignored. */
 function readInvalid(v: string | null): string | null {
-	return v !== null && (FIELDS.includes(v) || v === 'review') ? v : null;
+	return v !== null && (FIELDS.includes(v) || v === 'review' || v === 'traits') ? v : null;
 }
 
 /** Select options with the language of each label (same SRD order as `listSrd`). */
@@ -37,6 +38,8 @@ export const load: PageServerLoad = async ({ params, fetch, locals, url }) => {
 	const values = readValues(url.searchParams);
 	const bad = firstInvalid(values, step - 1);
 	if (bad) redirect(303, tunnelHref(params.id, bad.step, values, bad.field));
+	const level = Number(values.level ?? DEFAULTS.level);
+	const armor = step === 4 ? gearDetail('armors', values.armorId, lang) : null;
 	return {
 		campaign: { id: String(r.data.id), name: String(r.data.name) },
 		step,
@@ -45,6 +48,10 @@ export const load: PageServerLoad = async ({ params, fetch, locals, url }) => {
 		steps: TUNNEL_STEPS,
 		ranges: RANGES,
 		defaults: DEFAULTS,
+		traitOptions: TRAIT_OPTIONS,
+		armors: step === 3 ? armorGroups(tierOfLevel(Number.isInteger(level) ? level : 1), lang) : [],
+		derived: step === 4 ? tunnelDerived(values) : null,
+		armor: armor ? { name: armor.name, nameLang: armor.nameLang } : null,
 		// hrefs[k] is step k with the current values (index 0 unused).
 		hrefs: [0, 1, 2, 3, 4].map((k) => tunnelHref(params.id, k, values)),
 		picks: {
@@ -58,11 +65,13 @@ export const load: PageServerLoad = async ({ params, fetch, locals, url }) => {
 export const actions: Actions = {
 	default: async ({ request, params, fetch }) => {
 		const values = readValues(await request.formData());
+		const bad = firstInvalid(values, 3);
+		if (bad) redirect(303, tunnelHref(params.id, bad.step, values, bad.field));
 		const r = await call(fetch, 'POST', `/api/campaigns/${encodeURIComponent(params.id)}/characters`, characterBody(values));
 		if (r.status === 201 && r.data?.id) redirect(303, `/characters/${encodeURIComponent(r.data.id)}`);
 		if (r.status === 400) {
 			const f = fieldOfMessage(String(r.data?.error ?? ''));
-			redirect(303, tunnelHref(params.id, stepOfField(f ?? 'review'), values, f ?? 'review'));
+			redirect(303, tunnelHref(params.id, stepOfField(f), values, f));
 		}
 		const status = r.status >= 400 ? r.status : 500;
 		return fail(status, { error: status === 404 ? 'error.notFound' : 'error.server' });

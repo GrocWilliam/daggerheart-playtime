@@ -53,8 +53,9 @@ test('fr tunnel: class select shows Barde (value Bard, lang fr) and creating the
 	await Promise.all([p.waitForURL(/step=2/), p.getByTestId('tunnel-next').click()]);
 	assert.equal(new URL(p.url()).searchParams.get('class'), 'Bard');
 	await Promise.all([p.waitForURL(/step=3/), p.getByTestId('tunnel-next').click()]);
-	for (const [f, v] of [['evasion', '10'], ['majorThreshold', '5'], ['severeThreshold', '10'], ['maxHp', '5'], ['maxStress', '6'], ['armorSlots', '3']])
-		await p.locator(`input[name="${f}"]`).fill(v);
+	// us-252: step 3 picks the six traits instead of typing the statistics.
+	for (const [f, v] of Object.entries({ agility: '2', strength: '1', finesse: '1', instinct: '0', presence: '0', knowledge: '-1' }))
+		await p.locator(`select[name="${f}"]`).selectOption(v);
 	await Promise.all([p.waitForURL(/step=4/), p.getByTestId('tunnel-next').click()]);
 	await Promise.all([p.waitForURL(/\/characters\/[^/?]+$/), p.getByTestId('tunnel-create').click()]);
 	const c = await api('GET', `/api/characters/${new URL(p.url()).pathname.split('/').pop()}`);
