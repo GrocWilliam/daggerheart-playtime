@@ -19,6 +19,7 @@ const run = (name: keyof typeof actions, fields: Record<string, string>, f: type
 			headers: enhanced ? { 'x-sveltekit-action': 'true' } : {}
 		}),
 		params: { id: 'c1' },
+		url: new URL('http://x/characters/c1?tab=gear'),
 		fetch: f
 	});
 
@@ -31,7 +32,8 @@ describe('character page server', () => {
 	it('load returns the parsed tab (play when missing or unknown)', async () => {
 		const ch = { class: 'Guardian', level: 1, cards: [], items: [], subclass: null, ancestry: null, community: null };
 		const tabOf = async (q: string) =>
-			((await load({ params: { id: 'c1' }, fetch: recorder(200, ch).f, url: new URL(`http://x/characters/c1${q}`) } as never)) as { tab: string }).tab;
+			((await load({ params: { id: 'c1' },
+		url: new URL('http://x/characters/c1?tab=gear'), fetch: recorder(200, ch).f, url: new URL(`http://x/characters/c1${q}`) } as never)) as { tab: string }).tab;
 		expect(await tabOf('?tab=gear')).toBe('gear');
 		expect(await tabOf('?tab=notes')).toBe('notes');
 		expect(await tabOf('')).toBe('play');
@@ -41,7 +43,7 @@ describe('character page server', () => {
 	it('edit redirects 303 without enhance and fails with the modal and typed values', async () => {
 		await expect(run('edit', { name: 'A', class: 'B' }, recorder().f, false)).rejects.toMatchObject({
 			status: 303,
-			location: '/characters/c1'
+			location: '/characters/c1?tab=gear'
 		});
 		const r = (await run('edit', { name: '', class: 'B', level: '4', 'traits.agility': '1' }, recorder(400, { error: 'x' }).f)) as {
 			status: number;
@@ -141,5 +143,16 @@ describe('character page server', () => {
 		await run('removeItem', { itemId: 'i1' }, f);
 		expect(calls[0]).toMatchObject({ method: 'PATCH', url: '/api/items/i1', body: { quantity: 5 } });
 		expect(calls[1]).toMatchObject({ method: 'DELETE', url: '/api/items/i1' });
+	});
+});
+
+describe('done and failure', () => {
+	it('redirects without JS to the action tab', async () => {
+		const { f } = recorder(200, {});
+		await expect(run('gold', { handfuls: '1' }, f, false)).rejects.toMatchObject({ status: 303, location: '/characters/c1?tab=gear' });
+	});
+	it('failures carry the section and a catalog key', async () => {
+		const { f } = recorder(400, { error: 'x' });
+		expect(await run('gold', { handfuls: '-5' }, f)).toMatchObject({ status: 400, data: { error: 'error.invalid', section: 'sheet-gold' } });
 	});
 });

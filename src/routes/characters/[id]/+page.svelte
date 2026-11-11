@@ -13,7 +13,7 @@
 	import Modal from '$lib/components/Modal.svelte';
 	import Help from '$lib/components/Help.svelte';
 	import Chosen from '$lib/components/Chosen.svelte';
-	import { SHEET_TABS, TAB_LABEL } from './tabs';
+	import { SHEET_TABS, TAB_LABEL, actionHref } from './tabs';
 	let { data, form } = $props();
 	const t = (key: string, params?: Record<string, string | number>) => translate(data.lang, key, params);
 	const n = (v: number) => formatNumber(data.lang, v);
@@ -61,7 +61,7 @@
 </div>
 <ConditionBadges conditions={c.conditions} lang={data.lang} />
 <div class="mb-3"><a data-testid="campaign-run-link" href="/campaigns/{c.campaignId}?step=run">{t('character.runLink')}</a> <Modal kind="edit" params={{ tab: data.tab }} title={t('section.edit')} lang={data.lang}>
-<form use:enhance={busy} method="POST" action="?/edit" class="grid grid-cols-[minmax(0,1fr)] gap-x-4 *:min-w-0 min-[600px]:grid-cols-[repeat(2,minmax(0,1fr))]" class:form-grid={true}>
+<form use:enhance={busy} method="POST" action={actionHref('edit', data.tab)} class="grid grid-cols-[minmax(0,1fr)] gap-x-4 *:min-w-0 min-[600px]:grid-cols-[repeat(2,minmax(0,1fr))]" class:form-grid={true}>
 	{#if form?.modal === 'edit' && form.error}<p role="alert" class="col-span-full">{t(form.error)}</p>{/if}
 	{#each fields.slice(0, 1) as [name, label, type, value] (name)}
 		<label>{t(label)} <input {type} {name} value={editValues[name] ?? value} required /></label>
@@ -120,8 +120,6 @@
 {#if data.tab !== 'gear' && opened('item')}{@render itemModal()}{/if}
 {#if data.tab !== 'cards' && opened('card')}{@render cardModal()}{/if}
 
-{#if form?.error && !form?.modal}<p role="alert">{t(form.error)}</p>{/if}
-
 <nav data-testid="sheet-tabs" class="mb-4 flex flex-wrap gap-x-2">
 	{#each SHEET_TABS as k (k)}
 		<a class="flex min-h-11 items-center px-3 {data.tab === k ? 'font-bold underline' : ''}" data-testid="tab-{k}" href="?tab={k}"
@@ -131,7 +129,7 @@
 
 {#snippet experienceModal()}
 <Modal kind="experience" params={{ tab: 'traits' }} title={t('experience.new')} lang={data.lang}>
-<form use:enhance={busy} method="POST" action="?/addExperience">
+<form use:enhance={busy} method="POST" action={actionHref('addExperience', data.tab)}>
 	<label>{t('experience.name')} <input type="text" name="name" maxlength="100" required value={expValues?.name ?? ''} /></label>
 	<label>{t('experience.modifier')} <input type="number" name="modifier" min="1" max="5" step="1" value={expValues?.modifier ?? '2'} required /></label>
 	<button type="submit">{t('action.addExperience')}</button>
@@ -141,7 +139,7 @@
 {/snippet}
 {#snippet itemModal()}
 <Modal kind="item" params={{ tab: 'gear' }} title={t('item.new')} lang={data.lang}>
-<form use:enhance={busy} method="POST" action="?/addItem">
+<form use:enhance={busy} method="POST" action={actionHref('addItem', data.tab)}>
 	<label>{t('item.name')} <input type="text" name="name" maxlength="100" value={itemValues?.name ?? ''} /></label>
 	<label>
 		{t('item.fromSrd')}
@@ -164,7 +162,7 @@
 {/snippet}
 {#snippet cardModal()}
 <Modal kind="card" params={{ tab: 'cards' }} title={t('card.new')} lang={data.lang}>
-<form use:enhance={busy} method="POST" action="?/addCard">
+<form use:enhance={busy} method="POST" action={actionHref('addCard', data.tab)}>
 	<label>
 		{t('card.add')}
 		<select name="cardId" required>
@@ -202,7 +200,7 @@
 	</div>
 {/snippet}
 {#snippet picker(name: string, label: string, groups: { tier: number; picks: { id: string; name: string }[] }[], current: string | null)}
-	<form use:enhance={busy} class="flex flex-wrap items-end gap-2" method="POST" action="?/equip">
+	<form use:enhance={busy} class="flex flex-wrap items-end gap-2" method="POST" action={actionHref('equip', data.tab)}>
 		<label class="mb-0!">
 			{t(label)}
 			<select {name}>
@@ -223,19 +221,21 @@
 <div data-testid="sheet-sections" class="grid grid-cols-[minmax(0,1fr)] gap-x-4 *:min-w-0 {data.tab === 'cards' || data.tab === 'notes' ? '' : 'md:grid-cols-[repeat(2,minmax(0,1fr))]'}">
 {#if data.tab === 'play'}
 <div data-testid="sheet-trackers">
+{#if form?.section === 'sheet-trackers'}<p role="alert">{t(form.error)}</p>{/if}
 {#each TRACKERS as key (key)}
-	<Tracker name={key} label={t(`tracker.${key}`)} helpId={key} action="?/tracker" hidden={{ tracker: key }} lang={data.lang}
+	<Tracker name={key} label={t(`tracker.${key}`)} helpId={key} action={actionHref('tracker', data.tab)} hidden={{ tracker: key }} lang={data.lang}
 		{...trackerValues(c[key])} />
 {/each}
 <DefenseLine evasion={c.evasion} major={c.majorThreshold} severe={c.severeThreshold} lang={data.lang} />
-<DamageForm action="?/damage" lang={data.lang} />
+<DamageForm action={actionHref('damage', data.tab)} lang={data.lang} />
 </div>
 
 <div data-testid="sheet-conditions">
+{#if form?.section === 'sheet-conditions'}<p role="alert">{t(form.error)}</p>{/if}
 <h2 class="mt-4 mb-2">{t('section.conditions')}</h2>
 <div class="flex flex-wrap gap-2">
 {#each conditions as k (k)}
-	<form use:enhance={busy} method="POST" action="?/condition">
+	<form use:enhance={busy} method="POST" action={actionHref('condition', data.tab)}>
 		<input type="hidden" name="condition" value={k} />
 		<button type="submit" name="value" value={c.conditions[k] ? 'off' : 'on'}>
 			{t(`condition.${c.conditions[k] ? 'clear' : 'set'}.${k}`)}
@@ -257,18 +257,19 @@
 </div>
 
 <div data-testid="sheet-experiences">
+{#if form?.section === 'sheet-experiences'}<p role="alert">{t(form.error)}</p>{/if}
 <h2 class="mt-4 mb-2">{t('section.experiences')}</h2>
 {@render experienceModal()}
 <ul class="list-none pl-0!">
 	{#each c.experiences as ex (ex.id)}
 		<li data-testid="experience">
 			<span>{ex.name} +{ex.modifier}</span>
-			<form use:enhance={busy} class="flex flex-wrap items-end gap-2" method="POST" action="?/setExperience">
+			<form use:enhance={busy} class="flex flex-wrap items-end gap-2" method="POST" action={actionHref('setExperience', data.tab)}>
 				<input type="hidden" name="expId" value={ex.id} />
 				<input type="number" name="modifier" min="1" max="5" step="1" value={ex.modifier} required aria-label={t('experience.modifier')} />
 				<button type="submit">{t('action.update')}</button>
 			</form>
-			<form use:enhance={busy} method="POST" action="?/removeExperience">
+			<form use:enhance={busy} method="POST" action={actionHref('removeExperience', data.tab)}>
 				<input type="hidden" name="expId" value={ex.id} />
 				<button type="submit">{t('action.remove')}</button>
 			</form>
@@ -280,6 +281,7 @@
 
 {#if data.tab === 'gear'}
 <div data-testid="sheet-equipment">
+{#if form?.section === 'sheet-equipment'}<p role="alert">{t(form.error)}</p>{/if}
 <h2 class="mt-4 mb-2">{t('section.equipment')}</h2>
 {@render picker('primaryWeapon', 'equipment.primary', data.equipment.primary, c.primaryWeapon)}
 {#if data.equipment.primaryWeapon}{@render gear('primary-weapon', data.equipment.primaryWeapon)}{/if}
@@ -294,16 +296,18 @@
 </div>
 
 <div data-testid="sheet-gold">
+{#if form?.section === 'sheet-gold'}<p role="alert">{t(form.error)}</p>{/if}
 <h2 class="mt-4 mb-2">{t('section.gold')}</h2>
 <Help id="gold" name={t('section.gold')} lang={data.lang} />
 <p data-testid="gold">{n(c.gold.chests)} {t('gold.chests')}, {n(c.gold.bags)} {t('gold.bags')}, {n(c.gold.handfuls)} {t('gold.handfuls')}</p>
-<form use:enhance={busy} class="flex flex-wrap items-end gap-2" method="POST" action="?/gold">
+<form use:enhance={busy} class="flex flex-wrap items-end gap-2" method="POST" action={actionHref('gold', data.tab)}>
 	<label class="mb-0!">{t('gold.adjust')} <input type="number" name="handfuls" step="1" required /></label>
 	<button type="submit">{t('action.updateGold')}</button>
 </form>
 </div>
 
 <div data-testid="sheet-inventory" class="md:col-span-2">
+{#if form?.section === 'sheet-inventory'}<p role="alert">{t(form.error)}</p>{/if}
 <h2 class="mt-4 mb-2">{t('section.inventory')}</h2>
 {@render itemModal()}
 {#if c.items.length > 0}
@@ -327,14 +331,14 @@
 						{/if}
 					</td>
 					<td>
-						<form use:enhance={busy} class="flex flex-wrap items-end gap-2" method="POST" action="?/setQuantity">
+						<form use:enhance={busy} class="flex flex-wrap items-end gap-2" method="POST" action={actionHref('setQuantity', data.tab)}>
 							<input type="hidden" name="itemId" value={it.id} />
 							<input type="number" name="quantity" min="0" value={it.quantity} required />
 							<button type="submit">{t('action.update')}</button>
 						</form>
 					</td>
 					<td>
-						<form use:enhance={busy} class="flex flex-nowrap items-center gap-2" method="POST" action="?/removeItem">
+						<form use:enhance={busy} class="flex flex-nowrap items-center gap-2" method="POST" action={actionHref('removeItem', data.tab)}>
 							<input type="hidden" name="itemId" value={it.id} />
 							<button type="submit">{t('action.remove')}</button>
 						</form>
@@ -350,6 +354,7 @@
 
 {#if data.tab === 'cards'}
 <div data-testid="sheet-cards">
+{#if form?.section === 'sheet-cards'}<p role="alert">{t(form.error)}</p>{/if}
 <h2 class="mt-4 mb-2">{t('section.cards')}</h2>
 <ul class="list-none pl-0!">
 	{#each data.cards as card (card.id)}
@@ -357,7 +362,7 @@
 			<span lang={card.nameLang}>{card.name}</span>
 			<span class="muted"><span lang={card.domainNameLang}>{card.domainName}</span>, {t('card.level')} {card.level}</span>
 			<Help id={card.id} name={card.name} nameLang={card.nameLang} lang={data.lang} lines={card.lines} />
-			<form use:enhance={busy} method="POST" action="?/removeCard">
+			<form use:enhance={busy} method="POST" action={actionHref('removeCard', data.tab)}>
 				<input type="hidden" name="cardId" value={card.id} />
 				<button type="submit">{t('action.remove')}</button>
 			</form>
@@ -370,8 +375,9 @@
 
 {#if data.tab === 'notes'}
 <div data-testid="sheet-notes">
+{#if form?.section === 'sheet-notes'}<p role="alert">{t(form.error)}</p>{/if}
 <h2 class="mt-4 mb-2">{t('section.notes')}</h2>
-<form use:enhance={busy} method="POST" action="?/notes">
+<form use:enhance={busy} method="POST" action={actionHref('notes', data.tab)}>
 	<textarea name="notes" data-testid="notes" maxlength="5000" rows="6">{c.notes}</textarea>
 	<button type="submit">{t('action.saveNotes')}</button>
 </form>

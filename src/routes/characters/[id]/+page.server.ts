@@ -4,7 +4,7 @@ import { TRAITS, tierOfLevel, conditionFieldSchema, trackerFieldSchema } from '$
 type Actions = import('./$types').Actions;
 type PageServerLoad = import('./$types').PageServerLoad;
 
-import { parseTab } from './tabs';
+import { parseTab, ACTION_SECTION, type ActionName } from './tabs';
 
 type Fetch = typeof fetch;
 
@@ -35,9 +35,16 @@ function errorKey(status: number): string {
 
 function failure(
 	r: { status: number; data: { error?: string } | null },
-	extra: { modal?: string; values?: Record<string, string> } = {}
+	extra: { modal?: string; values?: Record<string, string>; section: string | null }
 ) {
-	return fail(r.status, { error: errorKey(r.status), modal: extra.modal, values: extra.values });
+	return fail(r.status, { error: errorKey(r.status), modal: extra.modal, values: extra.values, section: extra.section });
+}
+
+/** Success: no-JS posts redirect to the sheet tab of the action URL, enhanced ones update in place. */
+function done(event: { request: Request; params: { id: string }; url: URL }, _name: ActionName) {
+	if (!event.request.headers.has('x-sveltekit-action'))
+		redirect(303, `/characters/${enc(event.params.id)}?tab=${parseTab(event.url.searchParams.get('tab'))}`);
+	return { ok: true };
 }
 
 const enc = encodeURIComponent;
@@ -84,25 +91,28 @@ export const load: PageServerLoad = async ({ params, fetch, locals, url }) => {
 };
 
 export const actions: Actions = {
-	tracker: async ({ request, params, fetch }) => {
+	tracker: async (event) => {
+		const { request, params, fetch } = event;
 		const form = await request.formData();
 		const t = trackerFieldSchema.safeParse(form.get('tracker'));
-		if (!t.success) return fail(400, { error: 'error.invalid' });
+		if (!t.success) return fail(400, { error: 'error.invalid', section: ACTION_SECTION.tracker });
 		const tracker = t.data;
 		const r = await call(fetch, 'POST', `/api/characters/${enc(params.id)}/${tracker}`, {
 			delta: Number(form.get('delta'))
 		});
-		return r.ok ? { ok: true } : failure(r);
+		return r.ok ? done(event, 'tracker') : failure(r, { section: ACTION_SECTION.tracker });
 	},
-	damage: async ({ request, params, fetch }) => {
+	damage: async (event) => {
+		const { request, params, fetch } = event;
 		const form = await request.formData();
 		const r = await call(fetch, 'POST', `/api/characters/${enc(params.id)}/damage`, {
 			amount: num(form.get('amount')),
 			useArmor: form.get('useArmor') !== null
 		});
-		return r.ok ? { ok: true } : failure(r);
+		return r.ok ? done(event, 'damage') : failure(r, { section: ACTION_SECTION.damage });
 	},
-	edit: async ({ request, params, fetch }) => {
+	edit: async (event) => {
+		const { request, params, fetch } = event;
 		const form = await request.formData();
 		const body: Record<string, unknown> = {
 			name: form.get('name') ?? '',
@@ -144,39 +154,40 @@ export const actions: Actions = {
 			if (sc && String(sc.class) !== String(body.class).toUpperCase()) body.subclass = null;
 		}
 		const r = await call(fetch, 'PATCH', `/api/characters/${enc(params.id)}`, body);
-		if (r.ok) {
-			if (!request.headers.has('x-sveltekit-action')) redirect(303, `/characters/${enc(params.id)}`);
-			return { ok: true };
-		}
+		if (r.ok) return done(event, 'edit');
 		const values: Record<string, string> = {};
 		for (const [k, v] of form.entries()) if (typeof v === 'string') values[k] = v;
-		return failure(r, { modal: 'edit', values });
+		return failure(r, { modal: 'edit', values, section: null });
 	},
-	condition: async ({ request, params, fetch }) => {
+	condition: async (event) => {
+		const { request, params, fetch } = event;
 		const form = await request.formData();
 		const c = conditionFieldSchema.safeParse(form.get('condition'));
-		if (!c.success) return fail(400, { error: 'error.invalid' });
+		if (!c.success) return fail(400, { error: 'error.invalid', section: ACTION_SECTION.condition });
 		const key = c.data;
 		const r = await call(fetch, 'PUT', `/api/characters/${enc(params.id)}/conditions`, {
 			[key]: form.get('value') === 'on'
 		});
-		return r.ok ? { ok: true } : failure(r);
+		return r.ok ? done(event, 'condition') : failure(r, { section: ACTION_SECTION.condition });
 	},
-	notes: async ({ request, params, fetch }) => {
+	notes: async (event) => {
+		const { request, params, fetch } = event;
 		const form = await request.formData();
 		const r = await call(fetch, 'PATCH', `/api/characters/${enc(params.id)}`, {
 			notes: String(form.get('notes') ?? '')
 		});
-		return r.ok ? { ok: true } : failure(r);
+		return r.ok ? done(event, 'notes') : failure(r, { section: ACTION_SECTION.notes });
 	},
-	gold: async ({ request, params, fetch }) => {
+	gold: async (event) => {
+		const { request, params, fetch } = event;
 		const form = await request.formData();
 		const r = await call(fetch, 'POST', `/api/characters/${enc(params.id)}/gold`, {
 			handfuls: num(form.get('handfuls'))
 		});
-		return r.ok ? { ok: true } : failure(r);
+		return r.ok ? done(event, 'gold') : failure(r, { section: ACTION_SECTION.gold });
 	},
-	addItem: async ({ request, params, fetch }) => {
+	addItem: async (event) => {
+		const { request, params, fetch } = event;
 		const form = await request.formData();
 		const srdId = form.get('srdId');
 		const body: Record<string, unknown> =
@@ -186,48 +197,54 @@ export const actions: Actions = {
 		const r = await call(fetch, 'POST', `/api/characters/${enc(params.id)}/items`, body);
 		const str = (k: string) => (typeof form.get(k) === 'string' ? String(form.get(k)) : '');
 		return r.ok
-			? { ok: true }
-			: failure(r, { modal: 'item', values: { name: str('name'), srdId: str('srdId'), quantity: str('quantity') } });
+			? done(event, 'addItem')
+			: failure(r, { modal: 'item', values: { name: str('name'), srdId: str('srdId'), quantity: str('quantity') }, section: null });
 	},
-	setQuantity: async ({ request, fetch }) => {
+	setQuantity: async (event) => {
+		const { request, fetch } = event;
 		const form = await request.formData();
 		const r = await call(fetch, 'PATCH', `/api/items/${enc(String(form.get('itemId')))}`, {
 			quantity: num(form.get('quantity'))
 		});
-		return r.ok ? { ok: true } : failure(r);
+		return r.ok ? done(event, 'setQuantity') : failure(r, { section: ACTION_SECTION.setQuantity });
 	},
-	removeItem: async ({ request, fetch }) => {
+	removeItem: async (event) => {
+		const { request, fetch } = event;
 		const form = await request.formData();
 		const r = await call(fetch, 'DELETE', `/api/items/${enc(String(form.get('itemId')))}`);
-		return r.ok ? { ok: true } : failure(r);
+		return r.ok ? done(event, 'removeItem') : failure(r, { section: ACTION_SECTION.removeItem });
 	},
-	addCard: async ({ request, params, fetch }) => {
+	addCard: async (event) => {
+		const { request, params, fetch } = event;
 		const form = await request.formData();
 		const r = await call(fetch, 'POST', `/api/characters/${enc(params.id)}/cards`, {
 			cardId: String(form.get('cardId') ?? '')
 		});
-		return r.ok ? { ok: true } : failure(r, { modal: 'card', values: { cardId: String(form.get('cardId') ?? '') } });
+		return r.ok ? done(event, 'addCard') : failure(r, { modal: 'card', values: { cardId: String(form.get('cardId') ?? '') }, section: null });
 	},
-	removeCard: async ({ request, params, fetch }) => {
+	removeCard: async (event) => {
+		const { request, params, fetch } = event;
 		const form = await request.formData();
 		const r = await call(
 			fetch,
 			'DELETE',
 			`/api/characters/${enc(params.id)}/cards/${enc(String(form.get('cardId') ?? ''))}`
 		);
-		return r.ok ? { ok: true } : failure(r);
+		return r.ok ? done(event, 'removeCard') : failure(r, { section: ACTION_SECTION.removeCard });
 	},
-	equip: async ({ request, params, fetch }) => {
+	equip: async (event) => {
+		const { request, params, fetch } = event;
 		const form = await request.formData();
 		const field = ['primaryWeapon', 'secondaryWeapon', 'armorId'].find((k) => form.has(k));
-		if (!field) return fail(400, { error: 'error.invalid' });
+		if (!field) return fail(400, { error: 'error.invalid', section: ACTION_SECTION.equip });
 		const v = form.get(field);
 		const r = await call(fetch, 'PATCH', `/api/characters/${enc(params.id)}`, {
 			[field]: typeof v === 'string' && v !== '' ? v : null
 		});
-		return r.ok ? { ok: true } : failure(r);
+		return r.ok ? done(event, 'equip') : failure(r, { section: ACTION_SECTION.equip });
 	},
-	addExperience: async ({ request, params, fetch }) => {
+	addExperience: async (event) => {
+		const { request, params, fetch } = event;
 		const form = await request.formData();
 		const r = await call(fetch, 'POST', `/api/characters/${enc(params.id)}/experiences`, {
 			name: form.get('name') ?? '',
@@ -235,10 +252,11 @@ export const actions: Actions = {
 		});
 		const val = (k: string) => (typeof form.get(k) === 'string' ? String(form.get(k)) : '');
 		return r.ok
-			? { ok: true }
-			: failure(r, { modal: 'experience', values: { name: val('name'), modifier: val('modifier') } });
+			? done(event, 'addExperience')
+			: failure(r, { modal: 'experience', values: { name: val('name'), modifier: val('modifier') }, section: null });
 	},
-	setExperience: async ({ request, params, fetch }) => {
+	setExperience: async (event) => {
+		const { request, params, fetch } = event;
 		const form = await request.formData();
 		const r = await call(
 			fetch,
@@ -246,15 +264,16 @@ export const actions: Actions = {
 			`/api/characters/${enc(params.id)}/experiences/${enc(String(form.get('expId') ?? ''))}`,
 			{ modifier: num(form.get('modifier')) }
 		);
-		return r.ok ? { ok: true } : failure(r);
+		return r.ok ? done(event, 'setExperience') : failure(r, { section: ACTION_SECTION.setExperience });
 	},
-	removeExperience: async ({ request, params, fetch }) => {
+	removeExperience: async (event) => {
+		const { request, params, fetch } = event;
 		const form = await request.formData();
 		const r = await call(
 			fetch,
 			'DELETE',
 			`/api/characters/${enc(params.id)}/experiences/${enc(String(form.get('expId') ?? ''))}`
 		);
-		return r.ok ? { ok: true } : failure(r);
+		return r.ok ? done(event, 'removeExperience') : failure(r, { section: ACTION_SECTION.removeExperience });
 	}
 };

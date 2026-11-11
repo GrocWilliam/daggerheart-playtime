@@ -28,7 +28,7 @@ Per page:
 - Home: campaign grid with 1, 2 and 3 columns.
 - Run step: below 768px one column. From 768px, Fear and `current-scene` side by side, then `party` as a 2-column grid, then `journal`. From 1024px two columns: scene, notes and journal on the left; Fear and `party` on the right, party in 1 column.
 - Build step: from 768px `build-party` takes 1/3 and `build-scenes` 2/3, side by side; below that they stack.
-- The character sheet's edit form is in `<Modal kind="edit">` (opener `new-edit` in the header next to `campaign-run-link`; no Edit section); grid 1 column, 2 from `min-[600px]:`; `edit` fails with `modal: 'edit'` and `values`, redirects 303 to `/characters/:id` on success without enhance.
+- The character sheet's edit form is in `<Modal kind="edit">` (opener `new-edit` in the header next to `campaign-run-link`; no Edit section); grid 1 column, 2 from `min-[600px]:`; `edit` fails with `modal: 'edit'` and `values`, redirects 303 to `/characters/:id?tab=<tab>` on success without enhance.
 - The Add scene form is in `<Modal kind="scene">` inside `build-scenes` (opener `new-scene`); its `add` action fails with `modal: 'scene'` and `values`, and redirects 303 to `?step=build` on success unless the request is an enhance one (`x-sveltekit-action`).
 - Character sheet, header (every tab, above the tabs): `h1` (`character-name`, `down`), `Divider`, one line with class and level, `Chosen` and the `domain`s, `ConditionBadges`, then `campaign-run-link` and `new-edit`. The Modals carry their tab: `edit` → `{ tab: data.tab }`, `item` → `gear`, `experience` → `traits`, `card` → `cards` (openers of item/experience/card sit in their tab's section).
 - Character sheet, tab bar: `nav[data-testid=sheet-tabs]`, one plain link per tab (`tab-<key>`, `href="?tab=<key>"`, label `TAB_LABEL`); the current one has `aria-current="page"` and `font-bold underline` like `step-*`. Only the chosen tab is rendered (one `{#if data.tab === ...}` per tab, never hidden with CSS); `load` still computes every tab's data.
@@ -71,7 +71,7 @@ Test ids: `tunnel-progress` (step indicator), `tunnel-next`, `tunnel-back`, `tun
 - Home: empty (no campaigns, an empty-state text); loading (the submit button is busy, `aria-busy`); error (`[role=alert]`); success (the campaign appears in the grid).
 - DM screen, Build and Run: empty (no characters, no scenes, no journal entries show empty texts); loading (busy submit button with `aria-busy`); error (`[role=alert]` in the form); success (the list or tracker updates in place).
 - Tunnel: empty (step 1 with blank fields); loading (busy submit); error (`?step=N&invalid=<field>` with `[role=alert]`); success (redirect to the sheet).
-- Character sheet (all tabs): loading (busy buttons); error (`[role=alert]`, page-level above the tabs, modal errors in their dialog); success (values update in place, the tab stays).
+- Character sheet (all tabs): loading (busy buttons); error (`[role=alert]` inside the failing action's section on its tab, via `form.section` = `ACTION_SECTION[name]`; modal errors in their dialog); success (values update in place, the tab stays).
   - `play`: trackers, defense line and damage form; condition toggles show set/clear.
   - `traits`: empty (no experiences: empty list, `new-experience` opener).
   - `gear`: empty (no equipment picked: `option.none`; no items: no `inventory` table).
