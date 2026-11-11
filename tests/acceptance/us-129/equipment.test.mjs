@@ -39,7 +39,7 @@ async function open(lang, id) {
 	await ctx.addCookies([{ name: 'lang', value: lang, url: BASE }]);
 	const page = await ctx.newPage();
 	page.setDefaultTimeout(5000);
-	await page.goto(`${BASE}/characters/${id}`);
+	await page.goto(`${BASE}/characters/${id}?tab=gear`);
 	return { ctx, page };
 }
 const sel = (page, name) => page.locator(`select[name="${name}"]`);
@@ -48,7 +48,9 @@ const opts = (s) => s.locator('option').evaluateAll((os) => os.map((o) => ({ val
 async function choose(page, name, value) {
 	await sel(page, name).selectOption(value);
 	await Promise.all([page.waitForNavigation(), formOf(page, name).locator('button[type=submit]').click()]);
+	await page.goto(new URL('?tab=gear', page.url()).href); // us-305: equipment lives on the gear tab
 }
+const tab = (page, k) => page.goto(new URL(`?tab=${k}`, page.url()).href);
 const text = async (page, tid) => (await page.getByTestId(tid).innerText()).replace(/\s+/g, ' ');
 
 test('level 1 primary dropdown: None first, no tier 2+ option; secondary and armor likewise', async () => {
@@ -138,11 +140,13 @@ test('choosing armor updates Armor max and thresholds to the API values; details
 	await choose(page, 'armorId', 'core_armor_gambeson_armor');
 	const g = (await api('GET', `/api/characters/${id}`)).json;
 	assert.equal(g.armorId, 'core_armor_gambeson_armor');
+	await tab(page, 'play');
 	assert.equal(await text(page, 'armor'), `${g.armor.marked}/${g.armor.max}`);
 	assert.equal(g.armor.max, 3);
 	assert.equal(await text(page, 'thresholds'), `${g.majorThreshold}/${g.severeThreshold}`);
 	assert.equal(g.majorThreshold, 6);
 	const a = A.find((x) => x.id === 'core_armor_gambeson_armor');
+	await tab(page, 'gear');
 	const t = await text(page, 'equipped-armor');
 	assert.ok(t.includes(en(a)));
 	assert.ok(t.includes(`${a.baseMajorThreshold}`) && t.includes(`${a.baseSevereThreshold}`) && t.includes(`${a.baseScore}`));
@@ -150,6 +154,7 @@ test('choosing armor updates Armor max and thresholds to the API values; details
 		assert.ok(t.includes(en(f)));
 		assert.ok(t.includes(paras(f.description)[0]));
 	}
+	await tab(page, 'play');
 	assert.equal(await page.getByTestId('armor').count(), 1, 'tracker testid unchanged');
 	await ctx.close();
 });

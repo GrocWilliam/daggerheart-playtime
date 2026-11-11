@@ -44,7 +44,7 @@ test('fr character sheet: primary-weapon and equipped-armor show name and featur
 	const ctx = await browser.newContext();
 	await ctx.addCookies([{ name: 'lang', value: 'fr', url: BASE }]);
 	const p = await ctx.newPage();
-	assert.equal((await p.goto(`${BASE}/characters/${ch}`)).status(), 200);
+	assert.equal((await p.goto(`${BASE}/characters/${ch}?tab=gear`)).status(), 200);
 	for (const [testid, id, FR] of [['primary-weapon', WID, FRW], ['equipped-armor', AID, FRA]]) {
 		const box = p.locator(`[data-testid="${testid}"]`);
 		assert.equal(await box.count(), 1);

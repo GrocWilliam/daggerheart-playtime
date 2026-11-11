@@ -132,35 +132,35 @@ test('home at 1024x768: 3 columns (same y, 3 different x)', async () => {
 
 const IDS = SECTIONS.map((s) => `sheet-${s}`);
 
-test('character sheet at 768x1024: two non-spanning sections sit side by side', async () => {
-	const v = await open(paths[2], 768, 1024);
+// us-305: the sheet is split into tabs; the grid checks are per tab.
+const TAB_SECTIONS = { play: ['sheet-trackers', 'sheet-conditions'], traits: ['sheet-traits', 'sheet-experiences'], gear: ['sheet-equipment', 'sheet-gold', 'sheet-inventory'], cards: ['sheet-cards'], notes: ['sheet-notes'] };
+
+test('character sheet at 768x1024: on ?tab=traits, sheet-traits and sheet-experiences share a top edge', async () => {
+	const v = await open(paths[2] + '?tab=traits', 768, 1024);
 	try {
-		const b = await boxes(v.page, [...IDS, 'sheet-sections']);
-		for (const id of IDS) assert.ok(b[id], `${id} missing`);
-		const side = (p, q) => Math.abs(p.y - q.y) <= 1 && Math.abs(p.x - q.x) > 20;
-		const others = ['sheet-traits', 'sheet-equipment', 'sheet-experiences', 'sheet-cards', 'sheet-notes'];
-		const found = side(b['sheet-traits'], b['sheet-equipment']) ||
-			others.some((a) => others.some((c) => a < c && side(b[a], b[c])));
-		assert.ok(found, JSON.stringify(b));
+		const b = await boxes(v.page, ['sheet-traits', 'sheet-experiences']);
+		for (const id of ['sheet-traits', 'sheet-experiences']) assert.ok(b[id], `${id} missing`);
+		assert.ok(Math.abs(b['sheet-traits'].y - b['sheet-experiences'].y) <= 1, JSON.stringify(b));
 	} finally { await v.close(); }
 });
 
-test('character sheet at 768x1024: sheet-trackers and sheet-inventory span the full width', async () => {
-	const v = await open(paths[2], 768, 1024);
+test('character sheet at 768x1024: on ?tab=gear, sheet-inventory spans the full width', async () => {
+	const v = await open(paths[2] + '?tab=gear', 768, 1024);
 	try {
-		const b = await boxes(v.page, ['sheet-sections', 'sheet-trackers', 'sheet-inventory']);
-		for (const id of ['sheet-trackers', 'sheet-inventory'])
-			assert.ok(b[id] && Math.abs(b[id].w - b['sheet-sections'].w) <= 2, `${id} width ${b[id]?.w} vs ${b['sheet-sections']?.w}`);
+		const b = await boxes(v.page, ['sheet-sections', 'sheet-inventory']);
+		assert.ok(b['sheet-inventory'] && Math.abs(b['sheet-inventory'].w - b['sheet-sections'].w) <= 2, `width ${b['sheet-inventory']?.w} vs ${b['sheet-sections']?.w}`);
 	} finally { await v.close(); }
 });
 
-test('character sheet at 375x812: all sheet sections share the same left x', async () => {
-	const v = await open(paths[2], 375, 812);
-	try {
-		const b = await boxes(v.page, IDS);
-		for (const id of IDS) assert.ok(b[id], `${id} missing`);
-		assert.equal(new Set(IDS.map((i) => Math.round(b[i].x))).size, 1, JSON.stringify(b));
-	} finally { await v.close(); }
+test('character sheet at 375x812: on every tab, all sheet sections share the same left x', async () => {
+	for (const [tab, ids] of Object.entries(TAB_SECTIONS)) {
+		const v = await open(`${paths[2]}?tab=${tab}`, 375, 812);
+		try {
+			const b = await boxes(v.page, ids);
+			for (const id of ids) assert.ok(b[id], `${id} missing on ${tab}`);
+			assert.equal(new Set(ids.map((i) => Math.round(b[i].x))).size, 1, JSON.stringify(b));
+		} finally { await v.close(); }
+	}
 });
 
 test('reference: 2 columns of entries at 768x1024, 1 column at 375x812', async () => {

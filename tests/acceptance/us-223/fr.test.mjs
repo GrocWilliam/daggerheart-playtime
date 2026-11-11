@@ -40,7 +40,7 @@ test('fr character sheet: an SRD item shows its name and help lines in lang="fr"
 	const ctx = await browser.newContext();
 	await ctx.addCookies([{ name: 'lang', value: 'fr', url: BASE }]);
 	const p = await ctx.newPage();
-	assert.equal((await p.goto(`${BASE}/characters/${ch}`)).status(), 200);
+	assert.equal((await p.goto(`${BASE}/characters/${ch}?tab=gear`)).status(), 200);
 	const row = p.locator('[data-testid="item-row"]').filter({ has: p.locator(`[data-testid="help"][data-help="${ID}"]`) });
 	assert.equal(await row.count(), 1);
 	okFr(await langsOf(row, FR[ID].name), 'name');

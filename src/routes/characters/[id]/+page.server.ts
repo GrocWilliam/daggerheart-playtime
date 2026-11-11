@@ -4,6 +4,8 @@ import { TRAITS, tierOfLevel, conditionFieldSchema, trackerFieldSchema } from '$
 type Actions = import('./$types').Actions;
 type PageServerLoad = import('./$types').PageServerLoad;
 
+import { parseTab } from './tabs';
+
 type Fetch = typeof fetch;
 
 async function call(fetchFn: Fetch, method: string, path: string, body?: unknown) {
@@ -40,13 +42,14 @@ function failure(
 
 const enc = encodeURIComponent;
 
-export const load: PageServerLoad = async ({ params, fetch, locals }) => {
+export const load: PageServerLoad = async ({ params, fetch, locals, url }) => {
 	const r = await call(fetch, 'GET', `/api/characters/${enc(params.id)}`);
 	if (r.status === 404 || r.status === 400) error(404, 'not found');
 	if (!r.ok) error(r.status, 'load failed');
 	const lang = locals?.lang ?? 'en';
 	const ch = r.data;
 	return {
+		tab: parseTab(url.searchParams.get('tab')),
 		character: ch,
 		picks: {
 			classes: pickList('classes', lang).map((p, i) => ({ ...p, value: pickList('classes', 'en')[i].name })),

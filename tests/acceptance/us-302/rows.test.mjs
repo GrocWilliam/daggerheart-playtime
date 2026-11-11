@@ -39,12 +39,12 @@ async function open(path, { w = 1024, h = 768, js = true } = {}) {
 
 // Sheet forms, found by their (unchanged) action name, scoped to their section when the story names one.
 const SHEET_FORMS = [
-	{ key: 'gold', scope: null, sel: 'form[action$="?/gold"]', field: 'input[name="handfuls"]' },
-	{ key: 'primary', scope: 'sheet-equipment', sel: 'form[action$="?/equip"]:has(select[name="primaryWeapon"])', field: 'select' },
-	{ key: 'secondary', scope: 'sheet-equipment', sel: 'form[action$="?/equip"]:has(select[name="secondaryWeapon"])', field: 'select' },
-	{ key: 'armor', scope: 'sheet-equipment', sel: 'form[action$="?/equip"]:has(select[name="armorId"])', field: 'select' },
-	{ key: 'experience', scope: 'sheet-experiences', sel: 'form[action$="?/setExperience"]', field: 'input[name="modifier"]' },
-	{ key: 'quantity', scope: 'sheet-inventory', sel: 'form[action$="?/setQuantity"]', field: 'input[name="quantity"]' }
+	{ key: 'gold', tab: 'gear', scope: null, sel: 'form[action$="?/gold"]', field: 'input[name="handfuls"]' },
+	{ key: 'primary', tab: 'gear', scope: 'sheet-equipment', sel: 'form[action$="?/equip"]:has(select[name="primaryWeapon"])', field: 'select' },
+	{ key: 'secondary', tab: 'gear', scope: 'sheet-equipment', sel: 'form[action$="?/equip"]:has(select[name="secondaryWeapon"])', field: 'select' },
+	{ key: 'armor', tab: 'gear', scope: 'sheet-equipment', sel: 'form[action$="?/equip"]:has(select[name="armorId"])', field: 'select' },
+	{ key: 'experience', tab: 'traits', scope: 'sheet-experiences', sel: 'form[action$="?/setExperience"]', field: 'input[name="modifier"]' },
+	{ key: 'quantity', tab: 'gear', scope: 'sheet-inventory', sel: 'form[action$="?/setQuantity"]', field: 'input[name="quantity"]' }
 ];
 const RUN_FORM = { key: 'journal', scope: 'journal', sel: 'form[action$="?/addJournal"]', field: 'textarea[name="text"]' };
 
@@ -65,7 +65,14 @@ const measure = (p, f) => p.evaluate(({ f }) => {
 	};
 }, { f });
 
-const get = async (p, f) => { const m = await measure(p, f); assert.ok(!m.error, m.error); return m; };
+// us-305: sheet forms live on their tab
+const toTab = async (p, f) => {
+	const u = new URL(p.url());
+	if (!f.tab || !u.pathname.startsWith('/characters/') || u.searchParams.get('tab') === f.tab) return;
+	await p.goto(`${u.origin}${u.pathname}?tab=${f.tab}`);
+	await p.waitForLoadState('networkidle').catch(() => {});
+};
+const get = async (p, f) => { await toTab(p, f); const m = await measure(p, f); assert.ok(!m.error, m.error); return m; };
 
 test('gold input and button share a bottom edge, button to the right (1024x768)', async () => {
 	const { ch } = await shared();
@@ -136,7 +143,7 @@ test('these forms are display:flex with flex-wrap:wrap', async () => {
 for (const js of [true, false]) {
 	test(`setting gold to 12 and equipping armor work ${js ? 'with' : 'without'} JavaScript`, async () => {
 		const { ch } = await setup(js ? 'js' : 'nojs');
-		const { ctx, p } = await open(`/characters/${ch}`, { js });
+		const { ctx, p } = await open(`/characters/${ch}?tab=gear`, { js });
 		await p.locator('form[action$="?/gold"] input[name="handfuls"]').fill('12');
 		await Promise.all([
 			js ? p.waitForResponse((r) => r.request().method() === 'POST') : p.waitForNavigation(),
@@ -144,12 +151,14 @@ for (const js of [true, false]) {
 		]);
 		const total = async () => { const g = (await api('GET', `/api/characters/${ch}`)).gold; return g.chests * 100 + g.bags * 10 + g.handfuls; };
 		assert.equal(await total(), 12);
+		if (!js) await p.goto(`${BASE}/characters/${ch}?tab=gear`);
 		const armor = p.locator('form[action$="?/equip"]:has(select[name="armorId"])');
 		await armor.locator('select').selectOption('core_armor_gambeson_armor');
 		await Promise.all([
 			js ? p.waitForResponse((r) => r.request().method() === 'POST') : p.waitForNavigation(),
 			armor.locator('button[type="submit"]').click()
 		]);
+		if (!js) await p.goto(`${BASE}/characters/${ch}?tab=gear`);
 		await p.locator('[data-testid="equipped-armor"]').waitFor();
 		const c = await api('GET', `/api/characters/${ch}`);
 		assert.equal(c.armorId, 'core_armor_gambeson_armor');

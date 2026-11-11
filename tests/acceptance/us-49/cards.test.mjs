@@ -66,7 +66,7 @@ const pick = [CARDS[7], CARDS[100], CARDS[150]];
 
 test('no card held: the sheet lists no card', async () => {
 	const id = await mk();
-	const { ctx, page } = await open('en', `/characters/${id}`);
+	const { ctx, page } = await open('en', `/characters/${id}?tab=cards`);
 	assert.equal(await page.locator('[data-testid="card"]').count(), 0);
 	await ctx.close();
 });
@@ -74,7 +74,7 @@ test('no card held: the sheet lists no card', async () => {
 test('held cards are listed in the order added, each with name, domain and level (en + fr)', async () => {
 	const id = await mk('Ranger', pick);
 	for (const lang of ['en', 'fr']) {
-		const { ctx, page } = await open(lang, `/characters/${id}`);
+		const { ctx, page } = await open(lang, `/characters/${id}?tab=cards`);
 		const cards = page.locator('[data-testid="card"]');
 		assert.equal(await cards.count(), 3);
 		for (let i = 0; i < 3; i++) {
@@ -90,7 +90,7 @@ test('held cards are listed in the order added, each with name, domain and level
 test('each held card has a helper named after it (en + fr)', async () => {
 	const id = await mk('Ranger', pick);
 	for (const lang of ['en', 'fr']) {
-		const { ctx, page } = await open(lang, `/characters/${id}`);
+		const { ctx, page } = await open(lang, `/characters/${id}?tab=cards`);
 		for (let i = 0; i < 3; i++) {
 			const card = page.locator('[data-testid="card"]').nth(i);
 			const h = card.locator(`[data-testid="help"][data-help="${pick[i].id}"]`);
@@ -106,7 +106,7 @@ test('each held card has a helper named after it (en + fr)', async () => {
 test('opened card helper: 44x44 target, name, SRD text in a lang="en" block, without JavaScript', async () => {
 	const id = await mk('Ranger', pick);
 	for (const lang of ['en', 'fr']) {
-		const { ctx, page } = await open(lang, `/characters/${id}`, { js: false });
+		const { ctx, page } = await open(lang, `/characters/${id}?tab=cards`, { js: false });
 		for (const c of pick) {
 			const h = page.locator(`[data-testid="card"] [data-testid="help"][data-help="${c.id}"]`);
 			const box = await h.locator('[data-testid="help-open"]').boundingBox();
@@ -135,7 +135,7 @@ test('add form: select of the 189 cards grouped by domain, the class\'s two doma
 		for (const cl of CLASSES) {
 			const clsName = cap(cl.name);
 			const id = await mk(clsName);
-			const { ctx, page } = await open(lang, `/characters/${id}`);
+			const { ctx, page } = await open(lang, `/characters/${id}?tab=cards`);
 			const sel = addSelect(page);
 			assert.equal(await sel.count(), 1, `${clsName}: one grouped select`);
 			const groups = await sel.locator('optgroup').evaluateAll((gs) =>
@@ -161,10 +161,11 @@ test('add form: select of the 189 cards grouped by domain, the class\'s two doma
 test('submitting the add form holds the card: on the sheet with its helper, and in the API', async () => {
 	const id = await mk('Wizard');
 	const c = CARDS.find((x) => x.domain === 'CODEX');
-	const { ctx, page } = await open('en', `/characters/${id}?new=card`); // the add form lives in a modal (us-195)
+	const { ctx, page } = await open('en', `/characters/${id}?new=card&tab=cards`); // the add form lives in a modal (us-195)
 	await addSelect(page).selectOption(c.id);
 	await Promise.all([page.waitForNavigation(), addForm(page).locator('button[type="submit"]').click()]);
 	assert.deepEqual(await held(id), [c.id]);
+	await page.goto(`${BASE}/characters/${id}?tab=cards`); // us-305: no-JS posts land on the default tab
 	const card = page.locator('[data-testid="card"]');
 	assert.equal(await card.count(), 1);
 	assert.ok(norm(await card.textContent()).includes(cardEn(c)));
@@ -174,10 +175,11 @@ test('submitting the add form holds the card: on the sheet with its helper, and 
 
 test('the remove control of a card removes it from the sheet and the API', async () => {
 	const id = await mk('Ranger', pick);
-	const { ctx, page } = await open('en', `/characters/${id}`);
+	const { ctx, page } = await open('en', `/characters/${id}?tab=cards`);
 	const second = page.locator('[data-testid="card"]').nth(1);
 	await Promise.all([page.waitForNavigation(), second.locator('button:not([data-testid^="help-"])').first().click()]);
 	assert.deepEqual(await held(id), [pick[0].id, pick[2].id]);
+	await page.goto(`${BASE}/characters/${id}?tab=cards`); // us-305: no-JS posts land on the default tab
 	const cards = page.locator('[data-testid="card"]');
 	assert.equal(await cards.count(), 2);
 	const t = norm(await page.locator('[data-testid="card"]').allTextContents().then((a) => a.join(' ')));
@@ -189,7 +191,7 @@ test('the remove control of a card removes it from the sheet and the API', async
 test('375px wide: no horizontal overflow with cards held, remove controls are 44x44', async () => {
 	const id = await mk('Ranger', pick);
 	for (const lang of ['en', 'fr']) {
-		const { ctx, page } = await open(lang, `/characters/${id}`, { viewport: { width: 375, height: 800 } });
+		const { ctx, page } = await open(lang, `/characters/${id}?tab=cards`, { viewport: { width: 375, height: 800 } });
 		const over = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
 		assert.ok(over <= 0, `overflow ${over}px`);
 		const cards = page.locator('[data-testid="card"]');

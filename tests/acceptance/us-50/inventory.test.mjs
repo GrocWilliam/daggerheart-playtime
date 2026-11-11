@@ -109,7 +109,7 @@ test('add form: a select "from the SRD" next to the name input, 4 optgroups with
 	const total = ALL.length;
 	assert.equal(total, 346);
 	for (const lang of ['en', 'fr']) {
-		const { ctx, page } = await open(lang, `/characters/${id}`);
+		const { ctx, page } = await open(lang, `/characters/${id}?tab=gear`);
 		const sel = srdSelect(page);
 		assert.equal(await sel.count(), 1, 'one SRD select');
 		assert.equal(await srdForm(page).locator('input[type="text"][name="name"]').count(), 1, 'free-text name still next to it');
@@ -129,13 +129,14 @@ test('add form: a select "from the SRD" next to the name input, 4 optgroups with
 test('submitting the SRD select alone (no JS) adds the item to the sheet and the API', async () => {
 	const id = await mk();
 	const e = sample.armors;
-	const { ctx, page } = await open('fr', `/characters/${id}?new=item`);
+	const { ctx, page } = await open('fr', `/characters/${id}?new=item&tab=gear`);
 	await srdSelect(page).selectOption(e.id);
 	await Promise.all([page.waitForNavigation(), srdForm(page).locator('button[type="submit"]').click()]);
 	const held = await items(id);
 	assert.equal(held.length, 1);
 	assert.equal(held[0].name, en(e));
 	assert.equal(held[0].srdId, e.id);
+	await page.goto(`${BASE}/characters/${id}?tab=gear`); // us-305: no-JS posts land on the default tab
 	const row = page.locator('[data-testid="item"]');
 	assert.equal(await row.count(), 1);
 	assert.ok(norm(await row.textContent()).includes(en(e)));
@@ -148,7 +149,7 @@ test('an item with an srdId shows its helper, a free-text item does not (en + fr
 	await addItem(id, { srdId: e.id });
 	await addItem(id, { name: 'Lucky coin' });
 	for (const lang of ['en', 'fr']) {
-		const { ctx, page } = await open(lang, `/characters/${id}`);
+		const { ctx, page } = await open(lang, `/characters/${id}?tab=gear`);
 		const rows = page.locator('[data-testid="item"]');
 		assert.equal(await rows.count(), 2);
 		const h = page.locator(`[data-testid="help"][data-help="${e.id}"]`);
@@ -170,7 +171,7 @@ test('opened item helper: 44x44 target and the SRD text in a lang="en" block, wi
 	const picks = KINDS.map((k) => SRD[k].find((e) => lines(e).length > 0));
 	for (const e of picks) await addItem(id, { srdId: e.id });
 	for (const lang of ['en', 'fr']) {
-		const { ctx, page } = await open(lang, `/characters/${id}`, { js: false });
+		const { ctx, page } = await open(lang, `/characters/${id}?tab=gear`, { js: false });
 		for (const e of picks) {
 			const h = page.locator(`[data-testid="help"][data-help="${e.id}"]`);
 			const box = await h.locator('[data-testid="help-open"]').boundingBox();
@@ -194,7 +195,7 @@ test('375px wide: no horizontal overflow, the SRD select fits the viewport', asy
 	const id = await mk();
 	await addItem(id, { srdId: SRD.weapons[0].id });
 	for (const lang of ['en', 'fr']) {
-		const { ctx, page } = await open(lang, `/characters/${id}?new=item`, { viewport: { width: 375, height: 800 } });
+		const { ctx, page } = await open(lang, `/characters/${id}?new=item&tab=gear`, { viewport: { width: 375, height: 800 } });
 		const over = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
 		assert.ok(over <= 0, `overflow ${over}px`);
 		const b = await srdSelect(page).boundingBox();

@@ -139,7 +139,9 @@ test('French character sheet: Chosen, domain card and equipment names carry lang
 		['equipped-armor', 'armors', 'core_armor_gambeson_armor']
 	];
 	const { ctx, p } = await open('fr', `/characters/${ch}`);
+	const tabOf = { card: 'cards', 'primary-weapon': 'gear', 'equipped-armor': 'gear' }; // us-305: sheet tabs
 	for (const [testid, kind, id] of expected) {
+		await p.goto(`${BASE}/characters/${ch}?tab=${tabOf[testid] ?? 'play'}`);
 		const fr = await srdName(kind, id, 'fr');
 		assert.notEqual(fr, await srdName(kind, id, 'en'), `${id} has a French name`);
 		const el = p.locator(`[data-testid="${testid}"]`).filter({ hasText: fr });

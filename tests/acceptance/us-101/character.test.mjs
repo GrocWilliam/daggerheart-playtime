@@ -87,7 +87,7 @@ async function setup(tag) {
 	await post(`/api/characters/${ch.id}/gold`, { handfuls: 3 });
 	await post(`/api/characters/${ch.id}/hp`, { delta: 6 }).catch(() => {});
 	// hold the first domain card the page offers
-	const html = await (await fetch(BASE + `/characters/${ch.id}`)).text();
+	const html = await (await fetch(BASE + `/characters/${ch.id}?tab=cards`)).text();
 	const cardId = html.match(/<select name="cardId"[^>]*>[\s\S]*?<option value="([^"]+)"/)?.[1];
 	if (cardId) await post(`/api/characters/${ch.id}/cards`, { cardId });
 	return ch.id;
@@ -99,6 +99,14 @@ for (const [name, w, h] of [['phone', 375, 667], ['desktop', 1280, 800]]) {
 		const ctx = await browser.newContext({ viewport: { width: w, height: h } });
 		const page = await ctx.newPage();
 		await page.goto(BASE + `/characters/${id}?new=edit`);
+		// us-305: the sheet is split into tabs; bring the gear, cards and notes panels into this page so one snapshot covers them
+		await page.evaluate(async () => {
+			const grid = document.querySelector('[data-testid=sheet-sections]');
+			for (const tab of ['gear', 'cards', 'notes']) {
+				const doc = new DOMParser().parseFromString(await (await fetch(`${location.pathname}?tab=${tab}`)).text(), 'text/html');
+				for (const el of [...doc.querySelector('[data-testid=sheet-sections]').children]) grid.append(document.importNode(el, true));
+			}
+		});
 		const r = await page.evaluate(() => {
 			const q = (s, r = document) => r.querySelector(s);
 			const cs = (el) => getComputedStyle(el);
@@ -297,8 +305,10 @@ test('the sheet still works: tracker, condition and card forms submit and stay v
 	const page = await ctx.newPage();
 	await page.goto(BASE + `/characters/${id}`);
 	await afterSubmit(page, page.locator('[data-testid=hope]').locator('xpath=..').locator('button[value="-1"]').click());
-	assert.ok(await page.locator('[data-testid=item]').isVisible());
-	assert.ok(await page.locator('[data-testid=card]').isVisible());
 	assert.ok(await page.locator('[data-testid=condition-hidden]').isVisible());
+	await page.goto(BASE + `/characters/${id}?tab=gear`);
+	assert.ok(await page.locator('[data-testid=item]').isVisible());
+	await page.goto(BASE + `/characters/${id}?tab=cards`);
+	assert.ok(await page.locator('[data-testid=card]').isVisible());
 	await ctx.close();
 });

@@ -33,12 +33,33 @@ before(async () => {
 });
 after(async () => { await browser?.close(); });
 
-async function open(lang, id) {
+async function open(lang, id, tab) {
 	const ctx = await browser.newContext();
 	await ctx.addCookies([{ name: 'lang', value: lang, url: BASE }]);
 	const page = await ctx.newPage();
-	await page.goto(`${BASE}/characters/${id}`);
+	await page.goto(`${BASE}/characters/${id}${tab ? `?tab=${tab}` : ''}`);
 	return { ctx, page };
+}
+// us-305: the sheet is split into tabs; whole-sheet checks collect every tab.
+const TABS = ['play', 'traits', 'gear', 'cards', 'notes'];
+async function eachTab(lang, id, fn) {
+	const out = [];
+	for (const tab of TABS) {
+		const { ctx, page } = await open(lang, id, tab);
+		out.push(await fn(page));
+		await ctx.close();
+	}
+	return out;
+}
+// us-195 moved the class and level labels into the edit dialog: read it served open (?new=edit, no JavaScript)
+async function editDialogText(lang, id) {
+	const ctx = await browser.newContext({ javaScriptEnabled: false });
+	await ctx.addCookies([{ name: 'lang', value: lang, url: BASE }]);
+	const page = await ctx.newPage();
+	await page.goto(`${BASE}/characters/${id}?new=edit`);
+	const text = await bodyText(page);
+	await ctx.close();
+	return text;
 }
 const esc = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 const hasWord = (text, w) => new RegExp(`(?<![\\p{L}\\p{N}_])${esc(w)}(?![\\p{L}\\p{N}_])`, 'u').test(text);
@@ -69,24 +90,20 @@ test('every heading, label, button, placeholder and badge of /characters/:id com
 	for (const lang of ['en', 'fr']) {
 		const values = new Set(Object.values(dict[lang]));
 		for (const id of [rich, downed, bare]) {
-			const { ctx, page } = await open(lang, id);
-			const texts = await interfaceTexts(page);
+			const texts = (await eachTab(lang, id, interfaceTexts)).flat();
 			assert.ok(texts.some((t) => t.kind === 'H2'), 'a heading exists');
 			assert.ok(texts.filter((t) => t.kind === 'BUTTON').length > 5, 'buttons exist');
 			if (id === downed) assert.ok(texts.some((t) => t.kind === 'badge'), 'a badge exists');
 			for (const t of texts) assert.ok(values.has(t.text) || values.has(norm(t.text)), `${lang}: ${t.kind} "${t.text}" is not in ${lang}.json`);
-			await ctx.close();
 		}
 	}
 });
 
 async function noForeignWords(lang, other) {
 	for (const id of [rich, downed, bare]) {
-		const { ctx, page } = await open(lang, id);
-		const text = await bodyText(page);
+		const text = (await eachTab(lang, id, bodyText)).join('\n');
 		const bad = Object.keys(dict[other]).filter((k) =>
 			dict[other][k] !== dict[lang][k] && hasWord(text, dict[other][k])).map((k) => `${k}=${dict[other][k]}`);
-		await ctx.close();
 		assert.deepEqual(bad, [], `${lang} page shows ${other} text`);
 	}
 }
@@ -94,23 +111,19 @@ test('lang=fr: no differing en.json value appears as a whole word', () => noFore
 test('lang=en: no differing fr.json value appears as a whole word', () => noForeignWords('en', 'fr'));
 
 test('lang=fr: visible text contains Inventaire, Or, Notes, Niveau, Classe', async () => {
-	const { ctx, page } = await open('fr', rich);
-	const text = await bodyText(page);
+	const text = [...await eachTab('fr', rich, bodyText), await editDialogText('fr', rich)].join('\n');
 	for (const w of ['Inventaire', 'Or', 'Notes', 'Niveau', 'Classe']) assert.ok(hasWord(text, w), `missing ${w}`);
-	await ctx.close();
 });
 
 test('lang=en: visible text contains Inventory, Gold, Notes, Level, Class', async () => {
-	const { ctx, page } = await open('en', rich);
-	const text = await bodyText(page);
+	const text = [...await eachTab('en', rich, bodyText), await editDialogText('en', rich)].join('\n');
 	for (const w of ['Inventory', 'Gold', 'Notes', 'Level', 'Class']) assert.ok(hasWord(text, w), `missing ${w}`);
-	await ctx.close();
 });
 
 test('gold line reads "1 chests, 2 bags, 3 handfuls" in English and "1 coffres, 2 bourses, 3 poignées" in French', async () => {
 	const want = { en: '1 chests, 2 bags, 3 handfuls', fr: '1 coffres, 2 bourses, 3 poignées' };
 	for (const lang of ['en', 'fr']) {
-		const { ctx, page } = await open(lang, rich);
+		const { ctx, page } = await open(lang, rich, 'gear');
 		const got = (await page.locator('[data-testid="gold"]').innerText()).replace(/\s+/g, ' ').trim();
 		assert.equal(got, want[lang]);
 		await ctx.close();
@@ -119,8 +132,10 @@ test('gold line reads "1 chests, 2 bags, 3 handfuls" in English and "1 coffres, 
 
 test('notes and item names appear as entered in both languages', async () => {
 	for (const lang of ['en', 'fr']) {
-		const { ctx, page } = await open(lang, rich);
+		let { ctx, page } = await open(lang, rich, 'notes');
 		assert.equal(await page.locator('[data-testid="notes"]').inputValue(), NOTES);
+		await ctx.close();
+		({ ctx, page } = await open(lang, rich, 'gear'));
 		const items = await page.locator('[data-testid="item"]').allInnerTexts();
 		assert.equal(items.length, ITEMS.length);
 		for (const name of ITEMS) assert.ok(items.some((t) => t.includes(name)), `${lang}: item ${name}`);

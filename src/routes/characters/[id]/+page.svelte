@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import { page } from '$app/state';
 	import { busy } from '$lib/forms/busy';
 	import Divider from '$lib/components/Divider.svelte';
 	import { translate, formatNumber, type Lang } from '$lib/i18n';
@@ -12,6 +13,7 @@
 	import Modal from '$lib/components/Modal.svelte';
 	import Help from '$lib/components/Help.svelte';
 	import Chosen from '$lib/components/Chosen.svelte';
+	import { SHEET_TABS, TAB_LABEL } from './tabs';
 	let { data, form } = $props();
 	const t = (key: string, params?: Record<string, string | number>) => translate(data.lang, key, params);
 	const n = (v: number) => formatNumber(data.lang, v);
@@ -20,6 +22,8 @@
 	const expValues = $derived(valuesOf('experience'));
 	const itemValues = $derived(valuesOf('item'));
 	const cardValues = $derived(valuesOf('card'));
+	// a modal opened (or failed) from another tab still shows, in the header
+	const opened = (kind: string) => form?.modal === kind || page.url.searchParams.get('new') === kind;
 	const c = $derived(data.character);
 	const fields = $derived([
 		['name', 'field.name', 'text', c.name],
@@ -44,7 +48,19 @@
 	{#if c.hp.marked === c.hp.max}<span class="inline-block rounded-[999px] px-[0.6rem] text-[0.875rem] text-bg bg-danger" data-testid="down">{t('badge.down')}</span>{/if}
 </h1>
 <Divider />
-<div><a data-testid="campaign-run-link" href="/campaigns/{c.campaignId}?step=run">{t('character.runLink')}</a> <Modal kind="edit" title={t('section.edit')} lang={data.lang}>
+<div class="flex flex-wrap items-start gap-x-4 *:mb-3">
+	<span class="muted">{c.class}, {t('character.level')} {c.level} <Help id="level" name={t('character.level')} lang={data.lang} /></span>
+	<Chosen chosen={data.chosen} lang={data.lang} />
+	{#if data.domains.length}
+		<ul class="mt-0 flex list-none flex-wrap gap-x-4 pl-0!">
+			{#each data.domains as d (d.id)}
+				<li data-testid="domain"><span lang={d.nameLang}>{d.name}</span> <Help id={d.id} name={d.name} text={d.help} lang={data.lang} /></li>
+			{/each}
+		</ul>
+	{/if}
+</div>
+<ConditionBadges conditions={c.conditions} lang={data.lang} />
+<div class="mb-3"><a data-testid="campaign-run-link" href="/campaigns/{c.campaignId}?step=run">{t('character.runLink')}</a> <Modal kind="edit" params={{ tab: data.tab }} title={t('section.edit')} lang={data.lang}>
 <form use:enhance={busy} method="POST" action="?/edit" class="grid grid-cols-[minmax(0,1fr)] gap-x-4 *:min-w-0 min-[600px]:grid-cols-[repeat(2,minmax(0,1fr))]" class:form-grid={true}>
 	{#if form?.modal === 'edit' && form.error}<p role="alert" class="col-span-full">{t(form.error)}</p>{/if}
 	{#each fields.slice(0, 1) as [name, label, type, value] (name)}
@@ -93,24 +109,79 @@
 	{#each traits as k (k)}
 		<div>
 			<label>{t(`trait.${k}`)} <input type="number" name="traits.{k}" min="-5" max="5" step="1" value={editValues[`traits.${k}`] ?? c.traits[k]} required /></label>
-			<Help id={k} name={t(`trait.${k}`)} text={t(`trait.help.${k}`)} lang={data.lang} />
+			{#if opened('edit')}<Help id={k} name={t(`trait.${k}`)} text={t(`trait.help.${k}`)} lang={data.lang} />{/if}
 		</div>
 	{/each}
 	<button type="submit" class="[justify-self:start] min-[600px]:col-start-1">{t('action.save')}</button>
 </form>
 </Modal></div>
-<div class="muted">{c.class}, {t('character.level')} {c.level} <Help id="level" name={t('character.level')} lang={data.lang} /></div>
-{#if data.domains.length}
-	<ul class="mt-0 mb-3 flex list-none flex-wrap gap-x-4 pl-0!">
-		{#each data.domains as d (d.id)}
-			<li data-testid="domain"><span lang={d.nameLang}>{d.name}</span> <Help id={d.id} name={d.name} text={d.help} lang={data.lang} /></li>
-		{/each}
-	</ul>
-{/if}
-<Chosen chosen={data.chosen} lang={data.lang} />
+
+{#if data.tab !== 'traits' && opened('experience')}{@render experienceModal()}{/if}
+{#if data.tab !== 'gear' && opened('item')}{@render itemModal()}{/if}
+{#if data.tab !== 'cards' && opened('card')}{@render cardModal()}{/if}
 
 {#if form?.error && !form?.modal}<p role="alert">{t(form.error)}</p>{/if}
 
+<nav data-testid="sheet-tabs" class="mb-4 flex flex-wrap gap-x-2">
+	{#each SHEET_TABS as k (k)}
+		<a class="flex min-h-11 items-center px-3 {data.tab === k ? 'font-bold underline' : ''}" data-testid="tab-{k}" href="?tab={k}"
+			aria-current={data.tab === k ? 'page' : undefined}>{t(TAB_LABEL[k])}</a>
+	{/each}
+</nav>
+
+{#snippet experienceModal()}
+<Modal kind="experience" params={{ tab: 'traits' }} title={t('experience.new')} lang={data.lang}>
+<form use:enhance={busy} method="POST" action="?/addExperience">
+	<label>{t('experience.name')} <input type="text" name="name" maxlength="100" required value={expValues?.name ?? ''} /></label>
+	<label>{t('experience.modifier')} <input type="number" name="modifier" min="1" max="5" step="1" value={expValues?.modifier ?? '2'} required /></label>
+	<button type="submit">{t('action.addExperience')}</button>
+	{#if form?.modal === 'experience' && form?.error}<p role="alert">{t(form.error)}</p>{/if}
+</form>
+</Modal>
+{/snippet}
+{#snippet itemModal()}
+<Modal kind="item" params={{ tab: 'gear' }} title={t('item.new')} lang={data.lang}>
+<form use:enhance={busy} method="POST" action="?/addItem">
+	<label>{t('item.name')} <input type="text" name="name" maxlength="100" value={itemValues?.name ?? ''} /></label>
+	<label>
+		{t('item.fromSrd')}
+		<select name="srdId">
+			<option value="" selected={!itemValues?.srdId}></option>
+			{#each data.itemGroups as g (g.kind)}
+				<optgroup label={t(`reference.kind.${g.kind}`)}>
+					{#each g.picks as p (p.id)}
+						<option value={p.id} selected={itemValues?.srdId === p.id}>{p.name}</option>
+					{/each}
+				</optgroup>
+			{/each}
+		</select>
+	</label>
+	<label>{t('item.quantity')} <input type="number" name="quantity" min="1" value={itemValues?.quantity ?? ''} /></label>
+	<button type="submit">{t('action.addItem')}</button>
+	{#if form?.modal === 'item' && form?.error}<p role="alert">{t(form.error)}</p>{/if}
+</form>
+</Modal>
+{/snippet}
+{#snippet cardModal()}
+<Modal kind="card" params={{ tab: 'cards' }} title={t('card.new')} lang={data.lang}>
+<form use:enhance={busy} method="POST" action="?/addCard">
+	<label>
+		{t('card.add')}
+		<select name="cardId" required>
+			{#each data.cardGroups as g (g.domain)}
+				<optgroup label={g.label}>
+					{#each g.cards as card (card.id)}
+						<option value={card.id} selected={cardValues?.cardId === card.id}>{card.name}</option>
+					{/each}
+				</optgroup>
+			{/each}
+		</select>
+	</label>
+	<button type="submit">{t('action.addCard')}</button>
+	{#if form?.modal === 'card' && form?.error}<p role="alert">{t(form.error)}</p>{/if}
+</form>
+</Modal>
+{/snippet}
 {#snippet gear(testid: string, g: { name: string; nameLang: Lang; trait?: string; range?: string; dice?: string; damageType?: string; burden?: string; major?: number; severe?: number; score?: number; features: { name: string; text: string; lang: Lang }[] })}
 	<div data-testid={testid}>
 		<strong lang={g.nameLang}>{g.name}</strong>
@@ -148,8 +219,10 @@
 		<button type="submit">{t('action.equip')}</button>
 	</form>
 {/snippet}
-<div data-testid="sheet-sections" class="grid grid-cols-[minmax(0,1fr)] gap-x-4 *:min-w-0 md:grid-cols-[repeat(2,minmax(0,1fr))]">
-<div data-testid="sheet-trackers" class="md:col-span-2">
+<div data-testid="sheet-panel" class="bg-surface border-[3px] border-double border-accent rounded-[0.5rem] p-3">
+<div data-testid="sheet-sections" class="grid grid-cols-[minmax(0,1fr)] gap-x-4 *:min-w-0 {data.tab === 'cards' || data.tab === 'notes' ? '' : 'md:grid-cols-[repeat(2,minmax(0,1fr))]'}">
+{#if data.tab === 'play'}
+<div data-testid="sheet-trackers">
 {#each TRACKERS as key (key)}
 	<Tracker name={key} label={t(`tracker.${key}`)} helpId={key} action="?/tracker" hidden={{ tracker: key }} lang={data.lang}
 		{...trackerValues(c[key])} />
@@ -158,33 +231,9 @@
 <DamageForm action="?/damage" lang={data.lang} />
 </div>
 
-<div data-testid="sheet-traits">
-<h2 class="mt-4 mb-2">{t('section.traits')}</h2>
-<ul class="mt-0 mb-3 list-none pl-0!">
-	{#each traits as k (k)}
-		<li>{t(`trait.${k}`)}: <Help id={k} name={t(`trait.${k}`)} text={t(`trait.help.${k}`)} lang={data.lang} /> <span data-testid="trait-{k}">{signed(c.traits[k])}</span></li>
-	{/each}
-</ul>
-</div>
-
-<div data-testid="sheet-equipment">
-<h2 class="mt-4 mb-2">{t('section.equipment')}</h2>
-{@render picker('primaryWeapon', 'equipment.primary', data.equipment.primary, c.primaryWeapon)}
-{#if data.equipment.primaryWeapon}{@render gear('primary-weapon', data.equipment.primaryWeapon)}{/if}
-{#if data.equipment.secondaryBlocked}
-	<p data-testid="secondary-blocked">{t('equipment.secondaryBlocked')}</p>
-{:else}
-	{@render picker('secondaryWeapon', 'equipment.secondary', data.equipment.secondary, c.secondaryWeapon)}
-{/if}
-{#if data.equipment.secondaryWeapon}{@render gear('secondary-weapon', data.equipment.secondaryWeapon)}{/if}
-{@render picker('armorId', 'equipment.armor', data.equipment.armors, c.armorId)}
-{#if data.equipment.armor}{@render gear('equipped-armor', data.equipment.armor)}{/if}
-</div>
-
-<div>
-<ConditionBadges conditions={c.conditions} lang={data.lang} />
-
+<div data-testid="sheet-conditions">
 <h2 class="mt-4 mb-2">{t('section.conditions')}</h2>
+<div class="flex flex-wrap gap-2">
 {#each conditions as k (k)}
 	<form use:enhance={busy} method="POST" action="?/condition">
 		<input type="hidden" name="condition" value={k} />
@@ -194,27 +243,22 @@
 	</form>
 {/each}
 </div>
+</div>
+{/if}
 
-<div>
-<h2 class="mt-4 mb-2">{t('section.gold')}</h2>
-<Help id="gold" name={t('section.gold')} lang={data.lang} />
-<p data-testid="gold">{n(c.gold.chests)} {t('gold.chests')}, {n(c.gold.bags)} {t('gold.bags')}, {n(c.gold.handfuls)} {t('gold.handfuls')}</p>
-<form use:enhance={busy} class="flex flex-wrap items-end gap-2" method="POST" action="?/gold">
-	<label class="mb-0!">{t('gold.adjust')} <input type="number" name="handfuls" step="1" required /></label>
-	<button type="submit">{t('action.updateGold')}</button>
-</form>
+{#if data.tab === 'traits'}
+<div data-testid="sheet-traits">
+<h2 class="mt-4 mb-2">{t('section.traits')}</h2>
+<ul class="mt-0 mb-3 list-none pl-0!">
+	{#each traits as k (k)}
+		<li>{t(`trait.${k}`)}: <Help id={k} name={t(`trait.${k}`)} text={t(`trait.help.${k}`)} lang={data.lang} /> <span data-testid="trait-{k}">{signed(c.traits[k])}</span></li>
+	{/each}
+</ul>
 </div>
 
 <div data-testid="sheet-experiences">
 <h2 class="mt-4 mb-2">{t('section.experiences')}</h2>
-<Modal kind="experience" title={t('experience.new')} lang={data.lang}>
-<form use:enhance={busy} method="POST" action="?/addExperience">
-	<label>{t('experience.name')} <input type="text" name="name" maxlength="100" required value={expValues?.name ?? ''} /></label>
-	<label>{t('experience.modifier')} <input type="number" name="modifier" min="1" max="5" step="1" value={expValues?.modifier ?? '2'} required /></label>
-	<button type="submit">{t('action.addExperience')}</button>
-	{#if form?.modal === 'experience' && form?.error}<p role="alert">{t(form.error)}</p>{/if}
-</form>
-</Modal>
+{@render experienceModal()}
 <ul class="list-none pl-0!">
 	{#each c.experiences as ex (ex.id)}
 		<li data-testid="experience">
@@ -232,30 +276,36 @@
 	{/each}
 </ul>
 </div>
+{/if}
+
+{#if data.tab === 'gear'}
+<div data-testid="sheet-equipment">
+<h2 class="mt-4 mb-2">{t('section.equipment')}</h2>
+{@render picker('primaryWeapon', 'equipment.primary', data.equipment.primary, c.primaryWeapon)}
+{#if data.equipment.primaryWeapon}{@render gear('primary-weapon', data.equipment.primaryWeapon)}{/if}
+{#if data.equipment.secondaryBlocked}
+	<p data-testid="secondary-blocked">{t('equipment.secondaryBlocked')}</p>
+{:else}
+	{@render picker('secondaryWeapon', 'equipment.secondary', data.equipment.secondary, c.secondaryWeapon)}
+{/if}
+{#if data.equipment.secondaryWeapon}{@render gear('secondary-weapon', data.equipment.secondaryWeapon)}{/if}
+{@render picker('armorId', 'equipment.armor', data.equipment.armors, c.armorId)}
+{#if data.equipment.armor}{@render gear('equipped-armor', data.equipment.armor)}{/if}
+</div>
+
+<div data-testid="sheet-gold">
+<h2 class="mt-4 mb-2">{t('section.gold')}</h2>
+<Help id="gold" name={t('section.gold')} lang={data.lang} />
+<p data-testid="gold">{n(c.gold.chests)} {t('gold.chests')}, {n(c.gold.bags)} {t('gold.bags')}, {n(c.gold.handfuls)} {t('gold.handfuls')}</p>
+<form use:enhance={busy} class="flex flex-wrap items-end gap-2" method="POST" action="?/gold">
+	<label class="mb-0!">{t('gold.adjust')} <input type="number" name="handfuls" step="1" required /></label>
+	<button type="submit">{t('action.updateGold')}</button>
+</form>
+</div>
 
 <div data-testid="sheet-inventory" class="md:col-span-2">
 <h2 class="mt-4 mb-2">{t('section.inventory')}</h2>
-<Modal kind="item" title={t('item.new')} lang={data.lang}>
-<form use:enhance={busy} method="POST" action="?/addItem">
-	<label>{t('item.name')} <input type="text" name="name" maxlength="100" value={itemValues?.name ?? ''} /></label>
-	<label>
-		{t('item.fromSrd')}
-		<select name="srdId">
-			<option value="" selected={!itemValues?.srdId}></option>
-			{#each data.itemGroups as g (g.kind)}
-				<optgroup label={t(`reference.kind.${g.kind}`)}>
-					{#each g.picks as p (p.id)}
-						<option value={p.id} selected={itemValues?.srdId === p.id}>{p.name}</option>
-					{/each}
-				</optgroup>
-			{/each}
-		</select>
-	</label>
-	<label>{t('item.quantity')} <input type="number" name="quantity" min="1" value={itemValues?.quantity ?? ''} /></label>
-	<button type="submit">{t('action.addItem')}</button>
-	{#if form?.modal === 'item' && form?.error}<p role="alert">{t(form.error)}</p>{/if}
-</form>
-</Modal>
+{@render itemModal()}
 {#if c.items.length > 0}
 	<table data-testid="inventory">
 		<thead>
@@ -296,6 +346,9 @@
 {/if}
 </div>
 
+{/if}
+
+{#if data.tab === 'cards'}
 <div data-testid="sheet-cards">
 <h2 class="mt-4 mb-2">{t('section.cards')}</h2>
 <ul class="list-none pl-0!">
@@ -311,26 +364,11 @@
 		</li>
 	{/each}
 </ul>
-<Modal kind="card" title={t('card.new')} lang={data.lang}>
-<form use:enhance={busy} method="POST" action="?/addCard">
-	<label>
-		{t('card.add')}
-		<select name="cardId" required>
-			{#each data.cardGroups as g (g.domain)}
-				<optgroup label={g.label}>
-					{#each g.cards as card (card.id)}
-						<option value={card.id} selected={cardValues?.cardId === card.id}>{card.name}</option>
-					{/each}
-				</optgroup>
-			{/each}
-		</select>
-	</label>
-	<button type="submit">{t('action.addCard')}</button>
-	{#if form?.modal === 'card' && form?.error}<p role="alert">{t(form.error)}</p>{/if}
-</form>
-</Modal>
+{@render cardModal()}
 </div>
+{/if}
 
+{#if data.tab === 'notes'}
 <div data-testid="sheet-notes">
 <h2 class="mt-4 mb-2">{t('section.notes')}</h2>
 <form use:enhance={busy} method="POST" action="?/notes">
@@ -338,6 +376,6 @@
 	<button type="submit">{t('action.saveNotes')}</button>
 </form>
 </div>
-
-
+{/if}
+</div>
 </div>

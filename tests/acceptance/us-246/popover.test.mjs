@@ -105,7 +105,7 @@ test('/reference: each help has one help-open button "?" and one help-panel whos
 });
 
 test('character sheet: panel ids are unique even when the same data-help appears twice', async () => {
-	const { ctx, page } = await open(sheet());
+	const { ctx, page } = await open(sheet() + '?new=edit&tab=traits'); // us-305: traits tab with the edit dialog (its trait helps) open
 	const r = await page.locator('[data-testid="help"]').evaluateAll((hs) => hs.map((h) => ({ id: h.dataset.help, pid: h.querySelector('[data-testid="help-panel"]')?.id, target: h.querySelector('[data-testid="help-open"]')?.getAttribute('popovertarget') })));
 	const helps = r.map((h) => h.id);
 	assert.ok(helps.length > new Set(helps).size, 'some data-help value appears twice on the sheet (traits)');

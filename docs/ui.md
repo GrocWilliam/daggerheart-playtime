@@ -6,13 +6,14 @@ The single UI guide that later stories follow. It documents the current UI plus 
 - Home `/`: campaign list and creation.
 - DM screen `/campaigns/:id?step=build|run`: `run` is the default.
 - Character tunnel `/campaigns/:id/characters/new?step=1..4`.
-- Character sheet `/characters/:id`.
+- Character sheet `/characters/:id?tab=play|traits|gear|cards|notes` (missing or unknown `tab` → `play`, `parseTab` in `src/routes/characters/[id]/tabs.ts`).
 - Reference `/reference`.
 
 Links between them:
 - Header on every page: `nav-home` (to `/`) and `nav-reference` (to `/reference`).
 - Home: each campaign has `campaign-link` (to its DM screen) and `campaign-run-link` (to `?step=run`).
 - DM screen: the step switch `step-build` and `step-run`. Build's `new-character` link leads to the tunnel. Character cards link to the sheet.
+- Character sheet: the tab bar `sheet-tabs` (`tab-<key>` links to `?tab=<key>`).
 - Tunnel: Create (`tunnel-create`) leads to the sheet; Cancel (`tunnel-cancel`) goes back to `?step=build`.
 
 ## Layout
@@ -29,7 +30,13 @@ Per page:
 - Build step: from 768px `build-party` takes 1/3 and `build-scenes` 2/3, side by side; below that they stack.
 - The character sheet's edit form is in `<Modal kind="edit">` (opener `new-edit` in the header next to `campaign-run-link`; no Edit section); grid 1 column, 2 from `min-[600px]:`; `edit` fails with `modal: 'edit'` and `values`, redirects 303 to `/characters/:id` on success without enhance.
 - The Add scene form is in `<Modal kind="scene">` inside `build-scenes` (opener `new-scene`); its `add` action fails with `modal: 'scene'` and `values`, and redirects 303 to `?step=build` on success unless the request is an enhance one (`x-sveltekit-action`).
-- Character sheet: `sheet-sections` is a 2-column grid from 768px. `sheet-trackers` and `sheet-inventory` span both columns.
+- Character sheet, header (every tab, above the tabs): `h1` (`character-name`, `down`), `Divider`, one line with class and level, `Chosen` and the `domain`s, `ConditionBadges`, then `campaign-run-link` and `new-edit`. The Modals carry their tab: `edit` → `{ tab: data.tab }`, `item` → `gear`, `experience` → `traits`, `card` → `cards` (openers of item/experience/card sit in their tab's section).
+- Character sheet, tab bar: `nav[data-testid=sheet-tabs]`, one plain link per tab (`tab-<key>`, `href="?tab=<key>"`, label `TAB_LABEL`); the current one has `aria-current="page"` and `font-bold underline` like `step-*`. Only the chosen tab is rendered (one `{#if data.tab === ...}` per tab, never hidden with CSS); `load` still computes every tab's data.
+- Character sheet, panel: `sheet-panel` (surface look: `bg-surface`, `3px double` accent border, `0.5rem` radius, `p-3`) holds the `sheet-sections` grid: 1 column below 768px; from 768px 2 columns on tabs with two sections, 1 otherwise.
+  - `play`: `sheet-trackers` (trackers, `DefenseLine`, `DamageForm`) left, `sheet-conditions` (the three toggles in one row of buttons) right.
+  - `traits`: `sheet-traits` (one row per trait: name, `Help`, signed value) and `sheet-experiences`, side by side.
+  - `gear`: `sheet-equipment` left, `sheet-gold` right, `sheet-inventory` spanning both below.
+  - `cards`: `sheet-cards`. `notes`: `sheet-notes`.
 - Reference: entries in 2 columns from 768px.
 
 ## Shared components
@@ -64,7 +71,12 @@ Test ids: `tunnel-progress` (step indicator), `tunnel-next`, `tunnel-back`, `tun
 - Home: empty (no campaigns, an empty-state text); loading (the submit button is busy, `aria-busy`); error (`[role=alert]`); success (the campaign appears in the grid).
 - DM screen, Build and Run: empty (no characters, no scenes, no journal entries show empty texts); loading (busy submit button with `aria-busy`); error (`[role=alert]` in the form); success (the list or tracker updates in place).
 - Tunnel: empty (step 1 with blank fields); loading (busy submit); error (`?step=N&invalid=<field>` with `[role=alert]`); success (redirect to the sheet).
-- Character sheet: empty (no items, experiences or cards show empty texts); loading (busy buttons); error (`[role=alert]`); success (values update in place).
+- Character sheet (all tabs): loading (busy buttons); error (`[role=alert]`, page-level above the tabs, modal errors in their dialog); success (values update in place, the tab stays).
+  - `play`: trackers, defense line and damage form; condition toggles show set/clear.
+  - `traits`: empty (no experiences: empty list, `new-experience` opener).
+  - `gear`: empty (no equipment picked: `option.none`; no items: no `inventory` table).
+  - `cards`: empty (no cards: empty list, `new-card` opener).
+  - `notes`: empty (blank textarea).
 - Reference: static, no forms; empty sections are not shown.
 - Load errors (unknown id, server) go through `+error.svelte`, which translates by status.
 
@@ -75,13 +87,12 @@ Each `encounter-adversary` card of the current scene lists one `battle-unit` row
 Stable: keep them when restyling.
 
 Existing:
-`build`, `run`, `campaign-link`, `campaign-name`, `campaign-run-link`, `card`, `character-card`, `character-name`, `condition-hidden`, `condition-restrained`, `condition-vulnerable`, `current-scene`, `divider`, `domain`, `down`, `encounter-adversary`, `encounter-budget`, `evasion`, `experience`, `fear`, `gold`, `help`, `help-close`, `help-open`, `help-panel`, `inventory`, `item`, `item-row`, `journal`, `journal-entry`, `lang-en`, `lang-fr`, `language-switcher`, `loot-entry`, `nav-home`, `nav-reference`, `notes`, `notes-status`, `party-member`, `ref-item`, `scene`, `scene-environment`, `scene-notes`, `scene-status`, `secondary-blocked`, `sigil`, `srd-licence`, `thresholds`, `battle-unit`, `unit-hp`, `unit-defeated`, `unit-damage`, `unit-hit`, `unit-hp-plus`, `unit-hp-minus`, `battle-add`, `battle-add-adversary`, `battle-add-count`, `battle-add-submit`.
+`build`, `run`, `sheet-sections`, `sheet-trackers`, `sheet-traits`, `sheet-equipment`, `sheet-experiences`, `sheet-inventory`, `sheet-cards`, `sheet-notes`, `sheet-tabs`, `tab-play`, `tab-traits`, `tab-gear`, `tab-cards`, `tab-notes`, `sheet-panel`, `sheet-conditions`, `sheet-gold`, `campaign-link`, `campaign-name`, `campaign-run-link`, `card`, `character-card`, `character-name`, `condition-hidden`, `condition-restrained`, `condition-vulnerable`, `current-scene`, `divider`, `domain`, `down`, `encounter-adversary`, `encounter-budget`, `evasion`, `experience`, `fear`, `gold`, `help`, `help-close`, `help-open`, `help-panel`, `inventory`, `item`, `item-row`, `journal`, `journal-entry`, `lang-en`, `lang-fr`, `language-switcher`, `loot-entry`, `nav-home`, `nav-reference`, `notes`, `notes-status`, `party-member`, `ref-item`, `scene`, `scene-environment`, `scene-notes`, `scene-status`, `secondary-blocked`, `sigil`, `srd-licence`, `thresholds`, `battle-unit`, `unit-hp`, `unit-defeated`, `unit-damage`, `unit-hit`, `unit-hp-plus`, `unit-hp-minus`, `battle-add`, `battle-add-adversary`, `battle-add-count`, `battle-add-submit`.
 
 Dynamic: `ref-<kind>` (reference sections), `step-<k>` (`step-build`, `step-run`), `trait-<k>` (one per trait), `<name>-pips` (e.g. `fear-pips`), tracker values by key (e.g. `hp`, `hope`), subclass/ancestry/community from `Chosen`, and the equipment blocks `primary-weapon`, `secondary-weapon`, `equipped-armor`.
 
 New (*planned*):
 - Layout: `party`, `build-party`, `build-scenes`.
-- Sheet: `sheet-sections`, `sheet-trackers`, `sheet-traits`, `sheet-equipment`, `sheet-experiences`, `sheet-inventory`, `sheet-cards`, `sheet-notes`.
 - Openers: `new-campaign`, `new-scene`, `new-item`, `new-experience`, `new-card`, `new-character`.
 - Modals: `modal-campaign`, `modal-scene`, `modal-item`, `modal-experience`, `modal-card`, `modal-edit`, `new-edit`, `modal-cancel`.
 - Tunnel: `tunnel-progress`, `tunnel-next`, `tunnel-back`, `tunnel-cancel`, `tunnel-summary`, `tunnel-edit-1`, `tunnel-edit-2`, `tunnel-edit-3`, `tunnel-derived`, `derived-evasion`, `derived-thresholds`, `derived-maxHp`, `derived-maxStress`, `derived-armorSlots`, `tunnel-create`.

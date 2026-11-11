@@ -107,6 +107,7 @@ test('a legacy ancestry "Homebrew" is the selected option and saving keeps it', 
 test('the domain card picker is a select grouped by domain', async () => {
 	const id = await mk({ class: 'Wizard' });
 	const { ctx, page } = await open('en', id);
+	await page.goto(`${BASE}/characters/${id}?new=card&tab=cards`); // us-305: the card picker is on the cards tab
 	const sel = page.locator('select[name=cardId]');
 	assert.equal(await sel.count(), 1);
 	const groups = await sel.locator('optgroup').count();

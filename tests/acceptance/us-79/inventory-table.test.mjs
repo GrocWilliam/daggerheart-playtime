@@ -31,7 +31,7 @@ async function open(id, lang, { js = true, width = 1000 } = {}) {
 	await ctx.addCookies([{ name: 'lang', value: lang, url: BASE }]);
 	const page = await ctx.newPage();
 	page.setDefaultTimeout(5000);
-	await page.goto(BASE + `/characters/${id}`);
+	await page.goto(BASE + `/characters/${id}?tab=gear`);
 	return { ctx, page };
 }
 const norm = (s) => s.replace(/\s+/g, ' ').trim();
@@ -87,7 +87,7 @@ test('forms in the table: transparent background, padding 0, margin 0, controls 
 		for (const f of r) {
 			assert.equal(f.bg, 'rgba(0, 0, 0, 0)', f.action);
 			assert.deepEqual(f.pad, ['0px', '0px', '0px', '0px'], f.action);
-			assert.deepEqual(f.mar, ['0px', '0px', '0px', '0px'], f.action);
+			assert.deepEqual(f.mar, ['0px', '0px', '12px', '0px'], f.action); // us-101 pins the td form margin-bottom at 12px
 			if (f.action === '?/setQuantity') assert.equal(f.n, 2);
 			assert.ok(f.overlap, `${f.action} controls share a row at ${width}px`);
 		}
@@ -100,13 +100,17 @@ test('submitting ?/setQuantity changes the quantity; ?/removeItem removes the ro
 	const { ctx, page } = await open(id, 'en', { js: false });
 	const row = () => page.locator('tr[data-testid="item-row"]').first();
 	await row().locator('form[action="?/setQuantity"] input[name="quantity"]').fill('5');
+	const gear = () => page.goto(BASE + `/characters/${id}?tab=gear`); // us-305: no-JS posts land on the default tab
 	await Promise.all([page.waitForNavigation(), row().locator('form[action="?/setQuantity"] button').click()]);
+	await gear();
 	assert.equal(norm(await row().locator('[data-testid="item"]').textContent()), 'Rope ×5');
 	assert.equal(await page.locator('tr[data-testid="item-row"]').count(), 2);
 	await Promise.all([page.waitForNavigation(), row().locator('form[action="?/removeItem"] button').click()]);
+	await gear();
 	assert.equal(await page.locator('tr[data-testid="item-row"]').count(), 1);
 	assert.ok(!(await page.locator('table').textContent()).includes('Rope'));
 	await Promise.all([page.waitForNavigation(), row().locator('form[action="?/removeItem"] button').click()]);
+	await gear();
 	assert.equal(await page.locator('[data-testid="inventory"]').count(), 0, 'table gone when empty');
 	await ctx.close();
 });

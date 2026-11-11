@@ -29,7 +29,7 @@ test('fr character sheet with a VALOR card shows its name and text in lang="fr" 
 	const ctx = await browser.newContext();
 	await ctx.addCookies([{ name: 'lang', value: 'fr', url: BASE }]);
 	const p = await ctx.newPage();
-	assert.equal((await p.goto(`${BASE}/characters/${ch}`)).status(), 200);
+	assert.equal((await p.goto(`${BASE}/characters/${ch}?tab=cards`)).status(), 200);
 	const card = p.locator('[data-testid="card"]').filter({ hasText: frName });
 	assert.equal(await card.count(), 1);
 	const langs = (text) => card.evaluate((el, text) => {

@@ -14,6 +14,7 @@ const TEXT = {
 };
 const SECTION = { item: 'sheet-inventory', experience: 'sheet-experiences', card: 'sheet-cards' };
 const KINDS = ['item', 'experience', 'card'];
+const TAB = { item: 'gear', experience: 'traits', card: 'cards' }; // us-305: the tab holding each section
 let browser;
 before(async () => { browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH }); });
 after(async () => { await browser?.close(); });
@@ -74,11 +75,13 @@ for (const lang of ['en', 'fr']) {
 		const { p, close } = await open(`/characters/${id}`, { js: false, lang });
 		try {
 			for (const k of KINDS) {
+				await p.goto(`${BASE}/characters/${id}?tab=${TAB[k]}`);
 				const a = p.locator(`[data-testid=new-${k}]`);
 				assert.equal(await a.count(), 1, k);
 				assert.equal(await a.evaluate((e) => e.tagName), 'A');
 				assert.equal((await a.textContent()).trim(), TEXT[k][lang]);
-				assert.ok((await a.getAttribute('href')).endsWith(`?new=${k}`), await a.getAttribute('href'));
+				const href = new URL(await a.getAttribute('href'), BASE); // us-305: the opener also carries its tab
+				assert.deepEqual([href.pathname, href.searchParams.get('new'), href.searchParams.get('tab')], [`/characters/${id}`, k, TAB[k]], href.href);
 				assert.equal(await p.locator(`[data-testid=${SECTION[k]}] [data-testid=new-${k}]`).count(), 1, `${k} in ${SECTION[k]}`);
 				assert.equal(await p.locator(`[data-testid=${SECTION[k]}] [data-testid=modal-${k}]`).count(), 1);
 			}
@@ -104,8 +107,10 @@ test('without JS, GET /characters/:id?new=<kind> serves an open dialog labelled 
 			assert.equal((await h2.textContent()).trim(), TEXT[k].en);
 		} finally { await close(); }
 	}
-	const closed = await (await fetch(`${BASE}/characters/${id}`, { headers: { accept: 'text/html' } })).text();
-	for (const k of KINDS) assert.ok(!hasOpen(dialogOf(closed, k).tag), `${k}: closed without ?new`);
+	for (const k of KINDS) { // us-305: each dialog lives on its tab
+		const closed = await (await fetch(`${BASE}/characters/${id}?tab=${TAB[k]}`, { headers: { accept: 'text/html' } })).text();
+		assert.ok(!hasOpen(dialogOf(closed, k).tag), `${k}: closed without ?new`);
+	}
 });
 
 // --- no JavaScript: submit ---
@@ -116,6 +121,7 @@ for (const k of KINDS) {
 		try {
 			await fillValid(p, k);
 			await Promise.all([p.waitForLoadState('load'), dlg(p, k).locator('button[type=submit]').click()]);
+			await p.goto(`${BASE}/characters/${id}?tab=${TAB[k]}`);
 			await p.locator(rowSel[k]).first().waitFor();
 			assert.equal(await p.locator(rowSel[k]).count(), 1);
 			if (WORD[k]) assert.ok((await p.locator(rowSel[k]).first().textContent()).includes(WORD[k]));
@@ -127,7 +133,7 @@ for (const k of KINDS) {
 for (const k of KINDS) {
 	test(`with JS, new-${k} opens modal-${k} as a modal focused on its first field; adding closes it and shows the row without reload`, async () => {
 		const id = await mk();
-		const { p, close } = await open(`/characters/${id}`);
+		const { p, close } = await open(`/characters/${id}?tab=${TAB[k]}`);
 		try {
 			await p.evaluate(() => { window.__marker = 'alive'; });
 			await p.locator(`[data-testid=new-${k}]`).click();
@@ -148,7 +154,7 @@ for (const k of KINDS) {
 // --- invalid submissions ---
 test('with JS, an invalid experience keeps the dialog open with an alert inside and the typed modifier', async () => {
 	const id = await mk();
-	const { p, close } = await open(`/characters/${id}`);
+	const { p, close } = await open(`/characters/${id}?tab=traits`);
 	try {
 		await p.locator('[data-testid=new-experience]').click();
 		await waitOpen(p, 'experience', true);
@@ -165,7 +171,7 @@ test('with JS, an invalid experience keeps the dialog open with an alert inside 
 });
 test('with JS, an invalid item keeps the dialog open with an alert and the typed quantity', async () => {
 	const id = await mk();
-	const { p, close } = await open(`/characters/${id}`);
+	const { p, close } = await open(`/characters/${id}?tab=gear`);
 	try {
 		await p.locator('[data-testid=new-item]').click();
 		await waitOpen(p, 'item', true);
@@ -182,7 +188,7 @@ test('with JS, an invalid item keeps the dialog open with an alert and the typed
 test('with JS, an invalid card (already held) keeps the dialog open with an alert and the chosen card', async () => {
 	const id = await mk();
 	await api('POST', `/api/characters/${id}/cards`, { cardId: CARDS[3].id });
-	const { p, close } = await open(`/characters/${id}`);
+	const { p, close } = await open(`/characters/${id}?tab=cards`);
 	try {
 		await p.locator('[data-testid=new-card]').click();
 		await waitOpen(p, 'card', true);
@@ -216,7 +222,7 @@ test('without JS, an invalid POST re-renders the sheet with the dialog open, an 
 for (const k of KINDS) {
 	test(`Escape and modal-cancel close modal-${k} and return focus to new-${k}`, async () => {
 		const id = await mk();
-		const { p, close } = await open(`/characters/${id}`);
+		const { p, close } = await open(`/characters/${id}?tab=${TAB[k]}`);
 		try {
 			const focused = () => p.waitForFunction((kk) => document.activeElement === document.querySelector(`[data-testid=new-${kk}]`), k);
 			await p.locator(`[data-testid=new-${k}]`).click();
@@ -251,7 +257,7 @@ for (const [w, h] of [[375, 812], [768, 1024], [1024, 768], [1180, 820]]) {
 	for (const state of ['closed', 'open']) {
 		test(`${w}x${h}, ${state === 'open' ? '?new=item open' : 'dialogs closed'}: no sideways scroll, controls >= 44x44, text inputs 16px`, async () => {
 			const id = await mk({ withContent: true });
-			const { p, close } = await open(`/characters/${id}${state === 'open' ? '?new=item' : ''}`, { w, h });
+			const { p, close } = await open(`/characters/${id}${state === 'open' ? '?new=item&tab=gear' : ''}`, { w, h });
 			try {
 				if (state === 'open') await waitOpen(p, 'item', true);
 				const sw = await p.evaluate(() => [document.documentElement.scrollWidth, window.innerWidth]);

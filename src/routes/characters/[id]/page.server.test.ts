@@ -28,6 +28,16 @@ describe('character page server', () => {
 		await expect(load({ params: { id: 'x' }, fetch: f } as never)).rejects.toMatchObject({ status: 404 });
 	});
 
+	it('load returns the parsed tab (play when missing or unknown)', async () => {
+		const ch = { class: 'Guardian', level: 1, cards: [], items: [], subclass: null, ancestry: null, community: null };
+		const tabOf = async (q: string) =>
+			((await load({ params: { id: 'c1' }, fetch: recorder(200, ch).f, url: new URL(`http://x/characters/c1${q}`) } as never)) as { tab: string }).tab;
+		expect(await tabOf('?tab=gear')).toBe('gear');
+		expect(await tabOf('?tab=notes')).toBe('notes');
+		expect(await tabOf('')).toBe('play');
+		expect(await tabOf('?tab=bogus')).toBe('play');
+	});
+
 	it('edit redirects 303 without enhance and fails with the modal and typed values', async () => {
 		await expect(run('edit', { name: 'A', class: 'B' }, recorder().f, false)).rejects.toMatchObject({
 			status: 303,

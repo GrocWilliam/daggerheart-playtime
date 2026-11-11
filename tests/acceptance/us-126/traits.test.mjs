@@ -84,7 +84,7 @@ test('sheet shows signed traits in trait-<name> elements', async () => {
 	const { r } = await mk();
 	await call('PATCH', `/api/characters/${r.json.id}`, { traits: { agility: 2, finesse: -1 } });
 	const page = await browser.newPage();
-	await page.goto(BASE + `/characters/${r.json.id}`);
+	await page.goto(BASE + `/characters/${r.json.id}?tab=traits`);
 	const txt = async (n) => (await page.locator(`[data-testid=trait-${n}]`).first().innerText()).trim();
 	assert.equal(await txt('agility'), '+2');
 	assert.equal(await txt('strength'), '0');
@@ -96,7 +96,7 @@ test('sheet shows signed traits in trait-<name> elements', async () => {
 test('edit form has six number inputs min -5 max 5 and saves new values', async () => {
 	const { r } = await mk();
 	const page = await browser.newPage();
-	await page.goto(BASE + `/characters/${r.json.id}?new=edit`);
+	await page.goto(BASE + `/characters/${r.json.id}?new=edit&tab=traits`);
 	for (const n of NAMES) {
 		const inp = page.locator(`form[action="?/edit"] input[type=number][name$="${n}"]`);
 		assert.equal(await inp.count(), 1, n);
@@ -116,7 +116,7 @@ test('edit form has six number inputs min -5 max 5 and saves new values', async 
 
 test('sheet renders in French with translated trait labels and help', async () => {
 	const { r } = await mk();
-	const get = async (lang) => (await fetch(BASE + `/characters/${r.json.id}`, { headers: { cookie: `lang=${lang}`, accept: 'text/html' } })).text();
+	const get = async (lang) => (await fetch(BASE + `/characters/${r.json.id}?tab=traits`, { headers: { cookie: `lang=${lang}`, accept: 'text/html' } })).text();
 	const en = await get('en'), fr = await get('fr');
 	assert.match(en, />\s*Traits\s*</);
 	assert.doesNotMatch(fr, />\s*Traits\s*</);

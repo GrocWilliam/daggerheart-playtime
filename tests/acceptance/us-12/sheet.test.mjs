@@ -92,8 +92,8 @@ async function mkChar(extra = {}) {
 	return r.json.id;
 }
 const url = (id) => `${BASE}/characters/${id}`;
-async function sheet(id) {
-	const res = await fetch(url(id));
+async function sheet(id, tab) {
+	const res = await fetch(url(id) + (tab ? `?tab=${tab}` : ''));
 	return { res, html: await res.text() };
 }
 const getApi = async (id) => (await api('GET', `/api/characters/${id}`)).json;
@@ -134,12 +134,13 @@ test('character with notes, gold and one item: sheet shows notes, gold and the i
 	r = await api('POST', `/api/characters/${id}/items`, { name: 'Torch', quantity: 3 });
 	assert.ok(r.status < 300, r.text);
 
-	const { res, html } = await sheet(id);
+	const { res, html: notesHtml } = await sheet(id, 'notes');
 	assert.equal(res.status, 200);
 	assert.match(res.headers.get('content-type') ?? '', /html/);
-	const ta = /<textarea\b[^>]*data-testid=["']notes["'][^>]*>([\s\S]*?)<\/textarea>/i.exec(html);
+	const ta = /<textarea\b[^>]*data-testid=["']notes["'][^>]*>([\s\S]*?)<\/textarea>/i.exec(notesHtml);
 	assert.ok(ta, 'notes textarea');
 	assert.ok(unesc(ta[1]).includes('Has a scar'));
+	const html = (await sheet(id, 'gear')).html;
 	assert.ok(testid(html, 'gold')?.includes('1 chests, 2 bags, 3 handfuls'), testid(html, 'gold'));
 	const items = itemTexts(html);
 	assert.equal(items.length, 1);
@@ -242,7 +243,7 @@ test('vulnerable toggle submitted on shows condition-vulnerable (and API conditi
 
 test('saving new notes text via the notes form persists it', async () => {
 	const id = await mkChar();
-	const { html } = await sheet(id);
+	const { html } = await sheet(id, 'notes');
 	const f = notesForm(html);
 	assert.ok(f, 'notes form');
 	const ta = textareas(f.html)[0];
@@ -251,44 +252,44 @@ test('saving new notes text via the notes form persists it', async () => {
 	const r = await post(url(id), f.html, { fill: { [field]: 'Afraid of heights' } });
 	assert.ok(r.status < 400, `status ${r.status}`);
 	assert.equal((await getApi(id)).notes, 'Afraid of heights');
-	const after = (await sheet(id)).html;
+	const after = (await sheet(id, 'notes')).html;
 	const m = /<textarea\b[^>]*data-testid=["']notes["'][^>]*>([\s\S]*?)<\/textarea>/i.exec(after);
 	assert.equal(unesc(m[1]).trim(), 'Afraid of heights');
 });
 
 test('gold form: spending -2 handfuls from empty gold is rejected and gold stays 0/0/0; adding works', async () => {
 	const id = await mkChar();
-	const { html } = await sheet(id);
+	const { html } = await sheet(id, 'gear');
 	assert.equal(testid(html, 'gold'), '0 chests, 0 bags, 0 handfuls');
 	const f = goldForm(html);
 	assert.ok(f, 'gold form with a single integer input');
 	const field = numberInputName(f.html);
 	await post(url(id), f.html, { fill: { [field]: -2 } });
 	assert.deepEqual((await getApi(id)).gold, { handfuls: 0, bags: 0, chests: 0 });
-	assert.equal(testid((await sheet(id)).html, 'gold'), '0 chests, 0 bags, 0 handfuls');
+	assert.equal(testid((await sheet(id, 'gear')).html, 'gold'), '0 chests, 0 bags, 0 handfuls');
 	// adding handfuls works and normalizes
 	const ok = await post(url(id), f.html, { fill: { [field]: 12 } });
 	assert.ok(ok.status < 400, `status ${ok.status}`);
-	assert.equal(testid((await sheet(id)).html, 'gold'), '0 chests, 1 bags, 2 handfuls');
+	assert.equal(testid((await sheet(id, 'gear')).html, 'gold'), '0 chests, 1 bags, 2 handfuls');
 });
 
 test('add-item form with "Rope" x2 shows an item "Rope ×2"', async () => {
 	const id = await mkChar();
-	const { html } = await sheet(id);
+	const { html } = await sheet(id, 'gear');
 	assert.equal(itemTexts(html).length, 0);
 	const f = addItemForm(html);
 	assert.ok(f, 'add-item form with name and quantity inputs');
 	const r = await post(url(id), f.html, { fill: { name: 'Rope', quantity: 2 } });
 	assert.ok(r.status < 400, `status ${r.status}`);
-	const items = itemTexts((await sheet(id)).html);
+	const items = itemTexts((await sheet(id, 'gear')).html);
 	assert.equal(items.length, 1);
 	assert.ok(items[0].includes('Rope ×2'), items[0]);
 	assert.equal((await getApi(id)).items[0].name, 'Rope');
 	// quantity is optional (defaults to 1)
-	const f2 = addItemForm((await sheet(id)).html);
+	const f2 = addItemForm((await sheet(id, 'gear')).html);
 	const r2 = await post(url(id), f2.html, { fill: { name: 'Lantern', quantity: '' } });
 	assert.ok(r2.status < 400, `status ${r2.status}`);
-	assert.ok(itemTexts((await sheet(id)).html).some((t) => t.includes('Lantern ×1')));
+	assert.ok(itemTexts((await sheet(id, 'gear')).html).some((t) => t.includes('Lantern ×1')));
 });
 
 test('changing Rope quantity to 5 shows "Rope ×5"; removing it leaves no Rope item', async () => {
@@ -296,13 +297,13 @@ test('changing Rope quantity to 5 shows "Rope ×5"; removing it leaves no Rope i
 	const add = await api('POST', `/api/characters/${id}/items`, { name: 'Rope', quantity: 2 });
 	assert.ok(add.status < 300, add.text);
 	await api('POST', `/api/characters/${id}/items`, { name: 'Torch', quantity: 3 });
-	let html = (await sheet(id)).html;
+	let html = (await sheet(id, 'gear')).html;
 	let fs = itemForms(html, add.json.id, 'Rope ×2');
 	let q = qtyForm(fs);
 	assert.ok(q, 'per-item quantity form');
 	let r = await post(url(id), q.html, { fill: { quantity: 5 } });
 	assert.ok(r.status < 400, `status ${r.status}`);
-	html = (await sheet(id)).html;
+	html = (await sheet(id, 'gear')).html;
 	const texts = itemTexts(html);
 	assert.ok(texts.some((t) => t.includes('Rope ×5')), texts.join('|'));
 	assert.ok(texts.some((t) => t.includes('Torch ×3')), 'other item untouched');
@@ -316,7 +317,7 @@ test('changing Rope quantity to 5 shows "Rope ×5"; removing it leaves no Rope i
 		r = await post(url(id), qtyForm(fs).html, { fill: { quantity: 0 } });
 	}
 	assert.ok(r.status < 400, `status ${r.status}`);
-	const after = itemTexts((await sheet(id)).html);
+	const after = itemTexts((await sheet(id, 'gear')).html);
 	assert.ok(!after.some((t) => t.includes('Rope')), after.join('|'));
 	assert.ok(after.some((t) => t.includes('Torch ×3')));
 	assert.deepEqual((await getApi(id)).items.map((i) => i.name), ['Torch']);
