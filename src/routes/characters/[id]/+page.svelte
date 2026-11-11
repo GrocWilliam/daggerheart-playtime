@@ -94,7 +94,7 @@
 <div data-testid="sheet-sections" class="grid grid-cols-[minmax(0,1fr)] gap-x-4 *:min-w-0 md:grid-cols-[repeat(2,minmax(0,1fr))]">
 <div data-testid="sheet-trackers" class="md:col-span-2">
 {#each [['hp', 'tracker.hp'], ['stress', 'tracker.stress'], ['hope', 'tracker.hope'], ['armor', 'tracker.armor']] as [key, label] (key)}
-	<form use:enhance={busy} class="mb-3 flex flex-nowrap items-center gap-2 rounded-none! bg-transparent! border-0! p-0!"
+	<form use:enhance={busy} class="mb-3 flex flex-nowrap items-center gap-2"
 		class:tracker={true}
 		method="POST"
 		action="?/tracker"
@@ -126,7 +126,7 @@
 </div>
 
 <div data-testid="sheet-traits">
-<h2>{t('section.traits')}</h2>
+<h2 class="mt-4 mb-2">{t('section.traits')}</h2>
 <ul class="mt-0 mb-3 list-none pl-0!">
 	{#each traits as k (k)}
 		<li>{t(`trait.${k}`)}: <Help id={k} name={t(`trait.${k}`)} text={t(`trait.help.${k}`)} lang={data.lang} /> <span data-testid="trait-{k}">{signed(c.traits[k])}</span></li>
@@ -135,7 +135,7 @@
 </div>
 
 <div data-testid="sheet-equipment">
-<h2>{t('section.equipment')}</h2>
+<h2 class="mt-4 mb-2">{t('section.equipment')}</h2>
 {@render picker('primaryWeapon', 'equipment.primary', data.equipment.primary, c.primaryWeapon)}
 {#if data.equipment.primaryWeapon}{@render gear('primary-weapon', data.equipment.primaryWeapon)}{/if}
 {#if data.equipment.secondaryBlocked}
@@ -155,7 +155,7 @@
 	{#if c.conditions.hidden}<span class="inline-block rounded-[999px] px-[0.6rem] text-[0.875rem] text-bg bg-calm" data-testid="condition-hidden">{t('badge.hidden')}</span><Help id="hidden" name={t('badge.hidden')} lang={data.lang} />{/if}
 </div>
 
-<h2>{t('section.conditions')}</h2>
+<h2 class="mt-4 mb-2">{t('section.conditions')}</h2>
 {#each conditions as k (k)}
 	<form use:enhance={busy} method="POST" action="?/condition">
 		<input type="hidden" name="condition" value={k} />
@@ -167,7 +167,7 @@
 </div>
 
 <div>
-<h2>{t('section.gold')}</h2>
+<h2 class="mt-4 mb-2">{t('section.gold')}</h2>
 <Help id="gold" name={t('section.gold')} lang={data.lang} />
 <p data-testid="gold">{n(c.gold.chests)} {t('gold.chests')}, {n(c.gold.bags)} {t('gold.bags')}, {n(c.gold.handfuls)} {t('gold.handfuls')}</p>
 <form use:enhance={busy} method="POST" action="?/gold">
@@ -177,7 +177,7 @@
 </div>
 
 <div data-testid="sheet-experiences">
-<h2>{t('section.experiences')}</h2>
+<h2 class="mt-4 mb-2">{t('section.experiences')}</h2>
 <Modal kind="experience" title={t('experience.new')} lang={data.lang}>
 <form use:enhance={busy} method="POST" action="?/addExperience">
 	<label>{t('experience.name')} <input type="text" name="name" maxlength="100" required value={expValues?.name ?? ''} /></label>
@@ -205,7 +205,7 @@
 </div>
 
 <div data-testid="sheet-inventory" class="md:col-span-2">
-<h2>{t('section.inventory')}</h2>
+<h2 class="mt-4 mb-2">{t('section.inventory')}</h2>
 <Modal kind="item" title={t('item.new')} lang={data.lang}>
 <form use:enhance={busy} method="POST" action="?/addItem">
 	<label>{t('item.name')} <input type="text" name="name" maxlength="100" value={itemValues?.name ?? ''} /></label>
@@ -248,14 +248,14 @@
 						{/if}
 					</td>
 					<td>
-						<form use:enhance={busy} method="POST" action="?/setQuantity">
+						<form use:enhance={busy} class="flex flex-nowrap items-center gap-2" method="POST" action="?/setQuantity">
 							<input type="hidden" name="itemId" value={it.id} />
 							<input type="number" name="quantity" min="0" value={it.quantity} required />
 							<button type="submit">{t('action.update')}</button>
 						</form>
 					</td>
 					<td>
-						<form use:enhance={busy} method="POST" action="?/removeItem">
+						<form use:enhance={busy} class="flex flex-nowrap items-center gap-2" method="POST" action="?/removeItem">
 							<input type="hidden" name="itemId" value={it.id} />
 							<button type="submit">{t('action.remove')}</button>
 						</form>
@@ -268,7 +268,7 @@
 </div>
 
 <div data-testid="sheet-cards">
-<h2>{t('section.cards')}</h2>
+<h2 class="mt-4 mb-2">{t('section.cards')}</h2>
 <ul class="list-none pl-0!">
 	{#each data.cards as card (card.id)}
 		<li class="[overflow-wrap:anywhere]" data-testid="card">
@@ -303,16 +303,16 @@
 </div>
 
 <div data-testid="sheet-notes">
-<h2>{t('section.notes')}</h2>
-<form use:enhance={busy} method="POST" action="?/notes" class="px-[0.5625rem]!">
+<h2 class="mt-4 mb-2">{t('section.notes')}</h2>
+<form use:enhance={busy} method="POST" action="?/notes">
 	<textarea name="notes" data-testid="notes" maxlength="5000" rows="6">{c.notes}</textarea>
 	<button type="submit">{t('action.saveNotes')}</button>
 </form>
 </div>
 
 <div class="md:col-span-2">
-<h2>{t('section.edit')}</h2>
-<form use:enhance={busy} method="POST" action="?/edit" class="px-[0.5625rem]! grid grid-cols-[minmax(0,1fr)] gap-x-4 *:min-w-0 md:grid-cols-[repeat(2,minmax(0,1fr))]" class:form-grid={true}>
+<h2 class="mt-4 mb-2">{t('section.edit')}</h2>
+<form use:enhance={busy} method="POST" action="?/edit" class="grid grid-cols-[minmax(0,1fr)] gap-x-4 *:min-w-0 md:grid-cols-[repeat(2,minmax(0,1fr))]" class:form-grid={true}>
 	{#each fields.slice(0, 1) as [name, label, type, value] (name)}
 		<label>{t(label)} <input {type} {name} {value} required /></label>
 	{/each}

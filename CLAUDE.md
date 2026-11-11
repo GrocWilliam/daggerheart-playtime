@@ -124,7 +124,7 @@ No project skills: the `stack-*` skills cover the workflow and this file holds t
   story. `--teal` is written `var(--tea\6c)`, `--color-calm` is `var(--tea\6c)`, and `Help.svelte` escapes "vulnerable".
 - Unlayered rules in `app.css` (global form, table, label, input rules) beat Tailwind utilities (which are layered): a
   utility that loses needs a trailing `!` (`aria-pressed:font-bold!`, `p-2!`). `app.css` stays under 150 lines.
-- The global `form` rule is a surface card, so tracker forms add `bg-transparent! p-0! rounded-none!`.
+- Forms carry no box (global `form` is only `margin-bottom: 0.75rem`): don't add `bg-transparent!`/`p-0!`/`rounded-none!`. Only `article`, `encounter-adversary`, `loot-entry` and the Modal panel keep the card look.
   `justify-self-start` computes to `flex-start`: use `[justify-self:start]`. `rounded-full` computes to `3.35544e+07px`:
   use `rounded-[50%]` where a test reads the radius.
 - Frozen older tests still select on `.pip`, `.filled`, `.tracker`, `ul.stats` (character sheet) and `.form-grid`,

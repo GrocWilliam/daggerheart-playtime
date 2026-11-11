@@ -150,9 +150,9 @@ for (const [name, w, h, cols] of [['phone', 375, 667, 1], ['tablet', 700, 800, 1
 		assert.equal(r.stats.listStyleType, 'none');
 		assert.equal(r.stats.paddingLeft, '0px');
 		assert.equal(r.stats.marginBottom, '12px');
-		assert.equal(r.fear.backgroundColor, SURFACE);
-		assert.equal(r.fear.borderTopLeftRadius, '8px');
-		assert.equal(r.fear.paddingTop, '12px');
+		assert.equal(r.fear.backgroundColor, 'rgba(0, 0, 0, 0)');
+		assert.equal(r.fear.borderTopLeftRadius, '0px');
+		assert.equal(r.fear.paddingTop, '0px');
 		assert.equal(r.fear.marginBottom, '12px');
 		const want = { fear: [12, DANGER], hp: [6, DANGER], stress: [6, ACCENT], hope: [6, TEAL], armor: [3, MUTED] };
 		for (const [k, [n, col]] of Object.entries(want)) {

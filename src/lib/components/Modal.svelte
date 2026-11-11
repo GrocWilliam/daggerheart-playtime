@@ -76,7 +76,7 @@
 	class="m-0 h-dvh max-h-none w-screen max-w-none overflow-y-auto rounded-none bg-surface p-0 text-text backdrop:bg-bg backdrop:opacity-80 min-[600px]:m-auto min-[600px]:h-auto min-[600px]:max-h-[90dvh] min-[600px]:max-w-[32rem] min-[600px]:rounded-[0.5rem] min-[600px]:border-[3px] min-[600px]:border-double min-[600px]:border-accent"
 >
 	<div class="p-3">
-		<h2 id={titleId} class="mt-0">{title}</h2>
+		<h2 id={titleId} class="mt-4 mb-2">{title}</h2>
 		{@render children()}
 		<a data-testid="modal-cancel" href={closeHref} onclick={onCancel}>{translate(lang, 'modal.cancel')}</a>
 	</div>

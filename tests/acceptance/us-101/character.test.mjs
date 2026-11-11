@@ -188,18 +188,18 @@ for (const [name, w, h] of [['phone', 375, 667], ['desktop', 1280, 800]]) {
 		assert.match(r.name.fontFamily, /Cinzel/);
 		assert.equal(r.name.fontWeight, '700');
 		for (const f of [r.damage, r.edit]) {
-			assert.equal(f.backgroundColor, SURFACE);
-			assert.equal(f.borderTopLeftRadius, '8px');
-			assert.equal(f.paddingTop, '12px');
+			assert.equal(f.backgroundColor, CLEAR);
+			assert.equal(f.borderTopLeftRadius, '0px');
+			assert.equal(f.paddingTop, '0px');
 			assert.equal(f.marginBottom, '12px');
 		}
-		assert.equal(r.damage.paddingLeft, '12px');
+		assert.equal(r.damage.paddingLeft, '0px');
 		assert.equal(r.edit.display, 'grid');
 		assert.equal(r.edit.columnGap, '16px');
 		assert.equal(r.editCols, w >= 768 ? 2 : 1, 'edit form columns');
 		assert.equal(r.editXs, w >= 768 ? 2 : 1, 'edit form fields laid out in columns');
 		assert.equal(r.editBtn.justify, 'start');
-		assert.equal(r.editBtn.left, r.editBtn.formLeft + 12, 'save sits at the start of the first column');
+		assert.equal(r.editBtn.left, r.editBtn.formLeft, 'save sits at the start of the first column');
 		assert.ok(r.editBtn.h >= 43.5);
 		assert.equal(r.editBtn.bg, ACCENT);
 		assert.equal(r.editBtn.color, BG);
@@ -224,7 +224,7 @@ for (const [name, w, h] of [['phone', 375, 667], ['desktop', 1280, 800]]) {
 		assert.equal(r.check.label.alignItems, 'center');
 		assert.equal(r.check.label.columnGap, '8px');
 		assert.ok(r.check.lh >= 43.5);
-		assert.ok(Math.abs(r.notes.w - (r.notes.formW - 24)) < 1, 'notes fill their form');
+		assert.ok(Math.abs(r.notes.w - r.notes.formW) < 1, 'notes fill their form');
 		assert.equal(r.table.display, w >= 600 ? 'table' : 'block');
 		assert.equal(r.table.borderCollapse, 'collapse');
 		assert.ok(r.tableW >= 0.9 * (r.wrapW - 48), `table full width (${r.tableW} in ${r.wrapW})`);
@@ -257,7 +257,7 @@ for (const [name, w, h] of [['phone', 375, 667], ['desktop', 1280, 800]]) {
 		assert.equal(r.tdForm.columnGap, '8px');
 		assert.equal(r.tdForm.backgroundColor, CLEAR);
 		assert.equal(r.tdForm.paddingTop, '0px');
-		assert.equal(r.tdForm.marginBottom, '0px');
+		assert.equal(r.tdForm.marginBottom, '12px');
 		assert.equal(r.cards.listStyleType, 'none');
 		assert.equal(r.cards.paddingLeft, '0px');
 		assert.equal(r.cardLi.overflowWrap, 'anywhere');

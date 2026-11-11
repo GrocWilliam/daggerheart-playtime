@@ -19,6 +19,7 @@ Links between them:
 - The header (sigil, nav, language switcher) stays on one row from 768px.
 - Body max width: 60rem from 768px, 72rem from 1024px.
 - Breakpoints: `md:` 768px, `lg:` 1024px, and `min-[600px]:` (modal only). Mobile first, no `max-width` queries.
+- Forms carry no box (`form` is only `margin-bottom: 0.75rem`); only `article`, `encounter-adversary`, `loot-entry` and the Modal panel keep the card look (surface background, `3px double` accent border, `0.5rem` radius). Sheet/DM-screen/Modal `h2` use `mt-4 mb-2`; the `Divider` stays under the page `h1` only.
 - Target viewports (width × height): 375×812, 768×1024, 1024×768 and 1180×820.
 
 Per page:
