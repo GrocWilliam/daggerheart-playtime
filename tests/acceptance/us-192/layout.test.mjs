@@ -64,21 +64,19 @@ for (const step of ['run', 'build']) {
 	}
 }
 
-test('run at 375x812: one column for fear, current-scene, party and journal', async () => {
+test('run at 375x812: one column for current-scene, party and journal', async () => {
 	const p = await open('run', [375, 812]);
 	const xs = [];
-	for (const id of ['fear', 'current-scene', 'party', 'journal']) xs.push((await box(p, id)).x);
+	for (const id of ['current-scene', 'party', 'journal']) xs.push((await box(p, id)).x);
 	for (const x of xs) assert.ok(Math.abs(x - xs[0]) <= 2, `lefts ${xs}`);
 	const cs = await cards(p);
 	assert.deepEqual(new Set(cs.map((c) => Math.round(c.x))).size, 1, 'party single column');
 });
 
-test('run at 768x1024: Fear and scene side by side, then 2-column party, then journal', async () => {
+test('run at 768x1024: scene full width, then 2-column party, then journal', async () => {
 	const p = await open('run', [768, 1024]);
-	const f = await box(p, 'fear'), s = await box(p, 'current-scene'), party = await box(p, 'party'), j = await box(p, 'journal');
-	assert.ok(Math.abs(f.y - s.y) <= 2, `tops ${f.y} ${s.y}`);
-	assert.ok(Math.abs(f.x - s.x) > 2, 'different lefts');
-	assert.ok(party.y >= Math.max(f.y + f.height, s.y + s.height) - 1, 'party below both');
+	const s = await box(p, 'current-scene'), party = await box(p, 'party'), j = await box(p, 'journal');
+	assert.ok(party.y >= s.y + s.height - 1, 'party below scene');
 	const cs = await cards(p);
 	assert.ok(cs.some((a, i) => cs.some((b, k) => k !== i && Math.abs(a.y - b.y) <= 2 && Math.abs(a.x - b.x) > 2)), 'two cards on one row');
 	assert.ok(j.y >= party.y + party.height - 1, 'journal below party');
@@ -87,9 +85,9 @@ test('run at 768x1024: Fear and scene side by side, then 2-column party, then jo
 for (const vp of [[1024, 768], [1180, 820]]) {
 	test(`run at ${vp.join('x')}: two columns, party cards in one column`, async () => {
 		const p = await open('run', vp);
-		const s = await box(p, 'current-scene'), j = await box(p, 'journal'), f = await box(p, 'fear'), party = await box(p, 'party');
+		const s = await box(p, 'current-scene'), j = await box(p, 'journal'), party = await box(p, 'party');
 		assert.ok(Math.abs(s.x - j.x) <= 2, `scene/journal lefts ${s.x} ${j.x}`);
-		assert.ok(s.x < f.x - 2 && s.x < party.x - 2, 'left column is left of fear and party');
+		assert.ok(s.x < party.x - 2, 'left column is left of party');
 		const cs = await cards(p);
 		for (const c of cs) assert.ok(Math.abs(c.x - cs[0].x) <= 2, 'cards share left x');
 	});

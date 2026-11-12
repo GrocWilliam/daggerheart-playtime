@@ -60,7 +60,7 @@ test('with JS: campaign tracker and damage forms update in place', async () => {
 	await mark(p);
 	await trackerBtn(p, 'stress', 1, card(p)).click();
 	await p.waitForFunction(() => /^1\//.test(document.querySelector('[data-testid=character-card] [data-testid=stress]')?.textContent.trim() ?? ''));
-	const dmg = card(p).locator('form[action="?/damage"]');
+	const dmg = card(p).locator('form[action^="?/damage"]');
 	await dmg.locator('input[name=amount]').fill('1');
 	await dmg.locator('button[type=submit]').click();
 	await p.waitForFunction(() => /^1\//.test(document.querySelector('[data-testid=character-card] [data-testid=hp]')?.textContent.trim() ?? ''));
@@ -95,8 +95,8 @@ test('with JS: character page tracker and damage forms update in place', async (
 	await mark(p);
 	await trackerBtn(p, 'stress', 1).click();
 	await p.waitForFunction(() => /^1\//.test(document.querySelector('[data-testid=stress]')?.textContent.trim() ?? ''));
-	await p.locator('form[action="?/damage"] input[name=amount]').fill('1');
-	await p.locator('form[action="?/damage"] button[type=submit]').click();
+	await p.locator('form[action^="?/damage"] input[name=amount]').fill('1');
+	await p.locator('form[action^="?/damage"] button[type=submit]').click();
 	await p.waitForFunction(() => /^1\//.test(document.querySelector('[data-testid=hp]')?.textContent.trim() ?? ''));
 	await assertInPlace(p);
 });
@@ -210,8 +210,8 @@ test('without JavaScript the same forms still work as full-page POSTs', async ()
 	await Promise.all([p.waitForNavigation(), sceneForm(p).locator('button[type=submit]').click()]);
 	await p.locator('[data-testid=scene]', { hasText: 'Plain Scene' }).waitFor();
 	p = await open(`/characters/${ch.id}`, { js: false });
-	await p.locator('form[action="?/damage"] input[name=amount]').fill('1');
-	await Promise.all([p.waitForNavigation(), p.locator('form[action="?/damage"] button[type=submit]').click()]);
+	await p.locator('form[action^="?/damage"] input[name=amount]').fill('1');
+	await Promise.all([p.waitForNavigation(), p.locator('form[action^="?/damage"] button[type=submit]').click()]);
 	assert.match((await p.locator('[data-testid=hp]').textContent()).trim(), /^1\//);
 	p = await open('/?new=campaign', { js: false }); // US-193: the create form lives in the New campaign modal
 	await p.locator('form:has(input[name=name])').first().locator('input[name=name]').fill('Plain Camp');

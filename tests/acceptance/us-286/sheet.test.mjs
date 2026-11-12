@@ -31,11 +31,11 @@ async function create({ subclass, ...extra } = {}) {
 const plan = async (id) => ok(await send('GET', `/api/characters/${id}/level-up`));
 const levelUp = async (id, body) => ok(await send('POST', `/api/characters/${id}/level-up`, body));
 
-async function open(id, lang, width = 1024) {
+async function open(id, lang, width = 1024, q = '') {
 	const ctx = await browser.newContext({ viewport: { width, height: 800 } });
 	await ctx.addCookies([{ name: 'lang', value: lang, url: BASE }]);
 	const page = await ctx.newPage();
-	await page.goto(`${BASE}/characters/${id}`);
+	await page.goto(`${BASE}/characters/${id}${q}`);
 	return { page, ctx };
 }
 
@@ -74,13 +74,15 @@ for (const lang of ['en', 'fr']) {
 			],
 			domainCard: card.id
 		});
-		const { page, ctx } = await open(c.id, lang);
+		// Spec #298: traits live on the sheet's traits tab, Proficiency on the play tab.
+		const { page, ctx } = await open(c.id, lang, 1024, '?tab=traits');
 		for (const t of ['agility', 'knowledge']) {
 			const b = page.locator(`[data-testid=trait-marked-${t}]`);
 			assert.equal(await b.count(), 1);
 			assert.equal((await b.innerText()).trim(), L[lang].marked);
 		}
 		assert.equal(await page.locator('[data-testid=trait-marked-strength]').count(), 0);
+		await page.goto(`${BASE}/characters/${c.id}`);
 		assert.match(await page.locator('[data-testid=proficiency]').innerText(), /\b2\b/);
 		await ctx.close();
 	});

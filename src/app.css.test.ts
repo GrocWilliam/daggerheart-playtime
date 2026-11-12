@@ -53,8 +53,9 @@ describe('character sheet moved to Tailwind utilities', () => {
 });
 
 describe('form cards and validation', () => {
-	it('styles forms as surface cards', () => {
-		expect(css).toMatch(/(?<![\w-])form\s*\{[^}]*var\(--surface\)[^}]*border-radius: 0\.5rem[^}]*padding: 0\.75rem/);
+	it('gives forms no box, only a bottom margin', () => {
+		expect(css).toMatch(/(?<![\w-])form\s*\{\s*margin-bottom: 0\.75rem;\s*\}/);
+		expect(css).toMatch(/article\s*\{[^}]*var\(--surface\)[^}]*border-radius: 0\.5rem/);
 	});
 	it('marks user-invalid controls and alerts with --danger', () => {
 		expect(css).toMatch(/input:user-invalid[^{]*\{[^}]*border-color: var\(--danger\)/);

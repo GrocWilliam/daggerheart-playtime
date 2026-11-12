@@ -79,9 +79,7 @@ label > input[type='search'],
 label > select { display: block; margin-top: 0.25rem; width: 100%; }
 label > textarea { display: block; margin-top: 0.25rem; }
 input:user-invalid, select:user-invalid, textarea:user-invalid { border-color: var(--danger); }
-form { background-color: var(--surface); border: 3px double var(--accent); border-radius: 0.5rem; padding: 0.75rem; margin-bottom: 0.75rem; }
-/* forms inside tables override the card look */
-table form { background-color: transparent; border: 0; padding: 0; margin: 0; display: flex; flex-wrap: nowrap; align-items: center; gap: 0.5rem; }
+form { margin-bottom: 0.75rem; }
 article { background-color: var(--surface); border: 3px double var(--accent); border-radius: 0.5rem; padding: 0.75rem; margin-bottom: 1rem; }
 table { width: 100%; border-collapse: collapse; position: relative; }
 table, tbody, tr, td { display: block; max-width: 100%; }

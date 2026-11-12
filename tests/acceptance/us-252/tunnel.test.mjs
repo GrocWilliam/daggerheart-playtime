@@ -274,10 +274,13 @@ test('without JavaScript, steps 1 to 4 then tunnel-create end on the sheet with 
 	await Promise.all([p.waitForURL(/\/characters\/[^/?]+$/), tid(p, 'tunnel-create').click()]);
 	const newId = new URL(p.url()).pathname.split('/').pop();
 	assert.equal((await tid(p, 'character-name').first().innerText()).trim(), 'Brakka');
+	await p.goto(`${BASE}/characters/${newId}?tab=traits`); // us-305: sheet tabs
 	for (const n of TRAIT_NAMES) assert.equal(Number((await tid(p, `trait-${n}`).innerText()).trim()), Number(TRAITS[n]), `sheet trait ${n}`);
+	await p.goto(`${BASE}/characters/${newId}?tab=gear`);
 	const equipment = tid(p, 'sheet-equipment');
 	assert.equal(await equipment.locator('select[name="armorId"]').inputValue(), CHAIN, 'armor equipped in the picker');
 	assert.ok((await tid(p, 'equipped-armor').innerText()).includes('Chainmail Armor'), 'equipped armor shown');
+	await p.goto(`${BASE}/characters/${newId}?tab=play`);
 	assert.equal((await tid(p, 'evasion').innerText()).trim(), '10');
 	assert.equal(normal(await tid(p, 'thresholds').innerText()), '10/18');
 	assert.equal(normal(await tid(p, 'hp').innerText()), '0/6');

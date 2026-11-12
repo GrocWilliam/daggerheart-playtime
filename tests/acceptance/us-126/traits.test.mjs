@@ -84,7 +84,7 @@ test('sheet shows signed traits in trait-<name> elements', async () => {
 	const { r } = await mk();
 	await call('PATCH', `/api/characters/${r.json.id}`, { traits: { agility: 2, finesse: -1 } });
 	const page = await browser.newPage();
-	await page.goto(BASE + `/characters/${r.json.id}`);
+	await page.goto(BASE + `/characters/${r.json.id}?tab=traits`);
 	const txt = async (n) => (await page.locator(`[data-testid=trait-${n}]`).first().innerText()).trim();
 	assert.equal(await txt('agility'), '+2');
 	assert.equal(await txt('strength'), '0');
@@ -96,16 +96,16 @@ test('sheet shows signed traits in trait-<name> elements', async () => {
 test('edit form has six number inputs min -5 max 5 and saves new values', async () => {
 	const { r } = await mk();
 	const page = await browser.newPage();
-	await page.goto(BASE + `/characters/${r.json.id}`);
+	await page.goto(BASE + `/characters/${r.json.id}?new=edit&tab=traits`);
 	for (const n of NAMES) {
-		const inp = page.locator(`form[action="?/edit"] input[type=number][name$="${n}"]`);
+		const inp = page.locator(`form[action^="?/edit"] input[type=number][name$="${n}"]`);
 		assert.equal(await inp.count(), 1, n);
 		assert.equal(await inp.getAttribute('min'), '-5');
 		assert.equal(await inp.getAttribute('max'), '5');
 	}
-	await page.locator('form[action="?/edit"] input[name$="presence"]').fill('3');
-	await page.locator('form[action="?/edit"] input[name$="instinct"]').fill('-2');
-	await afterSubmit(page, page.locator('form[action="?/edit"] button[type=submit], form[action="?/edit"] button:not([type])').last().click());
+	await page.locator('form[action^="?/edit"] input[name$="presence"]').fill('3');
+	await page.locator('form[action^="?/edit"] input[name$="instinct"]').fill('-2');
+	await afterSubmit(page, page.locator('form[action^="?/edit"] button[type=submit], form[action^="?/edit"] button:not([type])').last().click());
 	const g = await waitFor(() => call('GET', `/api/characters/${r.json.id}`), (x) => x.json.traits && x.json.traits.presence === 3);
 	assert.deepEqual(g.json.traits, { ...ZERO, presence: 3, instinct: -2 });
 	await page.reload();
@@ -116,7 +116,7 @@ test('edit form has six number inputs min -5 max 5 and saves new values', async 
 
 test('sheet renders in French with translated trait labels and help', async () => {
 	const { r } = await mk();
-	const get = async (lang) => (await fetch(BASE + `/characters/${r.json.id}`, { headers: { cookie: `lang=${lang}`, accept: 'text/html' } })).text();
+	const get = async (lang) => (await fetch(BASE + `/characters/${r.json.id}?tab=traits`, { headers: { cookie: `lang=${lang}`, accept: 'text/html' } })).text();
 	const en = await get('en'), fr = await get('fr');
 	assert.match(en, />\s*Traits\s*</);
 	assert.doesNotMatch(fr, />\s*Traits\s*</);

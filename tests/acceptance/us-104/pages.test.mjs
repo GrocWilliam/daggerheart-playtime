@@ -37,7 +37,7 @@ async function cases() {
 		{ id: 'campaign damage', url: `/campaigns/${camp.id}?/damage`, fields: { characterId: ch.id, amount: 'abc' }, apiCall: () => api('POST', `/api/characters/${ch.id}/damage`, { amount: 'abc', useArmor: false }) },
 		{ id: 'character damage', url: `/characters/${ch.id}?/damage`, fields: { amount: 'abc' }, apiCall: () => api('POST', `/api/characters/${ch.id}/damage`, { amount: 'abc', useArmor: false }) },
 		{ id: 'character edit', url: `/characters/${ch.id}?/edit`, fields: bad, apiCall: () => api('PATCH', `/api/characters/${ch.id}`, { name: '' }) },
-		{ id: 'character gold', url: `/characters/${ch.id}?/gold`, fields: { handfuls: '-5' }, apiCall: () => api('POST', `/api/characters/${ch.id}/gold`, { handfuls: -5 }) },
+		{ id: 'character gold', url: `/characters/${ch.id}?/gold&tab=gear`, fields: { handfuls: '-5' }, apiCall: () => api('POST', `/api/characters/${ch.id}/gold`, { handfuls: -5 }) },
 		{ id: 'character add item', url: `/characters/${ch.id}?/addItem`, fields: { name: '' }, apiCall: () => api('POST', `/api/characters/${ch.id}/items`, { name: '' }) }
 	];
 }

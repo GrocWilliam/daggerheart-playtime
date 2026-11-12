@@ -171,19 +171,22 @@ test('no JS: Save posts only notes; other fields unchanged', async () => {
 	assert.equal(await p.locator('[data-testid=scene-notes]').inputValue(), 'Offline notes');
 });
 
+// Spec #298: the Fear bar runs full width above the grid; from 1024px the party sits right of the scene.
 test('layout: two columns at 1280px', async () => {
 	const { c } = await twoScenes();
 	const p = await open(`/campaigns/${c.id}`, { viewport: { width: 1280, height: 900 } });
 	const s = await cur(p).boundingBox();
 	const f = await p.locator('[data-testid=run] [data-testid=fear]').boundingBox();
-	assert.ok(s.x + s.width <= f.x + 2, `scene ${JSON.stringify(s)} fear ${JSON.stringify(f)}`);
+	const party = await p.locator('[data-testid=party]').boundingBox();
+	assert.ok(f.y + f.height <= s.y + 2, `fear ${JSON.stringify(f)} above scene ${JSON.stringify(s)}`);
+	assert.ok(s.x + s.width <= party.x + 2, `scene ${JSON.stringify(s)} party ${JSON.stringify(party)}`);
 });
 
 test('layout: stacked at 390px without horizontal scroll', async () => {
 	const { c } = await twoScenes();
 	const p = await open(`/campaigns/${c.id}`, { viewport: { width: 390, height: 800 } });
 	const s = await cur(p).boundingBox();
-	const f = await p.locator('[data-testid=run] [data-testid=fear]').boundingBox();
+	const f = await p.locator('[data-testid=run] form:has([data-testid=fear])').boundingBox();
 	assert.ok(f.y >= s.y + s.height - 2 || s.y >= f.y + f.height - 2, 'stacked');
 	assert.ok(Math.abs(f.x - s.x) < 40, 'same column');
 	assert.ok(await p.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth));

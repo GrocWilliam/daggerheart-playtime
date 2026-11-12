@@ -5,14 +5,20 @@
 	import { goto } from '$app/navigation';
 	import { translate, type Lang } from '$lib/i18n';
 
-	let { kind, title, lang, children }: { kind: string; title: string; lang: Lang; children: Snippet } = $props();
+	let {
+		kind,
+		title,
+		lang,
+		params: extra,
+		children
+	}: { kind: string; title: string; lang: Lang; params?: Record<string, string>; children: Snippet } = $props();
 
 	let dialog: HTMLDialogElement | undefined = $state();
-	let reopening = false;
 	let opener: HTMLAnchorElement | undefined = $state();
 
 	const href = (u: URL, add: boolean): string => {
 		const params = new URLSearchParams(u.searchParams);
+		for (const [k, v] of Object.entries(extra ?? {})) params.set(k, v);
 		if (add) params.set('new', kind);
 		else params.delete('new');
 		const q = params.toString();
@@ -30,12 +36,8 @@
 	}
 	function show() {
 		if (!dialog) return;
-		if (dialog.open) {
-			// the server rendered it open (non-modal): reopen as a modal without the close handler leaving the URL
-			reopening = true;
-			dialog.close();
-			setTimeout(() => (reopening = false), 0);
-		}
+		// the server rendered it open (non-modal): reopen as a modal; onClose ignores the close event this queues
+		if (dialog.open) dialog.close();
 		dialog.showModal();
 		focusFirst();
 	}
@@ -52,7 +54,8 @@
 		if (e.target === dialog) dialog?.close();
 	}
 	function onClose() {
-		if (reopening) return;
+		// open again when the event arrives: it came from show() reopening the dialog, not from the user closing it
+		if (dialog?.open) return;
 		opener?.focus();
 		if (page.url.searchParams.has('new')) {
 			goto(closeHref, { replaceState: true, noScroll: true, keepFocus: true });
@@ -76,7 +79,7 @@
 	class="m-0 h-dvh max-h-none w-screen max-w-none overflow-y-auto rounded-none bg-surface p-0 text-text backdrop:bg-bg backdrop:opacity-80 min-[600px]:m-auto min-[600px]:h-auto min-[600px]:max-h-[90dvh] min-[600px]:max-w-[32rem] min-[600px]:rounded-[0.5rem] min-[600px]:border-[3px] min-[600px]:border-double min-[600px]:border-accent"
 >
 	<div class="p-3">
-		<h2 id={titleId} class="mt-0">{title}</h2>
+		<h2 id={titleId} class="mt-4 mb-2">{title}</h2>
 		{@render children()}
 		<a data-testid="modal-cancel" href={closeHref} onclick={onCancel}>{translate(lang, 'modal.cancel')}</a>
 	</div>

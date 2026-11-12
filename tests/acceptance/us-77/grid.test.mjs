@@ -13,7 +13,7 @@ before(async () => {
 		name: 'Hero', class: 'Guardian', level: 2, evasion: 10, majorThreshold: 5, severeThreshold: 10, maxHp: 6, maxStress: 6, armorSlots: 2
 	}))).json();
 	targets = [
-		{ label: 'edit', path: `/characters/${ch.id}`, action: '?/edit' }
+		{ label: 'edit', path: `/characters/${ch.id}?new=edit`, action: '?/edit' }
 	];
 	browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH });
 });
@@ -26,13 +26,13 @@ async function open(t, lang, vp) {
 	await ctx.addCookies([{ name: 'lang', value: lang, url: BASE }]);
 	const page = await ctx.newPage();
 	await page.goto(BASE + t.path);
-	await page.waitForSelector(`form[action="${t.action}"]`);
+	await page.waitForSelector(`form[action^="${t.action}"]`); // spec #298: sheet actions carry &tab=
 	return { page, close: () => ctx.close() };
 }
 
 // Geometry of the form, its direct-or-nested labels, controls and submit button.
 const measure = (action) => `(() => {
-	const f = document.querySelector('form[action="${action}"]');
+	const f = document.querySelector('form[action^="${action}"]');
 	const s = getComputedStyle(f), r = f.getBoundingClientRect();
 	const cl = r.left + parseFloat(s.borderLeftWidth) + parseFloat(s.paddingLeft);
 	const cw = f.clientWidth - parseFloat(s.paddingLeft) - parseFloat(s.paddingRight);

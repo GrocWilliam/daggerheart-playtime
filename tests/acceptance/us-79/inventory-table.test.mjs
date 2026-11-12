@@ -31,7 +31,7 @@ async function open(id, lang, { js = true, width = 1000 } = {}) {
 	await ctx.addCookies([{ name: 'lang', value: lang, url: BASE }]);
 	const page = await ctx.newPage();
 	page.setDefaultTimeout(5000);
-	await page.goto(BASE + `/characters/${id}`);
+	await page.goto(BASE + `/characters/${id}?tab=gear`);
 	return { ctx, page };
 }
 const norm = (s) => s.replace(/\s+/g, ' ').trim();
@@ -41,7 +41,7 @@ test('with no items, [data-testid="inventory"] does not exist', async () => {
 	for (const lang of ['en', 'fr']) {
 		const { ctx, page } = await open(id, lang);
 		assert.equal(await page.locator('[data-testid="inventory"]').count(), 0);
-		assert.equal(await page.locator('form[action="?/addItem"]').count(), 1, 'add form remains');
+		assert.equal(await page.locator('form[action^="?/addItem"]').count(), 1, 'add form remains');
 		await ctx.close();
 	}
 });
@@ -65,8 +65,8 @@ test('with items: one table, 3 column headers (en/fr) with scope=col, 2 item row
 		for (let i = 0; i < 2; i++) assert.equal(await rows.nth(i).locator('> td').count(), 3);
 		assert.equal(norm(await rows.nth(0).locator('[data-testid="item"]').textContent()), 'Rope ×2');
 		assert.equal(await rows.nth(0).locator('td').nth(0).locator('[data-testid="item"]').count(), 1);
-		assert.equal(await rows.nth(0).locator('td').nth(1).locator('form[action="?/setQuantity"]').count(), 1);
-		assert.equal(await rows.nth(0).locator('td').nth(2).locator('form[action="?/removeItem"]').count(), 1);
+		assert.equal(await rows.nth(0).locator('td').nth(1).locator('form[action^="?/setQuantity"]').count(), 1);
+		assert.equal(await rows.nth(0).locator('td').nth(2).locator('form[action^="?/removeItem"]').count(), 1);
 		await ctx.close();
 	}
 });
@@ -87,7 +87,7 @@ test('forms in the table: transparent background, padding 0, margin 0, controls 
 		for (const f of r) {
 			assert.equal(f.bg, 'rgba(0, 0, 0, 0)', f.action);
 			assert.deepEqual(f.pad, ['0px', '0px', '0px', '0px'], f.action);
-			assert.deepEqual(f.mar, ['0px', '0px', '0px', '0px'], f.action);
+			assert.deepEqual(f.mar, ['0px', '0px', '12px', '0px'], f.action); // us-101 pins the td form margin-bottom at 12px
 			if (f.action === '?/setQuantity') assert.equal(f.n, 2);
 			assert.ok(f.overlap, `${f.action} controls share a row at ${width}px`);
 		}
@@ -99,14 +99,18 @@ test('submitting ?/setQuantity changes the quantity; ?/removeItem removes the ro
 	const id = await mk();
 	const { ctx, page } = await open(id, 'en', { js: false });
 	const row = () => page.locator('tr[data-testid="item-row"]').first();
-	await row().locator('form[action="?/setQuantity"] input[name="quantity"]').fill('5');
-	await Promise.all([page.waitForNavigation(), row().locator('form[action="?/setQuantity"] button').click()]);
+	await row().locator('form[action^="?/setQuantity"] input[name="quantity"]').fill('5');
+	const gear = () => page.goto(BASE + `/characters/${id}?tab=gear`); // us-305: no-JS posts land on the default tab
+	await Promise.all([page.waitForNavigation(), row().locator('form[action^="?/setQuantity"] button').click()]);
+	await gear();
 	assert.equal(norm(await row().locator('[data-testid="item"]').textContent()), 'Rope ×5');
 	assert.equal(await page.locator('tr[data-testid="item-row"]').count(), 2);
-	await Promise.all([page.waitForNavigation(), row().locator('form[action="?/removeItem"] button').click()]);
+	await Promise.all([page.waitForNavigation(), row().locator('form[action^="?/removeItem"] button').click()]);
+	await gear();
 	assert.equal(await page.locator('tr[data-testid="item-row"]').count(), 1);
 	assert.ok(!(await page.locator('table').textContent()).includes('Rope'));
-	await Promise.all([page.waitForNavigation(), row().locator('form[action="?/removeItem"] button').click()]);
+	await Promise.all([page.waitForNavigation(), row().locator('form[action^="?/removeItem"] button').click()]);
+	await gear();
 	assert.equal(await page.locator('[data-testid="inventory"]').count(), 0, 'table gone when empty');
 	await ctx.close();
 });

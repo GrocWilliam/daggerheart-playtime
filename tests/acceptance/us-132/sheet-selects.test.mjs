@@ -34,10 +34,10 @@ async function open(lang, id) {
 	const ctx = await browser.newContext({ javaScriptEnabled: false });
 	await ctx.addCookies([{ name: 'lang', value: lang, url: BASE }]);
 	const page = await ctx.newPage();
-	await page.goto(`${BASE}/characters/${id}`);
+	await page.goto(`${BASE}/characters/${id}?new=edit`);
 	return { ctx, page };
 }
-const edit = (page) => page.locator('form[action="?/edit"]');
+const edit = (page) => page.locator('form[action^="?/edit"]');
 const opts = (sel) => sel.locator('option').evaluateAll((os) => os.map((o) => ({ value: o.value, label: o.textContent.trim(), selected: o.selected })));
 
 test('class, subclass, ancestry and community are selects with SRD options; French labels, stable values', async () => {
@@ -79,7 +79,7 @@ test('choosing another class, saving and reloading shows the new class and its s
 	const { ctx, page } = await open('en', id);
 	await edit(page).locator('select[name=class]').selectOption('Bard');
 	await Promise.all([page.waitForNavigation(), edit(page).locator('button[type=submit]').click()]);
-	await page.goto(`${BASE}/characters/${id}`);
+	await page.goto(`${BASE}/characters/${id}?new=edit`);
 	const f = edit(page);
 	assert.equal((await opts(f.locator('select[name=class]'))).find((o) => o.selected).value, 'Bard');
 	const os = (await opts(f.locator('select[name=subclass]'))).filter((o) => o.value);
@@ -107,6 +107,7 @@ test('a legacy ancestry "Homebrew" is the selected option and saving keeps it', 
 test('the domain card picker is a select grouped by domain', async () => {
 	const id = await mk({ class: 'Wizard' });
 	const { ctx, page } = await open('en', id);
+	await page.goto(`${BASE}/characters/${id}?new=card&tab=cards`); // us-305: the card picker is on the cards tab
 	const sel = page.locator('select[name=cardId]');
 	assert.equal(await sel.count(), 1);
 	const groups = await sel.locator('optgroup').count();

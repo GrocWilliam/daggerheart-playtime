@@ -50,7 +50,9 @@ const eqName = (a, b) => a.toLowerCase() === b.toLowerCase();
 const CAMPAIGN = { path: () => `/campaigns/${camp}`, scope: (p) => p.locator('[data-testid="character-card"]').filter({ hasText: 'Rook' }),
 	fear: true, ids: ['hp', 'stress', 'hope', 'armor', 'evasion', 'thresholds', 'level', 'vulnerable', 'restrained', 'hidden'] };
 const SHEET = { path: () => `/characters/${rook}`, scope: (p) => p.locator('body'), fear: false,
-	ids: ['hp', 'stress', 'hope', 'armor', 'evasion', 'thresholds', 'level', 'vulnerable', 'restrained', 'hidden', 'gold'] };
+	ids: ['hp', 'stress', 'hope', 'armor', 'evasion', 'thresholds', 'level', 'vulnerable', 'restrained', 'hidden', 'gold'], tabOf: { gold: 'gear' } };
+// us-305: the sheet is split into tabs; go to the tab holding a helper
+const toTab = async (page, P, id) => { if (P.tabOf?.[id]) await page.goto(BASE + P.path() + '?tab=' + P.tabOf[id]); };
 const PAGES = { 'campaign page': CAMPAIGN, 'sheet': SHEET };
 const helper = (scope, id) => scope.locator(`[data-testid="help"][data-help="${id}"]`).first();
 
@@ -60,6 +62,7 @@ for (const [label, P] of Object.entries(PAGES)) {
 			const { ctx, page } = await open(lang, P.path());
 			const ids = P.fear ? [...P.ids, 'fear'] : P.ids;
 			for (const id of ids) {
+				await toTab(page, P, id);
 				const h = P.fear && id === 'fear' ? helper(page.locator('body'), id) : helper(P.scope(page), id);
 				assert.equal(await h.count(), 1, `${lang} ${label}: helper ${id}`);
 			}
@@ -72,6 +75,7 @@ for (const [label, P] of Object.entries(PAGES)) {
 			const { ctx, page } = await open(lang, P.path());
 			const ids = P.fear ? [...P.ids, 'fear'] : P.ids;
 			for (const id of ids) {
+				await toTab(page, P, id);
 				const s = helper(page.locator('body'), id).locator('[data-testid="help-open"]');
 				assert.equal(await s.count(), 1, `${id} help-open`);
 				assert.equal(norm(await s.textContent()), '?', `${id} text`);
@@ -84,8 +88,12 @@ for (const [label, P] of Object.entries(PAGES)) {
 
 	test(`${label}: each helper help-open is at least 44 x 44 px`, async () => {
 		const { ctx, page } = await open('en', P.path());
-		const boxes = await page.locator('[data-testid="help"] [data-testid="help-open"]').evaluateAll((els) =>
-			els.map((e) => { const r = e.getBoundingClientRect(); return [e.closest('[data-testid="help"]').dataset.help, r.width, r.height]; }));
+		const boxes = [];
+		for (const tab of [null, ...new Set(Object.values(P.tabOf ?? {}))]) { // us-305: helpers on every tab that holds one
+			if (tab) await page.goto(BASE + P.path() + '?tab=' + tab);
+			boxes.push(...await page.locator('[data-testid="help"] [data-testid="help-open"]').evaluateAll((els) =>
+				els.map((e) => { const r = e.getBoundingClientRect(); return [e.closest('[data-testid="help"]').dataset.help, r.width, r.height]; })));
+		}
 		assert.ok(boxes.length >= P.ids.length, 'helpers present');
 		for (const [id, w, h] of boxes) assert.ok(w >= 43.99 && h >= 43.99, `${id}: ${w}x${h}`);
 		await ctx.close();
@@ -133,6 +141,7 @@ test('the level helper sits next to the level on both pages, and gold helper nex
 		const s = await open(lang, SHEET.path());
 		const lv = helper(s.page.locator('body'), 'level');
 		assert.match(norm(await lv.evaluate((e) => e.parentElement.textContent)), /3/);
+		await toTab(s.page, SHEET, 'gold');
 		const g = helper(s.page.locator('body'), 'gold');
 		assert.equal(await g.evaluate((e) => !!e.parentElement.querySelector('[data-testid="gold"]') || !!e.parentElement.parentElement.querySelector('[data-testid="gold"]')), true);
 		await s.ctx.close();
@@ -172,7 +181,7 @@ test('existing data-testid values and content are unchanged by the helpers', asy
 		assert.equal(norm(await page.locator('[data-testid="fear"]').innerText()), '0');
 		assert.equal(await page.locator('[data-testid="character-card"]').count(), 2);
 		await ctx.close();
-		const s = await open(lang, SHEET.path());
+		const s = await open(lang, SHEET.path() + '?tab=gear');
 		assert.equal(norm(await s.page.locator('[data-testid="gold"]').innerText()).startsWith('1 '), true);
 		assert.ok((await s.page.locator('[data-testid="character-name"]').innerText()).includes('Rook'));
 		await s.ctx.close();

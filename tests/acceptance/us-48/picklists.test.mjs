@@ -44,13 +44,13 @@ async function open(lang, path, { js = false, viewport } = {}) {
 	await page.goto(BASE + path);
 	return { ctx, page };
 }
-const editForm = (page) => page.locator('form[action="?/edit"]');
+const editForm = (page) => page.locator('form[action^="?/edit"]');
 const opts = async (sel) => sel.locator('option').evaluateAll((os) => os.map((o) => ({ value: o.value, label: o.textContent.trim(), selected: o.selected })));
 
 test('edit form: class is a select of the 9 SRD classes, values Bard.., labels in the page language', async () => {
 	const { id } = await mk();
 	for (const lang of ['en', 'fr']) {
-		const { ctx, page } = await open(lang, `/characters/${id}`);
+		const { ctx, page } = await open(lang, `/characters/${id}?new=edit`);
 		const sel = editForm(page).locator('select[name="class"]');
 		assert.equal(await sel.count(), 1, 'select[name=class]');
 		assert.equal(await editForm(page).locator('input[name="class"]').count(), 0);
@@ -70,7 +70,7 @@ test('edit form: class is a select of the 9 SRD classes, values Bard.., labels i
 test('edit form: subclass select has none + only the 2 subclasses of the chosen class; ancestry and community have none + all', async () => {
 	const { id } = await mk({ class: 'Ranger' });
 	for (const lang of ['en', 'fr']) {
-		const { ctx, page } = await open(lang, `/characters/${id}`);
+		const { ctx, page } = await open(lang, `/characters/${id}?new=edit`);
 		const f = editForm(page);
 		const s = await opts(f.locator('select[name="subclass"]'));
 		const want = SUBS.filter((x) => x.class === 'RANGER');
@@ -91,7 +91,7 @@ test('edit form: subclass select has none + only the 2 subclasses of the chosen 
 
 test('edit form: a stored class that is not one of the 9 stays selected as is', async () => {
 	const { id } = await mk({ class: 'Homebrew Hero' });
-	const { ctx, page } = await open('en', `/characters/${id}`);
+	const { ctx, page } = await open('en', `/characters/${id}?new=edit`);
 	const sel = editForm(page).locator('select[name="class"]');
 	const os = await opts(sel);
 	const cur = os.find((o) => o.selected);
@@ -99,7 +99,7 @@ test('edit form: a stored class that is not one of the 9 stays selected as is', 
 	assert.equal(os.filter((o) => o.value !== '' && o.value !== 'Homebrew Hero').length, 9);
 	// saving without touching it keeps the class
 	await ctx.close();
-	const { ctx: c2, page: p2 } = await open('en', `/characters/${id}`, { js: true });
+	const { ctx: c2, page: p2 } = await open('en', `/characters/${id}?new=edit`, { js: true });
 	await editForm(p2).locator('button[type="submit"]').click();
 	await p2.waitForLoadState('networkidle');
 	assert.equal((await api('GET', `/api/characters/${id}`)).json.class, 'Homebrew Hero');
@@ -110,7 +110,7 @@ test('saving the edit form persists class, subclass, ancestry and community; "no
 	const { id } = await mk({ class: 'Ranger' });
 	const s = sub('Ranger', 1), a = ANCS[2], c = COMS[1];
 	// no JavaScript: a plain form submit
-	const { ctx, page } = await open('en', `/characters/${id}`);
+	const { ctx, page } = await open('en', `/characters/${id}?new=edit`);
 	const f = editForm(page);
 	await f.locator('select[name="class"]').selectOption('Ranger');
 	await f.locator('select[name="subclass"]').selectOption(s.id);
@@ -120,6 +120,7 @@ test('saving the edit form persists class, subclass, ancestry and community; "no
 	let g = (await api('GET', `/api/characters/${id}`)).json;
 	assert.deepEqual([g.class, g.subclass, g.ancestry, g.community], ['Ranger', s.id, a.id, c.id]);
 	// reopen: the stored choices are the selected options
+	await page.goto(`${BASE}/characters/${id}?new=edit`);
 	const f2 = editForm(page);
 	for (const [n, v] of [['subclass', s.id], ['ancestry', a.id], ['community', c.id]]) {
 		assert.equal((await opts(f2.locator(`select[name="${n}"]`))).find((o) => o.selected)?.value, v, n);
@@ -133,7 +134,7 @@ test('saving the edit form persists class, subclass, ancestry and community; "no
 
 test('changing the class in the form to another class works (subclass none)', async () => {
 	const { id } = await mk({ class: 'Ranger' });
-	const { ctx, page } = await open('en', `/characters/${id}`);
+	const { ctx, page } = await open('en', `/characters/${id}?new=edit`);
 	const f = editForm(page);
 	await f.locator('select[name="class"]').selectOption('Bard');
 	await Promise.all([page.waitForNavigation(), f.locator('button[type="submit"]').click()]);
@@ -196,7 +197,8 @@ const SCOPES = {
 };
 
 for (const [label, mkScope] of Object.entries(SCOPES)) {
-	test(`${label}: chosen subclass, ancestry and community show their name and a helper (en + fr)`, async () => {
+	// spec #298: Run cards no longer show subclass, ancestry and community; the sheet header still does.
+	if (label === 'sheet') test(`${label}: chosen subclass, ancestry and community show their name and a helper (en + fr)`, async () => {
 		const x = await setup();
 		const S = mkScope(x);
 		for (const lang of ['en', 'fr']) {
@@ -229,7 +231,7 @@ for (const [label, mkScope] of Object.entries(SCOPES)) {
 		await ctx.close();
 	});
 
-	test(`${label}: opened helper of an SRD element shows its name, description and "<feature>: <text>" in a lang="en" block, 44x44 target, no JavaScript`, async () => {
+	if (label === 'sheet') test(`${label}: opened helper of an SRD element shows its name, description and "<feature>: <text>" in a lang="en" block, 44x44 target, no JavaScript`, async () => {
 		const x = await setup();
 		const S = mkScope(x);
 		for (const lang of ['en', 'fr']) {

@@ -40,10 +40,11 @@ test('character page and Chosen use utilities: no <style>, no style=, no old cla
 			assert.ok(!/-(white|black|teal|gray|red|blue|green)-\d{2,3}$/.test(c), `${f}: default palette ${c}`);
 		}
 	}
-	const src = read(PAGE);
+	// us-301: tracker, defense line and condition markup moved to shared components.
+	const src = read(PAGE) + ['Tracker', 'DefenseLine', 'ConditionBadges'].map((c) => read(`src/lib/components/${c}.svelte`)).join('');
 	for (const id of ['character-name', 'down', 'evasion', 'thresholds', 'condition-vulnerable', 'condition-restrained', 'condition-hidden', 'notes', 'gold', 'inventory', 'item-row', 'item', 'card'])
 		assert.ok(src.includes(`data-testid="${id}"`), `data-testid ${id} kept`);
-	assert.ok(src.includes('data-testid={key}'), 'tracker testid kept');
+	assert.ok(src.includes('data-testid={key}') || src.includes('data-testid={name}'), 'tracker testid kept');
 	assert.ok(read('src/lib/components/Chosen.svelte').includes('data-testid={k}'), 'chosen testid kept');
 });
 
@@ -86,7 +87,7 @@ async function setup(tag) {
 	await post(`/api/characters/${ch.id}/gold`, { handfuls: 3 });
 	await post(`/api/characters/${ch.id}/hp`, { delta: 6 }).catch(() => {});
 	// hold the first domain card the page offers
-	const html = await (await fetch(BASE + `/characters/${ch.id}`)).text();
+	const html = await (await fetch(BASE + `/characters/${ch.id}?tab=cards`)).text();
 	const cardId = html.match(/<select name="cardId"[^>]*>[\s\S]*?<option value="([^"]+)"/)?.[1];
 	if (cardId) await post(`/api/characters/${ch.id}/cards`, { cardId });
 	return ch.id;
@@ -97,7 +98,15 @@ for (const [name, w, h] of [['phone', 375, 667], ['desktop', 1280, 800]]) {
 		const id = await setup(name);
 		const ctx = await browser.newContext({ viewport: { width: w, height: h } });
 		const page = await ctx.newPage();
-		await page.goto(BASE + `/characters/${id}`);
+		await page.goto(BASE + `/characters/${id}?new=edit`);
+		// us-305: the sheet is split into tabs; bring the gear, cards and notes panels into this page so one snapshot covers them
+		await page.evaluate(async () => {
+			const grid = document.querySelector('[data-testid=sheet-sections]');
+			for (const tab of ['gear', 'cards', 'notes']) {
+				const doc = new DOMParser().parseFromString(await (await fetch(`${location.pathname}?tab=${tab}`)).text(), 'text/html');
+				for (const el of [...doc.querySelector('[data-testid=sheet-sections]').children]) grid.append(document.importNode(el, true));
+			}
+		});
 		const r = await page.evaluate(() => {
 			const q = (s, r = document) => r.querySelector(s);
 			const cs = (el) => getComputedStyle(el);
@@ -106,9 +115,9 @@ for (const [name, w, h] of [['phone', 375, 667], ['desktop', 1280, 800]]) {
 			const trk = q('[data-testid=hp]').closest('form');
 			const trkBtns = [...trk.querySelectorAll('button:not([data-testid^="help-"])')];
 			const stats = q('[data-testid=evasion]').closest('ul');
-			const edit = q('form[action="?/edit"]');
+			const edit = q('form[action^="?/edit"]');
 			const kids = [...edit.children];
-			const damage = q('form[action="?/damage"]');
+			const damage = q('form[action^="?/damage"]');
 			const table = q('[data-testid=inventory]');
 			const row = q('[data-testid=item-row]');
 			const cards = q('[data-testid=card]').closest('ul');
@@ -141,7 +150,7 @@ for (const [name, w, h] of [['phone', 375, 667], ['desktop', 1280, 800]]) {
 				th: pick(q('th', table), ['color', 'borderBottomWidth', 'borderBottomColor', 'textAlign']),
 				row: pick(row, ['display', 'backgroundColor', 'borderTopWidth', 'borderTopColor', 'borderTopStyle', 'borderBottomWidth', 'borderTopLeftRadius', 'marginBottom']),
 				td: pick(q('td', row), ['display', 'paddingTop', 'textAlign', 'verticalAlign', 'overflowWrap']),
-				tdForm: pick(q('td form', row), ['display', 'flexWrap', 'alignItems', 'columnGap', 'backgroundColor', 'paddingTop', 'marginBottom']),
+				tdForm: pick(q('td form[action^="?/removeItem"]', row), ['display', 'flexWrap', 'alignItems', 'columnGap', 'backgroundColor', 'paddingTop', 'marginBottom']),
 				cards: pick(cards, ['listStyleType', 'paddingLeft']),
 				cardLi: pick(q('[data-testid=card]'), ['overflowWrap']),
 				cardMuted: cs(q('[data-testid=card] span:nth-of-type(2)')).color,
@@ -153,7 +162,7 @@ for (const [name, w, h] of [['phone', 375, 667], ['desktop', 1280, 800]]) {
 			};
 		});
 		assert.equal(r.trk.display, 'flex');
-		assert.equal(r.trk.flexWrap, 'nowrap');
+		assert.equal(r.trk.flexWrap, 'wrap'); // us-301: Tracker is flex-wrap (only the pips wrap)
 		assert.equal(r.trk.alignItems, 'center');
 		assert.equal(r.trk.columnGap, '8px');
 		assert.equal(r.trk.marginBottom, '12px');
@@ -188,18 +197,18 @@ for (const [name, w, h] of [['phone', 375, 667], ['desktop', 1280, 800]]) {
 		assert.match(r.name.fontFamily, /Cinzel/);
 		assert.equal(r.name.fontWeight, '700');
 		for (const f of [r.damage, r.edit]) {
-			assert.equal(f.backgroundColor, SURFACE);
-			assert.equal(f.borderTopLeftRadius, '8px');
-			assert.equal(f.paddingTop, '12px');
+			assert.equal(f.backgroundColor, CLEAR);
+			assert.equal(f.borderTopLeftRadius, '0px');
+			assert.equal(f.paddingTop, '0px');
 			assert.equal(f.marginBottom, '12px');
 		}
-		assert.equal(r.damage.paddingLeft, '12px');
+		assert.equal(r.damage.paddingLeft, '0px');
 		assert.equal(r.edit.display, 'grid');
 		assert.equal(r.edit.columnGap, '16px');
 		assert.equal(r.editCols, w >= 768 ? 2 : 1, 'edit form columns');
 		assert.equal(r.editXs, w >= 768 ? 2 : 1, 'edit form fields laid out in columns');
 		assert.equal(r.editBtn.justify, 'start');
-		assert.equal(r.editBtn.left, r.editBtn.formLeft + 12, 'save sits at the start of the first column');
+		assert.equal(r.editBtn.left, r.editBtn.formLeft, 'save sits at the start of the first column');
 		assert.ok(r.editBtn.h >= 43.5);
 		assert.equal(r.editBtn.bg, ACCENT);
 		assert.equal(r.editBtn.color, BG);
@@ -224,7 +233,7 @@ for (const [name, w, h] of [['phone', 375, 667], ['desktop', 1280, 800]]) {
 		assert.equal(r.check.label.alignItems, 'center');
 		assert.equal(r.check.label.columnGap, '8px');
 		assert.ok(r.check.lh >= 43.5);
-		assert.ok(Math.abs(r.notes.w - (r.notes.formW - 24)) < 1, 'notes fill their form');
+		assert.ok(Math.abs(r.notes.w - r.notes.formW) < 1, 'notes fill their form');
 		assert.equal(r.table.display, w >= 600 ? 'table' : 'block');
 		assert.equal(r.table.borderCollapse, 'collapse');
 		assert.ok(r.tableW >= 0.9 * (r.wrapW - 48), `table full width (${r.tableW} in ${r.wrapW})`);
@@ -257,7 +266,7 @@ for (const [name, w, h] of [['phone', 375, 667], ['desktop', 1280, 800]]) {
 		assert.equal(r.tdForm.columnGap, '8px');
 		assert.equal(r.tdForm.backgroundColor, CLEAR);
 		assert.equal(r.tdForm.paddingTop, '0px');
-		assert.equal(r.tdForm.marginBottom, '0px');
+		assert.equal(r.tdForm.marginBottom, '12px');
 		assert.equal(r.cards.listStyleType, 'none');
 		assert.equal(r.cards.paddingLeft, '0px');
 		assert.equal(r.cardLi.overflowWrap, 'anywhere');
@@ -278,8 +287,8 @@ test('focus outline stays teal, 2px, offset 2px on the character sheet', async (
 	const id = await setup('focus');
 	const ctx = await browser.newContext({ viewport: { width: 375, height: 667 } });
 	const page = await ctx.newPage();
-	await page.goto(BASE + `/characters/${id}`);
-	for (const sel of ['[data-testid=hp]', 'form[action="?/edit"] button:not([data-testid^="help-"])', 'form[action="?/edit"] input[name=name]']) {
+	for (const sel of ['[data-testid=hp]', 'form[action^="?/edit"] button:not([data-testid^="help-"])', 'form[action^="?/edit"] input[name=name]']) {
+		await page.goto(BASE + `/characters/${id}${sel === '[data-testid=hp]' ? '' : '?new=edit'}`);
 		const el = sel === '[data-testid=hp]' ? page.locator(sel).locator('xpath=..').locator('button:not([data-testid^="help-"])').first() : page.locator(sel).first();
 		await el.focus();
 		await page.keyboard.press('Shift+Tab');
@@ -296,8 +305,10 @@ test('the sheet still works: tracker, condition and card forms submit and stay v
 	const page = await ctx.newPage();
 	await page.goto(BASE + `/characters/${id}`);
 	await afterSubmit(page, page.locator('[data-testid=hope]').locator('xpath=..').locator('button[value="-1"]').click());
-	assert.ok(await page.locator('[data-testid=item]').isVisible());
-	assert.ok(await page.locator('[data-testid=card]').isVisible());
 	assert.ok(await page.locator('[data-testid=condition-hidden]').isVisible());
+	await page.goto(BASE + `/characters/${id}?tab=gear`);
+	assert.ok(await page.locator('[data-testid=item]').isVisible());
+	await page.goto(BASE + `/characters/${id}?tab=cards`);
+	assert.ok(await page.locator('[data-testid=card]').isVisible());
 	await ctx.close();
 });

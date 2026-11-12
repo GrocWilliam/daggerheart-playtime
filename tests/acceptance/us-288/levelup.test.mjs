@@ -172,8 +172,11 @@ for (const lang of LANGS) {
 
 		assert.match(norm(await page.locator('body').innerText()), new RegExp(`${L[lang].level.source} 2\\b`, 'i'));
 		assert.match(await page.locator('[data-testid=proficiency]').innerText(), /\b2\b/);
+		// Spec #298: traits and experiences live on the sheet's traits tab, cards on the cards tab.
+		await page.goto(`${BASE}/characters/${c.id}?tab=traits`);
 		for (const t of ['agility', 'knowledge']) assert.equal(await page.locator(`[data-testid=trait-marked-${t}]`).count(), 1, t);
 		assert.equal(await page.locator('[data-testid=experience]').filter({ hasText: 'Brawler +2' }).count(), 1);
+		await page.goto(`${BASE}/characters/${c.id}?tab=cards`);
 		assert.equal(await page.locator('[data-testid=card]').filter({ hasText: cardName }).count(), 1, cardName);
 		const after = await character(c.id);
 		assert.equal(after.level, 2);

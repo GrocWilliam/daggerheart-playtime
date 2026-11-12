@@ -29,9 +29,10 @@ test('campaign page and Pips use utilities: no <style>, no style=, no old classe
 			assert.ok(!/-(white|black|teal|gray|red|blue|green)-\d{2,3}$/.test(c), `${f}: default palette ${c}`);
 		}
 	}
-	const src = read(PAGE);
+	// us-301: tracker, defense line and condition markup moved to shared components.
+	const src = read(PAGE) + ['Tracker', 'DefenseLine', 'ConditionBadges'].map((c) => read(`src/lib/components/${c}.svelte`)).join('');
 	for (const id of ['campaign-name', 'fear', 'character-card', 'character-name', 'down', 'hp', 'stress', 'hope', 'armor', 'evasion', 'thresholds', 'condition-vulnerable', 'condition-restrained', 'condition-hidden'])
-		assert.ok(src.includes(`data-testid="${id}"`) || src.includes(`data-testid={${id}}`) || (['hp', 'stress', 'hope', 'armor'].includes(id) && src.includes('data-testid={key}')), `data-testid ${id} kept`);
+		assert.ok(src.includes(`data-testid="${id}"`) || src.includes(`data-testid={${id}}`) || (['hp', 'stress', 'hope', 'armor', 'fear'].includes(id) && (src.includes('data-testid={key}') || src.includes('data-testid={name}'))), `data-testid ${id} kept`);
 	assert.ok(read('src/lib/components/Pips.svelte').includes('data-testid="{name}-pips"'));
 });
 
@@ -132,7 +133,7 @@ for (const [name, w, h, cols] of [['phone', 375, 667, 1], ['tablet', 700, 800, 1
 		assert.equal(r.card.marginBottom, '0px');
 		assert.equal(r.name.color, ACCENT);
 		assert.equal(r.trk.display, 'flex');
-		assert.equal(r.trk.flexWrap, 'nowrap');
+		assert.equal(r.trk.flexWrap, 'wrap'); // us-301: Tracker is flex-wrap (only the pips wrap)
 		assert.equal(r.trk.alignItems, 'center');
 		assert.equal(r.trk.columnGap, '8px');
 		assert.equal(r.trk.backgroundColor, 'rgba(0, 0, 0, 0)');
@@ -150,9 +151,9 @@ for (const [name, w, h, cols] of [['phone', 375, 667, 1], ['tablet', 700, 800, 1
 		assert.equal(r.stats.listStyleType, 'none');
 		assert.equal(r.stats.paddingLeft, '0px');
 		assert.equal(r.stats.marginBottom, '12px');
-		assert.equal(r.fear.backgroundColor, SURFACE);
-		assert.equal(r.fear.borderTopLeftRadius, '8px');
-		assert.equal(r.fear.paddingTop, '12px');
+		assert.equal(r.fear.backgroundColor, 'rgba(0, 0, 0, 0)');
+		assert.equal(r.fear.borderTopLeftRadius, '0px');
+		assert.equal(r.fear.paddingTop, '0px');
 		assert.equal(r.fear.marginBottom, '12px');
 		const want = { fear: [12, DANGER], hp: [6, DANGER], stress: [6, ACCENT], hope: [6, TEAL], armor: [3, MUTED] };
 		for (const [k, [n, col]] of Object.entries(want)) {
@@ -163,7 +164,7 @@ for (const [name, w, h, cols] of [['phone', 375, 667, 1], ['tablet', 700, 800, 1
 			assert.equal(p.box.flexWrap, 'wrap');
 			assert.equal(p.box.columnGap, '4px');
 			assert.equal(p.box.rowGap, '4px');
-			assert.equal(p.box.marginBottom, '12px');
+			// us-301 and spec #298 (Fear bar): tracker pips, Fear's included, sit in the Tracker row: no own bottom margin.
 			assert.deepEqual(p.rect, [12, 12], `${k} pip size`);
 			assert.equal(p.pip.borderTopWidth, '1px');
 			assert.equal(p.pip.borderTopStyle, 'solid');

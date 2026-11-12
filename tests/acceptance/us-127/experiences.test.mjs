@@ -158,7 +158,7 @@ test('sheet shows "Bounty hunter +2"', async () => {
 	const { ch } = await mk();
 	await add(ch.id, 'Bounty hunter', 2);
 	const page = await browser.newPage();
-	await page.goto(BASE + `/characters/${ch.id}`);
+	await page.goto(BASE + `/characters/${ch.id}?tab=traits`);
 	assert.equal(await items(page).count(), 1);
 	assert.match(norm(await items(page).first().innerText()), /^Bounty hunter \+2/);
 	assert.match(await page.locator('body').innerText(), /Experiences/);
@@ -168,7 +168,7 @@ test('sheet shows "Bounty hunter +2"', async () => {
 test('add form (modifier defaults to 2), change form and remove button work', async () => {
 	const { ch } = await mk();
 	const page = await browser.newPage();
-	await page.goto(BASE + `/characters/${ch.id}`);
+	await page.goto(BASE + `/characters/${ch.id}?tab=traits`);
 	await page.locator('[data-testid=new-experience]').click(); // the add form lives in a modal (us-195)
 	const f = addForm(page).first();
 	assert.equal(await f.locator('[name=modifier]').inputValue(), '2');
@@ -176,7 +176,7 @@ test('add form (modifier defaults to 2), change form and remove button work', as
 	await afterSubmit(page, f.locator('button[type=submit], button:not([type])').first().click());
 	let g = (await waitFor(() => call('GET', `/api/characters/${ch.id}`), (x) => x.json.experiences.length === 1)).json;
 	assert.deepEqual(g.experiences.map((e) => [e.name, e.modifier]), [['Bounty hunter', 2]]);
-	await page.goto(BASE + `/characters/${ch.id}`);
+	await page.goto(BASE + `/characters/${ch.id}?tab=traits`);
 	assert.match(norm(await items(page).first().innerText()), /^Bounty hunter \+2/);
 
 	const chg = items(page).first().locator('form').filter({ has: page.locator('[name=modifier]') });
@@ -184,13 +184,13 @@ test('add form (modifier defaults to 2), change form and remove button work', as
 	await afterSubmit(page, chg.locator('button[type=submit], button:not([type])').first().click());
 	g = (await waitFor(() => call('GET', `/api/characters/${ch.id}`), (x) => x.json.experiences[0]?.modifier === 4)).json;
 	assert.equal(g.experiences[0].modifier, 4);
-	await page.goto(BASE + `/characters/${ch.id}`);
+	await page.goto(BASE + `/characters/${ch.id}?tab=traits`);
 	assert.match(norm(await items(page).first().innerText()), /^Bounty hunter \+4/);
 
 	const rm = items(page).first().locator('form').filter({ hasNot: page.locator('[name=modifier]') }).locator('button').first();
 	await afterSubmit(page, rm.click());
 	assert.deepEqual((await waitFor(() => call('GET', `/api/characters/${ch.id}`), (x) => x.json.experiences.length === 0)).json.experiences, []);
-	await page.goto(BASE + `/characters/${ch.id}`);
+	await page.goto(BASE + `/characters/${ch.id}?tab=traits`);
 	assert.equal(await items(page).count(), 0);
 	await page.close();
 });
@@ -199,7 +199,7 @@ test('adding a duplicate on the sheet shows a translated error key, not API Engl
 	const { ch } = await mk();
 	await add(ch.id, 'Hunter');
 	const page = await browser.newPage();
-	await page.goto(BASE + `/characters/${ch.id}`);
+	await page.goto(BASE + `/characters/${ch.id}?tab=traits`);
 	await page.locator('[data-testid=new-experience]').click(); // the add form lives in a modal (us-195)
 	const f = addForm(page).first();
 	await f.locator('input[name=name]').fill('hunter');
@@ -212,7 +212,7 @@ test('adding a duplicate on the sheet shows a translated error key, not API Engl
 
 test('sheet renders the section in French', async () => {
 	const { ch } = await mk();
-	const get = async (lang) => (await fetch(BASE + `/characters/${ch.id}`, { headers: { cookie: `lang=${lang}`, accept: 'text/html' } })).text();
+	const get = async (lang) => (await fetch(BASE + `/characters/${ch.id}?tab=traits`, { headers: { cookie: `lang=${lang}`, accept: 'text/html' } })).text();
 	const en = await get('en'), fr = await get('fr');
 	assert.match(en, />\s*Experiences\s*</);
 	assert.doesNotMatch(fr, />\s*Experiences\s*</);

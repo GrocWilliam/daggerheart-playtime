@@ -27,7 +27,7 @@ async function open(lang, width, height) {
 	await ctx.addCookies([{ name: 'lang', value: lang, url: BASE }]);
 	const page = await ctx.newPage();
 	page.setDefaultTimeout(5000);
-	await page.goto(BASE + `/characters/${charId}`);
+	await page.goto(BASE + `/characters/${charId}?tab=gear`); // spec #298: inventory lives on the gear tab
 	await page.locator('table[data-testid="inventory"]').waitFor();
 	return { ctx, page };
 }

@@ -20,7 +20,7 @@ before(async () => {
 	const ch = await (await fetch(`${BASE}/api/campaigns/${c.id}/characters`, json({
 		name: 'Hero', class: 'Guardian', level: 2, evasion: 10, majorThreshold: 5, severeThreshold: 10, maxHp: 6, maxStress: 6, armorSlots: 2
 	}))).json();
-	paths = ['/', `/campaigns/${c.id}`, `/characters/${ch.id}`];
+	paths = ['/', `/campaigns/${c.id}`, `/characters/${ch.id}?tab=gear`]; // spec #298: the sheet's forms with fields are on the gear tab
 	browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH });
 });
 after(async () => { await browser?.close(); });
@@ -36,7 +36,7 @@ async function open(path, lang, vp) {
 		await page.waitForLoadState('networkidle');
 		await page.locator('[data-testid=new-campaign]').click();
 	}
-	await page.waitForSelector('form');
+	await page.waitForSelector('form:visible'); // spec #298: the sheet's first form is the edit form, in a closed modal
 	return { page, close: () => ctx.close() };
 }
 
@@ -48,7 +48,8 @@ for (const path of [0, 1, 2]) for (const lang of ['en', 'fr']) for (const vp of 
 const name = (m, what) => `${what} [${['/', 'campaign', 'character'][m.path]} ${m.lang} ${m.vp.width}px]`;
 
 for (const m of matrix) {
-	test(name(m, 'each non-tracker form is a card: --surface background, radius >= 8px, padding >= 12px'), async () => {
+	// us-300 removed the box around forms (superseding the card look): no background, no border
+	test(name(m, 'each non-tracker form has no box: transparent background, no border'), async () => {
 		const { page, close } = await open(paths[m.path], m.lang, m.vp);
 		try {
 			const r = await page.evaluate(`(() => {
@@ -57,14 +58,13 @@ for (const m of matrix) {
 				return [...document.querySelectorAll('form:not(.tracker)')].filter((f) => !f.closest('table') && f.offsetParent !== null).map((f) => {
 					const s = getComputedStyle(f);
 					return { bg: s.backgroundColor, surface, radius: Math.min(...['TopLeft','TopRight','BottomLeft','BottomRight'].map((c) => parseFloat(s['border' + c + 'Radius']))),
-						pad: Math.min(...['Top','Right','Bottom','Left'].map((c) => parseFloat(s['padding' + c]) + parseFloat(s['border' + c + 'Width']))), action: f.getAttribute('action') };
+						pad: Math.min(...['Top','Right','Bottom','Left'].map((c) => parseFloat(s['padding' + c]) + parseFloat(s['border' + c + 'Width']))), border: s.borderTopStyle, action: f.getAttribute('action') };
 				});
 			})()`);
 			assert.ok(r.length > 0);
 			for (const f of r) {
-				assert.equal(f.bg, f.surface, `bg ${f.action}`);
-				assert.ok(f.radius >= 8, `radius ${f.radius} ${f.action}`);
-				assert.ok(f.pad >= 12, `padding ${f.pad} ${f.action}`);
+				assert.equal(f.bg, 'rgba(0, 0, 0, 0)', `bg ${f.action}`);
+				assert.equal(f.border, 'none', `border ${f.action}`);
 			}
 		} finally { await close(); }
 	});
@@ -117,14 +117,19 @@ for (const m of matrix) {
 					const s = getComputedStyle(f);
 					const content = f.clientWidth - parseFloat(s.paddingLeft) - parseFloat(s.paddingRight);
 					for (const el of f.querySelectorAll('label input[type=text], label input[type=number], label input[type=search], label select, textarea')) {
-						out.push({ n: el.name, ta: el.tagName === 'TEXTAREA', w: el.getBoundingClientRect().width, content });
+						// us-301: the damage form is one row (amount, use armor, button), so its amount field is not full width
+						if (el.name === 'amount' && /damage/i.test(f.getAttribute('action') || '')) continue;
+						// spec #298: the journal form is one row from 768px (textarea, then its button)
+						const row = el.name === 'text' && /addJournal/.test(f.getAttribute('action') || '') && window.innerWidth >= 768;
+						out.push({ n: el.name, ta: el.tagName === 'TEXTAREA', row, w: el.getBoundingClientRect().width, content });
 					}
 				}
 				return out;
 			})()`);
 			assert.ok(r.length > 0);
 			for (const c of r) {
-				if (c.ta || m.vp.width < 600) assert.ok(Math.abs(c.w - c.content) <= 1, `${c.n} width ${c.w} vs content ${c.content}`);
+				if (c.row) assert.ok(c.w >= c.content / 2 && c.w <= c.content, `${c.n} width ${c.w} vs content ${c.content}`);
+				else if (c.ta || m.vp.width < 600) assert.ok(Math.abs(c.w - c.content) <= 1, `${c.n} width ${c.w} vs content ${c.content}`);
 				else assert.ok(c.w <= 384.5, `${c.n} width ${c.w} > 384`);
 			}
 		} finally { await close(); }
@@ -133,9 +138,9 @@ for (const m of matrix) {
 	test(name(m, 'required input border is --accent before submit and --danger after a blocked submit'), async () => {
 		const { page, close } = await open(paths[m.path], m.lang, m.vp);
 		try {
-			const sel = 'form:not(.tracker) input[required]';
+			const sel = 'form:not(.tracker):visible input[required]'; // spec #298: skip the edit form in its closed modal
 			if (!(await page.locator(sel).count())) { assert.equal(m.path, 0, 'only home may lack required inputs'); return; }
-			const form = page.locator('form:not(.tracker):has(input[required])').first();
+			const form = page.locator('form:not(.tracker):visible:has(input[required])').first();
 			const input = form.locator('input[required]').first();
 			const get = (n) => page.evaluate(`(() => { const color = ${COLOR}; return color('${n}'); })()`);
 			const bc = () => input.evaluate((e) => getComputedStyle(e).borderTopColor);
