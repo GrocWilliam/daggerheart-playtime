@@ -50,7 +50,8 @@ the one that matches your change. This file lists only where we differ or add to
 | `migrations/` | Frozen legacy SQL files, applied first at startup. Never add, edit or rename. |
 | `drizzle/` | drizzle-kit output; baseline `0000_baseline.sql` is `SELECT 1;`. |
 | `scripts/postbuild.mjs` | Wraps `build/index.js` so `PORT` defaults to 8080. |
-| `tests/acceptance/us-N/` | Frozen acceptance tests, one folder per story. Never edit them. |
+| `tests/acceptance/us-N/` | Acceptance tests, one folder per story, frozen for the dev and the integrator. Only the tester of a story that deliberately changes a behavior an older test checks updates that test, minimally (the planner names it in the story; the reviewer checks it). |
+| `tests/acceptance/support/` | The acceptance tests' shared domain layer (page actions, API setup): not frozen; a UI change updates its actions once, keeping each function's meaning. |
 
 ## Conventions
 
