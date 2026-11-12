@@ -367,7 +367,7 @@
 {#each c.characters as ch (ch.id)}
 	<article class="mb-0! min-w-0" data-testid="character-card">
 		<div class="flex flex-wrap items-center gap-x-1 gap-y-0 [&_button]:px-2! [&_button:not([data-testid^=help])]:text-[0.875rem]">
-			<h3 class="m-0!"><a class="block" data-testid="character-name" href="/characters/{ch.id}">{ch.name}</a></h3>
+			<h3 class="m-0!"><a data-testid="character-name" href="/characters/{ch.id}">{ch.name}</a></h3>
 			{#if ch.hp.marked === ch.hp.max}<span class="inline-block rounded-[999px] px-[0.6rem] text-[0.875rem] text-bg bg-danger" data-testid="down">{t('badge.down')}</span>{/if}
 			<span class="muted inline-flex items-center gap-1">{ch.class}, {t('character.level')} {ch.level} <Help id="level" name={t('character.level')} lang={data.lang} /></span>
 		</div>

@@ -227,8 +227,8 @@ for (const [name, w, h] of [['phone', 375, 667], ['desktop', 1280, 800]]) {
 		else assert.ok(r.inputW <= 384.5 && r.inputW >= 191, 'inputs 12rem..24rem wide on desktop');
 		assert.ok(r.select.h >= 43.5);
 		assert.equal(r.select.fs, '16px');
-		assert.ok(r.check.w >= 24, 'checkbox width');
-		assert.ok(r.check.h >= 24, 'checkbox height');
+		assert.ok(r.check.w >= 19.5 && r.check.w <= 20.5, 'checkbox width'); // us-334: 1.25rem
+		assert.ok(r.check.h >= 19.5 && r.check.h <= 20.5, 'checkbox height'); // us-334: 1.25rem
 		assert.equal(r.check.label.display, 'flex');
 		assert.equal(r.check.label.alignItems, 'center');
 		assert.equal(r.check.label.columnGap, '8px');

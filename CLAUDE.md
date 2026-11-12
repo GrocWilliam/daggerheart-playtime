@@ -82,7 +82,11 @@ the one that matches your change. This file lists only where we differ or add to
 ### Styling (Tailwind v4)
 - Pages and components use utilities in the markup: no `<style>` blocks, no `style=`. Page styles do not go in `app.css`.
 - Tokens are in `@theme static` in `src/app.css` and only reference the palette variables: `bg`, `surface`, `text`,
-  `muted`, `accent`, `calm` (`--color-calm`), `danger`; fonts `font-display`, `font-body`.
+  `muted`, `accent`, `calm` (`--color-calm`), `danger`, `border` (`--border` is `--alpha(var(--accent) / 35%)`: never
+  write a colour function such as color-mix in `src`, us-38/us-99..102 scan for it); fonts `font-display`, `font-body`.
+- Buttons and button-styled links take one of `btn-primary`, `btn-secondary`, `btn-ghost`, `btn-danger`
+  (`@layer components` in `src/app.css`; pressed `btn-secondary` looks primary). The `button` and `a` rules are in `@layer base`,
+  so variants beat them and utilities beat variants.
 - Colour rule: never Tailwind's default palette (`red-500`) and never a colour literal or colour name after a `:` in
   `src/**/*.svelte` or `*.css`, except the palette definitions. Mobile first (no `max-width` queries; `app.css.test.ts`).
 - Touch targets at least 44×44 px, teal focus outline, no sideways scroll on phones, 16px text.
@@ -126,7 +130,7 @@ No project skills: the `stack-*` skills cover the workflow and this file holds t
 
 - us-38 colour scan: frozen tests match raw HTML and CSS with regexes, so a colour name added anywhere can break an older
   story. `--teal` is written `var(--tea\6c)`, `--color-calm` is `var(--tea\6c)`, and `Help.svelte` escapes "vulnerable".
-- Unlayered rules in `app.css` (global form, table, label, input rules) beat Tailwind utilities (which are layered): a
+- Unlayered rules in `app.css` (global form, table, label, input rules; not `button` and `a`) beat Tailwind utilities (which are layered): a
   utility that loses needs a trailing `!` (`aria-pressed:font-bold!`, `p-2!`). `app.css` stays under 150 lines.
 - Forms carry no box (global `form` is only `margin-bottom: 0.75rem`): don't add `bg-transparent!`/`p-0!`/`rounded-none!`. Only `article`, `encounter-adversary`, `loot-entry` and the Modal panel keep the card look.
   `justify-self-start` computes to `flex-start`: use `[justify-self:start]`. `rounded-full` computes to `3.35544e+07px`:
@@ -139,7 +143,7 @@ No project skills: the `stack-*` skills cover the workflow and this file holds t
 - us-22 whole-word scan: an English label equal to a different French value fails (en "Modifier" vs fr `section.edit`); use "Bonus" for experience.modifier.
 - us-154: a scene's text must not contain its neighbours' names (tests use case-insensitive `hasText`): the edit form's environment `<option>`s use `label=` attributes with empty bodies, and env features show name + question, not the rules text (it contains "two").
 - Hydration mismatches drop keyboard focus (us-172 Tab test was flaky): never put block elements (`<details>`, `<div>`) inside a `<p>`; the parser closes the `<p>` early. `Help` is inline-level only (its panel is a `popover` `<span>`). Check the browser console for `hydration_mismatch`.
-- `help-open` relies on `!` utilities (`bg-transparent! text-text! p-0!`) to override the global `button` rule; tests that count or style every `button` exclude `[data-testid^="help-"]`.
+- `help-open` carries `!` utilities (`bg-transparent! text-text! p-0!`) from when the `button` rule was unlayered; tests that count or style every `button` exclude `[data-testid^="help-"]`.
 - us-105 checks that every path-like token in backticks in this file exists (a bare partial path like lib/server fails): write real paths.
 - PGlite start-up takes 100s+ on a loaded machine (CI, or acceptance scripts running in parallel with `make test`): keep `testTimeout`/`hookTimeout` at 120000 in `vite.config.ts`, and run acceptance scripts one at a time.
 - us-143 runs `npm run check`, which type-checks `tests/`: a frozen test importing a path that only exists in a temporary copy (us-209's `fallback.unit.ts`) is excluded through `kit.typescript.config` in `svelte.config.js` (also us-218's `cards.unit.ts`, which does not type-check).

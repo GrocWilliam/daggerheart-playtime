@@ -89,7 +89,7 @@ describe('tailwind setup', () => {
 	});
 	it('has @theme tokens that only use var(...) and the escaped calm token', () => {
 		const colours = theme.split(';').map((d) => d.trim()).filter((d) => d.startsWith('--color-'));
-		expect(colours.length).toBe(7);
+		expect(colours.length).toBe(8);
 		for (const d of colours) expect(d).toMatch(/^--color-[\w-]+:\s*var\(--[\w\\-]+\)$/);
 		expect(theme).toContain('--color-calm: var(--tea\\6c)');
 		expect(theme).not.toMatch(/teal/i);
