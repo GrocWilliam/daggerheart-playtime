@@ -7,6 +7,7 @@ The single UI guide that later stories follow. It documents the current UI plus 
 - DM screen `/campaigns/:id?step=build|run`: `run` is the default.
 - Character tunnel `/campaigns/:id/characters/new?step=1..4`.
 - Character sheet `/characters/:id`.
+- Level-up `/characters/:id/level-up?step=1..5`.
 - Reference `/reference`.
 
 Links between them:
@@ -14,6 +15,7 @@ Links between them:
 - Home: each campaign has `campaign-link` (to its DM screen) and `campaign-run-link` (to `?step=run`).
 - DM screen: the step switch `step-build` and `step-run`. Build's `new-character` link leads to the tunnel. Character cards link to the sheet.
 - Tunnel: Create (`tunnel-create`) leads to the sheet; Cancel (`tunnel-cancel`) goes back to `?step=build`.
+- Character sheet: the `level-up` link (shown only below level 10 with an SRD class) leads to the level-up page. On that page `levelup-cancel` returns to the sheet and `levelup-confirm` leads to the sheet.
 
 ## Layout
 - The header (sigil, nav, language switcher) stays on one row from 768px.
@@ -52,11 +54,22 @@ In `src/lib/components/`:
 
 Test ids: `tunnel-progress` (step indicator), `tunnel-next`, `tunnel-back`, `tunnel-cancel`, `tunnel-summary` (step 4), `tunnel-edit-1` to `tunnel-edit-3` (jump back to a step from the review), `tunnel-derived` (step 4) with `derived-evasion`, `derived-thresholds`, `derived-maxHp`, `derived-maxStress`, `derived-armorSlots`, `tunnel-create`.
 
+## Level-up
+`/characters/:id/level-up?step=1..5`, a second tunnel built like the character tunnel: GET steps carry values in the query string, step 5 posts to the `default` action, errors come back as `?step=N&invalid=<field>`.
+1. Tier achievements: a required `newExperience` text input at new levels 2, 5 and 8; below those levels the text `levelup.none`.
+2. Advancements: selects `pick1` and `pick2`. `proficiency` is offered only in `pick1`, and only with `pick2` blank.
+3. Details: for each pick, `p1trait1`, `p1trait2`, `p1exp1`, `p1exp2`, `p1card` (and the same with `p2`, e.g. `p2exp2`). A `subclass` pick shows the subclass name and features text. `levelup.none` when nothing is needed. Options listing SRD names use `label=` attributes with empty bodies.
+4. Domain card: required `domainCard` select, options grouped by domain.
+5. Review: `levelup-summary` shows before and after values (the values `applyLevelUp` returns), then `levelup-confirm` submits.
+
+Test ids: `levelup-progress` (step indicator), `levelup-next`, `levelup-back`, `levelup-cancel`, `levelup-summary`, `levelup-confirm`.
+
 ## Screen states
 - Home: empty (no campaigns, an empty-state text); loading (the submit button is busy, `aria-busy`); error (`[role=alert]`); success (the campaign appears in the grid).
 - DM screen, Build and Run: empty (no characters, no scenes, no journal entries show empty texts); loading (busy submit button with `aria-busy`); error (`[role=alert]` in the form); success (the list or tracker updates in place).
 - Tunnel: empty (step 1 with blank fields); loading (busy submit); error (`?step=N&invalid=<field>` with `[role=alert]`); success (redirect to the sheet).
 - Character sheet: empty (no items, experiences or cards show empty texts); loading (busy buttons); error (`[role=alert]`); success (values update in place).
+- Level-up: error (`?step=N&invalid=<field>` with `[role=alert]`); loading (busy submit); success (redirect to the sheet).
 - Reference: static, no forms; empty sections are not shown.
 - Load errors (unknown id, server) go through `+error.svelte`, which translates by status.
 
@@ -69,11 +82,12 @@ Stable: keep them when restyling.
 Existing:
 `build`, `run`, `campaign-link`, `campaign-name`, `campaign-run-link`, `card`, `character-card`, `character-name`, `condition-hidden`, `condition-restrained`, `condition-vulnerable`, `current-scene`, `divider`, `domain`, `down`, `encounter-adversary`, `encounter-budget`, `evasion`, `experience`, `fear`, `gold`, `help`, `help-close`, `help-open`, `help-panel`, `inventory`, `item`, `item-row`, `journal`, `journal-entry`, `lang-en`, `lang-fr`, `language-switcher`, `loot-entry`, `nav-home`, `nav-reference`, `notes`, `notes-status`, `party-member`, `ref-item`, `scene`, `scene-environment`, `scene-notes`, `scene-status`, `secondary-blocked`, `sigil`, `srd-licence`, `thresholds`, `battle-unit`, `unit-hp`, `unit-defeated`, `unit-damage`, `unit-hit`, `unit-hp-plus`, `unit-hp-minus`, `battle-add`, `battle-add-adversary`, `battle-add-count`, `battle-add-submit`.
 
-Dynamic: `ref-<kind>` (reference sections), `step-<k>` (`step-build`, `step-run`), `trait-<k>` (one per trait), `<name>-pips` (e.g. `fear-pips`), tracker values by key (e.g. `hp`, `hope`), subclass/ancestry/community from `Chosen`, and the equipment blocks `primary-weapon`, `secondary-weapon`, `equipped-armor`.
+Dynamic: `ref-<kind>` (reference sections), `step-<k>` (`step-build`, `step-run`), `trait-<k>` (one per trait), `trait-marked-<name>` (one per marked trait), `<name>-pips` (e.g. `fear-pips`), tracker values by key (e.g. `hp`, `hope`), subclass/ancestry/community from `Chosen`, and the equipment blocks `primary-weapon`, `secondary-weapon`, `equipped-armor`.
 
 New (*planned*):
+- Level-up: `level-up`, `levelup-progress`, `levelup-next`, `levelup-back`, `levelup-cancel`, `levelup-summary`, `levelup-confirm`.
 - Layout: `party`, `build-party`, `build-scenes`.
-- Sheet: `sheet-sections`, `sheet-trackers`, `sheet-traits`, `sheet-equipment`, `sheet-experiences`, `sheet-inventory`, `sheet-cards`, `sheet-notes`.
+- Sheet: `sheet-sections`, `proficiency`, `subclass-stage`, `sheet-trackers`, `sheet-traits`, `sheet-equipment`, `sheet-experiences`, `sheet-inventory`, `sheet-cards`, `sheet-notes`.
 - Openers: `new-campaign`, `new-scene`, `new-item`, `new-experience`, `new-card`, `new-character`.
 - Modals: `modal-campaign`, `modal-scene`, `modal-item`, `modal-experience`, `modal-card`, `modal-cancel`.
 - Tunnel: `tunnel-progress`, `tunnel-next`, `tunnel-back`, `tunnel-cancel`, `tunnel-summary`, `tunnel-edit-1`, `tunnel-edit-2`, `tunnel-edit-3`, `tunnel-derived`, `derived-evasion`, `derived-thresholds`, `derived-maxHp`, `derived-maxStress`, `derived-armorSlots`, `tunnel-create`.

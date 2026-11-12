@@ -30,7 +30,7 @@ describe('drizzle', () => {
 		);
 		expect(idx).toContain('items_character_name_uniq');
 		const rows = (await db.query('SELECT * FROM drizzle.__drizzle_migrations')).rows;
-		expect(rows).toHaveLength(6);
+		expect(rows).toHaveLength(7);
 	});
 
 	it('schema columns and nullability match the database', async () => {

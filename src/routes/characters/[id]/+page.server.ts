@@ -1,6 +1,6 @@
 import { error, fail } from '@sveltejs/kit';
-import { pickList, pickOf, subclassesOf, getSrd, cardsByIds, cardGroups, domainsOfClass, itemGroups, itemPicks, weaponGroups, armorGroups, gearDetail } from '$lib/server/features/srd';
-import { TRAITS, tierOfLevel, conditionFieldSchema, trackerFieldSchema } from '$lib/server/features/characters';
+import { pickList, pickOf, subclassesOf, getSrd, cardsByIds, cardGroups, domainsOfClass, itemGroups, itemPicks, weaponGroups, armorGroups, gearDetail, idByName } from '$lib/server/features/srd';
+import { TRAITS, tierOfLevel, subclassStage, conditionFieldSchema, trackerFieldSchema } from '$lib/server/features/characters';
 type Actions = import('./$types').Actions;
 type PageServerLoad = import('./$types').PageServerLoad;
 
@@ -48,6 +48,9 @@ export const load: PageServerLoad = async ({ params, fetch, locals }) => {
 	const ch = r.data;
 	return {
 		character: ch,
+		// The level-up link: below level 10 and only for SRD classes (as the level-up API requires).
+		canLevelUp: Number(ch.level) < 10 && !!idByName('classes', String(ch.class)),
+		subclassStage: subclassStage(Array.isArray(ch.advancements) ? ch.advancements : []),
 		picks: {
 			classes: pickList('classes', lang).map((p, i) => ({ ...p, value: pickList('classes', 'en')[i].name })),
 			subclasses: subclassesOf(String(ch.class), lang),

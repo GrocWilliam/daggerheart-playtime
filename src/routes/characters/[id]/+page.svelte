@@ -43,6 +43,7 @@
 <Divider />
 <p><a data-testid="campaign-run-link" href="/campaigns/{c.campaignId}?step=run">{t('character.runLink')}</a></p>
 <div class="muted">{c.class}, {t('character.level')} {c.level} <Help id="level" name={t('character.level')} lang={data.lang} /></div>
+{#if data.canLevelUp}<p><a data-testid="level-up" href="/characters/{c.id}/level-up?step=1">{t('levelup.title')}</a></p>{/if}
 {#if data.domains.length}
 	<ul class="mt-0 mb-3 flex list-none flex-wrap gap-x-4 pl-0!">
 		{#each data.domains as d (d.id)}
@@ -51,6 +52,7 @@
 	</ul>
 {/if}
 <Chosen chosen={data.chosen} lang={data.lang} />
+{#if data.subclassStage}<p class="muted" data-testid="subclass-stage">{t(`levelup.subclassStage.${data.subclassStage}`)}</p>{/if}
 
 {#if form?.error && !form?.modal}<p role="alert">{t(form.error)}</p>{/if}
 
@@ -116,6 +118,7 @@
 {/each}
 <ul class="mt-0 mb-3 list-none pl-0!" class:stats={true}>
 	<li>{t('stat.evasion')}: <Help id="evasion" name={t('stat.evasion')} lang={data.lang} /> <span data-testid="evasion">{c.evasion}</span></li>
+	<li data-testid="proficiency">{t('levelup.proficiency')}: <Help id="proficiency" name={t('levelup.proficiency')} text={t('levelup.help.proficiency')} lang={data.lang} /> <span>{c.proficiency}</span></li>
 	<li>{t('stat.thresholds')}: <Help id="thresholds" name={t('stat.thresholds')} lang={data.lang} /> <span data-testid="thresholds">{c.majorThreshold}/{c.severeThreshold}</span></li>
 </ul>
 <form use:enhance={busy} method="POST" action="?/damage">
@@ -129,7 +132,7 @@
 <h2>{t('section.traits')}</h2>
 <ul class="mt-0 mb-3 list-none pl-0!">
 	{#each traits as k (k)}
-		<li>{t(`trait.${k}`)}: <Help id={k} name={t(`trait.${k}`)} text={t(`trait.help.${k}`)} lang={data.lang} /> <span data-testid="trait-{k}">{signed(c.traits[k])}</span></li>
+		<li>{t(`trait.${k}`)}: <Help id={k} name={t(`trait.${k}`)} text={t(`trait.help.${k}`)} lang={data.lang} /> <span data-testid="trait-{k}">{signed(c.traits[k])}</span>{#if c.markedTraits?.includes(k)} <span class="inline-block rounded-[999px] px-[0.6rem] text-[0.875rem] text-bg bg-accent" data-testid="trait-marked-{k}">{t('levelup.marked')}</span>{/if}</li>
 	{/each}
 </ul>
 </div>

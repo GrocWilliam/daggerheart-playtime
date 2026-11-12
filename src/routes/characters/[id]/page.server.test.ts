@@ -116,3 +116,15 @@ describe('character page server', () => {
 		expect(calls[1]).toMatchObject({ method: 'DELETE', url: '/api/items/i1' });
 	});
 });
+
+describe('level-up link', () => {
+	const canLevelUp = async (ch: Record<string, unknown>) => {
+		const f = (async () => new Response(JSON.stringify({ id: 'c1', items: [], cards: [], ...ch }), { status: 200 })) as unknown as typeof fetch;
+		return ((await load({ params: { id: 'c1' }, fetch: f, locals: { lang: 'en' } } as never)) as { canLevelUp: boolean }).canLevelUp;
+	};
+	it('shows below level 10 with an SRD class only', async () => {
+		expect(await canLevelUp({ level: 3, class: 'Guardian' })).toBe(true);
+		expect(await canLevelUp({ level: 10, class: 'Guardian' })).toBe(false);
+		expect(await canLevelUp({ level: 3, class: 'Chronomancer' })).toBe(false);
+	});
+});

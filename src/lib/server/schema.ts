@@ -1,4 +1,5 @@
 import { sql } from 'drizzle-orm';
+import type { Advancement, Trait } from './features/characters';
 import {
 	bigserial,
 	boolean,
@@ -64,7 +65,10 @@ export const characters = pgTable('characters', {
 	knowledge: integer('knowledge').notNull().default(0),
 	primaryWeapon: text('primary_weapon'),
 	secondaryWeapon: text('secondary_weapon'),
-	armorId: text('armor_id')
+	armorId: text('armor_id'),
+	proficiency: integer('proficiency').notNull().default(1),
+	advancements: jsonb('advancements').$type<Advancement[]>().notNull().default(sql`'[]'::jsonb`),
+	markedTraits: jsonb('marked_traits').$type<Trait[]>().notNull().default(sql`'[]'::jsonb`)
 });
 
 export const items = pgTable(

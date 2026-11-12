@@ -151,3 +151,21 @@ describe('pickOptions', () => {
 		for (const o of pickOptions('classes', 'en')) expect(o.value).toBe(o.label);
 	});
 });
+
+import { subclassStageText } from './srd';
+describe('subclassStageText', () => {
+	it('gives the name and the features of one stage', () => {
+		const s = subclassStageText('core_subclass_beastbound', 'specialization', 'en')!;
+		expect(s.name).toBe('Beastbound');
+		expect(s.lines.map((l) => l.text)).toEqual([
+			'Expert Training: Choose an additional level-up option for your companion.',
+			expect.stringMatching(/^Battle-Bonded: /)
+		]);
+	});
+	it('is French where translated and null for unknown ids', () => {
+		const s = subclassStageText('core_subclass_beastbound', 'mastery', 'fr')!;
+		expect(s.lines.every((l) => l.lang === 'fr')).toBe(true);
+		expect(subclassStageText(null, 'mastery', 'en')).toBeNull();
+		expect(subclassStageText('nope', 'mastery', 'en')).toBeNull();
+	});
+});

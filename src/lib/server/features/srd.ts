@@ -555,3 +555,21 @@ export function gearDetail(kind: 'weapons' | 'armors', id: string | null | undef
 		? { ...base, trait: e.trait, range: e.range, dice: e.damage?.dice, damageType: e.damage?.type, burden: e.burden }
 		: { ...base, major: e.baseMajorThreshold, severe: e.baseSevereThreshold, score: e.baseScore };
 }
+
+/** Name of an SRD subclass and the feature lines ("<name>: <text>") of one of its stages, in `lang` where translated. */
+export function subclassStageText(
+	id: string | null | undefined,
+	stage: 'foundation' | 'specialization' | 'mastery',
+	lang: Lang
+): { name: string; nameLang: Lang; lines: Line[] } | null {
+	const r = id ? localizedSrd('subclasses', id, lang) : null;
+	if (!r) return null;
+	const texts: string[] = [];
+	fieldTexts(r.element[stage], texts);
+	const textLang = r.langs[stage] ?? 'en';
+	return {
+		name: r.element.nameLocalized,
+		nameLang: r.langs.name ?? 'en',
+		lines: texts.filter((x) => x.trim()).map((text) => ({ text, lang: textLang }))
+	};
+}

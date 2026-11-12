@@ -5,7 +5,7 @@ import { OBJECT_ERROR, intField, safeIntField, strField } from '../../utils/vali
 import { domainsOfClass, getSrd, idByName } from './srd';
 
 /** Drizzle select shape giving the snake_case row that `characterJson` reads. */
-const characterSelect = {
+export const characterSelect = {
 	id: characters.id,
 	campaign_id: characters.campaignId,
 	name: characters.name,
@@ -41,6 +41,9 @@ const characterSelect = {
 	primary_weapon: characters.primaryWeapon,
 	secondary_weapon: characters.secondaryWeapon,
 	armor_id: characters.armorId,
+	proficiency: characters.proficiency,
+	advancements: characters.advancements,
+	marked_traits: characters.markedTraits,
 	experiences: sql<unknown>`(SELECT COALESCE(json_agg(json_build_object(
 		'id', e.id, 'name', e.name, 'modifier', e.modifier) ORDER BY e.created_at, e.seq), '[]'::json)
 		FROM experiences e WHERE e.character_id = ${sql.raw('"characters"."id"')})`.as('experiences'),
@@ -113,6 +116,9 @@ export function characterJson(r: any) {
 		primaryWeapon: r.primary_weapon ?? null,
 		secondaryWeapon: r.secondary_weapon ?? null,
 		armorId: r.armor_id ?? null,
+		proficiency: r.proficiency as number,
+		advancements: (r.advancements ?? []) as Advancement[],
+		markedTraits: (r.marked_traits ?? []) as Trait[],
 		experiences: r.experiences ?? [],
 		items: r.items ?? [],
 		down: r.hp_marked === r.hp_max
@@ -120,6 +126,16 @@ export function characterJson(r: any) {
 }
 
 export const TRAITS = ['agility', 'strength', 'finesse', 'instinct', 'presence', 'knowledge'] as const;
+export type Trait = (typeof TRAITS)[number];
+
+export type AdvancementOption = 'traits' | 'hp' | 'stress' | 'experiences' | 'card' | 'evasion' | 'subclass' | 'proficiency';
+export type Advancement = { level: number; tier: number; option: AdvancementOption };
+
+/** Subclass stage reached: one `subclass` advancement is specialization, two or more mastery. */
+export function subclassStage(advancements: Advancement[]): 'specialization' | 'mastery' | null {
+	const n = advancements.filter((a) => a.option === 'subclass').length;
+	return n === 0 ? null : n === 1 ? 'specialization' : 'mastery';
+}
 
 /** Optional subset of the six traits; unknown names are rejected, supplied ones kept. */
 export const traitsSchema = z

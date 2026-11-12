@@ -451,3 +451,13 @@ describe('recomputeOnPatch', () => {
 		expect(recomputeOnPatch({ ...worn, evasion: 30 }, { armorId: null })).toMatchObject({ evasion: Math.min(30, 30 - mod) });
 	});
 });
+
+import { subclassStage } from './characters';
+describe('subclassStage', () => {
+	it('counts subclass advancements', () => {
+		const a = (option: any) => ({ level: 2, tier: 2, option });
+		expect(subclassStage([])).toBeNull();
+		expect(subclassStage([a('hp'), a('subclass')])).toBe('specialization');
+		expect(subclassStage([a('subclass'), a('hp'), a('subclass')])).toBe('mastery');
+	});
+});
