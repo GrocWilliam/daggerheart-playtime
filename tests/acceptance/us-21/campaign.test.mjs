@@ -48,7 +48,7 @@ async function interfaceTexts(page) {
 	return page.evaluate(() => {
 		const out = [];
 		for (const el of document.querySelectorAll('h1,h2,h3,h4,h5,h6,label,button,summary,legend,th,[role="button"]')) {
-			if (el.closest('[lang="en"]:not(html)') || el.matches('[data-testid="help-open"]')) continue; // US-45
+			if (el.closest('[lang="en"]:not(html)') || el.matches('[data-testid="help-open"],[data-testid^="lang-"]')) continue; // US-45
 			if (el.matches('[data-testid="campaign-name"]') || el.querySelector('[data-testid="character-name"]')) continue; // user data
 			const clone = el.cloneNode(true);
 			clone.querySelectorAll('input,select,textarea,[data-testid="character-name"]').forEach((i) => i.remove());

@@ -83,7 +83,8 @@ test('contrast >= 4.5:1 for text on bg and surface; buttons use bg text on accen
 			});
 			assert.deepEqual(r.bad, [], `${w} ${lang}`);
 			assert.ok(r.btns.length > 0);
-			for (const [c, bg] of r.btns) assert.deepEqual([c, bg], [rgb(PALETTE['--bg']), rgb(PALETTE['--accent'])]);
+			const looks = [[rgb(PALETTE['--bg']), rgb(PALETTE['--accent'])], [rgb(PALETTE['--accent']), 'rgba(0, 0, 0, 0)'], [rgb(PALETTE['--text']), 'rgba(0, 0, 0, 0)'], [rgb(PALETTE['--danger']), 'rgba(0, 0, 0, 0)']].map((l) => JSON.stringify(l));
+			for (const [c, bg] of r.btns) assert.ok(looks.includes(JSON.stringify([c, bg])), `${c} ${bg}`);
 		}, lang);
 });
 

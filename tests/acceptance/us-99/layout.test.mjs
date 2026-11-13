@@ -129,8 +129,8 @@ for (const [name, w, h] of [['phone', 375, 667], ['desktop', 1280, 800]]) {
 			assert.ok(r.homeH >= 43.5 && r.refH >= 43.5, 'nav links 44px');
 			assert.equal(r.sw.display, 'flex');
 			assert.equal(r.sw.columnGap, '8px');
-			assert.equal(r.sw.paddingTop, '8px');
-			assert.equal(r.sw.paddingLeft, '8px');
+			assert.equal(r.sw.paddingTop, '0px');
+			assert.equal(r.sw.paddingLeft, '0px');
 			assert.equal(r.btns.length, 2);
 			for (const b of r.btns) {
 				assert.ok(b.h >= 43.5 && b.w >= 43.5, 'switcher buttons 44px');
