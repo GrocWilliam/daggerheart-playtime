@@ -121,9 +121,9 @@
 {#if data.tab !== 'gear' && opened('item')}{@render itemModal()}{/if}
 {#if data.tab !== 'cards' && opened('card')}{@render cardModal()}{/if}
 
-<nav data-testid="sheet-tabs" class="mb-4 flex flex-wrap gap-x-2">
+<nav data-testid="sheet-tabs" class="mb-4 flex gap-1 overflow-x-auto border-b border-solid border-border">
 	{#each SHEET_TABS as k (k)}
-		<a class="flex min-h-11 items-center px-3 {data.tab === k ? 'font-bold underline' : ''}" data-testid="tab-{k}" href="?tab={k}"
+		<a class="flex min-h-11 shrink-0 items-center px-3 no-underline {data.tab === k ? 'bg-accent font-bold text-bg' : 'bg-transparent text-muted'}" data-testid="tab-{k}" href="?tab={k}"
 			aria-current={data.tab === k ? 'page' : undefined}>{t(TAB_LABEL[k])}</a>
 	{/each}
 </nav>

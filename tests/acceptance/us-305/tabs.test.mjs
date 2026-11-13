@@ -65,16 +65,18 @@ for (const path of ['', '?tab=bogus']) {
 }
 
 for (const k of TABS) {
-	test(`?tab=${k} marks only tab-${k} as current, bold and underlined, and shows only its sections`, async () => {
+	test(`?tab=${k} marks only tab-${k} as current, bold, accent-filled and not underlined, and shows only its sections`, async () => {
 		const { ctx, p } = await open(`/characters/${id}?tab=${k}`);
 		const nav = p.locator('nav[data-testid="sheet-tabs"]');
 		assert.equal(await nav.count(), 1);
 		const current = nav.locator('[aria-current="page"]');
 		assert.equal(await current.count(), 1);
 		assert.equal(await current.getAttribute('data-testid'), `tab-${k}`);
-		const st = await current.evaluate((e) => { const c = getComputedStyle(e); return { w: Number(c.fontWeight), d: c.textDecorationLine }; });
+		const st = await current.evaluate((e) => { const c = getComputedStyle(e); return { w: Number(c.fontWeight), d: c.textDecorationLine, bg: c.backgroundColor, fg: c.color }; });
 		assert.ok(st.w >= 700, `font-weight ${st.w}`);
-		assert.ok(st.d.includes('underline'), `text-decoration-line ${st.d}`);
+		assert.equal(st.d, 'none', `text-decoration-line ${st.d}`);
+		assert.equal(st.bg, 'rgb(212, 160, 80)');
+		assert.equal(st.fg, 'rgb(15, 26, 21)');
 		for (const t of ALL) assert.equal(await count(p, t), SECTIONS[k].includes(t) ? 1 : 0, `${t} on ${k}`);
 		await ctx.close();
 	});

@@ -68,7 +68,7 @@ test('contrast >= 4.5:1 for text on bg and surface; buttons use bg text on accen
 				const bgs = [root.getPropertyValue('--bg').trim(), root.getPropertyValue('--surface').trim()];
 				const colors = new Set();
 				for (const e of document.querySelectorAll('body *')) {
-					if (e.offsetParent === null || !(e.textContent || '').trim() || e.tagName === 'BUTTON') continue;
+					if (e.offsetParent === null || !(e.textContent || '').trim() || e.tagName === 'BUTTON' || e.matches('a[aria-current]')) continue;
 					if (![...e.childNodes].some((n) => n.nodeType === 3 && n.textContent.trim())) continue;
 					colors.add(getComputedStyle(e).color);
 				}

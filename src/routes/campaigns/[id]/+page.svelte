@@ -129,9 +129,9 @@
 <p><a href="/">{t('campaign.back')}</a></p>
 <h1 data-testid="campaign-name">{c.name}</h1>
 <Divider />
-<nav class="mb-4 flex gap-4" aria-label={t('step.label')}>
+<nav class="mb-4 flex gap-1 border-b border-solid border-border" aria-label={t('step.label')}>
 	{#each ['build', 'run'] as k (k)}
-		<a class="flex min-h-11 items-center px-3 {data.step === k ? 'font-bold underline' : ''}" data-testid="step-{k}" href="?step={k}"
+		<a class="flex min-h-11 items-center px-3 no-underline {data.step === k ? 'bg-accent font-bold text-bg' : 'bg-transparent text-muted'}" data-testid="step-{k}" href="?step={k}"
 			aria-current={data.step === k ? 'step' : undefined}>{t(`step.${k}`)}</a>
 	{/each}
 </nav>
