@@ -5,8 +5,6 @@
 	import { translate, type Params } from '$lib/i18n';
 	let { data, form } = $props();
 	const t = (key: string, params?: Params) => translate(data.lang, key, params);
-	// Static class names per step so Tailwind sees them.
-	const BAR = ['w-1/5', 'w-2/5', 'w-3/5', 'w-4/5', 'w-full'];
 	const ALL = [
 		'newExperience', 'pick1', 'pick2',
 		'p1trait1', 'p1trait2', 'p1exp1', 'p1exp2', 'p1card',
@@ -84,13 +82,13 @@
 
 <div class="mb-4" data-testid="levelup-progress">
 	<p class="mb-2 font-bold">{t('tunnel.progress', { n: data.step, total: data.steps.length })}</p>
-	<div class="h-2 w-full overflow-hidden rounded-[0.25rem] bg-surface" aria-hidden="true">
-		<div class="h-full bg-accent {BAR[data.step - 1]}"></div>
-	</div>
-	<ol class="mt-2 flex flex-wrap gap-x-6 gap-y-1 pl-5">
+	<ol class="m-0 flex list-none flex-wrap gap-2 p-0">
 		{#each data.steps as s, i (s)}
-			<li class={i + 1 === data.step ? 'font-bold text-accent' : 'text-muted'} aria-current={i + 1 === data.step ? 'step' : undefined}>
-				{t(`levelup.step.${s}`)}
+			<li
+				class="flex min-h-11 items-center gap-2 rounded-[0.5rem] border border-solid border-border px-3 {i + 1 === data.step ? 'bg-accent font-bold text-bg' : i + 1 < data.step ? 'bg-transparent text-accent' : 'bg-transparent text-muted'}"
+				aria-current={i + 1 === data.step ? 'step' : undefined}
+			>
+				<span>{i + 1}</span> {t(`levelup.step.${s}`)}
 			</li>
 		{/each}
 	</ol>
@@ -150,7 +148,7 @@
 						{#each [1, 2] as k (k)}
 							<label class="min-w-0">
 								{t('levelup.choice', { n: k })}
-								<select name="p{p.n}trait{k}" required class="min-w-0 max-w-full">
+								<select name="p{p.n}trait{k}" required class="min-w-0 max-w-[16rem]!">
 									<option value=""></option>
 									{#each plan.unmarkedTraits as tr (tr)}
 										<option value={tr} selected={tr === v(`p${p.n}trait${k}`)}>{t(`trait.${tr}`)}</option>
@@ -191,10 +189,10 @@
 				{@render cardSelect('domainCard', true)}
 			</label>
 		{/if}
-		<div class="flex flex-wrap items-center gap-4">
-			<a href={href} data-testid="levelup-cancel">{t('tunnel.cancel')}</a>
-			{#if data.step > 1}<a href={data.hrefs[data.step - 1]} data-testid="levelup-back">{t('tunnel.back')}</a>{/if}
-			<button type="submit" data-testid="levelup-next">{t('tunnel.next')}</button>
+		<div class="flex flex-wrap gap-2">
+			<a href={href} class="btn-ghost" data-testid="levelup-cancel">{t('tunnel.cancel')}</a>
+			{#if data.step > 1}<a href={data.hrefs[data.step - 1]} class="btn-secondary" data-testid="levelup-back">{t('tunnel.back')}</a>{/if}
+			<button type="submit" class="btn-primary" data-testid="levelup-next">{t('tunnel.next')}</button>
 		</div>
 	</form>
 {:else}
@@ -217,10 +215,10 @@
 		</dl>
 	</section>
 	{#if form?.error}<p role="alert" class="text-danger">{t(form.error)}</p>{/if}
-	<form method="POST" use:enhance={busy} class="flex flex-wrap items-center gap-4">
+	<form method="POST" use:enhance={busy} class="flex flex-wrap gap-2">
 		{#each ALL as f (f)}{#if v(f)}<input type="hidden" name={f} value={v(f)} />{/if}{/each}
-		<a href={href} data-testid="levelup-cancel">{t('tunnel.cancel')}</a>
-		<a href={data.hrefs[4]} data-testid="levelup-back">{t('tunnel.back')}</a>
-		<button type="submit" data-testid="levelup-confirm">{t('levelup.title')}</button>
+		<a href={href} class="btn-ghost" data-testid="levelup-cancel">{t('tunnel.cancel')}</a>
+		<a href={data.hrefs[4]} class="btn-secondary" data-testid="levelup-back">{t('tunnel.back')}</a>
+		<button type="submit" class="btn-primary" data-testid="levelup-confirm">{t('levelup.title')}</button>
 	</form>
 {/if}

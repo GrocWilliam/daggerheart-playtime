@@ -11,8 +11,6 @@
 	const labelKey = (f: string) => (TRAIT_FIELDS.has(f) ? `trait.${f}` : f === 'armorId' ? 'equipment.armor' : `field.${f}`);
 	const signed = (v: number) => (v >= 0 ? `+${v}` : String(v));
 	type PickKey = 'class' | 'ancestry' | 'community';
-	// Static class names per step so Tailwind sees them.
-	const BAR = ['w-1/4', 'w-2/4', 'w-3/4', 'w-full'];
 	const id = $derived(data.campaign.id);
 	const TUNNEL_STEPS = $derived(data.steps);
 	const current = $derived(TUNNEL_STEPS[data.step - 1]);
@@ -53,13 +51,13 @@
 
 <div class="mb-4" data-testid="tunnel-progress">
 	<p class="mb-2 font-bold">{t('tunnel.progress', { n: data.step, total: TUNNEL_STEPS.length })}</p>
-	<div class="h-2 w-full overflow-hidden rounded-[0.25rem] bg-surface" aria-hidden="true">
-		<div class="h-full bg-accent {BAR[data.step - 1]}"></div>
-	</div>
-	<ol class="mt-2 flex flex-wrap gap-x-6 gap-y-1 pl-5">
+	<ol class="m-0 flex list-none flex-wrap gap-2 p-0">
 		{#each TUNNEL_STEPS as s, i (s.key)}
-			<li class={i + 1 === data.step ? 'font-bold text-accent' : 'text-muted'} aria-current={i + 1 === data.step ? 'step' : undefined}>
-				{t(`tunnel.step.${s.key}`)}
+			<li
+				class="flex min-h-11 items-center gap-2 rounded-[0.5rem] border border-solid border-border px-3 {i + 1 === data.step ? 'bg-accent font-bold text-bg' : i + 1 < data.step ? 'bg-transparent text-accent' : 'bg-transparent text-muted'}"
+				aria-current={i + 1 === data.step ? 'step' : undefined}
+			>
+				<span>{i + 1}</span> {t(`tunnel.step.${s.key}`)}
 			</li>
 		{/each}
 	</ol>
@@ -77,7 +75,7 @@
 			<label class="min-w-0">
 				{t(labelKey(f))}
 				{#if TRAIT_FIELDS.has(f)}
-					<select name={f} required>
+					<select name={f} required class="max-w-[16rem]!">
 						<option value=""></option>
 						{#each data.traitOptions as v (v)}
 							<option value={String(v)} selected={String(v) === valueOf(f)}>{signed(v)}</option>
@@ -104,17 +102,14 @@
 				{:else if f === 'name'}
 					<input type="text" name={f} value={valueOf(f)} required maxlength="100" />
 				{:else}
-					<input type="number" name={f} value={valueOf(f)} required min={data.ranges[f][0]} max={data.ranges[f][1]} />
+					<input type="number" class="w-[5rem]! min-w-0!" name={f} value={valueOf(f)} required min={data.ranges[f][0]} max={data.ranges[f][1]} />
 				{/if}
 			</label>
 		{/each}
-		<div class="flex flex-wrap items-center gap-4 md:col-span-2">
-			{#if data.step === 1}
-				<a href="/campaigns/{encodeURIComponent(id)}?step=build" data-testid="tunnel-cancel">{t('tunnel.cancel')}</a>
-			{:else}
-				<a href={data.hrefs[data.step - 1]} data-testid="tunnel-back">{t('tunnel.back')}</a>
-			{/if}
-			<button type="submit" data-testid="tunnel-next">{t('tunnel.next')}</button>
+		<div class="flex flex-wrap gap-2 md:col-span-2">
+			<a href="/campaigns/{encodeURIComponent(id)}?step=build" class="btn-ghost" data-testid="tunnel-cancel">{t('tunnel.cancel')}</a>
+			{#if data.step > 1}<a href={data.hrefs[data.step - 1]} class="btn-secondary" data-testid="tunnel-back">{t('tunnel.back')}</a>{/if}
+			<button type="submit" class="btn-primary" data-testid="tunnel-next">{t('tunnel.next')}</button>
 		</div>
 	</form>
 {:else}
@@ -123,7 +118,7 @@
 			<section class="mb-4 rounded-[0.5rem] border-2 border-solid border-muted p-3">
 				<div class="flex flex-wrap items-center justify-between gap-2">
 					<h3 class="my-0!">{t(`tunnel.step.${s.key}`)}</h3>
-					<a href={data.hrefs[i + 1]} data-testid="tunnel-edit-{i + 1}">{t('tunnel.edit')}</a>
+					<a href={data.hrefs[i + 1]} class="btn-secondary" data-testid="tunnel-edit-{i + 1}">{t('tunnel.edit')}</a>
 				</div>
 				<dl class="m-0 grid grid-cols-[auto_1fr] gap-x-4 gap-y-1">
 					{#each s.fields as f (f)}
@@ -151,9 +146,9 @@
 		</section>
 	{/if}
 	{#if form?.error}<p role="alert" class="text-danger">{t(form.error)}</p>{/if}
-	<form method="POST" use:enhance={busy} class="flex flex-wrap items-center gap-4">
+	<form method="POST" use:enhance={busy} class="flex flex-wrap gap-2">
 		{#each TUNNEL_STEPS.flatMap((s) => [...s.fields] as string[]) as f (f)}<input type="hidden" name={f} value={data.values[f] ?? ''} />{/each}
-		<a href={data.hrefs[3]} data-testid="tunnel-back">{t('tunnel.back')}</a>
-		<button type="submit" data-testid="tunnel-create">{t('tunnel.create')}</button>
+		<a href={data.hrefs[3]} class="btn-secondary" data-testid="tunnel-back">{t('tunnel.back')}</a>
+		<button type="submit" class="btn-primary" data-testid="tunnel-create">{t('tunnel.create')}</button>
 	</form>
 {/if}
