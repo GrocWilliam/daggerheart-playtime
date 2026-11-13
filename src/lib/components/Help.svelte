@@ -4,7 +4,7 @@
 
 	// Helper: a "?" button opening a native popover panel (Popover API, no click handler: works without JavaScript,
 	// never submits an enclosing form). Inline-level elements only: helpers sit inside <p> and <form>. Pass `id` of a glossary term for glossary text, `text` for a catalog
-	// string, or SRD `lines` (each in its own language, an optional `label` in the page language). `nameLang` is the
+	// string, or SRD `lines` (each in its own language, an optional `label` in the page language). With the `label` prop the trigger shows it (dotted underline) instead of "?". `nameLang` is the
 	// language of an SRD `name`.
 	let {
 		id,
@@ -12,7 +12,8 @@
 		lang,
 		nameLang = undefined,
 		lines = undefined,
-		text = undefined
+		text = undefined,
+		label = undefined
 	}: {
 		id: string;
 		name: string;
@@ -20,6 +21,7 @@
 		nameLang?: Lang;
 		lines?: { text: string; lang: Lang; label?: string }[];
 		text?: string;
+		label?: string;
 	} = $props();
 	const uid = $props.id();
 	const panelId = `help-${uid}`;
@@ -37,7 +39,7 @@
 </script>
 
 <span data-testid="help" data-help={id} class="inline-block align-middle">
-	<button type="button" data-testid="help-open" popovertarget={panelId} aria-label="{translate(lang, 'help.label')} {name}" class="inline-flex min-h-11 min-w-11 items-center justify-center bg-transparent! p-0! align-middle font-bold text-text!">?</button>
+	<button type="button" data-testid="help-open" popovertarget={panelId} aria-label="{translate(lang, 'help.label')} {name}" class="btn-ghost inline-flex min-h-11 min-w-11 items-center justify-center bg-transparent! p-0! align-middle font-bold text-text! {label ? 'px-1! underline decoration-dotted' : ''}">{label ?? '?'}</button>
 	<span popover="auto" id={panelId} data-testid="help-panel" class="m-auto max-h-[80dvh] w-[min(32rem,100vw_-_2rem)] overflow-y-auto rounded-[0.5rem] border-[3px] border-double border-accent bg-surface p-4 text-text backdrop:bg-bg backdrop:opacity-80">
 		<strong lang={nameLang}>{name}</strong>
 		{#if lines}
@@ -53,6 +55,6 @@
 		{:else if term}
 			<span class="my-1 block">{@html safe(term[lang])}</span>
 		{/if}
-		<button type="button" data-testid="help-close" popovertarget={panelId} popovertargetaction="hide" class="mt-2 min-h-11 min-w-11">{translate(lang, 'help.close')}</button>
+		<button type="button" data-testid="help-close" popovertarget={panelId} popovertargetaction="hide" class="btn-secondary mt-2 min-h-11 min-w-11">{translate(lang, 'help.close')}</button>
 	</span>
 </span>

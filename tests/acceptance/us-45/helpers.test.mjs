@@ -70,7 +70,7 @@ for (const [label, P] of Object.entries(PAGES)) {
 		}
 	});
 
-	test(`${label}: the helper's help-open button is "?" named "Help: <name>" / "Aide : <nom>"`, async () => {
+	test(`${label}: the helper's help-open button shows the term's visible label, named "Help: <name>" / "Aide : <nom>"`, async () => {
 		for (const lang of ['en', 'fr']) {
 			const { ctx, page } = await open(lang, P.path());
 			const ids = P.fear ? [...P.ids, 'fear'] : P.ids;
@@ -78,7 +78,10 @@ for (const [label, P] of Object.entries(PAGES)) {
 				await toTab(page, P, id);
 				const s = helper(page.locator('body'), id).locator('[data-testid="help-open"]');
 				assert.equal(await s.count(), 1, `${id} help-open`);
-				assert.equal(norm(await s.textContent()), '?', `${id} text`);
+				// us-337: a labelled helper shows the term's label instead of "?" (level and gold: any non-empty text)
+				const shown = norm(await s.textContent());
+				if (id === 'level' || id === 'gold') assert.ok(shown.length > 0, `${id} text`);
+				else assert.ok(eqName(shown, nameOf(id, lang)), `${lang} ${id} text "${shown}" should be "${nameOf(id, lang)}"`);
 				const aria = await s.getAttribute('aria-label');
 				assert.ok(aria && eqName(aria, helpName(id, lang)), `${lang} ${id}: aria-label "${aria}" should be "${helpName(id, lang)}"`);
 			}

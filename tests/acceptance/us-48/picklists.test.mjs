@@ -210,7 +210,7 @@ for (const [label, mkScope] of Object.entries(SCOPES)) {
 				const h = S.scope(page).locator(`[data-testid="help"][data-help="${e.id}"]`);
 				assert.equal(await h.count(), 1, `${lang} ${k} helper`);
 				const sm = h.locator('[data-testid="help-open"]');
-				assert.equal(norm(await sm.textContent()), '?');
+				assert.equal(norm(await sm.textContent()), nameIn(e, lang));
 				assert.equal(await sm.getAttribute('aria-label'), `${lang === 'fr' ? 'Aide : ' : 'Help: '}${nameIn(e, lang)}`);
 			}
 			await ctx.close();

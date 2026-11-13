@@ -79,7 +79,7 @@ async function interfaceTexts(page) {
 		}
 		for (const el of document.querySelectorAll('[placeholder]')) out.push({ kind: 'placeholder', text: el.getAttribute('placeholder') });
 		for (const el of document.querySelectorAll('input[type=submit],input[type=button]')) out.push({ kind: 'input', text: el.value });
-		for (const el of document.querySelectorAll('[data-testid^="condition-"],[data-testid="down"]')) out.push({ kind: 'badge', text: el.textContent.trim() });
+		for (const el of document.querySelectorAll('[data-testid^="condition-"],[data-testid="down"]')) out.push({ kind: 'badge', text: (el.querySelector('[data-testid="help-open"]') ?? el).textContent.trim() });
 		return out.filter((x) => x.text);
 	});
 }

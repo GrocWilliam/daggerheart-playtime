@@ -35,8 +35,7 @@
 <form use:enhance={busy} class="mb-3 flex flex-wrap items-center gap-2" class:tracker={true} method="POST" {action}>
 	{#each Object.entries(hidden) as [k, v] (k)}<input type="hidden" name={k} value={v} />{/each}
 	<span class="flex flex-nowrap items-center gap-1">
-		<span>{label}:</span>
-		<Help id={helpId} name={label} {lang} />
+		<Help id={helpId} name={label} {label} {lang} />
 		<button type="submit" name="delta" value="-1">{translate(lang, 'action.decrease')}</button>
 		<span class="min-w-[2ch] text-center {colours[name] ?? ''}" data-testid={name}>{value}</span>
 		<button type="submit" name="delta" value="1">{translate(lang, 'action.increase')}</button>

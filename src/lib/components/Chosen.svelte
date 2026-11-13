@@ -17,8 +17,7 @@
 		{#if chosen[k]}
 			<li class="[overflow-wrap:anywhere]">
 				<span class="muted">{translate(lang, `field.${k}`)}:</span>
-				<span data-testid={k} lang={chosen[k].nameLang}>{chosen[k].name}</span>
-				<Help id={chosen[k].id} name={chosen[k].name} nameLang={chosen[k].nameLang} {lang} lines={chosen[k].lines} />
+				<span data-testid={k} lang={chosen[k].nameLang}><Help id={chosen[k].id} name={chosen[k].name} label={chosen[k].name} nameLang={chosen[k].nameLang} {lang} lines={chosen[k].lines} /></span>
 			</li>
 		{/if}
 	{/each}

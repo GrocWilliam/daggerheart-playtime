@@ -6,13 +6,14 @@ export const launchBrowser = () => {
 	return chromium.launch({ executablePath: process.env.CHROMIUM_PATH });
 };
 
-export const openPage = async (browser, url, [width, height]) => {
-	const ctx = await browser.newContext({ viewport: { width, height } });
+export const openPage = async (browser, url, [width, height], { lang, js = true } = {}) => {
+	const ctx = await browser.newContext({ viewport: { width, height }, javaScriptEnabled: js });
+	if (lang) await ctx.addCookies([{ name: 'lang', value: lang, url }]);
 	const page = await ctx.newPage();
 	page.setDefaultTimeout(5000);
 	page.setDefaultNavigationTimeout(10000);
 	await page.goto(url);
-	await page.waitForLoadState('networkidle');
+	if (js) await page.waitForLoadState('networkidle');
 	return page;
 };
 

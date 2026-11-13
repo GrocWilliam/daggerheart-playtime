@@ -49,13 +49,13 @@
 </h1>
 <Divider />
 <div class="flex flex-wrap items-start gap-x-4 *:mb-3">
-	<span class="muted">{c.class}, {t('character.level')} {c.level} <Help id="level" name={t('character.level')} lang={data.lang} /></span>
+	<span class="muted">{c.class}, <Help id="level" name={t('character.level')} label={t('character.level')} lang={data.lang} /> {c.level}</span>
 	<Chosen chosen={data.chosen} lang={data.lang} />
 	{#if data.subclassStage}<span class="muted" data-testid="subclass-stage">{t(`levelup.subclassStage.${data.subclassStage}`)}</span>{/if}
 	{#if data.domains.length}
 		<ul class="mt-0 flex list-none flex-wrap gap-x-4 pl-0!">
 			{#each data.domains as d (d.id)}
-				<li data-testid="domain"><span lang={d.nameLang}>{d.name}</span> <Help id={d.id} name={d.name} text={d.help} lang={data.lang} /></li>
+				<li data-testid="domain"><span lang={d.nameLang}><Help id={d.id} name={d.name} label={d.name} nameLang={d.nameLang} text={d.help} lang={data.lang} /></span></li>
 			{/each}
 		</ul>
 	{/if}
@@ -228,7 +228,7 @@
 		{...trackerValues(c[key])} />
 {/each}
 <DefenseLine evasion={c.evasion} major={c.majorThreshold} severe={c.severeThreshold} lang={data.lang} />
-<p class="mt-0 mb-3" data-testid="proficiency">{t('levelup.proficiency')} <Help id="proficiency" name={t('levelup.proficiency')} text={t('levelup.help.proficiency')} lang={data.lang} /> <span>{c.proficiency}</span></p>
+<p class="mt-0 mb-3" data-testid="proficiency"><Help id="proficiency" name={t('levelup.proficiency')} label={t('levelup.proficiency')} text={t('levelup.help.proficiency')} lang={data.lang} /> <span>{c.proficiency}</span></p>
 <DamageForm action={actionHref('damage', data.tab)} lang={data.lang} />
 </div>
 
@@ -253,7 +253,7 @@
 <h2 class="mt-4 mb-2">{t('section.traits')}</h2>
 <ul class="mt-0 mb-3 list-none pl-0!">
 	{#each traits as k (k)}
-		<li>{t(`trait.${k}`)}: <Help id={k} name={t(`trait.${k}`)} text={t(`trait.help.${k}`)} lang={data.lang} /> <span data-testid="trait-{k}">{signed(c.traits[k])}</span>{#if c.markedTraits?.includes(k)} <span class="inline-block rounded-[999px] px-[0.6rem] text-[0.875rem] text-bg bg-accent" data-testid="trait-marked-{k}">{t('levelup.marked')}</span>{/if}</li>
+		<li><Help id={k} name={t(`trait.${k}`)} label={t(`trait.${k}`)} text={t(`trait.help.${k}`)} lang={data.lang} /> <span data-testid="trait-{k}">{signed(c.traits[k])}</span>{#if c.markedTraits?.includes(k)} <span class="inline-block rounded-[999px] px-[0.6rem] text-[0.875rem] text-bg bg-accent" data-testid="trait-marked-{k}">{t('levelup.marked')}</span>{/if}</li>
 	{/each}
 </ul>
 </div>

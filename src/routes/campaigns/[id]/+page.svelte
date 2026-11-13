@@ -369,7 +369,7 @@
 		<div class="flex flex-wrap items-center gap-x-1 gap-y-0 [&_button]:px-2! [&_button:not([data-testid^=help])]:text-[0.875rem]">
 			<h3 class="m-0!"><a data-testid="character-name" href="/characters/{ch.id}">{ch.name}</a></h3>
 			{#if ch.hp.marked === ch.hp.max}<span class="inline-block rounded-[999px] px-[0.6rem] text-[0.875rem] text-bg bg-danger" data-testid="down">{t('badge.down')}</span>{/if}
-			<span class="muted inline-flex items-center gap-1">{ch.class}, {t('character.level')} {ch.level} <Help id="level" name={t('character.level')} lang={data.lang} /></span>
+			<span class="muted inline-flex items-center gap-1">{ch.class}, <Help id="level" name={t('character.level')} label={t('character.level')} lang={data.lang} /> {ch.level}</span>
 		</div>
 		<ConditionBadges conditions={ch.conditions} lang={data.lang} />
 		{#each TRACKERS as key (key)}
