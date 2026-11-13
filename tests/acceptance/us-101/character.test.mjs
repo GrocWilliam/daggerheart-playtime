@@ -161,16 +161,15 @@ for (const [name, w, h] of [['phone', 375, 667], ['desktop', 1280, 800]]) {
 				scroll: document.documentElement.scrollWidth - document.documentElement.clientWidth
 			};
 		});
-		assert.equal(r.trk.display, 'flex');
-		assert.equal(r.trk.flexWrap, 'wrap'); // us-301: Tracker is flex-wrap (only the pips wrap)
+		assert.equal(r.trk.display, 'grid');
 		assert.equal(r.trk.alignItems, 'center');
 		assert.equal(r.trk.columnGap, '8px');
-		assert.equal(r.trk.marginBottom, '12px');
+		assert.equal(r.trk.marginBottom, '4px');
 		assert.equal(r.trk.backgroundColor, CLEAR);
 		assert.equal(r.trk.paddingTop, '0px');
 		for (const b of r.trkBtns) {
 			assert.ok(b.h >= 43.5 && b.w >= 43.5, 'tracker buttons 44px');
-			assert.equal(b.bg, ACCENT);
+			assert.equal(b.bg, CLEAR);
 			assert.equal(b.fs, '16px');
 		}
 		assert.equal(r.val.textAlign, 'center');

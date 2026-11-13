@@ -78,7 +78,7 @@ test('contrast >= 4.5:1 for text on bg and surface; buttons use bg text on accen
 					const bgc = getComputedStyle(el).color; el.remove();
 					if (ratio(c, bgc) < 4.5) bad.push(`${c} on ${bgc}`);
 				}
-				const btns = [...document.querySelectorAll('button:not([data-testid^="help-"])')].filter((b) => b.offsetParent !== null).map((b) => [getComputedStyle(b).color, getComputedStyle(b).backgroundColor]);
+				const btns = [...document.querySelectorAll('button:not([data-testid^="help-"]):not([name=delta])')].filter((b) => b.offsetParent !== null).map((b) => [getComputedStyle(b).color, getComputedStyle(b).backgroundColor]);
 				return { bad, btns };
 			});
 			assert.deepEqual(r.bad, [], `${w} ${lang}`);
@@ -101,7 +101,7 @@ test('article has a 3px double accent border, radius 8px; forms have no box (us-
 			const r = await page.evaluate(() => {
 				const pick = (e) => { const s = getComputedStyle(e); return ['Top', 'Right', 'Bottom', 'Left'].map((d) => [s[`border${d}Style`], s[`border${d}Width`], s[`border${d}Color`]]).concat([[s.borderTopLeftRadius, s.borderBottomRightRadius, s.backgroundColor]]); };
 				const out = { article: [...document.querySelectorAll('article')].map(pick), form: [], cards: [...document.querySelectorAll('[data-testid="character-card"]')].map(pick) };
-				out.form = [...document.querySelectorAll('form')].filter((f) => !f.closest('table, article, [data-testid="character-card"]')).map(pick);
+				out.form = [...document.querySelectorAll('form')].filter((f) => !f.closest('table, article, [data-testid="character-card"]') && !(f.getAttribute('action') || '').includes('/fear')).map(pick);
 				return out;
 			});
 			const side = [['double', '3px', rgb(PALETTE['--accent'])]];

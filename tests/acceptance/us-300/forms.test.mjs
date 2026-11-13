@@ -52,7 +52,10 @@ test('forms outside dialogs have no box and a 12px bottom margin', async () => {
 			for (const f of forms) {
 				const s = getComputedStyle(f);
 				const got = [s.backgroundColor, s.borderTopStyle, s.paddingTop, s.paddingRight, s.paddingBottom, s.paddingLeft, s.marginBottom].join('|');
-				if (got !== 'rgba(0, 0, 0, 0)|none|0px|0px|0px|0px|12px') out.push(`${f.getAttribute('action') ?? f.className}: ${got}`);
+				const want = f.classList.contains('tracker') && (f.getAttribute('action') ?? '').includes('?/tracker') ? '4px' : '12px';
+				const isFear = (f.getAttribute('action') ?? '').includes('?/fear');
+				const expected = isFear ? 'rgb(26, 42, 34)|solid|8px|12px|8px|12px|12px' : `rgba(0, 0, 0, 0)|none|0px|0px|0px|0px|${want}`;
+				if (got !== expected) out.push(`${f.getAttribute('action') ?? f.className}: ${got}`);
 			}
 			return { n: forms.length, out };
 		});

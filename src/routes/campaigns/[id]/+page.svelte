@@ -323,7 +323,7 @@
 </section>
 {:else}
 <div data-testid="run">
-<Tracker name="fear" label={t('campaign.fear')} helpId="fear" value={String(c.fear)} filled={c.fear} max={12} action="?/fear" lang={data.lang} />
+<Tracker name="fear" label={t('campaign.fear')} helpId="fear" value={String(c.fear)} filled={c.fear} max={12} action="?/fear" lang={data.lang} variant="band" />
 <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-[minmax(0,1.72fr)_minmax(0,1fr)] lg:grid-rows-[auto_1fr] lg:items-start">
 {#if cs}
 <div class="flow-root min-w-0 md:col-span-2 lg:col-span-1 lg:col-start-1 lg:row-start-1" data-testid="current-scene">

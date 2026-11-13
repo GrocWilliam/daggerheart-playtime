@@ -13,7 +13,8 @@
 		nameLang = undefined,
 		lines = undefined,
 		text = undefined,
-		label = undefined
+		label = undefined,
+		heading = false
 	}: {
 		id: string;
 		name: string;
@@ -22,6 +23,7 @@
 		lines?: { text: string; lang: Lang; label?: string }[];
 		text?: string;
 		label?: string;
+		heading?: boolean;
 	} = $props();
 	const uid = $props.id();
 	const panelId = `help-${uid}`;
@@ -39,7 +41,12 @@
 </script>
 
 <span data-testid="help" data-help={id} class="inline-block align-middle">
+	{#if heading}
+		<!-- A heading (Cinzel, us-39 allows it only in h1-h3) holding just the trigger: its text is the label. -->
+		<h3 class="m-0! text-base"><button type="button" data-testid="help-open" popovertarget={panelId} aria-label="{translate(lang, 'help.label')} {name}" class="btn-ghost inline-flex min-h-11 min-w-11 items-center justify-center bg-transparent! p-0! align-middle font-bold text-text! {label ? 'px-1! underline decoration-dotted' : ''}">{label ?? '?'}</button></h3>
+	{:else}
 	<button type="button" data-testid="help-open" popovertarget={panelId} aria-label="{translate(lang, 'help.label')} {name}" class="btn-ghost inline-flex min-h-11 min-w-11 items-center justify-center bg-transparent! p-0! align-middle font-bold text-text! {label ? 'px-1! underline decoration-dotted' : ''}">{label ?? '?'}</button>
+	{/if}
 	<span popover="auto" id={panelId} data-testid="help-panel" class="m-auto max-h-[80dvh] w-[min(32rem,100vw_-_2rem)] overflow-y-auto rounded-[0.5rem] border-[3px] border-double border-accent bg-surface p-4 text-text backdrop:bg-bg backdrop:opacity-80">
 		<strong lang={nameLang}>{name}</strong>
 		{#if lines}

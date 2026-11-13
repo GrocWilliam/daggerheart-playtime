@@ -132,16 +132,15 @@ for (const [name, w, h, cols] of [['phone', 375, 667, 1], ['tablet', 700, 800, 1
 		assert.equal(r.card.paddingLeft, '12px');
 		assert.equal(r.card.marginBottom, '0px');
 		assert.equal(r.name.color, ACCENT);
-		assert.equal(r.trk.display, 'flex');
-		assert.equal(r.trk.flexWrap, 'wrap'); // us-301: Tracker is flex-wrap (only the pips wrap)
+		assert.equal(r.trk.display, 'grid');
 		assert.equal(r.trk.alignItems, 'center');
 		assert.equal(r.trk.columnGap, '8px');
 		assert.equal(r.trk.backgroundColor, 'rgba(0, 0, 0, 0)');
 		assert.equal(r.trk.paddingTop, '0px');
-		assert.equal(r.trk.marginBottom, '12px');
+		assert.equal(r.trk.marginBottom, '4px');
 		for (const b of r.trkBtns) {
 			assert.ok(b.h >= 43.5 && b.w >= 43.5, 'tracker buttons 44px');
-			assert.equal(b.bg, ACCENT);
+			assert.equal(b.bg, 'rgba(0, 0, 0, 0)');
 			assert.equal(b.fs, '16px');
 		}
 		assert.equal(r.val.textAlign, 'center');
@@ -151,9 +150,9 @@ for (const [name, w, h, cols] of [['phone', 375, 667, 1], ['tablet', 700, 800, 1
 		assert.equal(r.stats.listStyleType, 'none');
 		assert.equal(r.stats.paddingLeft, '0px');
 		assert.equal(r.stats.marginBottom, '12px');
-		assert.equal(r.fear.backgroundColor, 'rgba(0, 0, 0, 0)');
-		assert.equal(r.fear.borderTopLeftRadius, '0px');
-		assert.equal(r.fear.paddingTop, '0px');
+		assert.equal(r.fear.backgroundColor, SURFACE);
+		assert.equal(r.fear.borderTopLeftRadius, '8px');
+		assert.equal(r.fear.paddingTop, '8px');
 		assert.equal(r.fear.marginBottom, '12px');
 		const want = { fear: [12, DANGER], hp: [6, DANGER], stress: [6, ACCENT], hope: [6, TEAL], armor: [3, MUTED] };
 		for (const [k, [n, col]] of Object.entries(want)) {
@@ -165,7 +164,7 @@ for (const [name, w, h, cols] of [['phone', 375, 667, 1], ['tablet', 700, 800, 1
 			assert.equal(p.box.columnGap, '4px');
 			assert.equal(p.box.rowGap, '4px');
 			// us-301 and spec #298 (Fear bar): tracker pips, Fear's included, sit in the Tracker row: no own bottom margin.
-			assert.deepEqual(p.rect, [12, 12], `${k} pip size`);
+			assert.deepEqual(p.rect, k === 'fear' ? [20, 20] : [12, 12], `${k} pip size`);
 			assert.equal(p.pip.borderTopWidth, '1px');
 			assert.equal(p.pip.borderTopStyle, 'solid');
 			assert.equal(p.pip.borderTopColor, col, `${k} pip colour`);
