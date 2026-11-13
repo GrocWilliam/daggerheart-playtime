@@ -86,6 +86,12 @@ const journalBase = (id: string) => `/api/campaigns/${encodeURIComponent(id)}/jo
 const text = (v: FormDataEntryValue | null) => (typeof v === 'string' ? v : '');
 const envOf = (v: FormDataEntryValue | null) => (text(v) === '' ? null : text(v));
 
+/** The scene the `scene-edit` modal edits: one of this campaign's scenes, or null for a missing or unknown id. */
+function editSceneOf(scenes: Pick<Scene, 'id' | 'title' | 'notes' | 'environmentId'>[], id: string | null | undefined) {
+	const s = id ? scenes.find((x) => x.id === id) : undefined;
+	return s ? { id: s.id, title: s.title, notes: s.notes ?? '', environmentId: s.environmentId ?? null } : null;
+}
+
 export const load: PageServerLoad = async ({ params, fetch, locals, url }) => {
 	const r = await call(fetch, 'GET', `/api/campaigns/${encodeURIComponent(params.id)}`);
 	if (r.status === 404 || r.status === 400) error(404, 'not found');
@@ -144,6 +150,7 @@ const scenes = scenesRaw.map((s) => {
 	}
 	return {
 		battleOptions,
+		editScene: editSceneOf(scenesRaw, url?.searchParams.get('new') === 'scene-edit' ? url.searchParams.get('scene') : null),
 		campaign: r.data, chosen, currentScene: (current?.title as string | undefined) ?? null,
 		step: url?.searchParams.get('step') === 'build' ? ('build' as const) : ('run' as const),
 		scenes, journal, characters, party, environments: listSrd('environments', lang)
@@ -220,7 +227,17 @@ add: async (e) => {
 		if (f.has('title')) body.title = text(f.get('title'));
 		if (f.has('notes')) body.notes = text(f.get('notes'));
 		if (f.has('environmentId')) body.environmentId = envOf(f.get('environmentId'));
-		return run(e, 'PATCH', `${base(e.params.id)}/${encodeURIComponent(text(f.get('sceneId')))}`, body);
+		const sceneId = text(f.get('sceneId'));
+		const path = `${base(e.params.id)}/${encodeURIComponent(sceneId)}`;
+		// Without a title it is the Run step's notes form: answer as `run` always did.
+		if (!f.has('title')) return run(e, 'PATCH', path, body);
+		const r = await call(e.fetch, 'PATCH', path, body);
+		if (!r.ok) {
+			const values = { title: text(f.get('title')), notes: text(f.get('notes')), environmentId: text(f.get('environmentId')) };
+			return failure(r, { modal: 'scene-edit', sceneId, values });
+		}
+		if (!e.request.headers.has('x-sveltekit-action')) redirect(303, `/campaigns/${encodeURIComponent(e.params.id)}?step=build`);
+		return { ok: true };
 	},
 	nextScene: async (e) => run(e, 'POST', `${base(e.params.id)}/next`),
 	move: async (e) => {

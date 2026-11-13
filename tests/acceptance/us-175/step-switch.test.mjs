@@ -2,6 +2,7 @@ import { test, before, after } from 'node:test';
 import assert from 'node:assert/strict';
 import { existsSync } from 'node:fs';
 import { createRequire } from 'node:module';
+import { openSceneEdit, fillSceneEdit } from '../support/scenes.mjs';
 
 const BASE = process.env.BASE_URL;
 const ORIGIN = new URL(BASE).origin;
@@ -112,8 +113,10 @@ test('moved actions work on /campaigns/:id: add, edit, move, status, delete', as
 	assert.deepEqual((await titles()).map((s) => s.title), ['Second', 'First']);
 	await Promise.all([p.waitForLoadState('load'), p.locator('[data-testid=scene]', { hasText: 'Second' }).getByRole('button', { name: /set current/i }).first().click()]);
 	assert.equal((await titles()).find((s) => s.id === s2.id).status, 'current');
-	const ed = p.locator('[data-testid=scene]', { hasText: 'First' }).locator('form', { has: p.locator('input[name=title]') }).first();
-	await ed.locator('input[name=title]').fill('Premier');
+	// US-340: the scene is edited in the scene-edit modal opened from its card
+	await openSceneEdit(p, 'First');
+	const ed = p.getByTestId('modal-scene-edit').locator('form', { has: p.locator('input[name=title]') });
+	await fillSceneEdit(p, { title: 'Premier' });
 	await Promise.all([p.waitForLoadState('load'), ed.locator('button[type=submit], button:not([type])').first().click()]);
 	assert.ok((await titles()).some((s) => s.id === s1.id && s.title === 'Premier'));
 	await Promise.all([p.waitForLoadState('load'), p.locator('[data-testid=scene]', { hasText: 'Premier' }).getByRole('button', { name: /delete/i }).first().click()]);

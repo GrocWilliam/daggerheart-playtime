@@ -14,7 +14,7 @@
 	const ADJUSTMENTS = ['easier', 'damageBoost', 'harder'] as const;
 	const badge: Record<string, string> = { planned: 'bg-muted', current: 'bg-accent', done: 'bg-calm' };
 	let { data, form: rawForm } = $props();
-	const form = $derived(rawForm as { error?: string; modal?: string; values?: Record<string, string> } | null);
+	const form = $derived(rawForm as { error?: string; modal?: string; sceneId?: string; values?: Record<string, string> } | null);
 	import { onMount } from 'svelte';
 	type Scene = (typeof data.scenes)[number];
 	type Adversary = NonNullable<Scene['encounter']>['adversaries'][number];
@@ -49,6 +49,13 @@
 	const envType = (type: string) => cap(t(`environment.type.${type}`));
 	const c = $derived(data.campaign);
 	const cs = $derived(data.scenes.find((x) => x.status === 'current'));
+	/** The scene in the scene-edit modal: from the query (load), or the failed post's scene with its submitted values. */
+	const editScene = $derived.by(() => {
+		if (form?.modal !== 'scene-edit') return data.editScene;
+		const s = data.scenes.find((x) => x.id === form.sceneId);
+		const v = form.values ?? {};
+		return s ? { id: s.id, title: v.title ?? s.title, notes: v.notes ?? s.notes, environmentId: v.environmentId || null } : null;
+	});
 </script>
 
 {#snippet battleUnits(a: Adversary & { units: { index: number; marked: number; max: number; defeated: boolean }[] }, sceneId: string)}
@@ -136,7 +143,7 @@
 	{/each}
 </nav>
 
-{#if form?.error && form.modal !== 'scene'}<p role="alert">{t(form.error)}</p>{/if}
+{#if form?.error && form.modal !== 'scene' && form.modal !== 'scene-edit'}<p role="alert">{t(form.error)}</p>{/if}
 
 {#if data.step === 'build'}
 <section class="border-none! p-0!" data-testid="build">
@@ -172,6 +179,28 @@
 	<button type="submit">{t('scenario.add')}</button>
 </form>
 </Modal>
+{#if editScene}
+{@const es = editScene}
+{#key es.id}
+<Modal kind="scene-edit" opener={false} params={{ step: 'build' }} clear={['scene']} title={t('scene.editTitle')} lang={data.lang}>
+{#if form?.modal === 'scene-edit' && form.error}<p role="alert">{t(form.error)}</p>{/if}
+<form use:enhance={busy} method="POST" action="?/edit&step=build">
+	<input type="hidden" name="sceneId" value={es.id} />
+	<label>{t('scenario.sceneTitle')} <input name="title" value={es.title} required maxlength="100" /></label>
+	<label>{t('scenario.notes')} <textarea name="notes" maxlength="5000">{es.notes}</textarea></label>
+	<label>
+		{t('scenario.environment')}
+		<select name="environmentId">
+			<!-- Labels as attributes keep the option names out of the page's scene text. -->
+			<option value="" selected={!es.environmentId} label={t('scenario.noEnvironment')}></option>
+			{#each data.environments as o (o.id)}<option value={o.id} selected={o.id === es.environmentId} label={o.name}></option>{/each}
+		</select>
+	</label>
+	<button type="submit" class="btn-primary">{t('scenario.save')}</button>
+</form>
+</Modal>
+{/key}
+{/if}
 
 {#each data.scenes as s, i (s.id)}
 	<article class="mb-4 rounded-[0.5rem] border-2 border-solid p-3 {s.status === 'current' ? 'border-accent' : 'border-muted'}"
@@ -196,6 +225,7 @@
 				<input type="hidden" name="sceneId" value={s.id} />
 				<button type="submit">{t('scenario.delete')}</button>
 			</form>
+			<a class="btn-secondary" data-testid="scene-edit-open" href="?step=build&new=scene-edit&scene={encodeURIComponent(s.id)}">{t('section.edit')}</a>
 		</div>
 		{#if s.notes}<p class="whitespace-pre-line">{s.notes}</p>{/if}
 		{#if s.environment}
@@ -277,20 +307,6 @@
 				<button type="submit">{t('encounter.delete')}</button>
 			</form>
 		{/if}
-		<form use:enhance={busy} method="POST" action="?/edit&step=build">
-			<input type="hidden" name="sceneId" value={s.id} />
-			<label>{t('scenario.sceneTitle')} <input name="title" value={s.title} required maxlength="100" /></label>
-			<label>{t('scenario.notes')} <textarea name="notes" maxlength="5000">{s.notes}</textarea></label>
-			<label>
-				{t('scenario.environment')}
-				<select name="environmentId">
-					<!-- Labels as attributes keep the option names out of the scene's text content. -->
-					<option value="" selected={!s.environmentId} label={t('scenario.noEnvironment')}></option>
-					{#each data.environments as o (o.id)}<option value={o.id} selected={o.id === s.environmentId} label={o.name}></option>{/each}
-				</select>
-			</label>
-			<button type="submit">{t('scenario.save')}</button>
-		</form>
 	</article>
 {:else}
 	<p>{t('scenario.none')}</p>

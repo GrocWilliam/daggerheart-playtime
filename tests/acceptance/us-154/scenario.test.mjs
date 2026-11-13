@@ -1,6 +1,7 @@
 import { test, before, after } from 'node:test';
 import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
+import { openSceneEdit, fillSceneEdit } from '../support/scenes.mjs';
 
 // us-178: forms update in place (use:enhance), so there is no navigation to wait for: wait for the POST response, then for the network to settle.
 const afterSubmit = async (p, click) => {
@@ -77,8 +78,10 @@ test('without JavaScript the forms add, edit, move, set current, mark done and d
 	assert.equal(one.environmentId, envs[0].id);
 	// edit
 	await p.goto(BASE + url);
-	const edit = scene(p, 'Two').locator('form', { has: p.locator('input[name=title]') }).first();
-	await edit.locator('input[name=title]').fill('Deux');
+	// US-340: the scene is edited in the scene-edit modal opened from its card
+	await openSceneEdit(p, 'Two');
+	const edit = p.getByTestId('modal-scene-edit').locator('form', { has: p.locator('input[name=title]') });
+	await fillSceneEdit(p, { title: 'Deux' });
 	await afterSubmit(p, edit.locator('button[type=submit], button:not([type])').first().click());
 	assert.deepEqual(await apiTitles(c.id), ['One', 'Deux']);
 	// move up / down

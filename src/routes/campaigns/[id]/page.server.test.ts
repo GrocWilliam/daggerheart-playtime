@@ -159,3 +159,49 @@ describe('campaign page journal', () => {
 		expect(await act('deleteJournal', { entryId: 'no' }, reply(404, { error: 'x' }))).toMatchObject({ status: 404, data: { error: 'error.notFound' } });
 	});
 });
+
+describe('scene-edit modal', () => {
+	const scenes = [
+		{ id: 's1', title: 'One', notes: 'n', status: 'planned', environmentId: null },
+		{ id: 's2', title: 'Two', notes: 'Bridge', status: 'planned', environmentId: 'env_x' }
+	];
+	const editScene = async (q: string) =>
+		((await load({ params: { id: 'x' }, fetch: routed({ characters: [] }, scenes), url: new URL(`http://x/${q}`) } as never)) as unknown as { editScene: unknown }).editScene;
+
+	it('load resolves ?new=scene-edit&scene=<id> against the loaded scenes', async () => {
+		expect(await editScene('?step=build&new=scene-edit&scene=s2')).toEqual({ id: 's2', title: 'Two', notes: 'Bridge', environmentId: 'env_x' });
+		expect(await editScene('?step=build&new=scene-edit&scene=999999')).toBeNull();
+		expect(await editScene('?step=build&new=scene-edit&scene=abc')).toBeNull();
+		expect(await editScene('?step=build&new=scene&scene=s2')).toBeNull();
+		expect(await editScene('?step=build&new=scene-edit')).toBeNull();
+	});
+
+	const edit = (fields: Record<string, string>, status: number, headers: Record<string, string> = {}) => {
+		let sent = '';
+		const f = (async (_u: string, init: RequestInit) => ((sent = String(init.body)), new Response('{"error":"English"}', { status }))) as unknown as typeof fetch;
+		const request = new Request('http://x', { method: 'POST', headers, body: new URLSearchParams(fields) });
+		const res = (actions.edit as never as (e: unknown) => Promise<unknown>)({ request, params: { id: 'c' }, fetch: f });
+		return { res, sent: () => JSON.parse(sent) };
+	};
+
+	it('a failed modal post reopens scene-edit with its scene and values', async () => {
+		const { res } = edit({ sceneId: 's2', title: '', notes: 'Kept', environmentId: '' }, 400);
+		expect(await res).toMatchObject({ status: 400, data: { error: 'error.invalid', modal: 'scene-edit', sceneId: 's2', values: { title: '', notes: 'Kept', environmentId: '' } } });
+	});
+
+	it('a modal post redirects 303 to the Build step without enhance and answers ok with it', async () => {
+		const plain = edit({ sceneId: 's2', title: 'Deux', notes: '', environmentId: '' }, 200);
+		await expect(plain.res).rejects.toMatchObject({ status: 303, location: '/campaigns/c?step=build' });
+		expect(plain.sent()).toEqual({ title: 'Deux', notes: '', environmentId: null });
+		const enhanced = edit({ sceneId: 's2', title: 'Deux' }, 200, { 'x-sveltekit-action': 'true' });
+		expect(await enhanced.res).toEqual({ ok: true });
+	});
+
+	it('a notes-only post keeps the old answers', async () => {
+		const ok = edit({ sceneId: 's2', notes: 'Only' }, 200);
+		expect(await ok.res).toEqual({ ok: true });
+		expect(ok.sent()).toEqual({ notes: 'Only' });
+		expect(await edit({ sceneId: 'zz', notes: 'x' }, 404).res).toMatchObject({ status: 404, data: { error: 'error.notFound' } });
+		expect(JSON.stringify(await edit({ sceneId: 'zz', notes: 'x' }, 404).res)).not.toContain('scene-edit');
+	});
+});

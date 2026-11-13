@@ -304,5 +304,6 @@
 	"levelup.pick2": "Seconde progression",
 	"levelup.slotsLeft": "{count} restant(s)",
 	"levelup.choice": "Choix {n}",
-	"levelup.newCards": "Nouvelles cartes"
+	"levelup.newCards": "Nouvelles cartes",
+	"scene.editTitle": "Modifier la scène"
 }
