@@ -1,6 +1,7 @@
 import { test, before, after } from 'node:test';
 import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
+import { openSceneMore } from '../support/scenes.mjs';
 
 const BASE = process.env.BASE_URL;
 const { chromium } = createRequire(process.env.PLAYWRIGHT_DIR + '/')('playwright-core');
@@ -25,10 +26,12 @@ async function open(path, lang = 'en') {
 	await ctx.addCookies([{ name: 'lang', value: lang, url: BASE }]);
 	const p = await ctx.newPage();
 	await p.goto(BASE + path);
+	await openSceneMore(scene(p));
 	return p;
 }
 const scene = (p) => p.locator('[data-testid=scene]', { hasText: 'Ambush' });
-const press = (p, loc) => Promise.all([p.waitForLoadState('load'), loc.click()]);
+// US-341: a non-current scene's controls sit in the closed scene-more disclosure
+const press = async (p, loc) => { await openSceneMore(scene(p)); await Promise.all([p.waitForLoadState('load'), loc.click()]); await openSceneMore(scene(p)); };
 const budget = async (p) => {
 	const t = (await scene(p).locator('[data-testid=encounter-budget]').textContent()).replace(/\s+/g, ' ');
 	const m = t.match(/(\d+)\s*\/\s*(\d+)/);

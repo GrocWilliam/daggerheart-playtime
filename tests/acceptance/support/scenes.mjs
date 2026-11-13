@@ -27,6 +27,12 @@ export const openAs = async (browser, url, { lang = 'en', js = true, viewport = 
 	return { page, status: res?.status() };
 };
 
+/** Open a scene card's `scene-more` disclosure (a no-op when it is already open); works with and without JavaScript. */
+export const openSceneMore = async (sceneLocator) => {
+	const more = sceneLocator.first().getByTestId('scene-more').first(); // a loose text filter may match several cards: like the callers' .first() click, use the first
+	if (!(await more.evaluate((d) => d.open))) await more.locator(':scope > summary').click();
+};
+
 /** A scene card by its exact heading (a plain text match would also hit buttons like "Mark done" for 'One'). */
 const card = (page, title) => page.getByTestId('scene').filter({ has: page.getByRole('heading', { name: title, exact: true }) });
 const dialog = (page) => page.getByTestId('modal-scene-edit');

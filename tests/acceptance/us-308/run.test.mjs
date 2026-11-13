@@ -1,6 +1,7 @@
 import { test, before, after } from 'node:test';
 import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
+import { openSceneMore } from '../support/scenes.mjs';
 
 const BASE = process.env.BASE_URL;
 const { chromium } = createRequire(process.env.PLAYWRIGHT_DIR + '/')('playwright-core');
@@ -139,13 +140,14 @@ test('build-party 1/3 and build-scenes 2/3 side by side at 1024x768, stacked at 
 	assert.ok(b.y >= a.y + a.height - 1, 'stacked');
 });
 
-test('scene header is one row with the environment below at 1024x768', async () => {
+test('scene header is one row (title, status, status buttons, edit link) with the environment below at 1024x768', async () => {
 	const p = await build([1024, 768]);
 	await p.waitForSelector('[data-testid=scene]');
 	const all = p.locator('[data-testid=scene]');
 	assert.ok((await all.count()) >= 3);
 	let withEnv = 0;
 	for (let i = 0; i < (await all.count()); i++) {
+		await openSceneMore(all.nth(i)); // US-341: environment sits in scene-more
 		const r = await all.nth(i).evaluate((sc) => {
 			const rc = (e) => e.getBoundingClientRect();
 			const h3 = sc.querySelector('h3');
@@ -154,12 +156,12 @@ test('scene header is one row with the environment below at 1024x768', async () 
 			for (let n = w.nextNode(); n; n = w.nextNode()) if (n.textContent.trim()) { node = n; break; }
 			const rg = document.createRange();
 			rg.selectNodeContents(node);
-			const btns = [...sc.querySelectorAll('form[action^="?/move&"] button, form[action^="?/status&"] button, form[action^="?/delete&"] button')].map(rc);
+			const btns = [...sc.querySelectorAll('form[action^="?/status&"] button, [data-testid=scene-edit-open]')].map(rc);
 			const env = sc.querySelector('[data-testid=scene-environment]');
 			return { cys: [rc(rg), rc(sc.querySelector('[data-testid=scene-status]')), ...btns].map((b) => b.y + b.height / 2),
 				n: btns.length, bottom: Math.max(...btns.map((b) => b.bottom)), env: env ? rc(env).y : null };
 		});
-		assert.ok(r.n >= 3, 'buttons');
+		assert.ok(r.n >= 2, 'buttons');
 		assert.ok(spread(r.cys) <= 8, `centres ${r.cys}`);
 		if (r.env !== null) { withEnv++; assert.ok(r.env >= r.bottom - 1, `env ${r.env} below ${r.bottom}`); }
 	}
@@ -184,6 +186,7 @@ test('without JavaScript, changing a scene status and deleting it end on ?step=b
 	assert.equal(new URL(p.url()).searchParams.get('step'), 'build');
 	assert.equal(new URL(p.url()).searchParams.get('_'), null);
 	assert.equal(await sc().getAttribute('data-status'), 'done');
+	await openSceneMore(sc());
 	await Promise.all([p.waitForNavigation(), sc().locator('form[action^="?/delete&"] button').click()]);
 	assert.equal(new URL(p.url()).searchParams.get('step'), 'build');
 	assert.equal(await sc().count(), 0);

@@ -305,5 +305,6 @@
 	"levelup.slotsLeft": "{count} restant(s)",
 	"levelup.choice": "Choix {n}",
 	"levelup.newCards": "Nouvelles cartes",
-	"scene.editTitle": "Modifier la scène"
+	"scene.editTitle": "Modifier la scène",
+	"scene.more": "Butin, rencontre et ordre"
 }

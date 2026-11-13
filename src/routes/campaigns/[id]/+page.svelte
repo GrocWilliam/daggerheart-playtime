@@ -9,6 +9,8 @@
 	import DamageForm from '$lib/components/DamageForm.svelte';
 	import { TRACKERS, trackerValues } from '$lib/utils/trackers';
 	import { translate } from '$lib/i18n';
+	// A re-render after an enhanced post must not reset a disclosure the user toggled.
+	let moreOpen = $state<Record<string, boolean>>({});
 
 	import Help from '$lib/components/Help.svelte';
 	const ADJUSTMENTS = ['easier', 'damageBoost', 'harder'] as const;
@@ -127,7 +129,7 @@
 					{#each data.characters as c (c.id)}<option value={c.id}>{c.name}</option>{/each}
 				</select>
 			</label>
-			<button type="submit">{t('loot.give')}</button>
+			<button class="btn-secondary" type="submit">{t('loot.give')}</button>
 		</form>
 {/snippet}
 
@@ -160,11 +162,11 @@
 		<li>{t('campaign.none')}</li>
 	{/each}
 </ul>
-<p><a href="/campaigns/{encodeURIComponent(c.id)}/characters/new" data-testid="new-character">{t('campaign.newCharacter')}</a></p>
+<p><a href="/campaigns/{encodeURIComponent(c.id)}/characters/new" data-testid="new-character" class="btn-primary">{t('campaign.newCharacter')}</a></p>
 </div>
 <div class="min-w-0 md:col-span-2" data-testid="build-scenes">
 <h2 class="mt-4 mb-2">{t('campaign.scenes')}</h2>
-<Modal kind="scene" title={t('scenario.new')} lang={data.lang}>
+<Modal kind="scene" openerClass="btn-primary" title={t('scenario.new')} lang={data.lang}>
 {#if form?.modal === 'scene' && form.error}<p role="alert">{t(form.error)}</p>{/if}
 <form use:enhance={busy} method="POST" action="?/add&step=build">
 	<label>{t('scenario.sceneTitle')} <input name="title" value={form?.values?.title ?? ''} required maxlength="100" /></label>
@@ -205,29 +207,19 @@
 {#each data.scenes as s, i (s.id)}
 	<article class="mb-4 rounded-[0.5rem] border-2 border-solid p-3 {s.status === 'current' ? 'border-accent' : 'border-muted'}"
 		data-testid="scene" data-status={s.status} aria-current={s.status === 'current' ? 'true' : undefined}>
-		<div class="flex flex-wrap items-center gap-x-1 gap-y-0 [&_button]:px-2! [&_button:not([data-testid^=help])]:text-[0.875rem]">
+		<div class="flex flex-wrap items-center gap-2">
 			<h3 class="m-0! mr-1!">{s.title}</h3>
 			<span class="inline-block rounded-[999px] px-[0.6rem] text-[0.875rem] text-bg {badge[s.status]}" data-testid="scene-status">{t(`scenario.status.${s.status}`)}</span>
-			<form use:enhance={busy} class="mb-0" method="POST" action="?/move&step=build">
+			<form use:enhance={busy} class="mb-0 flex flex-wrap gap-2" method="POST" action="?/status&step=build">
 				<input type="hidden" name="sceneId" value={s.id} />
-				<button type="submit" name="position" value={i - 1} disabled={i === 0}>{t('scenario.moveUp')}</button>
-			</form>
-			<form use:enhance={busy} class="mb-0" method="POST" action="?/move&step=build">
-				<input type="hidden" name="sceneId" value={s.id} />
-				<button type="submit" name="position" value={i + 1} disabled={i === data.scenes.length - 1}>{t('scenario.moveDown')}</button>
-			</form>
-			<form use:enhance={busy} class="mb-0" method="POST" action="?/status&step=build">
-				<input type="hidden" name="sceneId" value={s.id} />
-				{#if s.status !== 'current'}<button type="submit" name="status" value="current">{t('scenario.setCurrent')}</button>{/if}
-				{#if s.status !== 'done'}<button type="submit" name="status" value="done">{t('scenario.markDone')}</button>{/if}
-			</form>
-			<form use:enhance={busy} class="mb-0" method="POST" action="?/delete&step=build">
-				<input type="hidden" name="sceneId" value={s.id} />
-				<button type="submit">{t('scenario.delete')}</button>
+				{#if s.status !== 'current'}<button class="btn-secondary" type="submit" name="status" value="current">{t('scenario.setCurrent')}</button>{/if}
+				{#if s.status !== 'done'}<button class="btn-secondary" type="submit" name="status" value="done">{t('scenario.markDone')}</button>{/if}
 			</form>
 			<a class="btn-secondary" data-testid="scene-edit-open" href="?step=build&new=scene-edit&scene={encodeURIComponent(s.id)}">{t('section.edit')}</a>
 		</div>
 		{#if s.notes}<p class="whitespace-pre-line">{s.notes}</p>{/if}
+		<details data-testid="scene-more" open={moreOpen[s.id] ?? s.status === 'current'} ontoggle={(e) => (moreOpen[s.id] = e.currentTarget.open)}>
+		<summary class="flex min-h-11 items-center">{t('scene.more')}</summary>
 		{#if s.environment}
 			{@const env = s.environment}
 			<div data-testid="scene-environment">
@@ -244,18 +236,18 @@
 		<form use:enhance={busy} class="flex flex-wrap items-end gap-2" method="POST" action="?/roll&step=build">
 			<input type="hidden" name="sceneId" value={s.id} />
 			<label class="mb-0!">{t('loot.table')}
-				<select name="table">
+				<select class="max-w-[16rem]" name="table">
 					<option value="items">{t('loot.table.items')}</option>
 					<option value="consumables">{t('loot.table.consumables')}</option>
 				</select>
 			</label>
 			<label class="mb-0!">{t('loot.rarity')}
-				<select name="rarity">
+				<select class="max-w-[16rem]" name="rarity">
 					{#each ['common', 'uncommon', 'rare', 'legendary'] as r (r)}<option value={r}>{t(`loot.rarity.${r}`)}</option>{/each}
 				</select>
 			</label>
-			<label class="mb-0!">{t('loot.count')} <input name="count" type="number" min="1" max="10" value="1" required /></label>
-			<button type="submit">{t('loot.roll')}</button>
+			<label class="mb-0!">{t('loot.count')} <input class="w-[5rem]! min-w-0!" name="count" type="number" min="1" max="10" value="1" required /></label>
+			<button class="btn-primary" type="submit">{t('loot.roll')}</button>
 		</form>
 		{#each s.loot as l (l.id)}
 			<div class="mb-2 rounded-[0.5rem] border-[3px] border-double border-accent bg-surface p-3" data-testid="loot-entry" data-given={l.given}>
@@ -265,7 +257,7 @@
 					<form use:enhance={busy} method="POST" action="?/deleteLoot&step=build">
 						<input type="hidden" name="sceneId" value={s.id} />
 						<input type="hidden" name="lootId" value={l.id} />
-						<button type="submit">{t('loot.delete')}</button>
+						<button class="btn-danger" type="submit">{t('loot.delete')}</button>
 					</form>
 				</div>
 			</div>
@@ -273,12 +265,12 @@
 		<h4>{t('encounter.title')}</h4>
 		<form use:enhance={busy} class="flex flex-wrap items-end gap-2" method="POST" action="?/generate&step=build">
 			<input type="hidden" name="sceneId" value={s.id} />
-			<label class="mb-0!">{t('encounter.partySize')} <input name="partySize" type="number" min="1" max="8" value={s.encounter?.partySize ?? data.party.partySize} required /></label>
-			<label class="mb-0!">{t('encounter.tier')} <input name="tier" type="number" min="1" max="4" value={s.encounter?.tier ?? data.party.tier} required /></label>
+			<label class="mb-0!">{t('encounter.partySize')} <input class="w-[5rem]! min-w-0!" name="partySize" type="number" min="1" max="8" value={s.encounter?.partySize ?? data.party.partySize} required /></label>
+			<label class="mb-0!">{t('encounter.tier')} <input class="w-[5rem]! min-w-0!" name="tier" type="number" min="1" max="4" value={s.encounter?.tier ?? data.party.tier} required /></label>
 			{#each ADJUSTMENTS as a (a)}
 				<label class="mb-0!"><input type="checkbox" name="adjustments" value={a} checked={s.encounter?.adjustments.includes(a) ?? false} /> {t(`encounter.adjust.${a}`)}</label>
 			{/each}
-			<button type="submit">{s.encounter ? t('encounter.regenerate') : t('encounter.generate')}</button>
+			<button class="btn-primary" type="submit">{s.encounter ? t('encounter.regenerate') : t('encounter.generate')}</button>
 		</form>
 		{#if s.encounter}
 			{@const enc = s.encounter}
@@ -292,21 +284,36 @@
 					<form use:enhance={busy} method="POST" action="?/setCount&step=build">
 						<input type="hidden" name="sceneId" value={s.id} />
 						<input type="hidden" name="id" value={a.id} />
-						<input name="count" type="number" min="1" value={a.count} required aria-label={translate(data.lang, 'encounter.count', { name: a.name })} />
+						<input class="w-[5rem]! min-w-0!" name="count" type="number" min="1" value={a.count} required aria-label={translate(data.lang, 'encounter.count', { name: a.name })} />
 						{#each enc.adversaries.filter((o) => o.id !== a.id) as o (o.id)}
 							<input type="hidden" name="id" value={o.id} />
 							<input type="hidden" name="count" value={o.count} />
 						{/each}
-						<button type="submit">{t('encounter.update')}</button>
-						<button type="submit" formaction="?/removeAdversary&step=build" name="remove" value={a.id} formnovalidate>{t('encounter.remove')}</button>
+						<button class="btn-secondary" type="submit">{t('encounter.update')}</button>
+						<button class="btn-danger" type="submit" formaction="?/removeAdversary&step=build" name="remove" value={a.id} formnovalidate>{t('encounter.remove')}</button>
 					</form>
 				</div>
 			{/each}
 			<form use:enhance={busy} method="POST" action="?/deleteEncounter&step=build">
 				<input type="hidden" name="sceneId" value={s.id} />
-				<button type="submit">{t('encounter.delete')}</button>
+				<button class="btn-danger" type="submit">{t('encounter.delete')}</button>
 			</form>
 		{/if}
+		<div class="flex flex-wrap gap-2">
+			<form use:enhance={busy} class="mb-0" method="POST" action="?/move&step=build">
+				<input type="hidden" name="sceneId" value={s.id} />
+				<button class="btn-ghost" type="submit" name="position" value={i - 1} disabled={i === 0}>{t('scenario.moveUp')}</button>
+			</form>
+			<form use:enhance={busy} class="mb-0 mr-4" method="POST" action="?/move&step=build">
+				<input type="hidden" name="sceneId" value={s.id} />
+				<button class="btn-ghost" type="submit" name="position" value={i + 1} disabled={i === data.scenes.length - 1}>{t('scenario.moveDown')}</button>
+			</form>
+			<form use:enhance={busy} class="mb-0" method="POST" action="?/delete&step=build">
+				<input type="hidden" name="sceneId" value={s.id} />
+				<button class="btn-danger" type="submit">{t('scenario.delete')}</button>
+			</form>
+		</div>
+		</details>
 	</article>
 {:else}
 	<p>{t('scenario.none')}</p>

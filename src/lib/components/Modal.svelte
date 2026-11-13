@@ -12,6 +12,7 @@
 		params: extra,
 		opener: withOpener = true,
 		clear = [],
+		openerClass = undefined,
 		children
 	}: {
 		kind: string;
@@ -22,6 +23,7 @@
 		opener?: boolean;
 		/** Query parameters removed along with `new` when the dialog closes. */
 		clear?: string[];
+		openerClass?: string;
 		children: Snippet;
 	} = $props();
 
@@ -79,7 +81,7 @@
 	});
 </script>
 
-{#if withOpener}<a data-testid="new-{kind}" href={openHref} bind:this={opener} onclick={onOpen}>{title}</a>{/if}
+{#if withOpener}<a class={openerClass} data-testid="new-{kind}" href={openHref} bind:this={opener} onclick={onOpen}>{title}</a>{/if}
 
 <dialog
 	bind:this={dialog}
