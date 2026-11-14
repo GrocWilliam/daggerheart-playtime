@@ -71,7 +71,8 @@ const measureTrackers = (p, scopeSel, labels) => p.evaluate(({ scopeSel, labels,
 		const walker = document.createTreeWalker(form, NodeFilter.SHOW_TEXT);
 		for (let n = walker.nextNode(); n; n = walker.nextNode()) {
 			const el = n.parentElement;
-			if (el.closest('button, [data-testid^="help-"], [popover]')) continue;
+			if (el.closest('[data-testid="help-panel"], [popover]')) continue;
+			if (el.closest('button') && !el.closest('[data-testid="help-open"]')) continue;
 			if (n.textContent.trim().replace(/\s*:$/, '') !== labels[name]) continue;
 			const rg = document.createRange();
 			rg.selectNodeContents(n);

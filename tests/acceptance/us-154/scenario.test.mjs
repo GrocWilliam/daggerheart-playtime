@@ -1,6 +1,7 @@
 import { test, before, after } from 'node:test';
 import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
+import { openSceneEdit, fillSceneEdit, openSceneMore } from '../support/scenes.mjs';
 
 // us-178: forms update in place (use:enhance), so there is no navigation to wait for: wait for the POST response, then for the network to settle.
 const afterSubmit = async (p, click) => {
@@ -36,6 +37,7 @@ async function open(path, lang = 'en', js = true) {
 const sceneTitles = async (p) => p.locator('[data-testid=scene]').evaluateAll((els) => els.map((e) => e.textContent));
 const scene = (p, title) => p.locator('[data-testid=scene]', { hasText: title });
 const click = async (p, title, name) => {
+	if (/move|delete/i.test(String(name))) await openSceneMore(scene(p, title)); // US-341: moves and delete sit in the closed scene-more
 	await afterSubmit(p, scene(p, title).getByRole('button', { name }).first().click());
 };
 
@@ -77,8 +79,10 @@ test('without JavaScript the forms add, edit, move, set current, mark done and d
 	assert.equal(one.environmentId, envs[0].id);
 	// edit
 	await p.goto(BASE + url);
-	const edit = scene(p, 'Two').locator('form', { has: p.locator('input[name=title]') }).first();
-	await edit.locator('input[name=title]').fill('Deux');
+	// US-340: the scene is edited in the scene-edit modal opened from its card
+	await openSceneEdit(p, 'Two');
+	const edit = p.getByTestId('modal-scene-edit').locator('form', { has: p.locator('input[name=title]') });
+	await fillSceneEdit(p, { title: 'Deux' });
 	await afterSubmit(p, edit.locator('button[type=submit], button:not([type])').first().click());
 	assert.deepEqual(await apiTitles(c.id), ['One', 'Deux']);
 	// move up / down
@@ -143,7 +147,7 @@ test('a scene with an environment shows its name, type, difficulty, impulses and
 		// us-246: features sit in the Help popover (formerly a <details>) or a plain <details>.
 		assert.ok(await el.locator('[data-testid="help"], details').count() >= 1, 'features in a helper or details');
 		assert.ok(text.includes(shown.feature[0].name.trim()), 'feature name');
-		assert.equal(await scene(p, 'Plain').locator('[data-testid="help"], details').count(), 0);
+		assert.equal(await scene(p, 'Plain').locator('[data-testid="help"], details:not([data-testid="scene-more"])').count(), 0);
 	}
 });
 

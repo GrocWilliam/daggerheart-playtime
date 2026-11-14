@@ -203,7 +203,7 @@
 	"campaign.party": "Party",
 	"campaign.scenes": "Scenes",
 	"run.noScene": "No scene is being played.",
-	"run.goBuild": "Choose a scene in the Build step.",
+	"run.goBuild": "Go to Build.",
 	"run.nextScene": "Next scene",
 	"run.notes.save": "Save",
 	"run.notes.saving": "Saving…",
@@ -304,5 +304,7 @@
 	"levelup.pick2": "Second advancement",
 	"levelup.slotsLeft": "{count} left",
 	"levelup.choice": "Choice {n}",
-	"levelup.newCards": "New cards"
+	"levelup.newCards": "New cards",
+	"scene.editTitle": "Edit scene",
+	"scene.more": "Loot, encounter and order"
 }

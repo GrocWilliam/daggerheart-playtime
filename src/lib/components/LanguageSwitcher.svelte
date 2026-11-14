@@ -12,11 +12,27 @@
 	}
 </script>
 
-<div data-testid="language-switcher" role="group" aria-label={translate(lang, 'language.label')} class="flex gap-2 p-2">
-	<button class="min-h-11 min-w-11 aria-pressed:font-bold!" type="button" data-testid="lang-en" aria-pressed={lang === 'en'} onclick={() => choose('en')}>
-		{translate(lang, 'language.en')}
+<div data-testid="language-switcher" role="group" aria-label={translate(lang, 'language.label')} class="flex gap-2">
+	<button
+		class={[lang === 'en' ? 'btn-primary font-bold!' : 'btn-ghost font-normal!', 'min-h-11 min-w-11']}
+		type="button"
+		data-testid="lang-en"
+		lang="en"
+		aria-label={translate(lang, 'language.en')}
+		aria-pressed={lang === 'en'}
+		onclick={() => choose('en')}
+	>
+		{'en'.toUpperCase()}
 	</button>
-	<button class="min-h-11 min-w-11 aria-pressed:font-bold!" type="button" data-testid="lang-fr" aria-pressed={lang === 'fr'} onclick={() => choose('fr')}>
-		{translate(lang, 'language.fr')}
+	<button
+		class={[lang === 'fr' ? 'btn-primary font-bold!' : 'btn-ghost font-normal!', 'min-h-11 min-w-11']}
+		type="button"
+		data-testid="lang-fr"
+		lang="fr"
+		aria-label={translate(lang, 'language.fr')}
+		aria-pressed={lang === 'fr'}
+		onclick={() => choose('fr')}
+	>
+		{'fr'.toUpperCase()}
 	</button>
 </div>

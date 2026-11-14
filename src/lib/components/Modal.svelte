@@ -10,8 +10,22 @@
 		title,
 		lang,
 		params: extra,
+		opener: withOpener = true,
+		clear = [],
+		openerClass = undefined,
 		children
-	}: { kind: string; title: string; lang: Lang; params?: Record<string, string>; children: Snippet } = $props();
+	}: {
+		kind: string;
+		title: string;
+		lang: Lang;
+		params?: Record<string, string>;
+		/** When false, no `new-<kind>` link is rendered (the page opens the dialog with its own links). */
+		opener?: boolean;
+		/** Query parameters removed along with `new` when the dialog closes. */
+		clear?: string[];
+		openerClass?: string;
+		children: Snippet<[Snippet]>;
+	} = $props();
 
 	let dialog: HTMLDialogElement | undefined = $state();
 	let opener: HTMLAnchorElement | undefined = $state();
@@ -20,7 +34,7 @@
 		const params = new URLSearchParams(u.searchParams);
 		for (const [k, v] of Object.entries(extra ?? {})) params.set(k, v);
 		if (add) params.set('new', kind);
-		else params.delete('new');
+		else for (const k of ['new', ...clear]) params.delete(k);
 		const q = params.toString();
 		return u.pathname + (q ? `?${q}` : '');
 	};
@@ -57,7 +71,7 @@
 		// open again when the event arrives: it came from show() reopening the dialog, not from the user closing it
 		if (dialog?.open) return;
 		opener?.focus();
-		if (page.url.searchParams.has('new')) {
+		if (['new', ...clear].some((k) => page.url.searchParams.has(k))) {
 			goto(closeHref, { replaceState: true, noScroll: true, keepFocus: true });
 		}
 	}
@@ -67,7 +81,9 @@
 	});
 </script>
 
-<a data-testid="new-{kind}" href={openHref} bind:this={opener} onclick={onOpen}>{title}</a>
+{#snippet cancel()}<a class="btn-ghost" data-testid="modal-cancel" href={closeHref} onclick={onCancel}>{translate(lang, 'modal.cancel')}</a>{/snippet}
+
+{#if withOpener}<a class={openerClass} data-testid="new-{kind}" href={openHref} bind:this={opener} onclick={onOpen}>{title}</a>{/if}
 
 <dialog
 	bind:this={dialog}
@@ -80,7 +96,6 @@
 >
 	<div class="p-3">
 		<h2 id={titleId} class="mt-4 mb-2">{title}</h2>
-		{@render children()}
-		<a data-testid="modal-cancel" href={closeHref} onclick={onCancel}>{translate(lang, 'modal.cancel')}</a>
+		{@render children(cancel)}
 	</div>
 </dialog>

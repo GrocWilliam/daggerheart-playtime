@@ -203,7 +203,7 @@
 	"campaign.party": "Groupe",
 	"campaign.scenes": "Scènes",
 	"run.noScene": "Aucune scène n'est en cours.",
-	"run.goBuild": "Choisissez une scène à l'étape Préparer.",
+	"run.goBuild": "Aller à Préparer.",
 	"run.nextScene": "Scène suivante",
 	"run.notes.save": "Enregistrer",
 	"run.notes.saving": "Enregistrement…",
@@ -304,5 +304,7 @@
 	"levelup.pick2": "Seconde progression",
 	"levelup.slotsLeft": "{count} restant(s)",
 	"levelup.choice": "Choix {n}",
-	"levelup.newCards": "Nouvelles cartes"
+	"levelup.newCards": "Nouvelles cartes",
+	"scene.editTitle": "Modifier la scène",
+	"scene.more": "Butin, rencontre et ordre"
 }

@@ -91,7 +91,9 @@ async function checkProgress(page, lang, step) {
 	const prog = page.locator('[data-testid=levelup-progress]');
 	const text = await prog.innerText();
 	for (const s of L[lang].steps) assert.ok(text.includes(s), `progress lacks ${s}: ${text}`);
-	assert.equal((await prog.locator('[aria-current=step]').innerText()).trim(), L[lang].steps[step - 1]);
+	// Story #344 numbers the steps ("1 Tier achievements"): allow the step's own number before the name.
+	const cur = (await prog.locator('[aria-current=step]').innerText()).trim().replace(new RegExp(`^${step}\\s+`), '');
+	assert.equal(cur, L[lang].steps[step - 1]);
 }
 
 /**

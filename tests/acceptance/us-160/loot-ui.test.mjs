@@ -1,6 +1,7 @@
 import { test, before, after } from 'node:test';
 import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
+import { openSceneMore } from '../support/scenes.mjs';
 
 // us-178: forms update in place (use:enhance), so there is no navigation to wait for: wait for the POST response, then for the network to settle.
 const afterSubmit = async (p, click) => {
@@ -36,6 +37,7 @@ async function open(c, lang = 'en', js = true) {
 	p.__js = js;
 	p.setDefaultTimeout(15000);
 	await p.goto(`${BASE}/campaigns/${c.id}?step=build`);
+	await openSceneMore(sceneOf(p)); // US-341: loot lives in the scene-more disclosure
 	return p;
 }
 const sceneOf = (p) => p.locator('[data-testid=scene]', { hasText: 'Vaultroom' });
@@ -46,6 +48,7 @@ async function roll(p, table, rarity, count) {
 	await sc.locator('select[name=rarity]').selectOption(rarity);
 	await sc.locator('[name=count]').fill(String(count));
 	await afterSubmit(p, sc.getByRole('button', { name: /roll loot|lancer/i }).click());
+	await openSceneMore(sceneOf(p));
 }
 const strings = (v) => (typeof v === 'string' ? [v] : v && typeof v === 'object' ? Object.values(v).flatMap(strings) : []);
 const norm = (t) => t.replace(/\s+/g, ' ');

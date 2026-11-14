@@ -12,9 +12,10 @@ const VIEWPORTS = [
 	['just below 600', 599, 800, 1],
 	['600 boundary', 600, 800, 1],
 	['tablet portrait', 768, 1024, 2],
-	['just below 1024', 1023, 768, 2],
-	['tablet landscape', 1024, 768, 1],
-	['desktop', 1280, 800, 1]
+	['just below 1024', 1023, 768, 3],
+	['tablet landscape', 1024, 768, 2],
+	['wide laptop', 1180, 820, 2],
+	['desktop', 1280, 800, 3]
 ];
 
 async function api(method, path, body) {
@@ -55,7 +56,7 @@ async function visit(w, h) {
 	return { page, close: () => ctx.close() };
 }
 
-test('character cards sit in 1 column below 768px, 2 from 768 to 1023px, 1 from 1024px (us-192)', async () => {
+test('character cards sit in 1 column below 768px, auto-fill 18rem columns, with a sidebar from 1024px (us-192, #339)', async () => {
 	for (const [name, w, h, cols] of VIEWPORTS) {
 		const v = await visit(w, h);
 		try {

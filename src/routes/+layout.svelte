@@ -11,10 +11,10 @@
 	const notice = licence.trim().split(/\n\s*\n/)[0].replace(/\s+/g, ' ');
 </script>
 
-<header class="site-header mb-4 flex flex-wrap md:flex-nowrap items-center justify-between gap-2 border-b border-solid border-muted">
+<header class="site-header mb-4 flex flex-wrap items-center justify-between gap-x-2 md:flex-nowrap border-b border-solid border-muted">
 	<svg data-testid="sigil" aria-hidden="true" focusable="false" class="size-8 fill-accent" viewBox="0 0 32 32"><path d="M16 2 L30 16 L16 30 L2 16 Z M16 9 L23 16 L16 23 L9 16 Z" fill-rule="evenodd" /></svg>
 	<nav class="flex flex-wrap items-center gap-x-4 gap-y-2" aria-label={translate(data.lang, 'nav.label')}>
-		<a class="border-none no-underline aria-[current=page]:border-b-2 aria-[current=page]:border-solid aria-[current=page]:border-accent aria-[current=page]:font-bold" href="/" data-testid="nav-home" aria-current={page.url.pathname === '/' ? 'page' : undefined}>{translate(data.lang, 'home.title')}</a>
+		<a class="border-none no-underline aria-[current=page]:border-b-2 aria-[current=page]:border-solid aria-[current=page]:border-accent aria-[current=page]:font-bold" href="/" data-testid="nav-home" aria-current={page.url.pathname === '/' ? 'page' : undefined}><span class="sr-only md:not-sr-only">{translate(data.lang, 'home.title')}</span></a>
 		<a
 			class="border-none no-underline aria-[current=page]:border-b-2 aria-[current=page]:border-solid aria-[current=page]:border-accent aria-[current=page]:font-bold" 
 			href="/reference"
@@ -23,11 +23,11 @@
 			>{translate(data.lang, 'nav.reference')}</a
 		>
 	</nav>
-	<LanguageSwitcher lang={data.lang} />
+	<div class="ml-auto"><LanguageSwitcher lang={data.lang} /></div>
 </header>
 
 {@render children()}
 
-<footer lang="en" data-testid="srd-licence">
+<footer lang="en" data-testid="srd-licence" class="mt-8 text-[0.75rem] text-muted [&_small]:text-[length:inherit]">
 	<small>{notice}</small>
 </footer>

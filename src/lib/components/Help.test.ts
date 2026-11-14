@@ -33,6 +33,10 @@ describe('help', () => {
 			'popovertargetaction="hide"',
 			'$props.id()',
 			'aria-label=',
+			"{label ?? '?'}",
+			'underline decoration-dotted',
+			'btn-ghost',
+			'btn-secondary',
 			'lang={line.lang}'
 		])
 			expect(src).toContain(s);

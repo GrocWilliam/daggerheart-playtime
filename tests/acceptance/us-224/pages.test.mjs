@@ -1,4 +1,4 @@
-// us-224: no element outside the footer has lang="en" on French pages; the footer keeps its English licence.
+// us-224: no element outside the footer and the language switcher has lang="en" on French pages; the footer keeps its English licence.
 import { test, before, after } from 'node:test';
 import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
@@ -46,7 +46,7 @@ async function open(path, lang) {
 // Elements with lang="en" that are not inside the footer.
 const englishOutsideFooter = (p) => p.evaluate(() =>
 	[...document.querySelectorAll('[lang="en" i]')]
-		.filter((e) => !e.closest('footer'))
+		.filter((e) => !e.closest('footer, [data-testid="language-switcher"]'))
 		.map((e) => `${e.tagName.toLowerCase()}[${e.getAttribute('data-testid') ?? ''}]: ${(e.textContent ?? '').replace(/\s+/g, ' ').trim().slice(0, 80)}`));
 
 async function pages() {

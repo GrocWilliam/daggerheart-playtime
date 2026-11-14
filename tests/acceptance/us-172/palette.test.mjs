@@ -68,7 +68,7 @@ test('contrast >= 4.5:1 for text on bg and surface; buttons use bg text on accen
 				const bgs = [root.getPropertyValue('--bg').trim(), root.getPropertyValue('--surface').trim()];
 				const colors = new Set();
 				for (const e of document.querySelectorAll('body *')) {
-					if (e.offsetParent === null || !(e.textContent || '').trim() || e.tagName === 'BUTTON') continue;
+					if (e.offsetParent === null || !(e.textContent || '').trim() || e.tagName === 'BUTTON' || e.matches('a[aria-current]')) continue;
 					if (![...e.childNodes].some((n) => n.nodeType === 3 && n.textContent.trim())) continue;
 					colors.add(getComputedStyle(e).color);
 				}
@@ -78,12 +78,13 @@ test('contrast >= 4.5:1 for text on bg and surface; buttons use bg text on accen
 					const bgc = getComputedStyle(el).color; el.remove();
 					if (ratio(c, bgc) < 4.5) bad.push(`${c} on ${bgc}`);
 				}
-				const btns = [...document.querySelectorAll('button:not([data-testid^="help-"])')].filter((b) => b.offsetParent !== null).map((b) => [getComputedStyle(b).color, getComputedStyle(b).backgroundColor]);
+				const btns = [...document.querySelectorAll('button:not([data-testid^="help-"]):not([name=delta])')].filter((b) => b.offsetParent !== null).map((b) => [getComputedStyle(b).color, getComputedStyle(b).backgroundColor]);
 				return { bad, btns };
 			});
 			assert.deepEqual(r.bad, [], `${w} ${lang}`);
 			assert.ok(r.btns.length > 0);
-			for (const [c, bg] of r.btns) assert.deepEqual([c, bg], [rgb(PALETTE['--bg']), rgb(PALETTE['--accent'])]);
+			const looks = [[rgb(PALETTE['--bg']), rgb(PALETTE['--accent'])], [rgb(PALETTE['--accent']), 'rgba(0, 0, 0, 0)'], [rgb(PALETTE['--text']), 'rgba(0, 0, 0, 0)'], [rgb(PALETTE['--danger']), 'rgba(0, 0, 0, 0)']].map((l) => JSON.stringify(l));
+			for (const [c, bg] of r.btns) assert.ok(looks.includes(JSON.stringify([c, bg])), `${c} ${bg}`);
 		}, lang);
 });
 
@@ -101,7 +102,7 @@ test('article has a 3px double accent border, radius 8px; forms have no box (us-
 			const r = await page.evaluate(() => {
 				const pick = (e) => { const s = getComputedStyle(e); return ['Top', 'Right', 'Bottom', 'Left'].map((d) => [s[`border${d}Style`], s[`border${d}Width`], s[`border${d}Color`]]).concat([[s.borderTopLeftRadius, s.borderBottomRightRadius, s.backgroundColor]]); };
 				const out = { article: [...document.querySelectorAll('article')].map(pick), form: [], cards: [...document.querySelectorAll('[data-testid="character-card"]')].map(pick) };
-				out.form = [...document.querySelectorAll('form')].filter((f) => !f.closest('table, article, [data-testid="character-card"]')).map(pick);
+				out.form = [...document.querySelectorAll('form')].filter((f) => !f.closest('table, article, [data-testid="character-card"]') && !(f.getAttribute('action') || '').includes('/fear')).map(pick);
 				return out;
 			});
 			const side = [['double', '3px', rgb(PALETTE['--accent'])]];

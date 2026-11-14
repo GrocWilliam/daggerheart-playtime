@@ -39,7 +39,8 @@ test('fr sheet: Chosen ancestry and community show name and help lines in lang="
 		assert.notEqual(fr, await srdName(kind, id, 'en'), `${id} has a French name`);
 		const name = p.locator(`[data-testid="${testid}"]`);
 		assert.equal(await name.count(), 1);
-		assert.equal(await name.textContent(), fr);
+		const opener = name.locator('[data-testid="help-open"]');
+		assert.equal((await (await opener.count() ? opener : name).textContent()).trim(), fr);
 		assert.equal(await name.evaluate((e) => e.closest('[lang]')?.getAttribute('lang')), 'fr');
 		const details = p.locator(`[data-testid="help"][data-help="${id}"]`);
 		assert.equal(await details.count(), 1, `help of ${id}`);

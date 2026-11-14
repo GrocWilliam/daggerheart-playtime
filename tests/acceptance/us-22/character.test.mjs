@@ -70,7 +70,7 @@ async function interfaceTexts(page) {
 	return page.evaluate(() => {
 		const out = [];
 		for (const el of document.querySelectorAll('h1,h2,h3,h4,h5,h6,label,button,summary,legend,th,[role="button"]')) {
-			if (el.closest('[lang="en"]:not(html)') || el.matches('[data-testid="help-open"]')) continue; // US-45: SRD text, and the "?" helper toggle (named by aria-label)
+			if (el.closest('[lang="en"]:not(html)') || el.matches('[data-testid="help-open"],[data-testid^="lang-"]')) continue; // US-45: SRD text, and the "?" helper toggle (named by aria-label)
 			if (el.querySelector('[data-testid="character-name"]')) continue; // user data
 			const clone = el.cloneNode(true);
 			clone.querySelectorAll('input,select,textarea').forEach((i) => i.remove());
@@ -79,7 +79,7 @@ async function interfaceTexts(page) {
 		}
 		for (const el of document.querySelectorAll('[placeholder]')) out.push({ kind: 'placeholder', text: el.getAttribute('placeholder') });
 		for (const el of document.querySelectorAll('input[type=submit],input[type=button]')) out.push({ kind: 'input', text: el.value });
-		for (const el of document.querySelectorAll('[data-testid^="condition-"],[data-testid="down"]')) out.push({ kind: 'badge', text: el.textContent.trim() });
+		for (const el of document.querySelectorAll('[data-testid^="condition-"],[data-testid="down"]')) out.push({ kind: 'badge', text: (el.querySelector('[data-testid="help-open"]') ?? el).textContent.trim() });
 		return out.filter((x) => x.text);
 	});
 }

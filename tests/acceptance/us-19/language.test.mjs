@@ -109,8 +109,10 @@ test('every page shows the language switcher with two buttons and aria-pressed',
 			assert.equal(await sw.count(), 1, p);
 			assert.equal(await sw.getByRole('button').count(), 2);
 			const en = page.getByTestId('lang-en'), fr = page.getByTestId('lang-fr');
-			assert.equal((await en.textContent()).trim(), 'English');
-			assert.equal((await fr.textContent()).trim(), 'Français');
+			assert.equal((await en.textContent()).trim(), 'EN');
+			assert.equal((await fr.textContent()).trim(), 'FR');
+			assert.equal(await en.getAttribute('aria-label'), 'English');
+			assert.equal(await fr.getAttribute('aria-label'), 'Français');
 			assert.equal(await en.getAttribute('aria-pressed'), String(lang === 'en'), `${p} ${lang}`);
 			assert.equal(await fr.getAttribute('aria-pressed'), String(lang === 'fr'), `${p} ${lang}`);
 			await ctx.close();

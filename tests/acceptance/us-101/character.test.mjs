@@ -138,7 +138,7 @@ for (const [name, w, h] of [['phone', 375, 667], ['desktop', 1280, 800]]) {
 				edit: pick(edit, ['display', 'columnGap', 'backgroundColor', 'borderTopLeftRadius', 'paddingTop', 'marginBottom']),
 				editCols: cs(edit).gridTemplateColumns.split(' ').length,
 				editXs: [...new Set(kids.map((k) => Math.round(rect(k).left)))].length,
-				editBtn: { justify: cs(kids.at(-1)).justifySelf, left: rect(kids.at(-1)).left, formLeft: rect(edit).left, h: rect(kids.at(-1)).height, bg: cs(kids.at(-1)).backgroundColor, color: cs(kids.at(-1)).color },
+				editBtn: (() => { const b = q('button[type=submit]', edit); return { left: rect(b).left, formLeft: rect(edit).left, h: rect(b).height, bg: cs(b).backgroundColor, color: cs(b).color }; })(),
 				label: pick(q('label', edit), ['color', 'display', 'marginBottom']),
 				input: pick(q('input[name=name]', edit), ['backgroundColor', 'color', 'borderTopWidth', 'borderTopStyle', 'borderTopColor', 'borderTopLeftRadius', 'fontSize', 'width', 'paddingTop']),
 				inputH: rect(q('input[name=name]', edit)).height, inputW: rect(q('input[name=name]', edit)).width, labelW: rect(q('label', edit)).width,
@@ -161,16 +161,15 @@ for (const [name, w, h] of [['phone', 375, 667], ['desktop', 1280, 800]]) {
 				scroll: document.documentElement.scrollWidth - document.documentElement.clientWidth
 			};
 		});
-		assert.equal(r.trk.display, 'flex');
-		assert.equal(r.trk.flexWrap, 'wrap'); // us-301: Tracker is flex-wrap (only the pips wrap)
+		assert.equal(r.trk.display, 'grid');
 		assert.equal(r.trk.alignItems, 'center');
 		assert.equal(r.trk.columnGap, '8px');
-		assert.equal(r.trk.marginBottom, '12px');
+		assert.equal(r.trk.marginBottom, '4px');
 		assert.equal(r.trk.backgroundColor, CLEAR);
 		assert.equal(r.trk.paddingTop, '0px');
 		for (const b of r.trkBtns) {
 			assert.ok(b.h >= 43.5 && b.w >= 43.5, 'tracker buttons 44px');
-			assert.equal(b.bg, ACCENT);
+			assert.equal(b.bg, CLEAR);
 			assert.equal(b.fs, '16px');
 		}
 		assert.equal(r.val.textAlign, 'center');
@@ -207,8 +206,7 @@ for (const [name, w, h] of [['phone', 375, 667], ['desktop', 1280, 800]]) {
 		assert.equal(r.edit.columnGap, '16px');
 		assert.equal(r.editCols, w >= 768 ? 2 : 1, 'edit form columns');
 		assert.equal(r.editXs, w >= 768 ? 2 : 1, 'edit form fields laid out in columns');
-		assert.equal(r.editBtn.justify, 'start');
-		assert.equal(r.editBtn.left, r.editBtn.formLeft, 'save sits at the start of the first column');
+		assert.ok(Math.abs(r.editBtn.left - r.editBtn.formLeft) <= 1, 'save sits at the start of the form');
 		assert.ok(r.editBtn.h >= 43.5);
 		assert.equal(r.editBtn.bg, ACCENT);
 		assert.equal(r.editBtn.color, BG);
@@ -227,8 +225,8 @@ for (const [name, w, h] of [['phone', 375, 667], ['desktop', 1280, 800]]) {
 		else assert.ok(r.inputW <= 384.5 && r.inputW >= 191, 'inputs 12rem..24rem wide on desktop');
 		assert.ok(r.select.h >= 43.5);
 		assert.equal(r.select.fs, '16px');
-		assert.ok(r.check.w >= 24, 'checkbox width');
-		assert.ok(r.check.h >= 24, 'checkbox height');
+		assert.ok(r.check.w >= 19.5 && r.check.w <= 20.5, 'checkbox width'); // us-334: 1.25rem
+		assert.ok(r.check.h >= 19.5 && r.check.h <= 20.5, 'checkbox height'); // us-334: 1.25rem
 		assert.equal(r.check.label.display, 'flex');
 		assert.equal(r.check.label.alignItems, 'center');
 		assert.equal(r.check.label.columnGap, '8px');
