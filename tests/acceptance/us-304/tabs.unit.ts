@@ -116,14 +116,14 @@ describe('Modal params', () => {
 	};
 	it('adds params to the opener and Cancel hrefs', () => {
 		const { body } = render(Modal as unknown as Component<Record<string, unknown>>, {
-			props: { kind: 'item', title: 'T', lang: 'en', params: { tab: 'gear' }, children: () => {} }
+			props: { kind: 'item', title: 'T', lang: 'en', params: { tab: 'gear' }, children: ($$payload: unknown, cancel: (p: unknown) => void) => cancel($$payload) }
 		});
 		const { open, cancel } = hrefs(body);
 		expect(Object.fromEntries(open)).toEqual({ new: 'item', tab: 'gear' });
 		expect(Object.fromEntries(cancel)).toEqual({ tab: 'gear' });
 	});
 	it('still works without params', () => {
-		const { body } = render(Modal as unknown as Component<Record<string, unknown>>, { props: { kind: 'item', title: 'T', lang: 'en', children: () => {} } });
+		const { body } = render(Modal as unknown as Component<Record<string, unknown>>, { props: { kind: 'item', title: 'T', lang: 'en', children: ($$payload: unknown, cancel: (p: unknown) => void) => cancel($$payload) } });
 		const { open, cancel } = hrefs(body);
 		expect(Object.fromEntries(open)).toEqual({ new: 'item' });
 		expect([...cancel]).toEqual([]);

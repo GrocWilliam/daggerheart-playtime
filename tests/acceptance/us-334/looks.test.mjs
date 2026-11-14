@@ -106,8 +106,8 @@ test('h1 is 24px on phones and 28px from 768px', async () => {
 		});
 });
 
-test('buttons with no variant class keep the accent background and bg text (home and Run step)', async () => {
-	for (const url of [homeUrl(BASE), runStepUrl(BASE, campaignId)])
+test('buttons with no variant class keep the accent background and bg text (Run step; every home button has a variant)', async () => {
+	for (const url of [runStepUrl(BASE, campaignId)])
 		await withPage(url, [1024, 768], async (page) => {
 			const looks = await plainButtonLooks(page);
 			assert.ok(looks.length > 0, `${url} has buttons`);

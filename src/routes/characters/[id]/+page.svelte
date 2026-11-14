@@ -62,6 +62,7 @@
 <ConditionBadges conditions={c.conditions} lang={data.lang} />
 </div>
 <div class="mb-3 flex flex-wrap gap-2"><a class="btn-secondary" data-testid="campaign-run-link" href="/campaigns/{c.campaignId}?step=run">{t('character.runLink')}</a>{#if data.canLevelUp}<a class="btn-secondary" data-testid="level-up" href="/characters/{c.id}/level-up?step=1">{t('levelup.title')}</a>{/if}<Modal kind="edit" openerClass="btn-secondary" params={{ tab: data.tab }} title={t('section.edit')} lang={data.lang}>
+{#snippet children(cancel)}
 <form use:enhance={busy} method="POST" action={actionHref('edit', data.tab)} class="grid grid-cols-[minmax(0,1fr)] gap-x-4 *:min-w-0 min-[600px]:grid-cols-[repeat(2,minmax(0,1fr))]" class:form-grid={true}>
 	{#if form?.modal === 'edit' && form.error}<p role="alert" class="col-span-full">{t(form.error)}</p>{/if}
 	{#each fields.slice(0, 1) as [name, label, type, value] (name)}
@@ -113,8 +114,9 @@
 			{#if opened('edit')}<Help id={k} name={t(`trait.${k}`)} text={t(`trait.help.${k}`)} lang={data.lang} />{/if}
 		</div>
 	{/each}
-	<button type="submit" class="btn-primary [justify-self:start] min-[600px]:col-start-1">{t('action.save')}</button>
+	<div class="col-span-full flex flex-wrap gap-2"><button type="submit" class="btn-primary">{t('action.save')}</button>{@render cancel()}</div>
 </form>
+{/snippet}
 </Modal></div>
 
 {#if data.tab !== 'traits' && opened('experience')}{@render experienceModal()}{/if}
@@ -130,16 +132,19 @@
 
 {#snippet experienceModal()}
 <Modal kind="experience" openerClass="btn-secondary" params={{ tab: 'traits' }} title={t('experience.new')} lang={data.lang}>
+{#snippet children(cancel)}
 <form use:enhance={busy} method="POST" action={actionHref('addExperience', data.tab)}>
 	<label>{t('experience.name')} <input type="text" name="name" maxlength="100" required value={expValues?.name ?? ''} /></label>
 	<label>{t('experience.modifier')} <input type="number" name="modifier" min="1" max="5" step="1" value={expValues?.modifier ?? '2'} required /></label>
-	<button type="submit" class="btn-primary">{t('action.addExperience')}</button>
+	<div class="flex flex-wrap gap-2"><button type="submit" class="btn-primary">{t('action.addExperience')}</button>{@render cancel()}</div>
 	{#if form?.modal === 'experience' && form?.error}<p role="alert">{t(form.error)}</p>{/if}
 </form>
+{/snippet}
 </Modal>
 {/snippet}
 {#snippet itemModal()}
 <Modal kind="item" openerClass="btn-secondary" params={{ tab: 'gear' }} title={t('item.new')} lang={data.lang}>
+{#snippet children(cancel)}
 <form use:enhance={busy} method="POST" action={actionHref('addItem', data.tab)}>
 	<label>{t('item.name')} <input type="text" name="name" maxlength="100" value={itemValues?.name ?? ''} /></label>
 	<label>
@@ -156,13 +161,15 @@
 		</select>
 	</label>
 	<label>{t('item.quantity')} <input type="number" name="quantity" min="1" value={itemValues?.quantity ?? ''} /></label>
-	<button type="submit" class="btn-primary">{t('action.addItem')}</button>
+	<div class="flex flex-wrap gap-2"><button type="submit" class="btn-primary">{t('action.addItem')}</button>{@render cancel()}</div>
 	{#if form?.modal === 'item' && form?.error}<p role="alert">{t(form.error)}</p>{/if}
 </form>
+{/snippet}
 </Modal>
 {/snippet}
 {#snippet cardModal()}
 <Modal kind="card" openerClass="btn-secondary" params={{ tab: 'cards' }} title={t('card.new')} lang={data.lang}>
+{#snippet children(cancel)}
 <form use:enhance={busy} method="POST" action={actionHref('addCard', data.tab)}>
 	<label>
 		{t('card.add')}
@@ -176,9 +183,10 @@
 			{/each}
 		</select>
 	</label>
-	<button type="submit" class="btn-primary">{t('action.addCard')}</button>
+	<div class="flex flex-wrap gap-2"><button type="submit" class="btn-primary">{t('action.addCard')}</button>{@render cancel()}</div>
 	{#if form?.modal === 'card' && form?.error}<p role="alert">{t(form.error)}</p>{/if}
 </form>
+{/snippet}
 </Modal>
 {/snippet}
 {#snippet gear(testid: string, g: { name: string; nameLang: Lang; trait?: string; range?: string; dice?: string; damageType?: string; burden?: string; major?: number; severe?: number; score?: number; features: { name: string; text: string; lang: Lang }[] })}

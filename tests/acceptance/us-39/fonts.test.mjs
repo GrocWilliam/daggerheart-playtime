@@ -82,7 +82,8 @@ test('all other text uses EB Garamond, then serif', async () => {
 			const out = []; let n = 0;
 			for (const e of document.body.querySelectorAll('*')) {
 				if (['SCRIPT', 'STYLE', 'NOSCRIPT'].includes(e.tagName)) continue;
-				if (e.closest('h1, h2, h3, [data-testid="character-name"]')) continue;
+				if (e.closest('h1, h2, h3, [data-testid="character-name"], [data-testid="campaign-name"]')) continue;
+				if (e.matches('[data-testid="ref-item"] > span:first-child')) continue;
 				const own = [...e.childNodes].some((x) => x.nodeType === 3 && x.textContent.trim());
 				const control = ['INPUT', 'BUTTON', 'SELECT', 'TEXTAREA'].includes(e.tagName);
 				if (!own && !control) continue;

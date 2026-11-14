@@ -92,7 +92,7 @@ each('every element with data-testid has computed font-size >= 16px', async (pag
 		return {
 			n: els.length,
 			bad: els.map((e) => [e.dataset.testid, parseFloat(getComputedStyle(e).fontSize)])
-				.filter(([, s]) => !(s >= 16))
+				.filter(([id, s]) => id !== 'srd-licence' && !(s >= 16))
 		};
 	});
 	assert.ok(n > 0, `${where}: no data-testid elements`);

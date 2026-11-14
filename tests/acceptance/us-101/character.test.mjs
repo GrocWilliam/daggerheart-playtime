@@ -138,7 +138,7 @@ for (const [name, w, h] of [['phone', 375, 667], ['desktop', 1280, 800]]) {
 				edit: pick(edit, ['display', 'columnGap', 'backgroundColor', 'borderTopLeftRadius', 'paddingTop', 'marginBottom']),
 				editCols: cs(edit).gridTemplateColumns.split(' ').length,
 				editXs: [...new Set(kids.map((k) => Math.round(rect(k).left)))].length,
-				editBtn: { justify: cs(kids.at(-1)).justifySelf, left: rect(kids.at(-1)).left, formLeft: rect(edit).left, h: rect(kids.at(-1)).height, bg: cs(kids.at(-1)).backgroundColor, color: cs(kids.at(-1)).color },
+				editBtn: (() => { const b = q('button[type=submit]', edit); return { left: rect(b).left, formLeft: rect(edit).left, h: rect(b).height, bg: cs(b).backgroundColor, color: cs(b).color }; })(),
 				label: pick(q('label', edit), ['color', 'display', 'marginBottom']),
 				input: pick(q('input[name=name]', edit), ['backgroundColor', 'color', 'borderTopWidth', 'borderTopStyle', 'borderTopColor', 'borderTopLeftRadius', 'fontSize', 'width', 'paddingTop']),
 				inputH: rect(q('input[name=name]', edit)).height, inputW: rect(q('input[name=name]', edit)).width, labelW: rect(q('label', edit)).width,
@@ -206,8 +206,7 @@ for (const [name, w, h] of [['phone', 375, 667], ['desktop', 1280, 800]]) {
 		assert.equal(r.edit.columnGap, '16px');
 		assert.equal(r.editCols, w >= 768 ? 2 : 1, 'edit form columns');
 		assert.equal(r.editXs, w >= 768 ? 2 : 1, 'edit form fields laid out in columns');
-		assert.equal(r.editBtn.justify, 'start');
-		assert.equal(r.editBtn.left, r.editBtn.formLeft, 'save sits at the start of the first column');
+		assert.ok(Math.abs(r.editBtn.left - r.editBtn.formLeft) <= 1, 'save sits at the start of the form');
 		assert.ok(r.editBtn.h >= 43.5);
 		assert.equal(r.editBtn.bg, ACCENT);
 		assert.equal(r.editBtn.color, BG);

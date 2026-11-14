@@ -167,6 +167,7 @@
 <div class="min-w-0 md:col-span-2" data-testid="build-scenes">
 <h2 class="mt-4 mb-2">{t('campaign.scenes')}</h2>
 <Modal kind="scene" openerClass="btn-primary" title={t('scenario.new')} lang={data.lang}>
+{#snippet children(cancel)}
 {#if form?.modal === 'scene' && form.error}<p role="alert">{t(form.error)}</p>{/if}
 <form use:enhance={busy} method="POST" action="?/add&step=build">
 	<label>{t('scenario.sceneTitle')} <input name="title" value={form?.values?.title ?? ''} required maxlength="100" /></label>
@@ -178,13 +179,15 @@
 			{#each data.environments as o (o.id)}<option value={o.id} selected={form?.values?.environmentId === o.id}>{o.name}</option>{/each}
 		</select>
 	</label>
-	<button type="submit">{t('scenario.add')}</button>
+	<div class="flex flex-wrap gap-2"><button type="submit" class="btn-primary">{t('scenario.add')}</button>{@render cancel()}</div>
 </form>
+{/snippet}
 </Modal>
 {#if editScene}
 {@const es = editScene}
 {#key es.id}
 <Modal kind="scene-edit" opener={false} params={{ step: 'build' }} clear={['scene']} title={t('scene.editTitle')} lang={data.lang}>
+{#snippet children(cancel)}
 {#if form?.modal === 'scene-edit' && form.error}<p role="alert">{t(form.error)}</p>{/if}
 <form use:enhance={busy} method="POST" action="?/edit&step=build">
 	<input type="hidden" name="sceneId" value={es.id} />
@@ -198,8 +201,9 @@
 			{#each data.environments as o (o.id)}<option value={o.id} selected={o.id === es.environmentId} label={o.name}></option>{/each}
 		</select>
 	</label>
-	<button type="submit" class="btn-primary">{t('scenario.save')}</button>
+	<div class="flex flex-wrap gap-2"><button type="submit" class="btn-primary">{t('scenario.save')}</button>{@render cancel()}</div>
 </form>
+{/snippet}
 </Modal>
 {/key}
 {/if}

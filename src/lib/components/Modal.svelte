@@ -24,7 +24,7 @@
 		/** Query parameters removed along with `new` when the dialog closes. */
 		clear?: string[];
 		openerClass?: string;
-		children: Snippet;
+		children: Snippet<[Snippet]>;
 	} = $props();
 
 	let dialog: HTMLDialogElement | undefined = $state();
@@ -81,6 +81,8 @@
 	});
 </script>
 
+{#snippet cancel()}<a class="btn-ghost" data-testid="modal-cancel" href={closeHref} onclick={onCancel}>{translate(lang, 'modal.cancel')}</a>{/snippet}
+
 {#if withOpener}<a class={openerClass} data-testid="new-{kind}" href={openHref} bind:this={opener} onclick={onOpen}>{title}</a>{/if}
 
 <dialog
@@ -94,7 +96,6 @@
 >
 	<div class="p-3">
 		<h2 id={titleId} class="mt-4 mb-2">{title}</h2>
-		{@render children()}
-		<a data-testid="modal-cancel" href={closeHref} onclick={onCancel}>{translate(lang, 'modal.cancel')}</a>
+		{@render children(cancel)}
 	</div>
 </dialog>

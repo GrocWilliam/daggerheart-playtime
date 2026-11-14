@@ -28,6 +28,6 @@
 
 {@render children()}
 
-<footer lang="en" data-testid="srd-licence">
+<footer lang="en" data-testid="srd-licence" class="mt-8 text-[0.75rem] text-muted [&_small]:text-[length:inherit]">
 	<small>{notice}</small>
 </footer>
