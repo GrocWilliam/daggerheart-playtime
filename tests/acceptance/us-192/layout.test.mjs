@@ -73,23 +73,22 @@ test('run at 375x812: one column for current-scene, party and journal', async ()
 	assert.deepEqual(new Set(cs.map((c) => Math.round(c.x))).size, 1, 'party single column');
 });
 
-test('run at 768x1024: scene full width, then 2-column party, then journal', async () => {
+test('run at 768x1024: 2-column party first, then scene, then journal', async () => {
 	const p = await open('run', [768, 1024]);
 	const s = await box(p, 'current-scene'), party = await box(p, 'party'), j = await box(p, 'journal');
-	assert.ok(party.y >= s.y + s.height - 1, 'party below scene');
+	assert.ok(s.y >= party.y + party.height - 1, 'scene below party');
 	const cs = await cards(p);
 	assert.ok(cs.some((a, i) => cs.some((b, k) => k !== i && Math.abs(a.y - b.y) <= 2 && Math.abs(a.x - b.x) > 2)), 'two cards on one row');
-	assert.ok(j.y >= party.y + party.height - 1, 'journal below party');
+	assert.ok(j.y >= s.y + s.height - 1, 'journal below scene');
 });
 
 for (const vp of [[1024, 768], [1180, 820]]) {
-	test(`run at ${vp.join('x')}: two columns, party cards in one column`, async () => {
+	test(`run at ${vp.join('x')}: party left, scene and journal in the right column`, async () => {
 		const p = await open('run', vp);
 		const s = await box(p, 'current-scene'), j = await box(p, 'journal'), party = await box(p, 'party');
 		assert.ok(Math.abs(s.x - j.x) <= 2, `scene/journal lefts ${s.x} ${j.x}`);
-		assert.ok(s.x < party.x - 2, 'left column is left of party');
-		const cs = await cards(p);
-		for (const c of cs) assert.ok(Math.abs(c.x - cs[0].x) <= 2, 'cards share left x');
+		assert.ok(party.x + party.width <= s.x + 2, 'party is left of the aside');
+		assert.ok(j.y >= s.y + s.height - 1, 'journal below scene');
 	});
 }
 

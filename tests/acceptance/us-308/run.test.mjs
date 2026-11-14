@@ -81,7 +81,7 @@ test('character card: name and class/level on one row, then hp, stress, hope, ar
 
 const unit = (p, i = 0) => p.locator(`[data-testid=battle-unit][data-adversary=adv_giant_rat][data-index="${i}"]`);
 
-test('battle unit is one row at 1024x768', async () => {
+test('battle unit controls stay inside the unit at 1024x768 (18rem sidebar, may wrap)', async () => {
 	const p = await run([1024, 768]);
 	const u = unit(p);
 	await u.waitFor();
@@ -89,7 +89,9 @@ test('battle unit is one row at 1024x768', async () => {
 	boxes.push(await u.locator('[lang]').first().boundingBox());
 	for (const id of ['unit-hp', 'unit-damage', 'unit-hit', 'unit-hp-minus', 'unit-hp-plus'])
 		boxes.push(await u.locator(`[data-testid=${id}]`).boundingBox());
-	assert.ok(spread(boxes.map(cy)) <= 8, `centres ${boxes.map(cy)}`);
+	const ub = await u.boundingBox();
+	for (const b of boxes)
+		assert.ok(b.x >= ub.x - 1 && b.x + b.width <= ub.x + ub.width + 1, `control outside unit: ${JSON.stringify(b)} vs ${JSON.stringify(ub)}`);
 });
 
 test('battle units at 375x812: no horizontal scroll, 44x44 targets', async () => {

@@ -81,43 +81,41 @@ test('fear and its buttons are visible at 375x667 without scrolling', async () =
 	}
 });
 
-test('run at 375x812 stacks current-scene, party, journal in one column', async () => {
+test('run at 375x812 stacks party, current-scene, journal in one column', async () => {
 	const p = await open(full, [375, 812]);
 	const [s, pa, j] = await Promise.all(['current-scene', 'party', 'journal'].map((i) => box(p, i)));
-	assert.ok(pa.y >= s.y + s.height - 1, 'party below scene');
-	assert.ok(j.y >= pa.y + pa.height - 1, 'journal below party');
+	assert.ok(s.y >= pa.y + pa.height - 1, 'scene below party');
+	assert.ok(j.y >= s.y + s.height - 1, 'journal below scene');
 	assert.ok(Math.abs(s.x - pa.x) <= 1 && Math.abs(s.x - j.x) <= 1, 'same left');
 	const l = p.locator('[data-testid=character-card]');
 	const a = await l.nth(0).boundingBox(), b = await l.nth(1).boundingBox();
 	assert.ok(Math.abs(a.x - b.x) <= 1 && b.y > a.y, 'cards in 1 column');
 });
 
-test('run at 768x1024: scene full width, party in 2 columns, journal full width', async () => {
+test('run at 768x1024: party first with 2 cards side by side, scene and journal below at full width', async () => {
 	const p = await open(full, [768, 1024]);
 	const run = await box(p, 'run');
 	const [s, pa, j] = await Promise.all(['current-scene', 'party', 'journal'].map((i) => box(p, i)));
 	assert.ok(Math.abs(s.width - run.width) <= 2, `scene ${s.width} vs ${run.width}`);
 	assert.ok(Math.abs(j.width - run.width) <= 2, `journal ${j.width} vs ${run.width}`);
-	assert.ok(pa.y >= s.y + s.height - 1, 'party below scene');
-	assert.ok(j.y >= pa.y + pa.height - 1, 'journal below party');
+	assert.ok(s.y >= pa.y + pa.height - 1, 'scene below party');
+	assert.ok(j.y >= s.y + s.height - 1, 'journal below scene');
 	const l = p.locator('[data-testid=character-card]');
 	const a = await l.nth(0).boundingBox(), b = await l.nth(1).boundingBox();
 	assert.ok(Math.abs(a.y - b.y) <= 2 && Math.abs(a.x - b.x) > 10, 'cards side by side');
 });
 
 for (const vp of [[1024, 768], [1180, 820]]) {
-	test(`run at ${vp.join('x')}: scene and journal left (2/3), party right (1/3)`, async () => {
+	test(`run at ${vp.join('x')}: party left, scene and journal right (288px)`, async () => {
 		const p = await open(full, vp);
 		const [s, pa, j] = await Promise.all(['current-scene', 'party', 'journal'].map((i) => box(p, i)));
 		assert.ok(Math.abs(s.y - pa.y) <= 4, `tops ${s.y} ${pa.y}`);
-		assert.ok(pa.x >= s.x + s.width - 1, 'party right of scene');
+		assert.ok(s.x >= pa.x + pa.width - 1, 'scene right of party');
+		assert.ok(Math.abs(s.width - 288) <= 2 && Math.abs(j.width - 288) <= 2, `widths ${s.width} ${j.width}`);
 		assert.ok(j.y >= s.y + s.height - 1, 'journal below scene');
-		assert.ok(j.x + j.width <= pa.x + 1, 'journal left of party');
-		const ratio = s.width / pa.width;
-		assert.ok(ratio > 1.7 && ratio < 2.3, `ratio ${ratio}`);
 		const l = p.locator('[data-testid=character-card]');
 		const a = await l.nth(0).boundingBox(), b = await l.nth(1).boundingBox();
-		assert.ok(Math.abs(a.x - b.x) <= 1 && b.y > a.y, 'cards stacked');
+		assert.ok(Math.abs(a.y - b.y) <= 2 && Math.abs(a.x - b.x) > 10, 'cards side by side');
 	});
 }
 

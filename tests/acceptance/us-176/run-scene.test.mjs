@@ -171,7 +171,7 @@ test('no JS: Save posts only notes; other fields unchanged', async () => {
 	assert.equal(await p.locator('[data-testid=scene-notes]').inputValue(), 'Offline notes');
 });
 
-// Spec #298: the Fear bar runs full width above the grid; from 1024px the party sits right of the scene.
+// Spec #298, reversed by #339: the Fear bar runs full width above the grid; from 1024px the party sits left of the scene.
 test('layout: two columns at 1280px', async () => {
 	const { c } = await twoScenes();
 	const p = await open(`/campaigns/${c.id}`, { viewport: { width: 1280, height: 900 } });
@@ -179,7 +179,7 @@ test('layout: two columns at 1280px', async () => {
 	const f = await p.locator('[data-testid=run] [data-testid=fear]').boundingBox();
 	const party = await p.locator('[data-testid=party]').boundingBox();
 	assert.ok(f.y + f.height <= s.y + 2, `fear ${JSON.stringify(f)} above scene ${JSON.stringify(s)}`);
-	assert.ok(s.x + s.width <= party.x + 2, `scene ${JSON.stringify(s)} party ${JSON.stringify(party)}`);
+	assert.ok(party.x + party.width <= s.x + 2, `party ${JSON.stringify(party)} scene ${JSON.stringify(s)}`);
 });
 
 test('layout: stacked at 390px without horizontal scroll', async () => {

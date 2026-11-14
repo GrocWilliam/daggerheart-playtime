@@ -74,7 +74,7 @@ async function setup(tag) {
 	return camp.id;
 }
 
-for (const [name, w, h, cols] of [['phone', 375, 667, 1], ['tablet', 700, 800, 1], ['desktop', 1280, 800, 1]]) {
+for (const [name, w, h, cols] of [['phone', 375, 667, 1], ['tablet', 700, 800, 2], ['desktop', 1280, 800, 3]]) {
 	test(`computed styles unchanged on the campaign page at ${name} (${w}px)`, async () => {
 		const id = await setup(name);
 		const ctx = await browser.newContext({ viewport: { width: w, height: h } });

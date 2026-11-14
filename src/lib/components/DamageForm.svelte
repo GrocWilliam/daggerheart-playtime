@@ -11,7 +11,7 @@
 
 <form use:enhance={busy} class="flex flex-wrap items-end gap-2" method="POST" {action}>
 	{#if characterId}<input type="hidden" name="characterId" value={characterId} />{/if}
-	<label class="mb-0!">{t('damage.label')} <input class="w-[5rem]! min-w-0!" type="number" name="amount" min="0" required /></label>
+	<label class="mb-0!"><span class="sr-only">{t('damage.label')}</span><input class="mt-0! w-[5rem]! min-w-0!" type="number" name="amount" min="0" placeholder={t('damage.label')} required /></label>
 	<label class="mb-0!"><input type="checkbox" name="useArmor" /> {t('damage.useArmor')}</label>
-	<button type="submit" class="btn-primary">{t('damage.apply')}</button>
+	<button class="btn-primary" type="submit">{t('damage.apply')}</button>
 </form>

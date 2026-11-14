@@ -72,7 +72,7 @@
 					<input type="hidden" name="adversaryId" value={a.id} />
 					<input type="hidden" name="index" value={u.index} />
 					<input class="mb-0! w-20" type="number" name="amount" min="1" max="999" required data-testid="unit-damage" aria-label={translate(data.lang, 'battle.amount', { name: label })} />
-					<button type="submit" class="min-h-11 min-w-11" data-testid="unit-hit">{t('battle.hit')}</button>
+					<button type="submit" class="btn-primary" data-testid="unit-hit">{t('battle.hit')}</button>
 				</form>
 			{/if}
 			{#each [{ id: 'unit-hp-plus', d: 1, k: 'battle.hpUp', tx: '+1' }, { id: 'unit-hp-minus', d: -1, k: 'battle.hpDown', tx: '-1' }] as b (b.id)}
@@ -81,7 +81,7 @@
 					<input type="hidden" name="adversaryId" value={a.id} />
 					<input type="hidden" name="index" value={u.index} />
 					<input type="hidden" name="delta" value={b.d} />
-					<button type="submit" class="min-h-11 min-w-11" data-testid={b.id} aria-label={translate(data.lang, b.k, { name: label })}>{b.tx}</button>
+					<button type="submit" class="btn-ghost" data-testid={b.id} aria-label={translate(data.lang, b.k, { name: label })}>{b.tx}</button>
 				</form>
 			{/each}
 		</div>
@@ -328,9 +328,31 @@
 {:else}
 <div data-testid="run">
 <Tracker name="fear" label={t('campaign.fear')} helpId="fear" value={String(c.fear)} filled={c.fear} max={12} action="?/fear" lang={data.lang} variant="band" />
-<div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-[minmax(0,1.72fr)_minmax(0,1fr)] lg:grid-rows-[auto_1fr] lg:items-start">
+<div class="grid grid-cols-1 items-start gap-4 lg:grid-cols-[1fr_18rem]">
+<div class="grid min-w-0 grid-cols-[repeat(auto-fill,minmax(18rem,1fr))] content-start items-start gap-4" data-testid="party">
+<h2 class="col-span-full mt-4 mb-2">{t('campaign.characters')}</h2>
+{#each c.characters as ch (ch.id)}
+	<article class="mb-0! min-w-0 pb-0!" data-testid="character-card">
+		<div class="-mb-2 flex flex-wrap items-center gap-x-2 gap-y-0 [&_button]:px-2! [&_button:not([data-testid^=help])]:text-[0.875rem]">
+			<h3 class="m-0!"><a data-testid="character-name" href="/characters/{ch.id}">{ch.name}</a></h3>
+			{#if ch.hp.marked === ch.hp.max}<span class="inline-block rounded-[999px] px-[0.6rem] text-[0.875rem] text-bg bg-danger" data-testid="down">{t('badge.down')}</span>{/if}
+			<span class="muted inline-flex items-center gap-1 text-[0.875rem]">{ch.class}, <span class="text-base"><Help id="level" name={t('character.level')} label={t('character.level')} lang={data.lang} /></span> {ch.level}</span>
+		</div>
+		<ConditionBadges conditions={ch.conditions} lang={data.lang} />
+		{#each TRACKERS as key (key)}
+			<Tracker name={key} label={t(`tracker.${key}`)} helpId={key} action="?/tracker" hidden={{ characterId: ch.id, tracker: key }} lang={data.lang}
+				{...trackerValues(ch[key])} />
+		{/each}
+		<DefenseLine evasion={ch.evasion} major={ch.majorThreshold} severe={ch.severeThreshold} lang={data.lang} />
+		<DamageForm action="?/damage" characterId={ch.id} lang={data.lang} />
+	</article>
+{:else}
+	<p>{t('campaign.none')}</p>
+{/each}
+</div>
+<aside class="grid min-w-0 gap-4">
 {#if cs}
-<div class="flow-root min-w-0 md:col-span-2 lg:col-span-1 lg:col-start-1 lg:row-start-1" data-testid="current-scene">
+<div class="flow-root min-w-0" data-testid="current-scene">
 	<h2 class="mt-4 mb-2">{t('campaign.currentScene')}: {cs.title}</h2>
 	{#if cs.environment}
 		<div data-testid="scene-environment"><strong lang={cs.environment.nameLang}>{cs.environment.name}</strong> <span lang={data.lang}>{envType(cs.environment.type)}</span>
@@ -338,7 +360,7 @@
 			<span class="block">{t('scenario.env.impulses')}: <span lang={cs.environment.impulsesLang}>{cs.environment.impulses}</span></span></div>
 	{/if}
 	<form use:enhance={busy} class="mb-4" method="POST" action="?/nextScene">
-		<button type="submit">{t('run.nextScene')}</button>
+		<button class="btn-secondary" type="submit">{t('run.nextScene')}</button>
 	</form>
 	{#if cs.encounter}
 		<p data-testid="encounter-budget" class="font-bold {cs.encounter.over ? 'text-danger' : ''}">
@@ -364,7 +386,7 @@
 				</select>
 			</label>
 			<label>{t('battle.addQuantity')} <input type="number" name="count" value="1" min="1" max="20" data-testid="battle-add-count" /></label>
-			<button type="submit" class="min-h-[44px] min-w-[44px]" data-testid="battle-add-submit">{t('battle.add')}</button>
+			<button type="submit" class="btn-primary" data-testid="battle-add-submit">{t('battle.add')}</button>
 		</form>
 	{/if}
 	{#each cs.loot as l (l.id)}
@@ -380,41 +402,20 @@
 				oninput={(e) => typed(cs.id, e.currentTarget.value)}
 				onblur={(e) => js && saveNotes(cs.id, e.currentTarget.value)}></textarea>
 		</label>
-		{#if !js}<button type="submit">{t('run.notes.save')}</button>{/if}
+		{#if !js}<button class="btn-secondary" type="submit">{t('run.notes.save')}</button>{/if}
 		<span data-testid="notes-status" role="status">{notesStatus}</span>
 	</form>
 </div>
 {:else}
-<div class="min-w-0 md:col-span-2 lg:col-span-1 lg:col-start-1 lg:row-start-1" data-testid="current-scene">
+<div class="min-w-0" data-testid="current-scene">
 	<p class="m-0">{t('run.noScene')} <a href="?step=build">{t('run.goBuild')}</a></p>
 </div>
 {/if}
-<div class="grid min-w-0 grid-cols-1 gap-4 md:col-span-2 md:grid-cols-2 lg:col-span-1 lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:grid-cols-1" data-testid="party">
-<h2 class="mt-4 mb-2 md:col-span-2 lg:col-span-1">{t('campaign.characters')}</h2>
-{#each c.characters as ch (ch.id)}
-	<article class="mb-0! min-w-0" data-testid="character-card">
-		<div class="flex flex-wrap items-center gap-x-1 gap-y-0 [&_button]:px-2! [&_button:not([data-testid^=help])]:text-[0.875rem]">
-			<h3 class="m-0!"><a data-testid="character-name" href="/characters/{ch.id}">{ch.name}</a></h3>
-			{#if ch.hp.marked === ch.hp.max}<span class="inline-block rounded-[999px] px-[0.6rem] text-[0.875rem] text-bg bg-danger" data-testid="down">{t('badge.down')}</span>{/if}
-			<span class="muted inline-flex items-center gap-1">{ch.class}, <Help id="level" name={t('character.level')} label={t('character.level')} lang={data.lang} /> {ch.level}</span>
-		</div>
-		<ConditionBadges conditions={ch.conditions} lang={data.lang} />
-		{#each TRACKERS as key (key)}
-			<Tracker name={key} label={t(`tracker.${key}`)} helpId={key} action="?/tracker" hidden={{ characterId: ch.id, tracker: key }} lang={data.lang}
-				{...trackerValues(ch[key])} />
-		{/each}
-		<DefenseLine evasion={ch.evasion} major={ch.majorThreshold} severe={ch.severeThreshold} lang={data.lang} />
-		<DamageForm action="?/damage" characterId={ch.id} lang={data.lang} />
-	</article>
-{:else}
-	<p>{t('campaign.none')}</p>
-{/each}
-</div>
-<section class="min-w-0 rounded-[0.5rem] border-2 border-solid border-muted p-3 md:col-span-2 lg:col-span-1 lg:col-start-1 lg:row-start-2" data-testid="journal">
+<section class="min-w-0 rounded-[0.5rem] border-2 border-solid border-muted p-3" data-testid="journal">
 <h2 class="mt-4 mb-2">{t('journal.title')}</h2>
 <form use:enhance={busy} class="flex flex-wrap items-end gap-2" method="POST" action="?/addJournal">
 	<label class="mb-0! min-w-0 flex-1 basis-full md:basis-0">{t('journal.text')} <textarea name="text" maxlength="2000"></textarea></label>
-	<button type="submit">{t('journal.add')}</button>
+	<button class="btn-primary" type="submit">{t('journal.add')}</button>
 </form>
 {#each data.journal as j (j.id)}
 	<div class="mb-2 flex flex-wrap items-center gap-2 rounded-[0.5rem] border-2 border-solid border-muted p-3" data-testid="journal-entry">
@@ -422,13 +423,14 @@
 		<p class="m-0 min-w-0 flex-1 whitespace-pre-line">{j.text}</p>
 		<form use:enhance={busy} method="POST" action="?/deleteJournal">
 			<input type="hidden" name="entryId" value={j.id} />
-			<button type="submit">{t('journal.delete')}</button>
+			<button class="btn-danger" type="submit">{t('journal.delete')}</button>
 		</form>
 	</div>
 {:else}
 	<p>{t('journal.none')}</p>
 {/each}
 </section>
+</aside>
 </div>
 </div>
 {/if}
