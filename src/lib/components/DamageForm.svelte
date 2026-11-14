@@ -13,5 +13,5 @@
 	{#if characterId}<input type="hidden" name="characterId" value={characterId} />{/if}
 	<label class="mb-0!">{t('damage.label')} <input class="w-[5rem]! min-w-0!" type="number" name="amount" min="0" required /></label>
 	<label class="mb-0!"><input type="checkbox" name="useArmor" /> {t('damage.useArmor')}</label>
-	<button type="submit">{t('damage.apply')}</button>
+	<button type="submit" class="btn-primary">{t('damage.apply')}</button>
 </form>

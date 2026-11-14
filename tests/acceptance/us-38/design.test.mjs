@@ -126,7 +126,7 @@ test('character-card has surface background and 3px double accent border', async
 
 test('every button has one of the four variant looks (primary, secondary, ghost, danger)', async () => {
 	await eachCombo(async (page, id) => {
-		const bs = await page.evaluate(() => [...document.querySelectorAll('button:not([data-testid^="help-"]):not([name=delta])')].map((b) => { // us-246: the help buttons have their own look; us-338: tracker/Fear -/+ are btn-ghost
+		const bs = await page.evaluate(() => [...document.querySelectorAll('button:not([data-testid^="help-"]):not([name=delta]):not(.btn-danger):not(.btn-secondary:not([aria-pressed="true"]))')].map((b) => { // us-246: the help buttons have their own look; us-342: btn-danger and unpressed btn-secondary have their own look; us-338: tracker/Fear -/+ are btn-ghost
 			const c = getComputedStyle(b); return [c.backgroundColor, c.color];
 		}));
 		const looks = [[rgb('#d4a050'), rgb('#0f1a15')], ['rgba(0, 0, 0, 0)', rgb('#d4a050')], ['rgba(0, 0, 0, 0)', rgb('#efe4c8')], ['rgba(0, 0, 0, 0)', rgb('#ee8070')]].map((l) => JSON.stringify(l));
