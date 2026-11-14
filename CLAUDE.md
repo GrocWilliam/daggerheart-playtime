@@ -85,7 +85,7 @@ the one that matches your change. This file lists only where we differ or add to
   `muted`, `accent`, `calm` (`--color-calm`), `danger`, `border` (`--border` is `--alpha(var(--accent) / 35%)`: never
   write a colour function such as color-mix in `src`, us-38/us-99..102 scan for it); fonts `font-display`, `font-body`.
 - Buttons and button-styled links take one of `btn-primary`, `btn-secondary`, `btn-ghost`, `btn-danger`
-  (`@layer components` in `src/app.css`; pressed `btn-secondary` looks primary). The `button` and `a` rules are in `@layer base`,
+  (`@layer components` in `src/app.css`; pressed `btn-secondary` looks primary). `src/buttons.test.ts` fails any `<button` whose class (a ternary counts per branch) lacks exactly one variant; the base `button` rule sets no colours. The `button` and `a` rules are in `@layer base`,
   so variants beat them and utilities beat variants.
 - Colour rule: never Tailwind's default palette (`red-500`) and never a colour literal or colour name after a `:` in
   `src/**/*.svelte` or `*.css`, except the palette definitions. Mobile first (no `max-width` queries; `app.css.test.ts`).
