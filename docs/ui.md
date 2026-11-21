@@ -77,6 +77,8 @@ Build step:
 - Each `scene` `article` has a header row (`flex flex-wrap items-center gap-2`): title, `scene-status`, Set current, Mark done and `scene-edit-open`. Then come the notes and `<details data-testid="scene-more">`: closed by default, open on the current scene, with summary `scene.more` ("Loot, encounter and order" / "Butin, rencontre et ordre").
 - `scene-more` holds `scene-environment`, the loot section, the encounter section, then a row: ghost Move up, ghost Move down and, at least 1rem after them, `btn-danger` Delete scene.
 - One `<Modal kind="scene-edit" opener={false} clear={['scene']}>` per page (title `scene.editTitle`) is opened by `scene-edit-open` (`?step=build&new=scene-edit&scene=<id>`) and posts to `?/edit&step=build`. Its test id is `modal-scene-edit`.
+- Every `<summary>` shows an accent `▸`/`▾` marker (`app.css`), so disclosures read as clickable. `h4` (Loot, Encounter) is Cinzel in accent.
+- Adversary stats (`adversaryStats`) are one wrapping `text-[0.875rem]` line under the name. The loot give form is one row (select, Give, then Delete in the Build step).
 - Loot and encounter forms are one row: number inputs `w-[5rem]` with `min-w-0!`, selects at most 16rem.
 - `build-party` takes 1/3 and `build-scenes` 2/3 from 768px.
 
@@ -108,6 +110,7 @@ In `src/lib/components/`:
   - Props: `kind`, `title`, `lang`, `params`, `opener`, `clear`, children.
   - Renders the opener `new-<kind>` (`href="?new=<kind>"`, other params kept) unless `opener={false}`, and `<dialog data-testid="modal-<kind>" aria-labelledby="modal-<kind>-title">`, open when `?new=<kind>` or `form.modal === kind`.
   - The Cancel link is `data-testid="modal-cancel"`.
+  - The Save/Cancel row (the `div` holding `modal-cancel`) is `sticky bottom-0`, so it stays visible while a long form (edit) scrolls.
   - Size: full screen below 600px; from `min-[600px]:` centred, max 32rem, panel look, scrolling inside past 90dvh. Backdrop `var(--bg)` at opacity 0.8.
   - Kinds: `campaign`, `scene`, `scene-edit`, `item`, `experience`, `card`.
 
@@ -145,7 +148,7 @@ Test ids: `levelup-progress` (step indicator), `levelup-next`, `levelup-back`, `
 - Load errors (unknown id, server) go through `+error.svelte`, which translates by status.
 
 ## Battle tracker (Run step)
-Each `encounter-adversary` card of the current scene lists one `battle-unit` row per copy (one `flex flex-wrap items-center` row, wrapping below 768px) (name with copy number when count > 1, `unit-hp` `marked/max`). A live copy has a damage form (`unit-damage`, `unit-hit`); a defeated one shows `unit-defeated` and is muted. `unit-hp-plus`/`unit-hp-minus` (44px) always adjust one HP. Forms post to `?/battleDamage` and `?/battleHp`. The Build step has none. After the cards, a `battle-add` form (`battle-add-adversary` select with a blank option and one `optgroup` per tier whose options are `<option value lang label>` with empty bodies, `battle-add-count` 1–20, `battle-add-submit`) posts to `?/battleAdd` and shows only when the current scene has an encounter.
+Each `encounter-adversary` card of the current scene lists one `battle-unit` per copy on two lines (the 18rem sidebar cannot fit one): name with copy number when count > 1 and `unit-hp` `marked/max` (plus `unit-defeated`), then `unit-hp-minus`, `unit-hp-plus` and the damage form (amount `w-[4rem]`). A live copy has a damage form (`unit-damage`, `unit-hit`); a defeated one shows `unit-defeated` and is muted. `unit-hp-plus`/`unit-hp-minus` (44px) always adjust one HP. Forms post to `?/battleDamage` and `?/battleHp`. The Build step has none. After the cards, a `battle-add` form (`battle-add-adversary` select with a blank option and one `optgroup` per tier whose options are `<option value lang label>` with empty bodies, `battle-add-count` 1–20, `battle-add-submit`) posts to `?/battleAdd` and shows only when the current scene has an encounter.
 
 ## Test ids
 Stable: keep them when restyling.

@@ -63,34 +63,40 @@
 {#snippet battleUnits(a: Adversary & { units: { index: number; marked: number; max: number; defeated: boolean }[] }, sceneId: string)}
 	{#each a.units as u (u.index)}
 		{@const label = a.count > 1 ? `${a.name} ${u.index + 1}` : a.name}
-		<div class="mt-2 flex flex-wrap items-center gap-2 {u.defeated ? 'text-muted' : ''}" data-testid="battle-unit" data-adversary={a.id} data-index={u.index}>
-			<span lang={a.nameLang}>{label}</span>
-			<span data-testid="unit-hp">{u.marked}/{u.max}</span>
-			{#if u.defeated}<span data-testid="unit-defeated">{t('battle.defeated')}</span>{:else}
-				<form use:enhance={busy} class="mb-0 flex items-center gap-2" method="POST" action="?/battleDamage">
-					<input type="hidden" name="sceneId" value={sceneId} />
-					<input type="hidden" name="adversaryId" value={a.id} />
-					<input type="hidden" name="index" value={u.index} />
-					<input class="mb-0! w-20" type="number" name="amount" min="1" max="999" required data-testid="unit-damage" aria-label={translate(data.lang, 'battle.amount', { name: label })} />
-					<button type="submit" class="btn-primary" data-testid="unit-hit">{t('battle.hit')}</button>
-				</form>
-			{/if}
-			{#each [{ id: 'unit-hp-plus', d: 1, k: 'battle.hpUp', tx: '+1' }, { id: 'unit-hp-minus', d: -1, k: 'battle.hpDown', tx: '-1' }] as b (b.id)}
-				<form use:enhance={busy} class="mb-0" method="POST" action="?/battleHp">
-					<input type="hidden" name="sceneId" value={sceneId} />
-					<input type="hidden" name="adversaryId" value={a.id} />
-					<input type="hidden" name="index" value={u.index} />
-					<input type="hidden" name="delta" value={b.d} />
-					<button type="submit" class="btn-ghost" data-testid={b.id} aria-label={translate(data.lang, b.k, { name: label })}>{b.tx}</button>
-				</form>
-			{/each}
+		<!-- two lines (name and HP, then the controls): the 18rem sidebar cannot fit one -->
+		<div class="mt-2 {u.defeated ? 'text-muted' : ''}" data-testid="battle-unit" data-adversary={a.id} data-index={u.index}>
+			<div class="flex flex-wrap items-center gap-x-2">
+				<span class="grow" lang={a.nameLang}>{label}</span>
+				<span data-testid="unit-hp">{u.marked}/{u.max}</span>
+				{#if u.defeated}<span data-testid="unit-defeated">{t('battle.defeated')}</span>{/if}
+			</div>
+			<div class="flex flex-wrap items-center gap-1">
+				{#each [{ id: 'unit-hp-minus', d: -1, k: 'battle.hpDown', tx: '-1' }, { id: 'unit-hp-plus', d: 1, k: 'battle.hpUp', tx: '+1' }] as b (b.id)}
+					<form use:enhance={busy} class="mb-0" method="POST" action="?/battleHp">
+						<input type="hidden" name="sceneId" value={sceneId} />
+						<input type="hidden" name="adversaryId" value={a.id} />
+						<input type="hidden" name="index" value={u.index} />
+						<input type="hidden" name="delta" value={b.d} />
+						<button type="submit" class="btn-ghost" data-testid={b.id} aria-label={translate(data.lang, b.k, { name: label })}>{b.tx}</button>
+					</form>
+				{/each}
+				{#if !u.defeated}
+					<form use:enhance={busy} class="mb-0 flex items-center gap-1" method="POST" action="?/battleDamage">
+						<input type="hidden" name="sceneId" value={sceneId} />
+						<input type="hidden" name="adversaryId" value={a.id} />
+						<input type="hidden" name="index" value={u.index} />
+						<input class="mb-0! w-[4rem]! min-w-0!" type="number" name="amount" min="1" max="999" required data-testid="unit-damage" aria-label={translate(data.lang, 'battle.amount', { name: label })} />
+						<button type="submit" class="btn-primary" data-testid="unit-hit">{t('battle.hit')}</button>
+					</form>
+				{/if}
+			</div>
 		</div>
 	{/each}
 {/snippet}
 
 {#snippet adversaryStats(a: Adversary)}
-	<p><strong lang={a.nameLang}>{a.name}</strong> ×{a.count} · <span lang={data.lang}>{cap(t(`adversary.role.${a.role}`))}</span></p>
-	<ul class="list-none pl-0!">
+	<p class="mt-0 mb-1"><strong lang={a.nameLang}>{a.name}</strong> ×{a.count} · <span lang={data.lang}>{cap(t(`adversary.role.${a.role}`))}</span></p>
+	<ul class="my-1 flex list-none flex-wrap gap-x-3 pl-0! text-[0.875rem]">
 		<li>{t('encounter.difficulty')}: {a.difficulty}</li>
 		<li>{t('encounter.hp')}: {a.hp}</li>
 		<li>{t('encounter.stress')}: {a.stress}</li>
@@ -121,11 +127,11 @@
 {/snippet}
 
 {#snippet giveForm(sceneId: string, lootId: string, suffix: string)}
-		<form use:enhance={busy} method="POST" action="?/give{suffix}">
+		<form use:enhance={busy} class="mb-0 flex flex-wrap items-end gap-2" method="POST" action="?/give{suffix}">
 			<input type="hidden" name="sceneId" value={sceneId} />
 			<input type="hidden" name="lootId" value={lootId} />
-			<label>{t('loot.giveTo')}
-				<select name="characterId" required>
+			<label class="mb-0!">{t('loot.giveTo')}
+				<select class="max-w-[16rem]" name="characterId" required>
 					{#each data.characters as c (c.id)}<option value={c.id}>{c.name}</option>{/each}
 				</select>
 			</label>
@@ -170,7 +176,7 @@
 {#snippet children(cancel)}
 {#if form?.modal === 'scene' && form.error}<p role="alert">{t(form.error)}</p>{/if}
 <form use:enhance={busy} method="POST" action="?/add&step=build">
-	<label>{t('scenario.sceneTitle')} <input name="title" value={form?.values?.title ?? ''} required maxlength="100" /></label>
+	<label>{t('scenario.sceneTitle')} <input type="text" name="title" value={form?.values?.title ?? ''} required maxlength="100" /></label>
 	<label>{t('scenario.notes')} <textarea name="notes" maxlength="5000">{form?.values?.notes ?? ''}</textarea></label>
 	<label>
 		{t('scenario.environment')}
@@ -191,7 +197,7 @@
 {#if form?.modal === 'scene-edit' && form.error}<p role="alert">{t(form.error)}</p>{/if}
 <form use:enhance={busy} method="POST" action="?/edit&step=build">
 	<input type="hidden" name="sceneId" value={es.id} />
-	<label>{t('scenario.sceneTitle')} <input name="title" value={es.title} required maxlength="100" /></label>
+	<label>{t('scenario.sceneTitle')} <input type="text" name="title" value={es.title} required maxlength="100" /></label>
 	<label>{t('scenario.notes')} <textarea name="notes" maxlength="5000">{es.notes}</textarea></label>
 	<label>
 		{t('scenario.environment')}
@@ -256,9 +262,9 @@
 		{#each s.loot as l (l.id)}
 			<div class="mb-2 rounded-[0.5rem] border-[3px] border-double border-accent bg-surface p-3" data-testid="loot-entry" data-given={l.given}>
 				{@render lootHead(l)}
-				<div class="flex flex-wrap gap-2">
+				<div class="flex flex-wrap items-end gap-2">
 					{@render giveForm(s.id, l.id, '&step=build')}
-					<form use:enhance={busy} method="POST" action="?/deleteLoot&step=build">
+					<form use:enhance={busy} class="mb-0 self-end" method="POST" action="?/deleteLoot&step=build">
 						<input type="hidden" name="sceneId" value={s.id} />
 						<input type="hidden" name="lootId" value={l.id} />
 						<button class="btn-danger" type="submit">{t('loot.delete')}</button>
@@ -285,7 +291,7 @@
 			{#each enc.adversaries as a (a.id)}
 				<div class="mb-2 rounded-[0.5rem] border-[3px] border-double border-accent bg-surface p-3" data-testid="encounter-adversary">
 					{@render adversaryStats(a)}
-					<form use:enhance={busy} method="POST" action="?/setCount&step=build">
+					<form use:enhance={busy} class="mb-0 flex flex-wrap items-center gap-2" method="POST" action="?/setCount&step=build">
 						<input type="hidden" name="sceneId" value={s.id} />
 						<input type="hidden" name="id" value={a.id} />
 						<input class="w-[5rem]! min-w-0!" name="count" type="number" min="1" value={a.count} required aria-label={translate(data.lang, 'encounter.count', { name: a.name })} />
@@ -414,14 +420,14 @@
 <section class="min-w-0 rounded-[0.5rem] border-2 border-solid border-muted p-3" data-testid="journal">
 <h2 class="mt-4 mb-2">{t('journal.title')}</h2>
 <form use:enhance={busy} class="flex flex-wrap items-end gap-2" method="POST" action="?/addJournal">
-	<label class="mb-0! min-w-0 flex-1 basis-full md:basis-0">{t('journal.text')} <textarea name="text" maxlength="2000"></textarea></label>
+	<label class="mb-0! min-w-0 flex-1 basis-full md:basis-0 lg:basis-full">{t('journal.text')} <textarea name="text" maxlength="2000"></textarea></label>
 	<button class="btn-primary" type="submit">{t('journal.add')}</button>
 </form>
 {#each data.journal as j (j.id)}
 	<div class="mb-2 flex flex-wrap items-center gap-2 rounded-[0.5rem] border-2 border-solid border-muted p-3" data-testid="journal-entry">
 		<span class="text-muted">{j.time}</span>
 		<p class="m-0 min-w-0 flex-1 whitespace-pre-line">{j.text}</p>
-		<form use:enhance={busy} method="POST" action="?/deleteJournal">
+		<form use:enhance={busy} class="mb-0" method="POST" action="?/deleteJournal">
 			<input type="hidden" name="entryId" value={j.id} />
 			<button class="btn-danger" type="submit">{t('journal.delete')}</button>
 		</form>

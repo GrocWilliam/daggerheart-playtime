@@ -35,7 +35,7 @@ html {
 	}
 
 	body { font-family: 'EB Garamond', serif; line-height: 1.4; }
-	h1, h2, h3 { font-family: Cinzel, serif; font-weight: 700; }
+	h1, h2, h3, h4 { font-family: Cinzel, serif; font-weight: 700; }
 	h1 { font-size: 1.5rem; margin-block: 0.67em; }
 	@media (min-width: 768px) { h1 { font-size: 1.75rem; } }
 	h2 { font-size: 1.25rem; margin-block: 0.83em; }
@@ -74,7 +74,8 @@ html {
 *, *::before, *::after { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; }
 body { background-color: var(--bg); background-image: radial-gradient(ellipse at top, var(--surface), var(--bg) 70%); background-attachment: fixed; color: var(--text); margin: 0; padding: 0.75rem; font-size: 16px; overflow-wrap: anywhere; }
-h1, h2, h3 { color: var(--accent); }
+h1, h2, h3, h4 { color: var(--accent); }
+h4 { margin-block: 1rem 0.5rem; }
 h1 { letter-spacing: 0.05em; }
 label, .muted { color: var(--muted); }
 [role='alert'] { color: var(--danger); border-left: 3px solid var(--danger); padding-left: 0.5rem; }
@@ -120,3 +121,6 @@ thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rec
 @media (min-width:1280px){ body:has([data-testid=run]){max-width:80rem} }
 /* Scene, encounter and loot <details> summaries: utilities cannot hide the engine's disclosure marker. */
 summary::-webkit-details-marker { display: none; }
+summary { list-style: none; cursor: pointer; color: var(--accent); }
+summary::before { content: '▸'; margin-right: 0.5rem; }
+details[open] > summary::before { content: '▾'; }
