@@ -109,9 +109,10 @@
 		<label>{t(label)} <input {type} {name} value={editValues[name] ?? value} required /></label>
 	{/each}
 	{#each traits as k (k)}
-		<div>
+		<!-- the help sits beside the label text, so the input keeps the full column width -->
+		<div class="relative">
 			<label>{t(`trait.${k}`)} <input type="number" name="traits.{k}" min="-5" max="5" step="1" value={editValues[`traits.${k}`] ?? c.traits[k]} required /></label>
-			{#if opened('edit')}<Help id={k} name={t(`trait.${k}`)} text={t(`trait.help.${k}`)} lang={data.lang} />{/if}
+			{#if opened('edit')}<span class="absolute top-0 right-0"><Help id={k} name={t(`trait.${k}`)} text={t(`trait.help.${k}`)} lang={data.lang} /></span>{/if}
 		</div>
 	{/each}
 	<div class="col-span-full flex flex-wrap gap-2"><button type="submit" class="btn-primary">{t('action.save')}</button>{@render cancel()}</div>
@@ -272,14 +273,14 @@
 {@render experienceModal()}
 <ul class="list-none pl-0!">
 	{#each c.experiences as ex (ex.id)}
-		<li data-testid="experience">
-			<span>{ex.name} +{ex.modifier}</span>
-			<form use:enhance={busy} class="flex flex-wrap items-end gap-2" method="POST" action={actionHref('setExperience', data.tab)}>
+		<li class="mb-2 flex flex-wrap items-center gap-2" data-testid="experience">
+			<span class="min-w-0 flex-1">{ex.name} +{ex.modifier}</span>
+			<form use:enhance={busy} class="mb-0 flex flex-wrap items-end gap-2" method="POST" action={actionHref('setExperience', data.tab)}>
 				<input type="hidden" name="expId" value={ex.id} />
-				<input type="number" name="modifier" min="1" max="5" step="1" value={ex.modifier} required aria-label={t('experience.modifier')} />
+				<input class="w-[5rem]! min-w-0!" type="number" name="modifier" min="1" max="5" step="1" value={ex.modifier} required aria-label={t('experience.modifier')} />
 				<button type="submit" class="btn-primary">{t('action.update')}</button>
 			</form>
-			<form use:enhance={busy} method="POST" action={actionHref('removeExperience', data.tab)}>
+			<form use:enhance={busy} class="mb-0" method="POST" action={actionHref('removeExperience', data.tab)}>
 				<input type="hidden" name="expId" value={ex.id} />
 				<button type="submit" class="btn-danger">{t('action.remove')}</button>
 			</form>
@@ -307,8 +308,7 @@
 
 <div data-testid="sheet-gold">
 {#if form?.section === 'sheet-gold'}<p role="alert">{t(form.error)}</p>{/if}
-<h2 class="mt-4 mb-2">{t('section.gold')}</h2>
-<Help id="gold" name={t('section.gold')} lang={data.lang} />
+<div class="flex items-center gap-2"><h2 class="mt-4 mb-2">{t('section.gold')}</h2><Help id="gold" name={t('section.gold')} lang={data.lang} /></div>
 <p data-testid="gold">{n(c.gold.chests)} {t('gold.chests')}, {n(c.gold.bags)} {t('gold.bags')}, {n(c.gold.handfuls)} {t('gold.handfuls')}</p>
 <form use:enhance={busy} class="flex flex-wrap items-end gap-2" method="POST" action={actionHref('gold', data.tab)}>
 	<label class="mb-0! w-full md:w-auto">{t('gold.adjust')} <input type="number" name="handfuls" step="1" required /></label>
@@ -368,11 +368,11 @@
 <h2 class="mt-4 mb-2">{t('section.cards')}</h2>
 <ul class="list-none pl-0!">
 	{#each data.cards as card (card.id)}
-		<li class="[overflow-wrap:anywhere]" data-testid="card">
+		<li class="mb-2 flex flex-wrap items-center gap-x-2 [overflow-wrap:anywhere]" data-testid="card">
 			<span lang={card.nameLang}>{card.name}</span>
 			<span class="muted"><span lang={card.domainNameLang}>{card.domainName}</span>, {t('card.level')} {card.level}</span>
 			<Help id={card.id} name={card.name} nameLang={card.nameLang} lang={data.lang} lines={card.lines} />
-			<form use:enhance={busy} method="POST" action={actionHref('removeCard', data.tab)}>
+			<form use:enhance={busy} class="mb-0 ml-auto" method="POST" action={actionHref('removeCard', data.tab)}>
 				<input type="hidden" name="cardId" value={card.id} />
 				<button type="submit" class="btn-danger">{t('action.remove')}</button>
 			</form>
