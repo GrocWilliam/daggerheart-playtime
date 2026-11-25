@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # AC: make test exits 0; node build answers GET /health 200 {"status":"ok"} on 8080.
 cd "$ROOT"
-make test || { echo "make test failed" >&2; exit 1; }
+# make test is not rerun here: CI's `test` job runs it on every commit.
 [ -n "${FORGE_PREBUILT:-}" ] || npm run build || { echo "build failed" >&2; exit 1; }
 LOG="$(mktemp)"
 (unset DATABASE_URL PORT PGLITE_DATA_DIR; exec node build) >"$LOG" 2>&1 &
