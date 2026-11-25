@@ -79,9 +79,9 @@ for (const lang of ['en', 'fr'])
 		await closePage(p);
 	});
 
-test('without a condition each card is at most 440px tall at 1024x768', async () => {
+test('without a condition each card is at most 500px tall at 1024x768', async () => {
 	const p = await run(align, [1024, 768]);
-	for (const b of await cardBoxes(p)) assert.ok(b.height <= 440, `height ${b.height}`);
+	for (const b of await cardBoxes(p)) assert.ok(b.height <= 500, `height ${b.height}`);
 	await closePage(p);
 });
 

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import { busy } from '$lib/forms/busy';
+	import { damageText, type DamageResult } from '$lib/forms/damage';
 	import Divider from '$lib/components/Divider.svelte';
 	import Modal from '$lib/components/Modal.svelte';
 	import Tracker from '$lib/components/Tracker.svelte';
@@ -16,7 +17,7 @@
 	const ADJUSTMENTS = ['easier', 'damageBoost', 'harder'] as const;
 	const badge: Record<string, string> = { planned: 'bg-muted', current: 'bg-accent', done: 'bg-calm' };
 	let { data, form: rawForm } = $props();
-	const form = $derived(rawForm as { error?: string; modal?: string; sceneId?: string; values?: Record<string, string> } | null);
+	const form = $derived(rawForm as { error?: string; modal?: string; sceneId?: string; values?: Record<string, string>; damage?: DamageResult | null } | null);
 	import { onMount } from 'svelte';
 	type Scene = (typeof data.scenes)[number];
 	type Adversary = NonNullable<Scene['encounter']>['adversaries'][number];
@@ -334,6 +335,7 @@
 {:else}
 <div data-testid="run">
 <Tracker name="fear" label={t('campaign.fear')} helpId="fear" value={String(c.fear)} filled={c.fear} max={12} action="?/fear" lang={data.lang} variant="band" />
+<p class="my-1" data-testid="damage-result" role="status" aria-live="polite">{#if form?.damage}{damageText(data.lang, form.damage)}{/if}</p>
 <div class="grid grid-cols-1 items-start gap-4 lg:grid-cols-[1fr_18rem]">
 <div class="grid min-w-0 grid-cols-[repeat(auto-fill,minmax(18rem,1fr))] content-start items-start gap-4" data-testid="party">
 <h2 class="col-span-full mt-4 mb-2">{t('campaign.characters')}</h2>
@@ -353,7 +355,7 @@
 				{...trackerValues(ch[key])} />
 		{/each}
 		<DefenseLine evasion={ch.evasion} major={ch.majorThreshold} severe={ch.severeThreshold} lang={data.lang} />
-		<DamageForm action="?/damage" characterId={ch.id} lang={data.lang} />
+		<DamageForm action="?/damage" characterId={ch.id} lang={data.lang} major={ch.majorThreshold} severe={ch.severeThreshold} />
 		</div>
 	</article>
 {:else}

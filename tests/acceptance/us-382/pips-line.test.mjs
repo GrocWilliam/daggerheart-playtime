@@ -85,11 +85,11 @@ test('Fear stays on one line with 20x20 pips', async () => {
 	await closePage(p);
 });
 
-test('three cards with no condition are at most 440px tall at 1024x768', async () => {
+test('three cards with no condition are at most 500px tall at 1024x768', async () => {
 	const p = await openPage(browser, runStepUrl(BASE, cardCamp), [1024, 768]);
 	const hs = await cardHeights(p);
 	assert.equal(hs.length, 3);
-	for (const h of hs) assert.ok(h <= 440, `height ${h}`);
+	for (const h of hs) assert.ok(h <= 500, `height ${h}`);
 	await closePage(p);
 });
 

@@ -11,7 +11,7 @@ const config = {
 		csrf: { checkOrigin: false },
 		// us-209's fallback.unit.ts imports a path that only exists in the temporary copy its run.sh builds; us-218's cards.unit.ts does not type-check (`numbers()` returns `never[]` in a union).
 		typescript: {
-			config: (c) => ({ ...c, exclude: [...(c.exclude ?? []), '../tests/acceptance/us-209/fallback.unit.ts', '../tests/acceptance/us-218/cards.unit.ts'] })
+			config: (c) => ({ ...c, compilerOptions: { ...c.compilerOptions, allowImportingTsExtensions: true }, exclude: [...(c.exclude ?? []), '../tests/acceptance/us-209/fallback.unit.ts', '../tests/acceptance/us-218/cards.unit.ts'] })
 		}
 	}
 };

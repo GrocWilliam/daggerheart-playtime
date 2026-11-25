@@ -2,6 +2,7 @@
 	import { enhance } from '$app/forms';
 	import { page } from '$app/state';
 	import { busy } from '$lib/forms/busy';
+	import { damageText } from '$lib/forms/damage';
 	import Divider from '$lib/components/Divider.svelte';
 	import { translate, formatNumber, type Lang } from '$lib/i18n';
 	import Tracker from '$lib/components/Tracker.svelte';
@@ -15,6 +16,7 @@
 	import Chosen from '$lib/components/Chosen.svelte';
 	import { SHEET_TABS, TAB_LABEL, actionHref } from './tabs';
 	let { data, form } = $props();
+	const shownDamage = $derived(form?.damage ?? data.damageResult);
 	const t = (key: string, params?: Record<string, string | number>) => translate(data.lang, key, params);
 	const n = (v: number) => formatNumber(data.lang, v);
 	const valuesOf = (kind: string): Record<string, any> => (form?.modal === kind ? (form?.values ?? {}) : {});
@@ -237,7 +239,8 @@
 {/each}
 <DefenseLine evasion={c.evasion} major={c.majorThreshold} severe={c.severeThreshold} lang={data.lang} />
 <p class="mt-0 mb-3" data-testid="proficiency"><Help id="proficiency" name={t('levelup.proficiency')} label={t('levelup.proficiency')} text={t('levelup.help.proficiency')} lang={data.lang} /> <span>{c.proficiency}</span></p>
-<DamageForm action={actionHref('damage', data.tab)} lang={data.lang} />
+<DamageForm action={actionHref('damage', data.tab)} lang={data.lang} major={c.majorThreshold} severe={c.severeThreshold} />
+<p class="mt-0 mb-3" data-testid="damage-result" role="status" aria-live="polite">{#if shownDamage}{damageText(data.lang, shownDamage)}{/if}</p>
 </div>
 
 <div data-testid="sheet-conditions">

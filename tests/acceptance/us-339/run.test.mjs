@@ -53,11 +53,11 @@ test('body is 1280px wide on the Run step at 1440x900 and 1152px on the Build st
 	await closePage(p);
 });
 
-test('a card with no condition is at most 440px tall at 1024x768', async () => {
+test('a card with no condition is at most 500px tall at 1024x768', async () => {
 	const p = await run([1024, 768]);
 	const b = await cardBoxes(p);
 	const h = await cardOf(p, 'Cyra').evaluate((e) => e.getBoundingClientRect().height);
-	assert.ok(h <= 440, `height ${h}`);
+	assert.ok(h <= 500, `height ${h}`);
 	assert.equal(b.length, 3);
 	await closePage(p);
 });

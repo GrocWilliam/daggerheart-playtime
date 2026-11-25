@@ -62,7 +62,7 @@ describe('catalog keys', () => {
 		else used.add(k);
 	}
 	// keys passed around as plain string literals (tables of keys, server-side error keys)
-	const known = new Set(Object.keys(en).map((k) => k.replace(/\.(one|other|zero|two|few|many)$/, '')));
+	const known = new Set(Object.keys(en).flatMap((k) => [k, k.replace(/\.(one|other|zero|two|few|many)$/, '')]));
 	for (const m of text.matchAll(/(['"`])([\w][\w.\-]*)\1/g)) if (known.has(m[2])) used.add(m[2]);
 	const base = (k: string) => k.replace(/\.(one|other|zero|two|few|many)$/, '');
 	const isUsed = (k: string) => used.has(k) || used.has(base(k)) || prefixes.some((p) => k.startsWith(p));

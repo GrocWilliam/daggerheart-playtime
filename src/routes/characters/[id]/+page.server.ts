@@ -1,5 +1,6 @@
 import { error, fail, redirect } from '@sveltejs/kit';
 import { pickList, pickOf, subclassesOf, getSrd, cardsByIds, cardGroups, domainsOfClass, itemGroups, itemPicks, weaponGroups, armorGroups, gearDetail, idByName } from '$lib/server/features/srd';
+import { damageBody, damageResult, parseDamageQuery } from '$lib/forms/damage';
 import { TRAITS, tierOfLevel, subclassStage, conditionFieldSchema, trackerFieldSchema } from '$lib/server/features/characters';
 type Actions = import('./$types').Actions;
 type PageServerLoad = import('./$types').PageServerLoad;
@@ -41,9 +42,9 @@ function failure(
 }
 
 /** Success: no-JS posts redirect to the sheet tab of the action URL, enhanced ones update in place. */
-function done(event: { request: Request; params: { id: string }; url: URL }, _name: ActionName) {
+function done(event: { request: Request; params: { id: string }; url: URL }, _name: ActionName, extra: Record<string, string> = {}) {
 	if (!event.request.headers.has('x-sveltekit-action'))
-		redirect(303, `/characters/${enc(event.params.id)}?tab=${parseTab(event.url.searchParams.get('tab'))}`);
+		redirect(303, `/characters/${enc(event.params.id)}?${new URLSearchParams({ tab: parseTab(event.url.searchParams.get('tab')), ...extra })}`);
 	return { ok: true };
 }
 
@@ -57,6 +58,7 @@ export const load: PageServerLoad = async ({ params, fetch, locals, url }) => {
 	const ch = r.data;
 	return {
 		tab: parseTab(url.searchParams.get('tab')),
+		damageResult: parseDamageQuery(url, String(ch.name)),
 		character: ch,
 		// The level-up link: below level 10 and only for SRD classes (as the level-up API requires).
 		canLevelUp: Number(ch.level) < 10 && !!idByName('classes', String(ch.class)),
@@ -108,11 +110,12 @@ export const actions: Actions = {
 	damage: async (event) => {
 		const { request, params, fetch } = event;
 		const form = await request.formData();
-		const r = await call(fetch, 'POST', `/api/characters/${enc(params.id)}/damage`, {
-			amount: num(form.get('amount')),
-			useArmor: form.get('useArmor') !== null
-		});
-		return r.ok ? done(event, 'damage') : failure(r, { section: ACTION_SECTION.damage });
+		const r = await call(fetch, 'POST', `/api/characters/${enc(params.id)}/damage`, damageBody(form));
+		if (!r.ok) return failure(r, { section: ACTION_SECTION.damage });
+		const damage = damageResult(r.data);
+		const extra: Record<string, string> = { hit: String(damage?.hpHit ?? 0) };
+		if (damage?.armorUsed) extra.armor = '1';
+		return { ...done(event, 'damage', extra), damage };
 	},
 	edit: async (event) => {
 		const { request, params, fetch } = event;

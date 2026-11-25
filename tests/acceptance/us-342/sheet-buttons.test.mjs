@@ -96,7 +96,9 @@ test('the one submit of the gold, quantity, experience value, notes and damage f
 	for (const [tab, actions] of [['play', ['damage']], ['gear', ['gold', 'setQuantity']], ['traits', ['setExperience']], ['notes', ['notes']]]) {
 		const p = await openPage(browser, sheetUrl(BASE, id, tab), [1024, 768]);
 		for (const a of actions) {
-			const looks = await S.submitLooks(p, a);
+			let looks = await S.submitLooks(p, a);
+			// the quick damage buttons (name=quick) are secondary: only the Apply submit is checked
+			if (a === 'damage') looks = looks.slice(await p.locator('form[action^="?/damage"] button[name=quick]').count());
 			assert.ok(looks.length >= 1, `${a} has a submit`);
 			for (const b of looks) { assert.ok(b.cls.includes('btn-primary'), `${a} primary`); assert.equal(b.bg, ACCENT, `${a} background`); }
 		}

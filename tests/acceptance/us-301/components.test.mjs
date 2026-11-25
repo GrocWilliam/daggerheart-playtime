@@ -219,7 +219,7 @@ test('at 1024x768 the amount input and the submit button of each damage form hav
 		const { ctx, p } = await open(path);
 		const forms = await p.evaluate(() => [...document.querySelectorAll('form[action^="?/damage"]')].map((f) => {
 			const input = f.querySelector('input[name="amount"]');
-			const btn = f.querySelector('button[type="submit"], button:not([type])');
+			const btn = f.querySelector('button[type="submit"]');
 			return { input: input?.getBoundingClientRect().bottom, btn: btn?.getBoundingClientRect().bottom };
 		}));
 		assert.ok(forms.length >= (path.startsWith('/characters') ? 1 : 2), `${path}: damage forms`);

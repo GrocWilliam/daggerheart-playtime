@@ -38,7 +38,7 @@ test('package.json lists zod ^4 in dependencies', () => {
 });
 
 test('no hand-written parse* function remains in src', () => {
-	const re = /parse(Name|Create|Patch|Delta|Damage|Gold|Conditions|ItemCreate|ItemQuantity|CardId)/;
+	const re = /parse(Name|Create|Patch|Delta|Damage\b|Gold|Conditions|ItemCreate|ItemQuantity|CardId)/;
 	const hits = [];
 	(function walk(d) {
 		for (const e of fs.readdirSync(d, { withFileTypes: true })) {

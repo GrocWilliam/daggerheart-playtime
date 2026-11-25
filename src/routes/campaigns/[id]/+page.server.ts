@@ -1,5 +1,6 @@
 import { error, fail, redirect } from '@sveltejs/kit';
 import { adversariesByTier, listSrd, localizedSrd, idByName, pickOf, type Pick as SrdPick, type Line } from '$lib/server/features/srd';
+import { damageBody, damageResult } from '$lib/forms/damage';
 import type { Scene } from '$lib/server/features/scenes';
 import type { LootEntry } from '$lib/server/features/loot';
 import type { Lang } from '$lib/i18n';
@@ -198,11 +199,8 @@ export const actions: Actions = {
 	damage: async ({ request, fetch }) => {
 		const form = await request.formData();
 		const id = String(form.get('characterId'));
-		const r = await call(fetch, 'POST', `/api/characters/${encodeURIComponent(id)}/damage`, {
-			amount: num(form.get('amount')),
-			useArmor: form.get('useArmor') !== null
-		});
-		return r.ok ? { ok: true } : failure(r, { damageFor: id });
+		const r = await call(fetch, 'POST', `/api/characters/${encodeURIComponent(id)}/damage`, damageBody(form));
+		return r.ok ? { ok: true, damage: damageResult(r.data) } : failure(r, { damageFor: id });
 	},
 add: async (e) => {
 		const f = await e.request.formData();

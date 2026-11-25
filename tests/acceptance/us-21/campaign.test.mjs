@@ -67,12 +67,17 @@ const norm = (s) => s.replace(/\s*:\s*$/, '');
 test('every heading, label, button, placeholder and badge of /campaigns/:id comes from the dictionaries', async () => {
 	for (const lang of ['en', 'fr']) {
 		const values = new Set(Object.values(dict[lang]));
+		// Templates such as "Major ≥{major}" render with a value filled in: match them as patterns.
+		const esc = (x) => x.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+		const templates = [...values].filter((v) => /\{\w+\}/.test(v))
+			.map((v) => new RegExp('^' + v.split(/\{\w+\}/).map(esc).join('.+') + '$'));
+		const known = (x) => values.has(x) || templates.some((r) => r.test(x));
 		for (const id of [empty, full]) {
 			const { ctx, page } = await open(lang, id);
 			const texts = await interfaceTexts(page);
 			assert.ok(texts.some((t) => t.kind === 'H2'), 'a heading exists');
 			assert.ok(texts.some((t) => t.kind === 'BUTTON'), 'a button exists');
-			for (const t of texts) assert.ok(values.has(t.text) || values.has(norm(t.text)), `${lang}: ${t.kind} "${t.text}" is not in ${lang}.json`);
+			for (const t of texts) assert.ok(known(t.text) || known(norm(t.text)), `${lang}: ${t.kind} "${t.text}" is not in ${lang}.json`);
 			await ctx.close();
 		}
 	}

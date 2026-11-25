@@ -1,6 +1,6 @@
 import * as z from 'zod';
-import en from './en.json';
-import fr from './fr.json';
+import en from './en.json' with { type: 'json' };
+import fr from './fr.json' with { type: 'json' };
 
 export type Lang = 'en' | 'fr';
 export const LANGS: readonly Lang[] = ['en', 'fr'];

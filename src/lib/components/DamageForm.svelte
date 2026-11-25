@@ -3,15 +3,22 @@
 	import { busy } from '$lib/forms/busy';
 	import { translate, type Lang } from '$lib/i18n';
 
-	// The damage form on one row: amount, "use armor", submit. Labels lose the global bottom margin so the
-	// input and the button share their bottom edge.
-	let { action, characterId = undefined, lang }: { action: string; characterId?: string; lang: Lang } = $props();
-	const t = (key: string) => translate(lang, key);
+	// Two rows in one form: the Minor/Major/Severe quick buttons (no `type`, so `button[type=submit]` is only Apply),
+	// then the free amount with its label, "use armor" and Apply.
+	let { action, characterId = undefined, lang, major, severe }: { action: string; characterId?: string; lang: Lang; major: number; severe: number } = $props();
+	const t = (key: string, params?: Record<string, string | number>) => translate(lang, key, params);
 </script>
 
-<form use:enhance={busy} class="flex flex-wrap items-end gap-2" method="POST" {action}>
+<form use:enhance={busy} class="flex flex-col gap-0.5" method="POST" {action} aria-label={t('damage.label')}>
 	{#if characterId}<input type="hidden" name="characterId" value={characterId} />{/if}
-	<label class="mb-0!"><span class="sr-only">{t('damage.label')}</span><input class="mt-0! w-[5rem]! min-w-0!" type="number" name="amount" min="0" placeholder={t('damage.label')} required /></label>
-	<label class="mb-0!"><input type="checkbox" name="useArmor" /> {t('damage.useArmor')}</label>
-	<button class="btn-primary" type="submit">{t('damage.apply')}</button>
+	<div class="flex flex-wrap gap-2">
+		<button class="btn-secondary" name="quick" value="1" formnovalidate data-testid="damage-minor">{t('damage.minor')}</button>
+		<button class="btn-secondary" name="quick" value={major} formnovalidate data-testid="damage-major">{t('damage.major', { major })}</button>
+		<button class="btn-secondary" name="quick" value={severe} formnovalidate data-testid="damage-severe">{t('damage.severe', { severe })}</button>
+	</div>
+	<div class="flex flex-wrap items-end gap-2">
+		<label class="mb-0!"><span class="block text-[0.875rem] leading-none">{t('damage.other')}</span><input class="mt-0! w-[5rem]! min-w-0!" type="number" name="amount" min="0" required /></label>
+		<label class="mb-0!"><input type="checkbox" name="useArmor" /> {t('damage.useArmor')}</label>
+		<button class="btn-primary" type="submit">{t('damage.apply')}</button>
+	</div>
 </form>

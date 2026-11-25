@@ -89,12 +89,16 @@ const norm = (s) => s.replace(/\s*:\s*$/, '');
 test('every heading, label, button, placeholder and badge of /characters/:id comes from the dictionaries', async () => {
 	for (const lang of ['en', 'fr']) {
 		const values = new Set(Object.values(dict[lang]));
+		// Templates such as "Major ≥{major}" render with a value filled in: match them as patterns.
+		const templates = [...values].filter((v) => /\{\w+\}/.test(v))
+			.map((v) => new RegExp('^' + v.split(/\{\w+\}/).map(esc).join('.+') + '$'));
+		const known = (x) => values.has(x) || templates.some((r) => r.test(x));
 		for (const id of [rich, downed, bare]) {
 			const texts = (await eachTab(lang, id, interfaceTexts)).flat();
 			assert.ok(texts.some((t) => t.kind === 'H2'), 'a heading exists');
 			assert.ok(texts.filter((t) => t.kind === 'BUTTON').length > 5, 'buttons exist');
 			if (id === downed) assert.ok(texts.some((t) => t.kind === 'badge'), 'a badge exists');
-			for (const t of texts) assert.ok(values.has(t.text) || values.has(norm(t.text)), `${lang}: ${t.kind} "${t.text}" is not in ${lang}.json`);
+			for (const t of texts) assert.ok(known(t.text) || known(norm(t.text)), `${lang}: ${t.kind} "${t.text}" is not in ${lang}.json`);
 		}
 	}
 });
