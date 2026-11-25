@@ -30,10 +30,10 @@ Per page:
 - Home: campaign grid with 1, 2 and 3 columns.
 - Run step: see Design system. `run` has no border or padding; `fear` band first, then `party`, `current-scene` and `journal` (an `<aside>` from 1024px). With no scene, `current-scene` is one line: the text and the Build link.
 - Build step: see Design system. `build` has no border or padding; `build-party` 1/3 and `build-scenes` 2/3 from 768px; each `scene` has a header row and a closed `scene-more` `<details>`.
-- Run card (`character-card`): name, `down`, class and level; `ConditionBadges` only when a condition is set; the four aligned trackers; `DefenseLine`; the one-row `DamageForm`. No `Chosen` on cards (it stays on the sheet header).
+- Run card (`character-card`): name, `down`, class (through `chosen.class`, `localizedSrd`) and level; `ConditionBadges` only when a condition is set; the four aligned trackers; `DefenseLine`; the one-row `DamageForm`. No `Chosen` on cards (it stays on the sheet header).
 - The character sheet's edit form is in `<Modal kind="edit">` (opener `new-edit` in the header next to `campaign-run-link`; no Edit section); grid 1 column, 2 from `min-[600px]:`; `edit` fails with `modal: 'edit'` and `values`, redirects 303 to `/characters/:id?tab=<tab>` on success without enhance.
 - The Add scene form is in `<Modal kind="scene">` inside `build-scenes` (opener `new-scene`); its `add` action fails with `modal: 'scene'` and `values`, and redirects 303 to `?step=build` on success unless the request is an enhance one (`x-sveltekit-action`).
-- Character sheet, header (every tab, above the tabs): `h1` (`character-name`, `down`), `Divider`, a meta line (class and level, `Chosen`, `domain`s, `ConditionBadges`), then a button row of `campaign-run-link`, `level-up` and `new-edit`. The Modals carry their tab: `edit` → `{ tab: data.tab }`, `item` → `gear`, `experience` → `traits`, `card` → `cards` (openers of item/experience/card sit in their tab's section).
+- Character sheet, header (every tab, above the tabs; no back link above the `h1`, `campaign-run-link` is the way back): `h1` (`character-name`, `down`), `Divider`, a meta line (class and level, `Chosen`, `domain`s, `ConditionBadges`), then a button row of `campaign-run-link`, `level-up` and `new-edit`. The Modals carry their tab: `edit` → `{ tab: data.tab }`, `item` → `gear`, `experience` → `traits`, `card` → `cards` (openers of item/experience/card sit in their tab's section).
 - Character sheet, tab bar: `nav[data-testid=sheet-tabs]`, one plain link per tab (`tab-<key>`, `href="?tab=<key>"`, label `TAB_LABEL`); the current one has `aria-current="page"` and the accent look of `step-*`. Only the chosen tab is rendered (one `{#if data.tab === ...}` per tab, never hidden with CSS); `load` still computes every tab's data.
 - Character sheet, panel: `sheet-panel` (surface look: `bg-surface`, `3px double` accent border, `0.5rem` radius, `p-3`) holds the `sheet-sections` grid: 1 column below 768px; from 768px 2 columns on tabs with two sections, 1 otherwise.
   - `play`: `sheet-trackers` (trackers, `DefenseLine`, `DamageForm`) left, `sheet-conditions` (the three toggles in one row of buttons) right.
@@ -64,7 +64,7 @@ Trackers and help:
 - Every helper after a visible label uses `label`: tracker labels, Evasion, Thresholds, Proficiency, trait names, condition badges, `Chosen` names and the class. The `/reference` page and helpers inside prose keep "?".
 
 Navigation:
-- The header is one row at 375, 768, 1024 and 1180px: sigil, `nav-home`, `nav-reference`, then `language-switcher` at the right end. At 375px it is at most 60px tall with no sideways scroll. Below 768px the `nav-home` text may be `sr-only` (the link keeps its accessible name and 44×44px).
+- The header is one row at 375, 768, 1024 and 1180px: sigil, `nav-home`, `nav-reference`, then `language-switcher` at the right end. At 375px it is at most 60px tall with no sideways scroll. Below 768px the `nav-home` text may be `sr-only` (the link keeps its accessible name and 44×44px). The `<header>` has no `justify-between`: the switcher's `ml-auto` keeps it at the right end, and below 768px the nav sits right after the sigil (left-aligned).
 - `language-switcher` is two 44px buttons, 8px apart, with no padding around them. Their text is `EN` and `FR`, rendered from the language code (`code.toUpperCase()`, not catalog keys, because us-104's equal-value budget is used up). Their `aria-label` is `language.en`/`language.fr` and their `lang` is their own language. The current one is `aria-pressed="true"` with the primary look; the other is ghost.
 - Tab bars (`step-*`, `sheet-tabs`): 44px-high links on a 1px `--border` bottom line, no underline. The current tab has an accent background and bg text; the others have muted text on a transparent background. At 375px `sheet-tabs` fits on one row or scrolls inside itself (`overflow-x: auto`).
 
@@ -74,7 +74,7 @@ Run step:
 - `character-card`: name, `down`, and class and level in small muted text; `ConditionBadges` only when a condition is set; the four aligned trackers; `DefenseLine` on one line; the one-row `DamageForm` (amount `w-[5rem]`, use armor, `btn-primary` submit). At 1024×768 a card with no condition is at most 360px tall.
 
 Build step:
-- Each `scene` `article` has a header row (`flex flex-wrap items-center gap-2`): title, `scene-status`, Set current, Mark done and `scene-edit-open`. Then come the notes and `<details data-testid="scene-more">`: closed by default, open on the current scene, with summary `scene.more` ("Loot, encounter and order" / "Butin, rencontre et ordre").
+- Each `scene` `article` has a header row (`flex flex-wrap items-center gap-2`): title, `scene-status`, Set current, Mark done and `scene-edit-open` (the link sits in the status form's flex row, so the form's 12px bottom margin shifts both together). The link and the buttons share `m-0 border py-1 leading-normal` and are top-aligned within 1px. Then come the notes and `<details data-testid="scene-more">`: closed by default, open on the current scene, with summary `scene.more` ("Loot, encounter and order" / "Butin, rencontre et ordre").
 - `scene-more` holds `scene-environment`, the loot section, the encounter section, then a row: ghost Move up, ghost Move down and, at least 1rem after them, `btn-danger` Delete scene.
 - One `<Modal kind="scene-edit" opener={false} clear={['scene']}>` per page (title `scene.editTitle`) is opened by `scene-edit-open` (`?step=build&new=scene-edit&scene=<id>`) and posts to `?/edit&step=build`. Its test id is `modal-scene-edit`.
 - Every `<summary>` shows an accent `▸`/`▾` marker (`app.css`), so disclosures read as clickable. `h4` (Loot, Encounter) is Cinzel in accent.
@@ -96,7 +96,7 @@ Other pages:
 
 ## Shared components
 In `src/lib/components/`:
-- `Divider`: the h1 flourish (`divider`).
+- `Divider`: the h1 flourish (`divider`), left-aligned under the `h1` (`preserveAspectRatio="xMinYMid meet"`; width unchanged, `max-w-xs`).
 - `Pips`: filled/empty pips for a tracker (`<name>-pips`).
 - `Help`: glossary `id`, `text` prop or `lines: Line[]`, optional `label`; native Popover API: `help-open` (`popovertarget`; the label with a dotted underline, or "?") opens a `popover="auto"` `help-panel` (inline-level `<span>`) styled like the `Modal` panel, closed by Escape, an outside click or `help-close`. The one exception to `Modal` being the only dialog.
 - `Chosen`: subclass, ancestry and community of a character.

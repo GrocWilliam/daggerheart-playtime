@@ -1,5 +1,5 @@
 import { error, fail, redirect } from '@sveltejs/kit';
-import { adversariesByTier, listSrd, localizedSrd, pickOf, type Line } from '$lib/server/features/srd';
+import { adversariesByTier, listSrd, localizedSrd, idByName, pickOf, type Pick as SrdPick, type Line } from '$lib/server/features/srd';
 import type { Scene } from '$lib/server/features/scenes';
 import type { LootEntry } from '$lib/server/features/loot';
 import type { Lang } from '$lib/i18n';
@@ -97,9 +97,10 @@ export const load: PageServerLoad = async ({ params, fetch, locals, url }) => {
 	if (r.status === 404 || r.status === 400) error(404, 'not found');
 	if (!r.ok) error(r.status, 'load failed');
 	const lang = locals?.lang ?? 'en';
-	const chosen: Record<string, unknown> = {};
+	const chosen: Record<string, { class: SrdPick | null; subclass: SrdPick | null; ancestry: SrdPick | null; community: SrdPick | null }> = {};
 	for (const ch of r.data.characters ?? []) {
 		chosen[ch.id] = {
+			class: pickOf('classes', idByName('classes', ch.class), lang),
 			subclass: pickOf('subclasses', ch.subclass, lang),
 			ancestry: pickOf('ancestries', ch.ancestry, lang),
 			community: pickOf('communities', ch.community, lang)

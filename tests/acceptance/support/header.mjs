@@ -55,3 +55,16 @@ export const switchLanguage = async (page, code) => {
 	await page.waitForLoadState('networkidle');
 };
 export const htmlLang = (page) => page.evaluate(() => document.documentElement.lang);
+
+/** Horizontal boxes of the four header items (left/right edges, width). */
+export const headerEdges = (page) => page.evaluate(() => {
+	const out = {};
+	for (const id of ['sigil', 'nav-home', 'nav-reference', 'language-switcher']) {
+		const r = document.querySelector(`[data-testid="${id}"]`).getBoundingClientRect();
+		out[id] = { left: r.left, right: r.right };
+	}
+	return out;
+});
+
+/** The header's computed CSS justify-content. */
+export const headerJustifyContent = (page) => page.evaluate(() => getComputedStyle(document.querySelector('header')).justifyContent);

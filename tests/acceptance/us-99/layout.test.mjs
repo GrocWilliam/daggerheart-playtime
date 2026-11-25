@@ -106,7 +106,7 @@ for (const [name, w, h] of [['phone', 375, 667], ['desktop', 1280, 800]]) {
 			assert.equal(r.header.display, 'flex');
 			assert.equal(r.header.flexWrap, w >= 768 ? 'nowrap' : 'wrap'); // US-191: md:flex-nowrap
 			assert.equal(r.header.alignItems, 'center');
-			assert.equal(r.header.justifyContent, 'space-between');
+			assert.equal(r.header.justifyContent, 'normal'); // US-374: no justify-between; the switcher's ml-auto keeps it right
 			assert.equal(r.header.columnGap, '8px');
 			assert.equal(r.header.borderBottomWidth, '1px');
 			assert.equal(r.header.borderBottomStyle, 'solid');

@@ -162,7 +162,7 @@
 	{#each c.characters as ch (ch.id)}
 		<li class="flex min-h-11 flex-wrap items-center gap-2" data-testid="party-member">
 			<a data-testid="character-name" href="/characters/{ch.id}">{ch.name}</a>
-			<span class="muted inline-flex items-center gap-1">{ch.class}, {t('character.level')} {ch.level}</span>
+			<span class="muted inline-flex items-center gap-1">{#if data.chosen[ch.id]?.class}{@const cls = data.chosen[ch.id].class}<span lang={cls?.nameLang}>{cls?.name}</span>{:else}{ch.class}{/if}, {t('character.level')} {ch.level}</span>
 		</li>
 	{:else}
 		<li>{t('campaign.none')}</li>
@@ -220,12 +220,12 @@
 		<div class="flex flex-wrap items-center gap-2">
 			<h3 class="m-0! mr-1!">{s.title}</h3>
 			<span class="inline-block rounded-[999px] px-[0.6rem] text-[0.875rem] text-bg {badge[s.status]}" data-testid="scene-status">{t(`scenario.status.${s.status}`)}</span>
-			<form use:enhance={busy} class="mb-0 flex flex-wrap gap-2" method="POST" action="?/status&step=build">
+			<form use:enhance={busy} class="flex flex-wrap items-center gap-2" method="POST" action="?/status&step=build">
 				<input type="hidden" name="sceneId" value={s.id} />
-				{#if s.status !== 'current'}<button class="btn-secondary" type="submit" name="status" value="current">{t('scenario.setCurrent')}</button>{/if}
-				{#if s.status !== 'done'}<button class="btn-secondary" type="submit" name="status" value="done">{t('scenario.markDone')}</button>{/if}
+				{#if s.status !== 'current'}<button class="btn-secondary m-0 self-center border py-1 leading-normal" type="submit" name="status" value="current">{t('scenario.setCurrent')}</button>{/if}
+				{#if s.status !== 'done'}<button class="btn-secondary m-0 self-center border py-1 leading-normal" type="submit" name="status" value="done">{t('scenario.markDone')}</button>{/if}
+				<a class="btn-secondary m-0 self-center border py-1 leading-normal" data-testid="scene-edit-open" href="?step=build&new=scene-edit&scene={encodeURIComponent(s.id)}">{t('section.edit')}</a>
 			</form>
-			<a class="btn-secondary" data-testid="scene-edit-open" href="?step=build&new=scene-edit&scene={encodeURIComponent(s.id)}">{t('section.edit')}</a>
 		</div>
 		{#if s.notes}<p class="whitespace-pre-line">{s.notes}</p>{/if}
 		<details data-testid="scene-more" open={moreOpen[s.id] ?? s.status === 'current'} ontoggle={(e) => (moreOpen[s.id] = e.currentTarget.open)}>
@@ -342,7 +342,7 @@
 		<div class="-mb-2 flex flex-wrap items-center gap-x-2 gap-y-0 [&_button]:px-2! [&_button:not([data-testid^=help])]:text-[0.875rem]">
 			<h3 class="m-0!"><a data-testid="character-name" href="/characters/{ch.id}">{ch.name}</a></h3>
 			{#if ch.hp.marked === ch.hp.max}<span class="inline-block rounded-[999px] px-[0.6rem] text-[0.875rem] text-bg bg-danger" data-testid="down">{t('badge.down')}</span>{/if}
-			<span class="muted inline-flex items-center gap-1 text-[0.875rem]">{ch.class}, <span class="text-base"><Help id="level" name={t('character.level')} label={t('character.level')} lang={data.lang} /></span> {ch.level}</span>
+			<span class="muted inline-flex items-center gap-1 text-[0.875rem]">{#if data.chosen[ch.id]?.class}{@const cls = data.chosen[ch.id].class}<span lang={cls?.nameLang}>{cls?.name}</span>{:else}{ch.class}{/if}, <span class="text-base"><Help id="level" name={t('character.level')} label={t('character.level')} lang={data.lang} /></span> {ch.level}</span>
 		</div>
 		<ConditionBadges conditions={ch.conditions} lang={data.lang} />
 		{#each TRACKERS as key (key)}

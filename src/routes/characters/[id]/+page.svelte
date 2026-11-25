@@ -42,7 +42,6 @@
 
 <svelte:head><title>{c.name} – {t('home.title')}</title></svelte:head>
 
-<p><a href="/campaigns/{c.campaignId}">{t('character.back')}</a></p>
 <h1>
 	<span data-testid="character-name">{c.name}</span>
 	{#if c.hp.marked === c.hp.max}<span class="inline-block rounded-[999px] px-[0.6rem] text-[0.875rem] text-bg bg-danger" data-testid="down">{t('badge.down')}</span>{/if}

@@ -72,3 +72,45 @@ export const metaCentres = (page) => page.evaluate(() => {
 });
 
 export const sideScroll = (page) => page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+
+/** The sheet's HTML over HTTP. `lang` is sent as the app's language cookie (`en` or `fr`). */
+export const fetchSheetHtml = async (base, id, { tab = 'play', lang = 'en' } = {}) => {
+	const r = await fetch(`${base}/characters/${id}?tab=${tab}`, { headers: { cookie: `lang=${lang}` } });
+	if (!r.ok) throw new Error(`GET /characters/${id} -> ${r.status}`);
+	return r.text();
+};
+
+/** The page content: everything after the site header (the layout renders no <main> element). */
+const contentOf = (html) => html.slice(html.indexOf('</header>') + '</header>'.length);
+const h1Index = (content) => {
+	const i = content.indexOf('<h1');
+	if (i < 0) throw new Error('the sheet has no h1');
+	return i;
+};
+
+/** Opening tags of the links (`<a ...>`) in the content before the h1. */
+export const anchorsBeforeH1 = (html) => {
+	const c = contentOf(html);
+	return [...c.slice(0, h1Index(c)).matchAll(/<a\b[^>]*>/g)].map((m) => m[0]);
+};
+
+/** The first element after the h1's closing tag, ignoring whitespace and comment markers (its opening tag). */
+export const elementAfterH1 = (html) => {
+	const c = contentOf(html);
+	const close = c.indexOf('</h1>', h1Index(c));
+	if (close < 0) throw new Error('the h1 is not closed');
+	const rest = c.slice(close + '</h1>'.length).replace(/<!--[\s\S]*?-->/g, '').trimStart();
+	return rest.match(/^<[a-z][^>]*>/)?.[0] ?? '';
+};
+
+/** Opening tags of the content's links whose path is `/campaigns/<campaignId>` (the query string is ignored). */
+export const campaignLinks = (html, campaignId) =>
+	[...contentOf(html).matchAll(/<a\b[^>]*>/g)]
+		.map((m) => m[0])
+		.filter((tag) => (tag.match(/\shref="([^"]*)"/)?.[1] ?? '').split('?')[0] === `/campaigns/${campaignId}`);
+
+/** True when an element with this data-testid is in the HTML. */
+export const hasTestId = (html, testId) => html.includes(`data-testid="${testId}"`);
+
+/** The `lang` the server put on <html>. */
+export const htmlLang = (html) => html.match(/<html lang="([^"]*)"/)?.[1];

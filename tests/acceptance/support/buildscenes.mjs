@@ -110,3 +110,21 @@ export const buildColumns = (page) =>
 		const a = r('build-party'), b = r('build-scenes');
 		return { party: { x: a.x, y: a.y, right: a.right, width: a.width }, scenes: { x: b.x, y: b.y, width: b.width } };
 	});
+
+/** US-371: boxes of a scene header's edit link and one status button (by exact name): { edit, button } with top/bottom/width/height, or button null when absent. */
+export const headerBoxes = (page, title, buttonName) =>
+	sceneCard(page, title).evaluate((sc, buttonName) => {
+		const box = (e) => { if (!e) return null; const r = e.getBoundingClientRect(); return { top: r.top, bottom: r.bottom, width: r.width, height: r.height }; };
+		const b = [...sc.querySelectorAll('form[action^="?/status&"] button')].find((x) => x.textContent.trim() === buttonName);
+		return { edit: box(sc.querySelector('[data-testid="scene-edit-open"]')), button: box(b) };
+	}, buttonName);
+
+/** The status buttons' boxes of a scene header (every button of the status forms). */
+export const statusButtonBoxes = (page, title) =>
+	sceneCard(page, title).evaluate((sc) =>
+		[...sc.querySelectorAll('form[action^="?/status&"] button')].map((e) => { const r = e.getBoundingClientRect(); return { label: e.textContent.trim(), width: r.width, height: r.height }; }));
+
+/** Whether the scene edit dialog is open. */
+export const editDialogOpen = (page) => page.evaluate(() => document.querySelector('[data-testid="modal-scene-edit"]')?.open === true);
+export const waitEditDialogOpen = (page) => page.waitForFunction(() => document.querySelector('[data-testid="modal-scene-edit"]')?.open === true);
+export const clickEditLink = (page, title) => sceneCard(page, title).getByTestId('scene-edit-open').click();
