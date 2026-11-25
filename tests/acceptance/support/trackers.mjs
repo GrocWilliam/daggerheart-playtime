@@ -13,7 +13,16 @@ export const leftEdges = (container) => container.evaluate((root, names) => {
 	const x = (e) => e.getBoundingClientRect().left;
 	const minus = names.map((n) => x(root.querySelector(`[data-testid="${n}"]`).closest('form').querySelector('button[name=delta][value="-1"]')));
 	const pips = names.map((n) => x(root.querySelector(`[data-testid="${n}-pips"]`)));
-	return { minus, pips };
+	const labels = names.map((n) => {
+		const f = root.querySelector(`[data-testid="${n}"]`).closest('form');
+		return x([...f.querySelectorAll('button')].find((b) => b.name !== 'delta'));
+	});
+	const below = names.map((n) => {
+		const f = root.querySelector(`[data-testid="${n}"]`).closest('form');
+		const minusBottom = f.querySelector('button[name=delta][value="-1"]').getBoundingClientRect().bottom;
+		return [...root.querySelector(`[data-testid="${n}-pips"]`).children].every((c) => c.getBoundingClientRect().top >= minusBottom - 1);
+	});
+	return { minus, pips, labels, below };
 }, TRACKER_NAMES);
 export const sheetTrackers = (page) => page.locator('[data-testid="sheet-trackers"]');
 export const runCard = (page, i) => page.locator('[data-testid="character-card"]').nth(i);
@@ -48,3 +57,27 @@ export const fearBand = (page) => page.locator('[data-testid="fear"]').evaluate(
 export const fearValue = async (page) => (await page.locator('[data-testid="fear"]').textContent()).trim();
 export const clickPlus = (page, name) => page.locator('form', { has: page.locator(`[data-testid="${name}"]`) }).first().locator('button[name=delta][value="1"]').click();
 export const hpText = async (page) => (await page.locator('[data-testid="hp"]').first().textContent()).trim();
+
+// Per tracker in a container: the tops of its pips, the − button bottom/size, the label/−/value/+ centres.
+export const pipTops = (container, names = TRACKER_NAMES) => container.evaluate((root, names) => names.map((n) => ({
+	name: n, tops: [...root.querySelector(`[data-testid="${n}-pips"]`).children].map((c) => c.getBoundingClientRect().top)
+})), names);
+export const stepperSizes = (container, names = TRACKER_NAMES) => container.evaluate((root, names) => names.flatMap((n) => {
+	const f = root.querySelector(`[data-testid="${n}"]`).closest('form');
+	return ['-1', '1'].map((v) => { const r = f.querySelector(`button[name=delta][value="${v}"]`).getBoundingClientRect(); return { name: n, w: r.width, h: r.height }; });
+}), names);
+export const scrollOverflow = (page) => page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+export const fearGeometry = (page) => page.locator('[data-testid="fear"]').evaluate((val) => {
+	const f = val.closest('form');
+	const cy = (e) => { const r = e.getBoundingClientRect(); return r.top + r.height / 2; };
+	const label = [...f.querySelectorAll('button')].find((b) => b.name !== 'delta');
+	return { cys: [cy(label), cy(f.querySelector('button[name=delta][value="-1"]')), cy(val), cy(f.querySelector('button[name=delta][value="1"]')), cy(f.querySelector('[data-testid="fear-pips"]'))],
+		pips: [...f.querySelector('[data-testid="fear-pips"]').children].map((p) => { const r = p.getBoundingClientRect(); return [r.width, r.height]; }) };
+});
+export const rowCentres = (page, name, scope) => (scope ?? page).locator(`[data-testid="${name}"]`).first().evaluate((val) => {
+	const f = val.closest('form');
+	const cy = (e) => { const r = e.getBoundingClientRect(); return r.top + r.height / 2; };
+	const label = [...f.querySelectorAll('button')].find((b) => b.name !== 'delta');
+	return [cy(label), cy(f.querySelector('button[name=delta][value="-1"]')), cy(val), cy(f.querySelector('button[name=delta][value="1"]'))];
+});
+export const cardHeights = (page) => page.locator('[data-testid="character-card"]').evaluateAll((els) => els.map((e) => e.getBoundingClientRect().height));

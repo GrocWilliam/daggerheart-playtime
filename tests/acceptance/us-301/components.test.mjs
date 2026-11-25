@@ -143,12 +143,12 @@ test('components import only $lib/i18n, $lib/forms/busy, Help and Pips, never ro
 	}
 });
 
-test('sheet at 1024x768: label, −, value, + and pips of each tracker on one row, value between − and +', async () => {
+test('sheet at 1024x768: label, −, value and + of each tracker on one row, value between − and +', async () => {
 	const { a } = await setup();
 	for (const lang of ['en', 'fr']) {
 		const labels = Object.fromEntries(TRACKERS.map((k) => [k, LABELS[lang][`tracker.${k}`]]));
 		const { ctx, p } = await open(`/characters/${a}`, { lang });
-		checkRows(await measureTrackers(p, null, labels), { withPips: true }, `sheet ${lang} 1024`);
+		checkRows(await measureTrackers(p, null, labels), { withPips: false }, `sheet ${lang} 1024`);
 		await ctx.close();
 	}
 });
@@ -163,11 +163,11 @@ test('sheet at 375x812: label, −, value and + of each tracker on one row', asy
 	}
 });
 
-test('Run cards at 1024x768: each tracker on one row with its pips; at 375x812 label, −, value and + on one row', async () => {
+test('Run cards at 1024x768: each tracker on one row; at 375x812 label, −, value and + on one row', async () => {
 	const { camp } = await setup();
 	for (const lang of ['en', 'fr']) {
 		const labels = Object.fromEntries(TRACKERS.map((k) => [k, LABELS[lang][`tracker.${k}`]]));
-		for (const [w, h, withPips] of [[1024, 768, true], [375, 812, false]]) {
+		for (const [w, h, withPips] of [[1024, 768, false], [375, 812, false]]) {
 			const { ctx, p } = await open(`/campaigns/${camp}?step=run`, { w, h, lang });
 			const scopes = await measureTrackers(p, '[data-testid="character-card"]', labels);
 			assert.equal(scopes.length, 2, 'two character cards');

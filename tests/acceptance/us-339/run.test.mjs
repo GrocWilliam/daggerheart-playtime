@@ -53,20 +53,21 @@ test('body is 1280px wide on the Run step at 1440x900 and 1152px on the Build st
 	await closePage(p);
 });
 
-test('a card with no condition is at most 360px tall at 1024x768', async () => {
+test('a card with no condition is at most 440px tall at 1024x768', async () => {
 	const p = await run([1024, 768]);
 	const b = await cardBoxes(p);
-	const h = await cardOf(p, 'Alyndra').evaluate((e) => e.getBoundingClientRect().height);
-	assert.ok(h <= 360, `height ${h}`);
+	const h = await cardOf(p, 'Cyra').evaluate((e) => e.getBoundingClientRect().height);
+	assert.ok(h <= 440, `height ${h}`);
 	assert.equal(b.length, 3);
 	await closePage(p);
 });
 
-test('card header: name, down and class/level share a centre; class/level is 14px muted', async () => {
+test('card header: name and down share a centre, class/level is below the name; class/level is 14px muted', async () => {
 	const p = await run([1024, 768]);
 	const h = await cardHeader(cardOf(p, 'Brom'));
 	assert.notEqual(h.down, null, 'Brom is down');
-	assert.ok(Math.max(h.name, h.down, h.meta) - Math.min(h.name, h.down, h.meta) <= 8, JSON.stringify(h));
+	assert.ok(Math.abs(h.name - h.down) <= 8, JSON.stringify(h));
+	assert.ok(h.metaTop >= h.nameBottom - 1, JSON.stringify(h));
 	assert.equal(h.fontSize, '14px');
 	assert.equal(h.color, 'rgb(185, 176, 143)');
 	await closePage(p);

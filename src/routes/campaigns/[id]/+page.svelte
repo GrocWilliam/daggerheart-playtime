@@ -338,19 +338,23 @@
 <div class="grid min-w-0 grid-cols-[repeat(auto-fill,minmax(18rem,1fr))] content-start items-start gap-4" data-testid="party">
 <h2 class="col-span-full mt-4 mb-2">{t('campaign.characters')}</h2>
 {#each c.characters as ch (ch.id)}
-	<article class="mb-0! min-w-0 pb-0!" data-testid="character-card">
-		<div class="-mb-2 flex flex-wrap items-center gap-x-2 gap-y-0 [&_button]:px-2! [&_button:not([data-testid^=help])]:text-[0.875rem]">
-			<h3 class="m-0!"><a data-testid="character-name" href="/characters/{ch.id}">{ch.name}</a></h3>
-			{#if ch.hp.marked === ch.hp.max}<span class="inline-block rounded-[999px] px-[0.6rem] text-[0.875rem] text-bg bg-danger" data-testid="down">{t('badge.down')}</span>{/if}
-			<span class="muted inline-flex items-center gap-1 text-[0.875rem]">{#if data.chosen[ch.id]?.class}{@const cls = data.chosen[ch.id].class}<span lang={cls?.nameLang}>{cls?.name}</span>{:else}{ch.class}{/if}, <span class="text-base"><Help id="level" name={t('character.level')} label={t('character.level')} lang={data.lang} /></span> {ch.level}</span>
+	<article class="mb-0! row-span-2 grid min-w-0 grid-rows-subgrid gap-y-0 pb-0!" data-testid="character-card">
+		<div class="-mb-2 min-w-0">
+			<div class="flex flex-wrap items-center gap-x-2 [&_button]:px-2! [&_button:not([data-testid^=help])]:text-[0.875rem]">
+				<h3 class="m-0! min-w-0 break-words"><a data-testid="character-name" href="/characters/{ch.id}">{ch.name}</a></h3>
+				{#if ch.hp.marked === ch.hp.max}<span class="inline-block rounded-[999px] px-[0.6rem] text-[0.875rem] text-bg bg-danger" data-testid="down">{t('badge.down')}</span>{/if}
+			</div>
+			<p class="muted m-0 min-w-0 text-[0.875rem] leading-tight break-words">{#if data.chosen[ch.id]?.class}{@const cls = data.chosen[ch.id].class}<span lang={cls?.nameLang}>{cls?.name}</span>{:else}{ch.class}{/if} · {t('character.level')} {ch.level}</p>
+			<ConditionBadges conditions={ch.conditions} lang={data.lang} />
 		</div>
-		<ConditionBadges conditions={ch.conditions} lang={data.lang} />
+		<div class="min-w-0">
 		{#each TRACKERS as key (key)}
 			<Tracker name={key} label={t(`tracker.${key}`)} helpId={key} action="?/tracker" hidden={{ characterId: ch.id, tracker: key }} lang={data.lang}
 				{...trackerValues(ch[key])} />
 		{/each}
 		<DefenseLine evasion={ch.evasion} major={ch.majorThreshold} severe={ch.severeThreshold} lang={data.lang} />
 		<DamageForm action="?/damage" characterId={ch.id} lang={data.lang} />
+		</div>
 	</article>
 {:else}
 	<p>{t('campaign.none')}</p>

@@ -53,7 +53,7 @@ test('docs/ui.md has ## Design system right after ## Layout', () => {
 
 test('the Design system section contains the required strings', () => {
   const { text } = designSystem();
-  const required = ['--border', '--alpha(var(--accent) / 35%)', 'btn-primary', 'btn-secondary', 'btn-ghost', 'btn-danger', 'aria-pressed', 'flex flex-wrap gap-2', '6rem', 'variant="band"', 'EN', 'FR', 'language.en', 'language.fr', 'overflow-x: auto', 'minmax(18rem, 1fr)', '18rem', '80rem', '360px', 'scene-more', 'scene.more', 'scene-edit-open', 'modal-scene-edit', 'scene.editTitle', 'w-[5rem]', 'min-w-0!', '3rem'];
+  const required = ['--border', '--alpha(var(--accent) / 35%)', 'btn-primary', 'btn-secondary', 'btn-ghost', 'btn-danger', 'aria-pressed', 'flex flex-wrap gap-2', '6rem', 'variant="band"', 'EN', 'FR', 'language.en', 'language.fr', 'overflow-x: auto', 'minmax(18rem, 1fr)', '18rem', '80rem', '440px', 'scene-more', 'scene.more', 'scene-edit-open', 'modal-scene-edit', 'scene.editTitle', 'w-[5rem]', 'min-w-0!', '3rem'];
   const missing = required.filter((s) => !text.includes(s));
   assert.deepEqual(missing, []);
 });

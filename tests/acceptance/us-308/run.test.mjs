@@ -53,7 +53,7 @@ test('run cards do not show subclass, ancestry or community; the sheet header do
 		assert.equal(await s.locator(`[data-testid=${k}]`).count(), 1, `sheet ${k}`);
 });
 
-test('character card: name and class/level on one row, then hp, stress, hope, armor, evasion, damage form', async () => {
+test('character card: name, then class/level, then hp, stress, hope, armor, evasion, damage form', async () => {
 	const p = await run([1024, 768]);
 	await p.waitForSelector('[data-testid=character-card]');
 	const cards = p.locator('[data-testid=character-card]');
@@ -69,11 +69,11 @@ test('character card: name and class/level on one row, then hp, stress, hope, ar
 			rg.selectNodeContents(node);
 			const top = (id) => rc(card.querySelector(`[data-testid=${id}]`)).y;
 			const form = card.querySelector('form[action^="?/damage"]');
-			return { nameY: rc(name).y + rc(name).height / 2, clsY: rc(rg).y + rc(rg).height / 2, nameBottom: rc(name).bottom,
+			return { nameY: rc(name).y + rc(name).height / 2, clsY: rc(rg).y + rc(rg).height / 2, nameBottom: rc(name).bottom, clsBottom: rc(rg).bottom,
 				tops: ['hp', 'stress', 'hope', 'armor', 'evasion'].map(top), form: rc(form).y };
 		});
-		assert.ok(Math.abs(r.nameY - r.clsY) <= 6, `centres ${r.nameY} ${r.clsY}`);
-		assert.ok(r.tops[0] > r.nameBottom - 1, 'hp below name row');
+		assert.ok(r.clsY > r.nameBottom, `class/level centre below name bottom ${r.clsY} ${r.nameBottom}`);
+		assert.ok(r.tops[0] > r.clsBottom - 1, 'hp below class/level text');
 		for (let k = 1; k < r.tops.length; k++) assert.ok(r.tops[k] > r.tops[k - 1], `order ${r.tops}`);
 		assert.ok(r.form > r.tops[4], `damage form below evasion ${r.form} ${r.tops[4]}`);
 	}

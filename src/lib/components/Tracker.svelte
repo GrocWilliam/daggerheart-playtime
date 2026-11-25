@@ -5,7 +5,8 @@
 	import Help from './Help.svelte';
 	import Pips from './Pips.svelte';
 
-	// One tracker row: label, help, −, value, + (never wrapping), then the pips (the only part that may wrap).
+	// `row`: two lines. Line 1 is the label then the nowrap −, value, + group; line 2 is the pips (col-span-full, so they start at the
+	// label's left edge). `band` (Fear) keeps one line: label, stepper, pips.
 	// `.tracker` is a marker class without CSS: frozen tests select on it.
 	let {
 		name,
@@ -37,7 +38,7 @@
 
 <form
 	use:enhance={busy}
-	class="grid grid-cols-[6rem_auto_1fr] items-center gap-2 {band ? 'mb-3! rounded-[0.5rem] border border-border bg-surface px-3! py-2!' : 'mb-1!'}"
+	class="grid grid-cols-[6rem_auto_1fr] items-center {band ? 'gap-2 mb-3! rounded-[0.5rem] border border-border bg-surface px-3! py-2!' : 'gap-x-2 gap-y-1 mb-1!'}"
 	class:tracker={true}
 	method="POST"
 	{action}
@@ -49,5 +50,9 @@
 		<span class="inline-block w-[3ch] text-center {colours[name] ?? ''}" data-testid={name}>{value}</span>
 		<button type="submit" name="delta" value="1" class="btn-ghost">{translate(lang, 'action.increase')}</button>
 	</span>
-	<Pips {name} {max} {filled} row size={band ? 'lg' : 'sm'} />
+	{#if band}
+		<Pips {name} {max} {filled} row size="lg" />
+	{:else}
+		<div class="col-span-full"><Pips {name} {max} {filled} row size="sm" /></div>
+	{/if}
 </form>

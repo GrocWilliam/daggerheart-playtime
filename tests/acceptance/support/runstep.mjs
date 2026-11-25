@@ -48,7 +48,7 @@ export const cardHeader = (card, className = 'Guardian') => card.evaluate((c, cl
 	const rg = document.createRange();
 	rg.selectNodeContents(meta);
 	const cs = getComputedStyle(meta.parentElement);
-	return { name: cy(name.getBoundingClientRect()), down: down && cy(down.getBoundingClientRect()), meta: cy(rg.getBoundingClientRect()), fontSize: cs.fontSize, color: cs.color };
+	return { nameBottom: name.getBoundingClientRect().bottom, metaTop: rg.getBoundingClientRect().y, name: cy(name.getBoundingClientRect()), down: down && cy(down.getBoundingClientRect()), meta: cy(rg.getBoundingClientRect()), fontSize: cs.fontSize, color: cs.color };
 }, className);
 
 /** Amount input and submit of a card's damage form: width, bottom edges, submit classes. */
@@ -76,3 +76,63 @@ export const battleAddLook = (page) => page.getByTestId('battle-add-submit').eva
 export const runTargets = (page) => page.getByTestId('run').evaluate((run) =>
 	[...run.querySelectorAll('a, button')].filter((e) => e.offsetParent !== null || getComputedStyle(e).position === 'fixed')
 		.map((e) => ({ label: (e.dataset.testid || e.textContent.trim()).slice(0, 30), height: e.getBoundingClientRect().height })));
+
+// --- us-383: class/level line and aligned trackers
+const callJson = async (base, method, path, body) => call(base, method, path, body);
+
+/** Campaign with Kael l'Inébranlable (Guardian, level 10) and two short names; optionally a Vulnerable one (Dara) and a level-1 Brom. */
+export const setupAlignCampaign = async (base, tag = '') => {
+	const campaignId = await createCampaign(base, `Aligncamp${tag}`);
+	const kael = await createCharacter(base, campaignId, "Kael l'Inébranlable", { level: 10 });
+	const brom = await createCharacter(base, campaignId, 'Brom');
+	const cyra = await createCharacter(base, campaignId, 'Cyra');
+	return { campaignId, kael, brom, cyra };
+};
+export const setupDownAndVulnerable = async (base, tag = '') => {
+	const campaignId = await createCampaign(base, `Condcamp${tag}`);
+	const brom = await createCharacter(base, campaignId, 'Brom');
+	await callJson(base, 'POST', `/api/characters/${brom}/hp`, { delta: 6 });
+	const dara = await createCharacter(base, campaignId, 'Dara');
+	await callJson(base, 'PUT', `/api/characters/${dara}/conditions`, { vulnerable: true, restrained: false, hidden: false });
+	return { campaignId, brom, dara };
+};
+export const setupSixHp = async (base, tag = '') => {
+	const campaignId = await createCampaign(base, `Sixcamp${tag}`);
+	const id = await createCharacter(base, campaignId, 'Sixy', { maxHp: 6, majorThreshold: 5, severeThreshold: 10 });
+	return { campaignId, id };
+};
+
+const norm = (s) => s.replace(/\s+/g, ' ').trim();
+/** Rendered text of the class/level line of a card: the text node holding `className`'s parent element. */
+export const classLineText = (card, className) => card.evaluate((c, cls) => {
+	const w = document.createTreeWalker(c, NodeFilter.SHOW_TEXT);
+	for (let n = w.nextNode(); n; n = w.nextNode()) if (n.textContent.includes(cls)) return (n.parentElement.closest('p') ?? n.parentElement).textContent.replace(/\s+/g, ' ').trim();
+	return null;
+}, className);
+/** Geometry of a card's name and class/level line (top of the class text, bottom of the name). */
+export const classLineBox = (card, className) => cardHeader(card, className);
+export const levelHelpCount = (scope) => scope.locator('[data-testid="help"][data-help="level"]').count();
+export const helpOf = levelHelpCount;
+export const hpTops = (page) => page.getByTestId('character-card').evaluateAll((els) => els.map((e) => ({
+	top: e.getBoundingClientRect().y, hp: e.querySelector('[data-testid=hp]').getBoundingClientRect().y })));
+export const cardInner = (card) => card.evaluate((c) => {
+	const r = c.getBoundingClientRect();
+	const name = c.querySelector('[data-testid=character-name]').getBoundingClientRect();
+	let t = null;
+	const w = document.createTreeWalker(c, NodeFilter.SHOW_TEXT);
+	for (let n = w.nextNode(); n; n = w.nextNode()) if (n.textContent.includes('Guardian') || n.textContent.includes('Gardien')) { t = n; break; }
+	const rg = document.createRange(); rg.selectNodeContents(t);
+	const cl = rg.getBoundingClientRect();
+	return { left: r.left, right: r.right, name: { left: name.left, right: name.right }, cls: { left: cl.left, right: cl.right } };
+});
+/** Vertical positions of the class line bottom, vulnerable badge and hp tracker in a card. */
+export const conditionLayout = (card) => card.evaluate((c) => {
+	const y = (id) => c.querySelector(`[data-testid=${id}]`)?.getBoundingClientRect();
+	let t = null;
+	const w = document.createTreeWalker(c, NodeFilter.SHOW_TEXT);
+	for (let n = w.nextNode(); n; n = w.nextNode()) if (n.textContent.includes('Guardian')) { t = n; break; }
+	const rg = document.createRange(); rg.selectNodeContents(t);
+	const v = y('condition-vulnerable'), h = y('hp');
+	return { classBottom: rg.getBoundingClientRect().bottom, vulnTop: v?.y, vulnBottom: v?.bottom, hpTop: h.y };
+});
+export { norm };

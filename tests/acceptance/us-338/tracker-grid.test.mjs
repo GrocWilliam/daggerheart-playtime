@@ -25,7 +25,8 @@ for (const lang of LANGS) for (const vp of VIEWPORTS) {
 		const p = await openPage(browser, sheetUrl(BASE, a, 'play'), vp, { lang });
 		const e = await leftEdges(sheetTrackers(p));
 		within(e.minus, 1, '− left edges');
-		within(e.pips, 1, 'pips left edges');
+		within([...e.pips, ...e.labels], 1, 'pips and label left edges');
+		assert.deepEqual(e.below, [true, true, true, true], 'pips below the − button');
 		await closePage(p);
 	});
 	test(`run cards: − buttons and pips are aligned in each card (${lang} ${vp.join('x')})`, async () => {
@@ -33,7 +34,8 @@ for (const lang of LANGS) for (const vp of VIEWPORTS) {
 		for (const i of [0, 1]) {
 			const e = await leftEdges(runCard(p, i));
 			within(e.minus, 1, `card ${i} − left edges`);
-			within(e.pips, 1, `card ${i} pips left edges`);
+			within([...e.pips, ...e.labels], 1, `card ${i} pips and label left edges`);
+			assert.deepEqual(e.below, [true, true, true, true], `card ${i} pips below the − button`);
 		}
 		await closePage(p);
 	});

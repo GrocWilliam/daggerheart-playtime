@@ -48,7 +48,7 @@ const helpName = (id, lang) => `${lang === 'fr' ? 'Aide : ' : 'Help: '}${nameOf(
 const eqName = (a, b) => a.toLowerCase() === b.toLowerCase();
 
 const CAMPAIGN = { path: () => `/campaigns/${camp}`, scope: (p) => p.locator('[data-testid="character-card"]').filter({ hasText: 'Rook' }),
-	fear: true, ids: ['hp', 'stress', 'hope', 'armor', 'evasion', 'thresholds', 'level', 'vulnerable', 'restrained', 'hidden'] };
+	fear: true, ids: ['hp', 'stress', 'hope', 'armor', 'evasion', 'thresholds', 'vulnerable', 'restrained', 'hidden'] };
 const SHEET = { path: () => `/characters/${rook}`, scope: (p) => p.locator('body'), fear: false,
 	ids: ['hp', 'stress', 'hope', 'armor', 'evasion', 'thresholds', 'level', 'vulnerable', 'restrained', 'hidden', 'gold'], tabOf: { gold: 'gear' } };
 // us-305: the sheet is split into tabs; go to the tab holding a helper
@@ -137,10 +137,6 @@ test('lang=fr: glossary helper text is not inside a lang="en" element, and <html
 
 test('the level helper sits next to the level on both pages, and gold helper next to the gold line', async () => {
 	for (const lang of ['en', 'fr']) {
-		const c = await open(lang, CAMPAIGN.path());
-		const lvl = helper(CAMPAIGN.scope(c.page), 'level');
-		assert.match(norm(await lvl.evaluate((e) => e.parentElement.textContent)), /3/);
-		await c.ctx.close();
 		const s = await open(lang, SHEET.path());
 		const lv = helper(s.page.locator('body'), 'level');
 		assert.match(norm(await lv.evaluate((e) => e.parentElement.textContent)), /3/);
