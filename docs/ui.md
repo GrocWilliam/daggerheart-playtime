@@ -20,7 +20,7 @@ Links between them:
 
 ## Layout
 - The header (sigil, nav, language switcher) stays on one row from 768px.
-- Body max width: 60rem from 768px, 72rem from 1024px.
+- Body max width: 60rem from 768px, 72rem from 1024px on every page. `run` is 77rem (`-mx-16`) from 1280px.
 - Breakpoints: `md:` 768px, `lg:` 1024px, and `min-[600px]:` (modal only). Mobile first, no `max-width` queries.
 - Forms carry no box (`form` is only `margin-bottom: 0.75rem`); only `article`, `encounter-adversary`, `loot-entry` and the Modal panel keep the card look (surface background, `3px double` accent border, `0.5rem` radius). Sheet/DM-screen/Modal `h2` use `mt-4 mb-2`; the `Divider` stays under the page `h1` only.
 - One-row form (one field plus its submit): `flex flex-wrap items-end gap-2` on the `form`; a wrapping `label` is a flex item with `mb-0!` (the global `label` margin would misalign the button) and keeps its input `block`, so the button lines up with the input's bottom. Used by gold, equip selects, experience value, inventory quantity and the journal form (textarea label `flex-1`, full width below 768px).
@@ -58,8 +58,8 @@ Buttons: every `<button>` and button-styled link has exactly one of `btn-primary
 - The base `button` and `a` rules are in `@layer base`.
 
 Trackers and help:
-- `Tracker` is a `grid grid-cols-[6rem_auto_1fr] items-center` grid. The `row` variant has two lines (`gap-x-2 gap-y-1`): line 1 is the label as `Help label` in column 1 and a nowrap group (ghost −, the value, ghost +) in column 2; line 2 is `Pips` (`col-span-full`), starting at the label's left edge, so the pips sit below the − button. Fear (`variant="band"`) stays on one line (label, stepper, pips). In one container (a Run card, `sheet-trackers`), the − buttons line up within 1px, and so do the pips and the labels.
-- Fear uses `variant="band"`: surface background, 1px `--border` border, 0.5rem radius, 0.5rem 0.75rem padding, label in Cinzel, `Pips size="lg"` (1.25rem).
+- `Tracker` is a `grid grid-cols-[6rem_auto_1fr] items-center` grid. The `row` variant has two lines (`gap-x-2 gap-y-1`): line 1 is the label as `Help label` in column 1 and a nowrap group (ghost −, the value, ghost +) in column 2; line 2 is `Pips` (`col-span-full`), starting at the label's left edge, so the pips sit below the − button. Fear (`variant="band"`) stays on one line at every width (label, stepper, pips); its label column is `auto` below 768px and 6rem from 768px. In one container (a Run card, `sheet-trackers`), the − buttons line up within 1px, and so do the pips and the labels.
+- Fear uses `variant="band"`: surface background, 1px `--border` border, 0.5rem radius, 0.5rem 0.75rem padding (0.25rem 0.5rem below 768px), label in Cinzel; sticky (`top-0 z-10`) at the top of the Run step on a surface background; at most 60px tall at 375px; `Pips size="band"`: 0.625rem pips with a 0.125rem gap below 768px, 1.25rem with a 0.25rem gap from 768px.
 - `Help` takes an optional `label`. With it, `help-open` shows the label with a dotted underline instead of "?", and the label is not repeated before it. The `aria-label` stays `"<help.label> <name>"`.
 - Every helper after a visible label uses `label`: tracker labels, Evasion, Thresholds, Proficiency, trait names, condition badges, `Chosen` names and the class. The `/reference` page and helpers inside prose keep "?".
 
@@ -70,7 +70,7 @@ Navigation:
 
 Run step:
 - `fear` band first. Below 1024px: `party`, then `current-scene`, then `journal` in one column. From 1024px: `lg:grid-cols-[1fr_18rem]`, with `party` left and an `<aside>` holding `current-scene` then `journal` right, starting at the same top.
-- `party` is `repeat(auto-fill, minmax(18rem, 1fr))` with a 1rem gap (the spec's 20rem cannot give 3 cards at 1280px). With 3 characters that gives 1, 2, 2, 2 and 3 cards per row at 375, 768, 1024, 1180 and 1280px. The body max width is 80rem from 1280px on the Run step only.
+- `party` is `repeat(auto-fill, minmax(18rem, 1fr))` with a 1rem gap (the spec's 20rem cannot give 3 cards at 1280px). With 3 characters that gives 1, 2, 2, 2 and 3 cards per row at 375, 768, 1024, 1180 and 1280px. From 1280px `run` is 77rem wide, as wide as the content of the former 80rem body.
 - `character-card`: the header has two lines (name + `down`, then class and level in small muted text on their own line below the name); there is no `Help` on the level (it stays on the sheet); cards in one visual row align their first tracker (CSS subgrid, `row-span-2`); `ConditionBadges` only when a condition is set; the four aligned trackers; `DefenseLine` on one line; the two-row `DamageForm` (quick Minor/Major/Severe buttons, then labelled amount `w-[5rem]`, use armor, `btn-primary` Apply). At 1024×768 a card with no condition is at most 500px tall (measured 499.5px at 1024×768; the form keeps its 12px bottom margin, the two rows are 2px apart).
 
 Build step:

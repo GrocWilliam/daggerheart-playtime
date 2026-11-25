@@ -44,9 +44,10 @@ for (const [vp, n] of [[[375, 812], 1], [[768, 1024], 2], [[1024, 768], 2], [[11
 		await closePage(p);
 	});
 
-test('body is 1280px wide on the Run step at 1440x900 and 1152px on the Build step', async () => {
+// Superseded by us-395: the body keeps 1152px on both steps; only `run` is wider.
+test('body is 1152px wide on the Run step and on the Build step at 1440x900', async () => {
 	let p = await run([1440, 900]);
-	assert.ok(Math.abs((await bodyWidth(p)) - 1280) <= 1);
+	assert.ok(Math.abs((await bodyWidth(p)) - 1152) <= 1);
 	await closePage(p);
 	p = await openPage(browser, `${BASE}/campaigns/${camp.campaignId}?step=build`, [1440, 900]);
 	assert.ok(Math.abs((await bodyWidth(p)) - 1152) <= 1);

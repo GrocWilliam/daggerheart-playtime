@@ -1,6 +1,6 @@
 <script lang="ts">
 	// `row`: inside a Tracker row, without the bottom margin (the Tracker form has it).
-	let { name, max, filled, row = false, size = 'md' }: { name: string; max: number; filled: number; row?: boolean; size?: 'sm' | 'md' | 'lg' } = $props();
+	let { name, max, filled, row = false, size = 'md' }: { name: string; max: number; filled: number; row?: boolean; size?: 'sm' | 'md' | 'band' } = $props();
 	// `pip` and `filled` are marker classes without CSS: frozen tests (us-40) select on them.
 	// Full class names so Tailwind finds them; each tracker has its own colour.
 	const colours: Record<string, [string, string]> = {
@@ -10,11 +10,11 @@
 		hope: ['border-calm', 'bg-calm'],
 		armor: ['border-muted', 'bg-muted']
 	};
-	const dim = { sm: 'size-3', md: 'size-3', lg: 'size-5' };
+	const dim = { sm: 'size-3', md: 'size-3', band: 'size-2.5 md:size-5' };
 	const [border, fill] = $derived(colours[name] ?? colours.armor);
 </script>
 
-<div class="{row ? 'mb-0' : 'mb-3'} flex flex-wrap gap-1 text-base" data-testid="{name}-pips" aria-hidden="true"
+<div class="{row ? 'mb-0' : 'mb-3'} flex text-base {size === 'band' ? 'flex-nowrap gap-0.5 md:gap-1' : 'flex-wrap gap-1'}" data-testid="{name}-pips" aria-hidden="true"
 	>{#each Array.from({ length: max }, (_, i) => i) as i (i)}<span
 			class="inline-block {dim[size]} rounded-[50%] border {border} {i < filled ? fill : 'bg-transparent'}"
 			class:pip={true}

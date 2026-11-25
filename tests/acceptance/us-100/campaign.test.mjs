@@ -152,7 +152,7 @@ for (const [name, w, h, cols] of [['phone', 375, 667, 1], ['tablet', 700, 800, 2
 		assert.equal(r.stats.marginBottom, '12px');
 		assert.equal(r.fear.backgroundColor, SURFACE);
 		assert.equal(r.fear.borderTopLeftRadius, '8px');
-		assert.equal(r.fear.paddingTop, '8px');
+		assert.equal(r.fear.paddingTop, w < 768 ? '4px' : '8px'); // #396: band is py-1 below md
 		assert.equal(r.fear.marginBottom, '12px');
 		const want = { fear: [12, DANGER], hp: [6, DANGER], stress: [6, ACCENT], hope: [6, TEAL], armor: [3, MUTED] };
 		for (const [k, [n, col]] of Object.entries(want)) {
@@ -160,11 +160,13 @@ for (const [name, w, h, cols] of [['phone', 375, 667, 1], ['tablet', 700, 800, 2
 			assert.equal(p.n, n, `${k} pip count`);
 			assert.equal(p.aria, 'true');
 			assert.equal(p.box.display, 'flex');
-			assert.equal(p.box.flexWrap, 'wrap');
-			assert.equal(p.box.columnGap, '4px');
-			assert.equal(p.box.rowGap, '4px');
+			const band = k === 'fear'; // #396: the Fear band never wraps; 2px gap below md
+			assert.equal(p.box.flexWrap, band ? 'nowrap' : 'wrap');
+			const gap = band && w < 768 ? '2px' : '4px';
+			assert.equal(p.box.columnGap, gap);
+			assert.equal(p.box.rowGap, band && w < 768 ? '2px' : '4px');
 			// us-301 and spec #298 (Fear bar): tracker pips, Fear's included, sit in the Tracker row: no own bottom margin.
-			assert.deepEqual(p.rect, k === 'fear' ? [20, 20] : [12, 12], `${k} pip size`);
+			assert.deepEqual(p.rect, k === 'fear' ? (w < 768 ? [10, 10] : [20, 20]) : [12, 12], `${k} pip size`);
 			assert.equal(p.pip.borderTopWidth, '1px');
 			assert.equal(p.pip.borderTopStyle, 'solid');
 			assert.equal(p.pip.borderTopColor, col, `${k} pip colour`);

@@ -333,7 +333,7 @@
 </div>
 </section>
 {:else}
-<div data-testid="run">
+<div data-testid="run" class="min-[1280px]:-mx-16">
 <Tracker name="fear" label={t('campaign.fear')} helpId="fear" value={String(c.fear)} filled={c.fear} max={12} action="?/fear" lang={data.lang} variant="band" />
 <p class="my-1" data-testid="damage-result" role="status" aria-live="polite">{#if form?.damage}{damageText(data.lang, form.damage)}{/if}</p>
 <div class="grid grid-cols-1 items-start gap-4 lg:grid-cols-[1fr_18rem]">

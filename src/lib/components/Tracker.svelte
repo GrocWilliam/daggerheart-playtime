@@ -38,7 +38,7 @@
 
 <form
 	use:enhance={busy}
-	class="grid grid-cols-[6rem_auto_1fr] items-center {band ? 'gap-2 mb-3! rounded-[0.5rem] border border-border bg-surface px-3! py-2!' : 'gap-x-2 gap-y-1 mb-1!'}"
+	class="grid items-center {band ? 'sticky top-0 z-10 grid-cols-[auto_auto_1fr] gap-1 md:grid-cols-[6rem_auto_1fr] md:gap-2 mb-3! rounded-[0.5rem] border border-border bg-surface px-2! py-1! md:px-3! md:py-2!' : 'grid-cols-[6rem_auto_1fr] gap-x-2 gap-y-1 mb-1!'}"
 	class:tracker={true}
 	method="POST"
 	{action}
@@ -51,7 +51,7 @@
 		<button type="submit" name="delta" value="1" class="btn-ghost">{translate(lang, 'action.increase')}</button>
 	</span>
 	{#if band}
-		<Pips {name} {max} {filled} row size="lg" />
+		<Pips {name} {max} {filled} row size="band" />
 	{:else}
 		<div class="col-span-full"><Pips {name} {max} {filled} row size="sm" /></div>
 	{/if}

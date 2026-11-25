@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Criteria (run.test.mjs): column order and left edges at 375/768 in en and fr; party left / aside 288px at 1024/1180;
-# cards per row 1/2/2/2/3; body width 1280 (Run) vs 1152 (Build) at 1440; card height; card header; damage form;
+# cards per row 1/2/2/2/3; body width 1152 on both steps at 1440 (changed by us-395); card height; card header; damage form;
 # journal, encounter button variants; no sideways scroll and 44px targets; damage without JS.
 # Also updated: us-307 (new order and columns), us-100 (party columns 1/2/3).
 set -uo pipefail

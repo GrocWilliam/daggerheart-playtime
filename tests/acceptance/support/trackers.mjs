@@ -81,3 +81,53 @@ export const rowCentres = (page, name, scope) => (scope ?? page).locator(`[data-
 	return [cy(label), cy(f.querySelector('button[name=delta][value="-1"]')), cy(val), cy(f.querySelector('button[name=delta][value="1"]'))];
 });
 export const cardHeights = (page) => page.locator('[data-testid="character-card"]').evaluateAll((els) => els.map((e) => e.getBoundingClientRect().height));
+
+// ---- Sticky one-row Fear band (us-396). Reads and actions only: no assertions.
+export const BAND_VIEWPORTS = [[375, 812], [768, 1024], [1024, 768], [1180, 820], [1280, 900]];
+export const fearLabelButton = (page) => page.locator('[data-testid="fear"]').locator('xpath=ancestor::form[1]').locator('button:not([name=delta])').first();
+export const fearMinus = (page) => page.locator('[data-testid="fear"]').locator('xpath=ancestor::form[1]').locator('button[name=delta][value="-1"]');
+
+// Everything about the band's geometry: centres of label, −, value, +, 12 pips; sizes; widths; label column width.
+export const fearBandRead = (page) => page.locator('[data-testid="fear"]').evaluate((val) => {
+	const f = val.closest('form');
+	const r = (e) => e.getBoundingClientRect();
+	const cy = (e) => r(e).top + r(e).height / 2;
+	const label = [...f.querySelectorAll('button')].find((b) => b.name !== 'delta');
+	const minus = f.querySelector('button[name=delta][value="-1"]');
+	const plus = f.querySelector('button[name=delta][value="1"]');
+	const pips = [...f.querySelector('[data-testid="fear-pips"]').children].map((p) => r(p));
+	return {
+		centres: [cy(label), cy(minus), cy(val), cy(plus), ...pips.map((p) => p.top + p.height / 2)],
+		pipCount: pips.length,
+		pipSizes: pips.map((p) => [p.width, p.height]),
+		pipGaps: pips.slice(1).map((p, i) => p.left - pips[i].right),
+		height: r(f).height, top: r(f).top, width: r(f).width,
+		runWidth: r(document.querySelector('[data-testid="run"]')).width,
+		labelColumn: r(f.firstElementChild).width,
+		minusLeft: r(minus).left
+	};
+});
+
+// Label column width of a row tracker (the first cell of its form).
+export const labelColumnWidth = (page, name, scope) => (scope ?? page).locator(`[data-testid="${name}"]`).first().evaluate((val) => val.closest('form').querySelector(':scope > :not(input[type=hidden])').getBoundingClientRect().width);
+
+export const scrollRunDown = async (page, px = 600) => {
+	await page.evaluate((y) => window.scrollTo(0, y), px);
+	await page.waitForFunction((y) => window.scrollY >= y - 1, px);
+	return page.evaluate(() => window.scrollY);
+};
+
+// The band while scrolled: top, background, and whether the element at the centre of the value is the value itself.
+export const fearBandSticky = (page) => page.locator('[data-testid="fear"]').evaluate((val) => {
+	const f = val.closest('form'), r = val.getBoundingClientRect();
+	const hit = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+	return { top: f.getBoundingClientRect().top, bg: getComputedStyle(f).backgroundColor, text: val.textContent.trim(), valueOnTop: hit === val || val.contains(hit) };
+});
+
+export const fearPlusButton = (page) => page.locator('[data-testid="fear"]').locator('xpath=ancestor::form[1]').locator('button[name=delta][value="1"]');
+export const fearButtonSizes = (page) => page.locator('[data-testid="fear"]').evaluate((val) => {
+	const f = val.closest('form');
+	const label = [...f.querySelectorAll('button')].find((b) => b.name !== 'delta');
+	const size = (b) => { const r = b.getBoundingClientRect(); return { w: r.width, h: r.height }; };
+	return { label: size(label), minus: size(f.querySelector('button[name=delta][value="-1"]')), plus: size(f.querySelector('button[name=delta][value="1"]')) };
+});

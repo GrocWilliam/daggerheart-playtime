@@ -17,3 +17,7 @@ export const createCurrentScene = async (base, campaignId, title) => {
 };
 
 export const addJournalEntry = (base, campaignId, text) => call(base, 'POST', `/api/campaigns/${campaignId}/journal`, { text });
+
+export const addManyJournalEntries = async (base, campaignId, n) => {
+	for (let i = 0; i < n; i++) await addJournalEntry(base, campaignId, `Entry number ${i + 1}: the party walks on`);
+};

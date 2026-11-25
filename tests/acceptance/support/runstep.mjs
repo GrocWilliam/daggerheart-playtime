@@ -136,3 +136,16 @@ export const conditionLayout = (card) => card.evaluate((c) => {
 	return { classBottom: rg.getBoundingClientRect().bottom, vulnTop: v?.y, vulnBottom: v?.bottom, hpTop: h.y };
 });
 export { norm };
+
+/** Left edge and width of the site header, the page h1 and the Run content (null when absent). */
+export const pageFrame = (page) => page.evaluate(() => {
+	const f = (e) => { if (!e) return null; const r = e.getBoundingClientRect(); return { left: r.left, right: r.right, width: r.width }; };
+	return {
+		header: f(document.querySelector('header')),
+		h1: f(document.querySelector('h1')),
+		run: f(document.querySelector('[data-testid="run"]')),
+		party: f(document.querySelector('[data-testid="build-party"]')),
+		scenes: f(document.querySelector('[data-testid="build-scenes"]')),
+	};
+});
+export const buildStepUrl = (base, campaignId) => `${base}/campaigns/${campaignId}?step=build`;
