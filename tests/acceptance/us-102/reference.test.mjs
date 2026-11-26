@@ -86,8 +86,13 @@ test('ui-style skill no longer describes the old app.css page rules', () => {
 });
 
 const { chromium } = createRequire(process.env.PW_DIR + '/')('playwright-core');
-let browser;
-before(async () => { browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH }); });
+let browser, hero;
+before(async () => {
+	browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH });
+	const post = async (path, body) => (await fetch(BASE + path, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) })).json();
+	const camp = await post('/api/campaigns', { name: 'Ref 102' });
+	hero = (await post(`/api/campaigns/${camp.id}/characters`, { name: 'Ref', class: 'Bard', evasion: 10, majorThreshold: 5, severeThreshold: 10, maxHp: 6, armorSlots: 3 })).id;
+});
 after(async () => { await browser?.close(); });
 
 const SURFACE = 'rgb(26, 42, 34)', ACCENT = 'rgb(212, 160, 80)';
@@ -97,17 +102,36 @@ for (const [name, w, h] of [['phone', 375, 667], ['desktop', 1280, 800]]) {
 		const ctx = await browser.newContext({ viewport: { width: w, height: h } });
 		const page = await ctx.newPage();
 		await page.goto(BASE + '/reference?kind=classes');
+		await page.locator('[data-testid="ref-classes"] > summary').click(); // us-411: sections are closed <details>
 		const r = await page.evaluate(() => {
 			const q = (s) => document.querySelector(s), cs = (e) => getComputedStyle(e), rc = (e) => e.getBoundingClientRect();
 			const pick = (e, ps) => Object.fromEntries(ps.map((x) => [x, cs(e)[x]]));
 			const f = q('form[action="/reference"]');
-			const li = q('[data-testid=ref-item]'), ul = li.parentElement, help = li.querySelector('[data-testid=help]'), btn = help.querySelector('[data-testid=help-open]'), panel = help.querySelector('[data-testid=help-panel]');
+			const li = q('[data-testid=ref-item]'), ul = li.parentElement;
 			const o = {};
 			o.form = pick(f, ['display', 'flexWrap', 'columnGap', 'rowGap', 'paddingTop', 'paddingLeft', 'backgroundColor']);
 			o.heights = [rc(q('form[action="/reference"] select')).height, rc(q('form[action="/reference"] input[name=q]')).height, rc(q('form[action="/reference"] button')).height];
 			o.ul = pick(ul, ['listStyleType', 'paddingLeft', 'marginBottom', 'marginTop']);
-			o.li = pick(li, ['display', 'flexWrap', 'alignItems', 'columnGap', 'rowGap', 'overflowWrap', 'paddingTop', 'paddingLeft', 'backgroundColor', 'borderLeftWidth', 'borderLeftColor', 'borderTopLeftRadius', 'marginBottom']);
-			o.help = cs(help).display;
+			o.li = pick(li, ['overflowWrap', 'paddingTop', 'paddingLeft', 'backgroundColor', 'borderLeftWidth', 'borderLeftColor', 'borderTopLeftRadius', 'marginBottom']);
+			o.scroll = document.documentElement.scrollWidth - document.documentElement.clientWidth;
+			return o;
+		});
+		assert.deepEqual(r.form, { display: 'flex', flexWrap: 'wrap', columnGap: '8px', rowGap: '8px', paddingTop: '8px', paddingLeft: '8px', backgroundColor: 'rgba(0, 0, 0, 0)' }); // us-300: forms carry no box
+		for (const hh of r.heights) assert.ok(hh >= 43.5, `control height ${hh}`);
+		assert.deepEqual(r.ul, { listStyleType: 'none', paddingLeft: '0px', marginBottom: '12px', marginTop: '0px' });
+		// us-411: the entry keeps its card look; its name row moved into a <summary>
+		assert.deepEqual(r.li, { overflowWrap: 'anywhere', paddingTop: '8px', paddingLeft: '12px', backgroundColor: SURFACE, borderLeftWidth: '3px', borderLeftColor: ACCENT, borderTopLeftRadius: '8px', marginBottom: '12px' });
+		assert.equal(r.scroll, 0);
+		// us-246 Help look, checked on the sheet since us-411 (Reference has no Help): the "?" gold helper of the gear tab (it sits in a flex row, so
+		// its display is blockified there: the inline-level check reads the hp helper of the play tab)
+		await page.goto(`${BASE}/characters/${hero}?tab=play`);
+		const hpHelp = await page.evaluate(() => getComputedStyle(document.querySelector('[data-testid=help][data-help=hp]')).display);
+		await page.goto(`${BASE}/characters/${hero}?tab=gear`);
+		const hl = await page.evaluate(() => {
+			const cs = (e) => getComputedStyle(e), rc = (e) => e.getBoundingClientRect();
+			const pick = (e, ps) => Object.fromEntries(ps.map((x) => [x, cs(e)[x]]));
+			const help = document.querySelector('[data-testid=help][data-help=gold]'), btn = help.querySelector('[data-testid=help-open]'), panel = help.querySelector('[data-testid=help-panel]');
+			const o = {};
 			o.btn = pick(btn, ['display', 'alignItems', 'justifyContent', 'minWidth', 'minHeight', 'fontWeight']);
 			o.btnText = btn.textContent.trim();
 			o.btnR = [rc(btn).width, rc(btn).height];
@@ -120,20 +144,15 @@ for (const [name, w, h] of [['phone', 375, 667], ['desktop', 1280, 800]]) {
 			o.scroll = document.documentElement.scrollWidth - document.documentElement.clientWidth;
 			return o;
 		});
-		assert.deepEqual(r.form, { display: 'flex', flexWrap: 'wrap', columnGap: '8px', rowGap: '8px', paddingTop: '8px', paddingLeft: '8px', backgroundColor: 'rgba(0, 0, 0, 0)' }); // us-300: forms carry no box
-		for (const hh of r.heights) assert.ok(hh >= 43.5, `control height ${hh}`);
-		assert.deepEqual(r.ul, { listStyleType: 'none', paddingLeft: '0px', marginBottom: '12px', marginTop: '0px' });
-		assert.deepEqual(r.li, { display: 'flex', flexWrap: 'wrap', alignItems: 'center', columnGap: '8px', rowGap: '8px', overflowWrap: 'anywhere', paddingTop: '8px', paddingLeft: '12px', backgroundColor: SURFACE, borderLeftWidth: '3px', borderLeftColor: ACCENT, borderTopLeftRadius: '8px', marginBottom: '12px' });
-		// us-246: Help is an inline-level span with a "?" button and a popover panel
-		assert.ok(r.help.startsWith('inline'), `help display ${r.help} is inline-level`);
-		assert.deepEqual(r.btn, { display: 'inline-flex', alignItems: 'center', justifyContent: 'center', minWidth: '44px', minHeight: '44px', fontWeight: '700' });
-		assert.equal(r.btnText, '?');
-		assert.ok(r.btnR[0] >= 44 && r.btnR[1] >= 44, `help-open ${r.btnR}`);
-		assert.equal(r.open, true, 'help-panel opens');
-		assert.deepEqual(r.panel, { position: 'fixed', backgroundColor: SURFACE });
-		assert.ok(r.panelW <= 512 + 0.5, `panel width ${r.panelW}`);
-		assert.ok(Math.abs(r.centre) <= 2, `panel off centre by ${r.centre}px`);
-		assert.equal(r.scroll, 0);
+		assert.ok(hpHelp.startsWith('inline'), `help display ${hpHelp} is inline-level`);
+		assert.deepEqual(hl.btn, { display: 'inline-flex', alignItems: 'center', justifyContent: 'center', minWidth: '44px', minHeight: '44px', fontWeight: '700' });
+		assert.equal(hl.btnText, 'Gold'); // #409: the gold help shows its label
+		assert.ok(hl.btnR[0] >= 44 && hl.btnR[1] >= 44, `help-open ${hl.btnR}`);
+		assert.equal(hl.open, true, 'help-panel opens');
+		assert.deepEqual(hl.panel, { position: 'fixed', backgroundColor: SURFACE });
+		assert.ok(hl.panelW <= 512 + 0.5, `panel width ${hl.panelW}`);
+		assert.ok(Math.abs(hl.centre) <= 2, `panel off centre by ${hl.centre}px`);
+		assert.equal(hl.scroll, 0);
 		await ctx.close();
 	});
 }

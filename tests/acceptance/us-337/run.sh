@@ -7,7 +7,7 @@
 # (4) a tracker form shows its label text exactly once;
 # (5) ?tab=traits: each trait row's help-open reads the trait name;
 # (6) the help-open inside `subclass` shows the subclass name;
-# (7) /reference: every help-open is still "?";
+# (7) /reference: every help-open was "?"; since us-411 the page has no helper (entries open inline), checked instead;
 # (8) JavaScript disabled: clicking the HP help-open opens its help-panel (:popover-open).
 # (9) updated us-45, us-48, us-301 are run by their own scripts.
 set -uo pipefail

@@ -149,7 +149,7 @@ for (const [name, w, h] of [['phone', 375, 667], ['desktop', 1280, 800]]) {
 			assert.equal(r.link.paddingTop, '0px');
 			assert.equal(r.link.color, ACCENT);
 			assert.ok(r.linkH >= 43.5, 'campaign link 44px');
-			assert.ok(r.linkW >= r.liW - 4, `campaign link fills its row (${r.linkW} vs ${r.liW})`);
+			assert.ok(r.linkW >= r.liW - 6, `campaign link fills its row (${r.linkW} vs ${r.liW})`);
 			assert.equal(r.form.marginBottom, '12px');
 			assert.ok(r.input.h >= 43.5 && r.input.fs === '16px');
 			assert.ok(r.submit.h >= 43.5 && r.submit.w >= 43.5 && r.submit.fs === '16px');

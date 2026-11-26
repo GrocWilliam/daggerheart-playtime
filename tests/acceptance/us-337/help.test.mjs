@@ -107,11 +107,10 @@ test('a character with a subclass: the helper inside subclass shows the subclass
 	}
 });
 
-test('/reference: every helper still reads "?"', async () => {
+// us-411: /reference has no helper any more (entries open inline), so the "?" check no longer applies there.
+test('/reference: no helper on the page (us-411)', async () => {
 	const page = await open(`${BASE}/reference`, [1024, 768], 'en');
-	const texts = await help.helpTexts(page);
-	assert.ok(texts.length > 0, 'helpers present');
-	assert.deepEqual(texts.filter((t) => t !== '?'), []);
+	assert.deepEqual(await help.helpTexts(page), []);
 	await closePage(page);
 });
 

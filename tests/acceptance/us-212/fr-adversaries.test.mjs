@@ -3,6 +3,7 @@ import { test, before, after } from 'node:test';
 import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
 import { readFileSync } from 'node:fs';
+import { entry, openEntry, openSection } from '../support/reference.mjs';
 
 const { chromium } = createRequire(process.env.PLAYWRIGHT_DIR + '/')('playwright-core');
 const BASE = process.env.BASE_URL;
@@ -94,9 +95,11 @@ test('lang=fr: /reference shows the French name and feature lines of adv_acid_bu
 	const p = await ctx.newPage();
 	p.setDefaultTimeout(8000);
 	await p.goto(`${BASE}/reference?kind=adversaries&q=${encodeURIComponent(fr.name)}`);
-	const item = p.locator('[data-testid="ref-adversaries"] [data-testid="ref-item"]').filter({ has: p.locator('[data-testid="help"][data-help="adv_acid_burrower"]') });
+	// us-411: the entry is found by name; its section and its <details> are opened, its lines render inline
+	const item = entry(p, 'adversaries', fr.name);
 	assert.equal(await item.count(), 1);
-	await item.locator('[data-testid="help"] [data-testid="help-open"]').click();
+	await openSection(p, 'adversaries');
+	await openEntry(p, 'adversaries', fr.name);
 	const langsOf = (text) => item.evaluate((el, text) => {
 		const out = [];
 		const w = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);

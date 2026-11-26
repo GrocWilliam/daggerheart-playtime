@@ -37,9 +37,10 @@ describe('help', () => {
 			'underline decoration-dotted',
 			'btn-ghost',
 			'btn-secondary',
-			'lang={line.lang}'
+			'<SrdLines {lines} {lang} />'
 		])
 			expect(src).toContain(s);
+		expect(readFileSync(new URL('./SrdLines.svelte', import.meta.url), 'utf8')).toContain('lang={line.lang}');
 		for (const s of ['<details', '<summary', 'onclick', '<div', 'lang="en"', '<style', ' style='])
 			expect(src).not.toContain(s);
 		// the name comes first in the panel, help-close last

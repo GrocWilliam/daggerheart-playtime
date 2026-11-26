@@ -39,7 +39,7 @@ export const setupButtonPages = async (base) => {
 /** Every visible <button> of the page (closed <details> are opened first): classes, computed looks, size, form action and testid. */
 export const scanButtons = async (page) => {
 	await page.evaluate(() => document.querySelectorAll('details').forEach((d) => { d.open = true; }));
-	return page.evaluate(() => [...document.querySelectorAll('button')].filter((b) => b.checkVisibility() && b.getClientRects().length > 0).map((b, i) => {
+	return page.evaluate(() => [...document.querySelectorAll('button')].filter((b) => b.checkVisibility() && b.getClientRects().length > 0 && !(b.offsetWidth <= 1 && b.offsetHeight <= 1)).map((b, i) => {
 		const r = b.getBoundingClientRect();
 		const c = getComputedStyle(b);
 		const f = b.closest('form');

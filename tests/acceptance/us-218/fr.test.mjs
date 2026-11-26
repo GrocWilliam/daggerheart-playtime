@@ -3,6 +3,7 @@ import { test, before, after } from 'node:test';
 import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
 import { readFileSync } from 'node:fs';
+import { entry, openEntry, openSection } from '../support/reference.mjs';
 
 const { chromium } = createRequire(process.env.PLAYWRIGHT_DIR + '/')('playwright-core');
 const BASE = process.env.BASE_URL;
@@ -47,8 +48,12 @@ test('fr /reference: help of a CODEX card shows its lines with lang="fr"', async
 	const p = await ctx.newPage();
 	const r = await p.goto(`${BASE}/reference?kind=domain-cards&q=${encodeURIComponent(c.name['en-US'])}`);
 	assert.equal(r.status(), 200);
-	const details = p.locator(`[data-testid="ref-domain-cards"] [data-testid="ref-item"] [data-testid="help"][data-help="${c.id}"]`);
+	// us-411: the entry is found by its (French) name; its section and its <details> are opened, its lines render inline
+	const name = (await (await fetch(`${BASE}/api/srd/domain-cards`, { headers: { cookie: 'lang=fr' } })).json()).find((e) => e.id === c.id).name;
+	const details = entry(p, 'domain-cards', name);
 	assert.equal(await details.count(), 1);
+	await openSection(p, 'domain-cards');
+	await openEntry(p, 'domain-cards', name);
 	const lines = await details.evaluate((d) =>
 		[...d.querySelectorAll('[lang]')].filter((e) => !e.closest('[data-testid="help-open"]') && !e.querySelector('[lang]')).map((e) => ({ lang: e.getAttribute('lang'), text: e.textContent.trim() })).filter((l) => l.text));
 	assert.ok(lines.length >= 2, JSON.stringify(lines));

@@ -39,7 +39,7 @@ async function open(path, { w = 1024, h = 768, js = true } = {}) {
 
 // Sheet forms, found by their (unchanged) action name, scoped to their section when the story names one.
 const SHEET_FORMS = [
-	{ key: 'gold', tab: 'gear', scope: null, sel: 'form[action*="?/gold"]', field: 'input[name="handfuls"]' },
+	{ key: 'gold', tab: 'gear', scope: null, sel: 'form[action*="?/gold"]:has(input[name="handfuls"])', field: 'input[name="handfuls"]' },
 	{ key: 'primary', tab: 'gear', scope: 'sheet-equipment', sel: 'form[action*="?/equip"]:has(select[name="primaryWeapon"])', field: 'select' },
 	{ key: 'secondary', tab: 'gear', scope: 'sheet-equipment', sel: 'form[action*="?/equip"]:has(select[name="secondaryWeapon"])', field: 'select' },
 	{ key: 'armor', tab: 'gear', scope: 'sheet-equipment', sel: 'form[action*="?/equip"]:has(select[name="armorId"])', field: 'select' },
@@ -83,9 +83,9 @@ test('gold input and button share a bottom edge, button to the right (1024x768)'
 	await ctx.close();
 });
 
-test('each equip select and its button share a bottom edge (1024x768)', async () => {
+test('each equip select and its button share a bottom edge (1024x768, JavaScript disabled: #409 hides the button with JS)', async () => {
 	const { ch } = await shared();
-	const { ctx, p } = await open(`/characters/${ch}`);
+	const { ctx, p } = await open(`/characters/${ch}`, { js: false });
 	for (const f of SHEET_FORMS.slice(1, 4)) {
 		const m = await get(p, f);
 		assert.ok(Math.abs(m.field.bottom - m.button.bottom) <= TOL, `${f.key} ${JSON.stringify(m)}`);
@@ -121,6 +121,7 @@ test('no horizontal scroll and 44x44 buttons at 375x812', async () => {
 		assert.ok(scroll <= 0, `${path} scrolls by ${scroll}`);
 		for (const f of forms) {
 			const m = await get(p, f);
+			if (['primary', 'secondary', 'armor'].includes(f.key)) continue; // #409: with JavaScript the Equip button is visually hidden
 			assert.ok(m.button.w >= 43.5 && m.button.h >= 43.5, `${f.key} button ${m.button.w}x${m.button.h}`);
 		}
 		await ctx.close();
@@ -147,17 +148,17 @@ for (const js of [true, false]) {
 		await p.locator('form[action*="?/gold"] input[name="handfuls"]').fill('12');
 		await Promise.all([
 			js ? p.waitForResponse((r) => r.request().method() === 'POST') : p.waitForNavigation(),
-			p.locator('form[action*="?/gold"] button[type="submit"]').click()
+			p.locator('form[action*="?/gold"]:has(input[name="handfuls"]) button.btn-primary').click()
 		]);
 		const total = async () => { const g = (await api('GET', `/api/characters/${ch}`)).gold; return g.chests * 100 + g.bags * 10 + g.handfuls; };
 		assert.equal(await total(), 12);
 		if (!js) await p.goto(`${BASE}/characters/${ch}?tab=gear`);
 		const armor = p.locator('form[action*="?/equip"]:has(select[name="armorId"])');
-		await armor.locator('select').selectOption('core_armor_gambeson_armor');
-		await Promise.all([
-			js ? p.waitForResponse((r) => r.request().method() === 'POST') : p.waitForNavigation(),
-			armor.locator('button[type="submit"]').click()
-		]);
+		if (js) await Promise.all([p.waitForResponse((r) => r.request().method() === 'POST'), armor.locator('select').selectOption('core_armor_gambeson_armor')]); // #409: the change saves by itself
+		else {
+			await armor.locator('select').selectOption('core_armor_gambeson_armor');
+			await Promise.all([p.waitForNavigation(), armor.locator('button[type="submit"]').click()]);
+		}
 		if (!js) await p.goto(`${BASE}/characters/${ch}?tab=gear`);
 		await p.locator('[data-testid="equipped-armor"]').waitFor();
 		const c = await api('GET', `/api/characters/${ch}`);

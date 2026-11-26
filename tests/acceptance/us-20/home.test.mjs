@@ -94,7 +94,7 @@ test('campaign names appear as entered in both languages', async () => {
 	await seed();
 	for (const lang of ['en', 'fr']) {
 		const { ctx, page } = await open(lang);
-		const links = await page.locator('[data-testid="campaign-link"]').allInnerTexts();
+		const links = await page.locator('[data-testid="campaign-name"]').allInnerTexts();
 		for (const n of NAMES) assert.ok(links.map((l) => l.trim()).includes(n), `${lang}: "${n}" not shown as entered`);
 		await ctx.close();
 	}

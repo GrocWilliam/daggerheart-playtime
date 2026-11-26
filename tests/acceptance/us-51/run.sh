@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 # Criteria (tests in reference.test.mjs):
 # (1) /reference has one section data-testid="ref-<kind>" per SRD kind, in the page language;
-# (2) every element is a data-testid="ref-item" with its name (en or fr) and a helper ([data-testid=help]);
+# (2) every element is a data-testid="ref-item" with its name (en or fr) and (us-411) a <details> showing its text;
 # (3) GET filter ?kind=<kind> keeps only that kind's section(s);
 # (4) ?q= is a case-insensitive substring of the name in either language (weapons&q=sword example);
 # (5) kind and q combine; no match -> no items;
 # (6) a "/reference" link is in the header of every page (home, campaign, character, reference);
-# (7) helpers open and show lang="en" SRD text; help-open >= 44x44; no horizontal overflow at 360px.
+# (7) entries open (us-411: <details>, was a helper) and show SRD text in its lang; summary >= 44px; no horizontal overflow at 360px.
 set -uo pipefail
 cd "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/../../.."
 ROOT="$PWD"

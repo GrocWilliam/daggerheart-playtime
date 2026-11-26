@@ -18,15 +18,12 @@ after(async () => { await browser?.close(); });
 const LANGS = ['en', 'fr'];
 
 for (const lang of LANGS) for (const [vp, cols] of [[[375, 812], 1], [[768, 1024], 2], [[1024, 768], 3]]) {
-	test(`home cards are in ${cols} column(s), names in Cinzel, run links secondary, new-campaign primary (${lang} ${vp[0]})`, async () => {
+	test(`home cards are in ${cols} column(s), names in Cinzel, new-campaign primary (${lang} ${vp[0]})`, async () => {
 		const p = await openPage(browser, homeUrl(BASE), vp, { lang });
 		const cards = await C.homeCards(p);
 		assert.ok(cards.length >= 3);
 		assert.equal(C.columnCount(cards.slice(0, 3)), cols);
 		for (const n of await C.campaignNames(p)) assert.match(n.font, /Cinzel/);
-		const runs = await C.runLinks(p);
-		assert.ok(runs.length >= 3);
-		for (const r of runs) { assert.ok(r.cls.includes('btn-secondary')); assert.equal(r.color, ACCENT); }
 		const o = await C.newCampaignOpener(p);
 		assert.ok(o.cls.includes('btn-primary'));
 		assert.equal(o.bg, ACCENT);
@@ -90,7 +87,7 @@ for (const lang of LANGS) {
 		assert.equal(kind.size, '14px');
 		assert.equal(kind.color, MUTED);
 		assert.ok((await C.refSearchSubmit(p)).cls.includes('btn-primary'));
-		assert.equal((await C.refHelpTexts(p)).trim(), '?');
+		assert.equal(await C.refHelpCount(p), 0); // us-411: entries open inline, no helper on Reference
 		await closePage(p);
 	});
 }

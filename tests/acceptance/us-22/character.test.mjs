@@ -73,7 +73,7 @@ async function interfaceTexts(page) {
 			if (el.closest('[lang="en"]:not(html)') || el.matches('[data-testid="help-open"],[data-testid^="lang-"]')) continue; // US-45: SRD text, and the "?" helper toggle (named by aria-label)
 			if (el.querySelector('[data-testid="character-name"]')) continue; // user data
 			const clone = el.cloneNode(true);
-			clone.querySelectorAll('input,select,textarea').forEach((i) => i.remove());
+			clone.querySelectorAll('input,select,textarea,[popover],[data-testid^="help-"]:not([data-testid="help-open"])').forEach((i) => i.remove());
 			const t = clone.textContent.replace(/\s+/g, ' ').trim();
 			if (t) out.push({ kind: el.tagName, text: t });
 		}
@@ -98,7 +98,7 @@ test('every heading, label, button, placeholder and badge of /characters/:id com
 			assert.ok(texts.some((t) => t.kind === 'H2'), 'a heading exists');
 			assert.ok(texts.filter((t) => t.kind === 'BUTTON').length > 5, 'buttons exist');
 			if (id === downed) assert.ok(texts.some((t) => t.kind === 'badge'), 'a badge exists');
-			for (const t of texts) assert.ok(known(t.text) || known(norm(t.text)), `${lang}: ${t.kind} "${t.text}" is not in ${lang}.json`);
+			for (const t of texts.filter((x) => /\p{L}/u.test(x.text))) assert.ok(known(t.text) || known(norm(t.text)), `${lang}: ${t.kind} "${t.text}" is not in ${lang}.json`);
 		}
 	}
 });

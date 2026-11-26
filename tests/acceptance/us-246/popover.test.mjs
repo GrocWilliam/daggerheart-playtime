@@ -9,8 +9,9 @@ const BASE = process.env.BASE_URL;
 const read = (p) => readFileSync(new URL('../../../' + p, import.meta.url), 'utf8');
 const EN = JSON.parse(read('src/lib/i18n/en.json'));
 const FR = JSON.parse(read('src/lib/i18n/fr.json'));
-const FR_CLASSES = JSON.parse(read('src/lib/srd/fr/classes.json'));
-const BARD = 'core_class_bard';
+const FR_CARDS = JSON.parse(read('src/lib/srd/fr/domain-cards.json'));
+// us-411: /reference has no Help any more; its Help checks run on the sheet's cards tab, whose card Help is a "?" with SRD lines.
+const CARD = 'core_domain_card_a_soldiers_bond';
 
 let browser, camp, hero;
 const api = async (method, path, body) => {
@@ -22,6 +23,7 @@ before(async () => {
 	browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH });
 	camp = (await api('POST', '/api/campaigns', { name: 'Popover Camp' })).id;
 	hero = (await api('POST', `/api/campaigns/${camp}/characters`, { name: 'Wren', class: 'Bard', evasion: 10, majorThreshold: 5, severeThreshold: 10, maxHp: 6, armorSlots: 3 })).id;
+	await api('POST', `/api/characters/${hero}/cards`, { cardId: CARD });
 });
 after(async () => { await browser?.close(); });
 
@@ -34,7 +36,9 @@ async function open(path, { lang = 'en', js = true, viewport = { width: 1000, he
 	return { ctx, page };
 }
 const sheet = () => `/characters/${hero}`;
-const refHelp = (page, id) => page.locator(`[data-testid="ref-item"] [data-testid="help"][data-help="${id}"]`).first();
+const cards = () => `/characters/${hero}?tab=cards`;
+const cardHelp = (page) => page.locator(`[data-testid="card"] [data-testid="help"][data-help="${CARD}"]`).first();
+const cardName = (page) => page.locator('[data-testid="card"]').filter({ has: page.locator(`[data-testid="help"][data-help="${CARD}"]`) }).locator('> span:not([data-testid])').first();
 const isOpen = (panel) => panel.evaluate((e) => e.matches(':popover-open'));
 const openCount = (page) => page.evaluate(() => [...document.querySelectorAll('[data-testid="help-panel"]')].filter((e) => e.matches(':popover-open')).length);
 // wait until the panel's open state equals `want` (no fixed sleep), then return it
@@ -82,25 +86,32 @@ test('CLAUDE.md drops the old <details>/Help pitfall and says Help is inline-lev
 
 // ---------------------------------------------------------------- markup
 
-test('/reference: each help has one help-open button "?" and one help-panel whose id is its popovertarget; ids are unique', async () => {
+test('/reference: entries have no help-open (us-411)', async () => {
 	const { ctx, page } = await open('/reference');
+	assert.ok((await page.locator('[data-testid="ref-item"]').count()) > 10, 'entries on /reference');
+	assert.equal(await page.locator('[data-testid="help-open"]').count(), 0, 'no help-open on /reference');
+	await ctx.close();
+});
+
+test('sheet cards tab: each help has one help-open button and one help-panel whose id is its popovertarget; the card help reads "?"; ids are unique', async () => {
+	const { ctx, page } = await open(cards());
 	const r = await page.locator('[data-testid="help"]').evaluateAll((hs) => hs.map((h) => {
 		const b = h.querySelectorAll('[data-testid="help-open"]'), p = h.querySelectorAll('[data-testid="help-panel"]');
 		return { id: h.dataset.help, nb: b.length, np: p.length, tag: b[0]?.tagName, type: b[0]?.getAttribute('type'), text: b[0]?.textContent.trim(), target: b[0]?.getAttribute('popovertarget'), pid: p[0]?.id, popover: p[0]?.getAttribute('popover') };
 	}));
-	assert.ok(r.length > 10, 'helpers on /reference');
+	assert.ok(r.some((h) => h.id === CARD), 'the card helper on the cards tab');
 	for (const h of r) {
 		assert.equal(h.nb, 1, `${h.id}: one help-open`);
 		assert.equal(h.np, 1, `${h.id}: one help-panel`);
 		assert.equal(h.tag, 'BUTTON', `${h.id}: help-open is a button`);
 		assert.equal(h.type, 'button', `${h.id}: type=button`);
-		assert.equal(h.text, '?', `${h.id}: text ?`);
+		if (h.id === CARD) assert.equal(h.text, '?', `${h.id}: text ?`);
 		assert.equal(h.popover, 'auto', `${h.id}: popover=auto`);
 		assert.ok(h.pid, `${h.id}: panel has an id`);
 		assert.equal(h.target, h.pid, `${h.id}: popovertarget equals the panel id`);
 	}
 	const ids = r.map((h) => h.pid);
-	assert.equal(new Set(ids).size, ids.length, 'panel ids are unique on /reference');
+	assert.equal(new Set(ids).size, ids.length, 'panel ids are unique on the cards tab');
 	await ctx.close();
 });
 
@@ -115,12 +126,12 @@ test('character sheet: panel ids are unique even when the same data-help appears
 });
 
 test('on load no help-panel is open and its text (the name) is in the DOM', async () => {
-	for (const path of ['/reference', sheet()]) {
+	for (const path of [cards(), sheet()]) {
 		const { ctx, page } = await open(path);
 		assert.equal(await openCount(page), 0, `${path}: no panel open on load`);
-		const h = path === '/reference' ? refHelp(page, BARD) : page.locator('[data-testid="help"][data-help="hp"]').first();
-		const name = path === '/reference'
-			? (await page.locator('[data-testid="ref-item"]').filter({ has: page.locator(`[data-testid="help"][data-help="${BARD}"]`) }).locator('> span:not([data-testid])').first().textContent()).trim()
+		const h = path === cards() ? cardHelp(page) : page.locator('[data-testid="help"][data-help="hp"]').first();
+		const name = path === cards()
+			? (await cardName(page).textContent()).trim()
 			: EN['tracker.hp'];
 		const text = await h.locator('[data-testid="help-panel"]').evaluate((e) => e.textContent);
 		assert.ok(text.includes(name), `${path}: panel textContent holds "${name}"`);
@@ -129,9 +140,9 @@ test('on load no help-panel is open and its text (the name) is in the DOM', asyn
 });
 
 test('clicking help-open opens its panel: name in a strong first (with nameLang), help-close "Close" last', async () => {
-	const { ctx, page } = await open('/reference');
-	const h = refHelp(page, BARD);
-	const name = page.locator('[data-testid="ref-item"]').filter({ has: page.locator(`[data-testid="help"][data-help="${BARD}"]`) }).locator('> span:not([data-testid])').first();
+	const { ctx, page } = await open(cards());
+	const h = cardHelp(page);
+	const name = cardName(page);
 	const nameLang = await name.getAttribute('lang');
 	const panel = h.locator('[data-testid="help-panel"]');
 	await h.locator('[data-testid="help-open"]').click();
@@ -161,8 +172,8 @@ test('a glossary helper on the sheet opens with its name first and help-close la
 // ---------------------------------------------------------------- closing
 
 test('the panel closes on Escape and focus returns to its help-open', async () => {
-	const { ctx, page } = await open('/reference');
-	const h = refHelp(page, BARD);
+	const { ctx, page } = await open(cards());
+	const h = cardHelp(page);
 	const panel = h.locator('[data-testid="help-panel"]');
 	await h.locator('[data-testid="help-open"]').click();
 	assert.equal(await settle(panel, true), true);
@@ -173,8 +184,8 @@ test('the panel closes on Escape and focus returns to its help-open', async () =
 });
 
 test('the panel closes on a click outside it (5,5 on the backdrop)', async () => {
-	const { ctx, page } = await open('/reference');
-	const h = refHelp(page, BARD);
+	const { ctx, page } = await open(cards());
+	const h = cardHelp(page);
 	const panel = h.locator('[data-testid="help-panel"]');
 	await h.locator('[data-testid="help-open"]').click();
 	assert.equal(await settle(panel, true), true);
@@ -184,8 +195,8 @@ test('the panel closes on a click outside it (5,5 on the backdrop)', async () =>
 });
 
 test('the panel closes with help-close and focus returns to its help-open', async () => {
-	const { ctx, page } = await open('/reference');
-	const h = refHelp(page, BARD);
+	const { ctx, page } = await open(cards());
+	const h = cardHelp(page);
 	const panel = h.locator('[data-testid="help-panel"]');
 	await h.locator('[data-testid="help-open"]').click();
 	assert.equal(await settle(panel, true), true);
@@ -198,8 +209,8 @@ test('the panel closes with help-close and focus returns to its help-open', asyn
 // ---------------------------------------------------------------- one at a time
 
 test('one panel at a time: opening a second helper (click after Escape, or through the API) leaves only the second open', async () => {
-	const { ctx, page } = await open('/reference');
-	const helps = page.locator('[data-testid="ref-item"] [data-testid="help"]');
+	const { ctx, page } = await open(cards());
+	const helps = page.locator('[data-testid="help"]');
 	const a = helps.nth(0), b = helps.nth(1), c = helps.nth(2);
 	const pa = a.locator('[data-testid="help-panel"]'), pb = b.locator('[data-testid="help-panel"]'), pc = c.locator('[data-testid="help-panel"]');
 	// click: open a, close it with Escape, click b
@@ -225,12 +236,12 @@ const nextTop = (h) => h.evaluate((el) => {
 	for (let e = el; e && e !== document.body; e = e.parentElement) if (e.nextElementSibling) return e.nextElementSibling.getBoundingClientRect().top;
 	return null;
 });
-for (const [label, path, pick] of [
-	['/reference', '/reference', (page) => refHelp(page, BARD)],
-	['character sheet', null, (page) => page.locator('[data-testid="help"][data-help="hp"]').first()]
+for (const [label, , pick, url] of [
+	['cards tab', null, (page) => cardHelp(page), cards],
+	['character sheet', null, (page) => page.locator('[data-testid="help"][data-help="hp"]').first(), sheet]
 ]) {
 	test(`${label}: opening a panel leaves scrollHeight and the next element's top unchanged`, async () => {
-		const { ctx, page } = await open(path ?? sheet());
+		const { ctx, page } = await open(url());
 		const h = pick(page);
 		const before = { sh: await page.evaluate(() => document.documentElement.scrollHeight), top: await nextTop(h) };
 		assert.notEqual(before.top, null, 'helper has a following element');
@@ -268,12 +279,12 @@ test('sheet: a help-open inside a tracker form causes no navigation and no POST;
 
 // ---------------------------------------------------------------- mobile
 
-for (const [label, path, pick] of [
-	['/reference', '/reference', (page) => refHelp(page, BARD)],
-	['character sheet', null, (page) => page.locator('[data-testid="help"][data-help="hp"]').first()]
+for (const [label, , pick, url] of [
+	['cards tab', null, (page) => cardHelp(page), cards],
+	['character sheet', null, (page) => page.locator('[data-testid="help"][data-help="hp"]').first(), sheet]
 ]) {
 	test(`${label} at 360 px: an open panel causes no sideways scroll, fits min(512, 328) px wide and 80% high, position fixed`, async () => {
-		const { ctx, page } = await open(path ?? sheet(), { viewport: { width: 360, height: 640 } });
+		const { ctx, page } = await open(url(), { viewport: { width: 360, height: 640 } });
 		const h = pick(page);
 		await h.locator('[data-testid="help-open"]').click();
 		const panel = h.locator('[data-testid="help-panel"]');
@@ -290,12 +301,12 @@ for (const [label, path, pick] of [
 // ---------------------------------------------------------------- look
 
 test('help-open and help-close are each at least 44x44 px', async () => {
-	for (const path of ['/reference', sheet()]) {
+	for (const path of [cards(), sheet()]) {
 		const { ctx, page } = await open(path);
 		const opens = await page.locator('[data-testid="help-open"]').evaluateAll((bs) => bs.map((b) => { const r = b.getBoundingClientRect(); return [b.closest('[data-testid="help"]').dataset.help, r.width, r.height]; }).filter(([, w, h]) => w || h));
 		assert.ok(opens.length > 0);
 		for (const [id, w, hh] of opens) assert.ok(w >= 44 && hh >= 44, `${path} ${id} help-open ${w}x${hh}`);
-		const h = path === '/reference' ? refHelp(page, BARD) : page.locator('[data-testid="help"][data-help="hp"]').first();
+		const h = path === cards() ? cardHelp(page) : page.locator('[data-testid="help"][data-help="hp"]').first();
 		await h.locator('[data-testid="help-open"]').click();
 		assert.equal(await settle(h.locator('[data-testid="help-panel"]'), true), true);
 		const box = await h.locator('[data-testid="help-close"]').boundingBox();
@@ -305,8 +316,8 @@ test('help-open and help-close are each at least 44x44 px', async () => {
 });
 
 test('the open panel has the surface background and is centred horizontally (within 2 px)', async () => {
-	const { ctx, page } = await open('/reference');
-	const h = refHelp(page, BARD);
+	const { ctx, page } = await open(cards());
+	const h = cardHelp(page);
 	await h.locator('[data-testid="help-open"]').click();
 	const panel = h.locator('[data-testid="help-panel"]');
 	assert.equal(await settle(panel, true), true);
@@ -327,9 +338,9 @@ test('the open panel has the surface background and is centred horizontally (wit
 
 // ---------------------------------------------------------------- without JavaScript
 
-test('without JavaScript, help-open opens the panel on /reference and help-close closes it', async () => {
-	const { ctx, page } = await open('/reference', { js: false });
-	const h = refHelp(page, BARD);
+test('without JavaScript, help-open opens the card panel on the cards tab and help-close closes it', async () => {
+	const { ctx, page } = await open(cards(), { js: false });
+	const h = cardHelp(page);
 	const panel = h.locator('[data-testid="help-panel"]');
 	assert.equal(await isOpen(panel), false);
 	await h.locator('[data-testid="help-open"]').click();
@@ -341,14 +352,14 @@ test('without JavaScript, help-open opens the panel on /reference and help-close
 
 // ---------------------------------------------------------------- French
 
-test('fr /reference: the open panel shows the French name with lang="fr" and help-close reads "Fermer"', async () => {
-	const { ctx, page } = await open('/reference', { lang: 'fr' });
-	const h = refHelp(page, BARD);
+test('fr cards tab: the open card panel shows the French name with lang="fr" and help-close reads "Fermer"', async () => {
+	const { ctx, page } = await open(cards(), { lang: 'fr' });
+	const h = cardHelp(page);
 	const panel = h.locator('[data-testid="help-panel"]');
 	await h.locator('[data-testid="help-open"]').click();
 	assert.equal(await settle(panel, true), true);
 	const r = await panel.evaluate((p) => ({ name: p.firstElementChild?.textContent.trim(), lang: p.firstElementChild?.getAttribute('lang'), tag: p.firstElementChild?.tagName }));
-	assert.deepEqual(r, { name: FR_CLASSES[BARD].name, lang: 'fr', tag: 'STRONG' });
+	assert.deepEqual(r, { name: FR_CARDS[CARD].name, lang: 'fr', tag: 'STRONG' });
 	assert.equal((await panel.locator('[data-testid="help-close"]').textContent()).trim(), 'Fermer');
 	await ctx.close();
 });

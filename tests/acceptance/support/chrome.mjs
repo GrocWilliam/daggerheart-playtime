@@ -10,7 +10,7 @@ export const sideScroll = (page) => page.evaluate(() => document.documentElement
 
 export const homeCards = (page) => all(page.locator('[data-testid="campaign-link"]').locator('xpath=ancestor::li[1]'));
 export const campaignNames = (page) => all(page.locator('[data-testid="campaign-name"]'));
-export const runLinks = (page) => all(page.locator('[data-testid="campaign-run-link"]'));
+export const runLinks = (page) => all(page.locator('[data-testid="campaign-run-link"]')); // US-413: no longer on Home; kept for the sheet
 export const newCampaignOpener = (page) => look(page.locator('[data-testid="new-campaign"]'));
 export const columnCount = (boxes) => new Set(boxes.map((b) => Math.round(b.left))).size;
 
@@ -22,7 +22,13 @@ export const clickModalCancel = (page, kind) => modal(page, kind).locator('[data
 export const cancelRowClasses = (page, kind) => modal(page, kind).locator('[data-testid="modal-cancel"]').evaluate((a) => [...a.parentElement.classList]);
 export const openDialogCount = (page) => page.locator('dialog[open]').count();
 
-export const refItems = (page) => all(page.locator('[data-testid="ref-item"]'));
+/** us-411: Reference sections are closed <details>; open each one (click its summary) so its entries are laid out. */
+export const openRefSections = async (page) => {
+	const closed = page.locator('details[data-testid^="ref-"]:not([data-testid="ref-item"]):not([open]) > summary');
+	while ((await closed.count()) > 0) await closed.first().click();
+};
+/** Boxes of the entries, read with their sections open. */
+export const refItems = async (page) => { await openRefSections(page); return all(page.locator('[data-testid="ref-item"]')); };
 export const refItemLook = (page) => look(page.locator('[data-testid="ref-item"]').first());
 export const refItemCard = (page) => page.locator('[data-testid="ref-item"]').first().evaluate((e) => {
 	const c = getComputedStyle(e); return { bg: c.backgroundColor, borderLeft: c.borderLeftWidth, borderColor: c.borderLeftColor, radius: c.borderTopLeftRadius };
@@ -34,7 +40,8 @@ export const refNameAndKind = (page) => page.locator('[data-testid="ref-item"]')
 	return { name: cs(spans[0]), kind: cs(spans[1]) };
 });
 export const refSearchSubmit = (page) => look(page.locator('form[action="/reference"] button[type="submit"]'));
-export const refHelpTexts = (page) => page.locator('[data-testid="ref-item"] [data-testid="help-open"]').first().textContent();
+/** Number of help-open triggers inside Reference entries. */
+export const refHelpCount = (page) => page.locator('[data-testid="ref-item"] [data-testid="help-open"]').count();
 
 export const licenceLook = (page) => page.evaluate(() => {
 	const e = document.querySelector('[data-testid="srd-licence"]'), c = getComputedStyle(e), r = e.getBoundingClientRect();

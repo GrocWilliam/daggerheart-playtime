@@ -190,7 +190,9 @@ export const actions: Actions = {
 		const r = await call(fetch, 'POST', `/api/characters/${enc(params.id)}/gold`, {
 			handfuls: num(form.get('handfuls'))
 		});
-		return r.ok ? done(event, 'gold') : failure(r, { section: ACTION_SECTION.gold });
+		if (!r.ok) return failure(r, { section: ACTION_SECTION.gold });
+		// the new gold rides in the response so the page updates before the reload of `load` lands
+		return { ...done(event, 'gold'), gold: r.data?.gold };
 	},
 	addItem: async (event) => {
 		const { request, params, fetch } = event;

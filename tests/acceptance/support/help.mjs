@@ -37,3 +37,10 @@ export const openHelp = async (page, id, scope) => {
 	await h.locator(OPEN).click();
 	return h.locator('[data-testid="help-panel"]').evaluate((e) => e.matches(':popover-open'));
 };
+/** Text lines of a helper's panel (`[lang]` innermost elements outside its buttons and name), with their lang and visibility. */
+export const helpPanelLines = (page, id, scope) => (scope ?? page).locator(`[data-testid="help"][data-help="${id}"]`).first().locator('[data-testid="help-panel"]').evaluate((p) =>
+	[...p.querySelectorAll('[lang]')].filter((e) => e.tagName !== 'STRONG' && !e.closest('button') && !e.querySelector('[lang]')).map((e) => {
+		return { lang: e.getAttribute('lang'), text: e.textContent.replace(/\s+/g, ' ').trim(), visible: e.checkVisibility() };
+	}).filter((l) => l.text));
+/** Visible text of a helper's panel. */
+export const helpPanelText = async (page, id, scope) => norm(await (scope ?? page).locator(`[data-testid="help"][data-help="${id}"]`).first().locator('[data-testid="help-panel"]').evaluate((p) => p.innerText));

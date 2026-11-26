@@ -12,7 +12,7 @@ The single UI guide that later stories follow. It documents the current UI plus 
 
 Links between them:
 - Header on every page: `nav-home` (to `/`) and `nav-reference` (to `/reference`).
-- Home: each campaign has `campaign-link` (to its DM screen) and `campaign-run-link` (to `?step=run`).
+- Home: each campaign card is one whole-card `campaign-link` (to its DM screen) holding `campaign-name` and `campaign-meta` (small muted line: characters count · current scene or none · last journal date).
 - DM screen: the step switch `step-build` and `step-run`. Build's `new-character` link leads to the tunnel. Character cards link to the sheet.
 - Character sheet: the tab bar `sheet-tabs` (`tab-<key>` links to `?tab=<key>`).
 - Tunnel: Create (`tunnel-create`) leads to the sheet; Cancel (`tunnel-cancel`) goes back to `?step=build`.
@@ -33,14 +33,14 @@ Per page:
 - Run card (`character-card`): name and `down` on line 1, class (through `chosen.class`, `localizedSrd`) and level on their own line below ("Guardian · level 10"); no level `Help`; `ConditionBadges` only when a condition is set; the four aligned trackers; `DefenseLine`; the two-row `DamageForm`. No `Chosen` on cards (it stays on the sheet header).
 - The character sheet's edit form is in `<Modal kind="edit">` (opener `new-edit` in the header next to `campaign-run-link`; no Edit section); grid 1 column, 2 from `min-[600px]:`; `edit` fails with `modal: 'edit'` and `values`, redirects 303 to `/characters/:id?tab=<tab>` on success without enhance.
 - The Add scene form is in `<Modal kind="scene">` inside `build-scenes` (opener `new-scene`); its `add` action fails with `modal: 'scene'` and `values`, and redirects 303 to `?step=build` on success unless the request is an enhance one (`x-sveltekit-action`).
-- Character sheet, header (every tab, above the tabs; no back link above the `h1`, `campaign-run-link` is the way back): `h1` (`character-name`, `down`), `Divider`, a meta line (class and level, `Chosen`, `domain`s, `ConditionBadges`), then a button row of `campaign-run-link`, `level-up` and `new-edit`. The Modals carry their tab: `edit` → `{ tab: data.tab }`, `item` → `gear`, `experience` → `traits`, `card` → `cards` (openers of item/experience/card sit in their tab's section).
+- Character sheet, header (every tab, above the tabs; no back link above the `h1`; the run link is the way back): `h1` (`character-name`, `down`), `Divider`, a meta line (class and level, `Chosen`, `domain`s, `ConditionBadges`), then a button row of `level-up` (`btn-primary`, first, only when `canLevelUp`), `campaign-run-link` and `new-edit` (both `btn-secondary`); `whitespace-nowrap` and tight padding keep it on one line at 375px. The Modals carry their tab: `edit` → `{ tab: data.tab }`, `item` → `gear`, `experience` → `traits`, `card` → `cards` (openers of item/experience/card sit in their tab's section).
 - Character sheet, tab bar: `nav[data-testid=sheet-tabs]`, one plain link per tab (`tab-<key>`, `href="?tab=<key>"`, label `TAB_LABEL`); the current one has `aria-current="page"` and the accent look of `step-*`. Only the chosen tab is rendered (one `{#if data.tab === ...}` per tab, never hidden with CSS); `load` still computes every tab's data.
-- Character sheet, panel: `sheet-panel` (surface look: `bg-surface`, `3px double` accent border, `0.5rem` radius, `p-3`) holds the `sheet-sections` grid: 1 column below 768px; from 768px 2 columns on tabs with two sections, 1 otherwise.
-  - `play`: `sheet-trackers` (trackers, `DefenseLine`, the two-row `DamageForm` with quick damage buttons) left, `sheet-conditions` (the three toggles in one row of buttons) right.
+- Character sheet, panel: `sheet-panel` (surface look: `bg-surface`, `3px double` accent border, `0.5rem` radius, `p-3`) holds the `sheet-sections` grid: 1 column below 768px; from 768px 2 columns on traits and gear, 1 otherwise (Play included).
+  - `play` (Play tab): one column at every width: `sheet-trackers` (trackers, then a `flex flex-wrap items-center gap-x-4` row of `DefenseLine` and `proficiency`, then the two-row `DamageForm` and `damage-result`), with `sheet-conditions` (the three toggles in one `flex flex-wrap gap-2` row) below it.
   - `traits`: `sheet-traits` (one row per trait: name, `Help`, signed value) and `sheet-experiences`, side by side.
-  - `gear`: `sheet-equipment` left, `sheet-gold` right, `sheet-inventory` spanning both below.
+  - `gear`: `sheet-equipment` left, `sheet-gold` right, `sheet-inventory` spanning both below. Equipment selects save on change (`requestSubmit`); with JavaScript the Equip button is `sr-only` (visible without JS). Gold: the heading is an `<h2>` holding `Help` with `label` "Gold"; ghost − / + steppers per unit (`gold-<unit>-minus|plus`, ±1, ±10, ±100 handfuls) above the free handfuls form.
   - `cards`: `sheet-cards`. `notes`: `sheet-notes`.
-- Reference: entries in 2 columns from 768px.
+- Reference: the GET filter form (kind, `q`, Filter), then one `<details data-testid="ref-<kind>">` per section, closed by default, whose `<summary>` is the kind name (`h2`) and the entry count (`reference.count`, `formatNumber`). Each entry is `<li data-testid="ref-item"><details>` (closed by default): its `<summary>` holds the name (Cinzel, `lang={nameLang}`) and the kind; below it the entry's lines render inline through `SrdLines`. With JavaScript the `q` input filters as you type (`src/lib/utils/search.ts`: `fold` strips accents and case, `matches` checks name, line text and label): non-matching entries and sections are `hidden`, and while the query is not empty each section's `open` follows "has matches" (cleared: back to the user's own state). A row of `ref-chip-<kind>` buttons (`btn-secondary`, `aria-pressed`, only after `onMount`) shows only the pressed kinds (union; none pressed = all). The no-JS GET form stays name-only and server-renders its sections open when `q` is set (JavaScript closes them again on mount); the Filter button is `self-end min-h-11`, as tall as the input. No `Help` on Reference. Entries in 2 columns from 768px; every summary is at least 44px high.
 
 ## Design system
 Tokens:
@@ -49,8 +49,8 @@ Tokens:
 - Checkboxes use `accent-color: var(--accent)`, are 1.25rem square, and sit inside a 44px-high label.
 
 Buttons: every `<button>` and button-styled link has exactly one of `btn-primary` (accent background, bg text, no border), `btn-secondary` (transparent, 1px accent border, accent text), `btn-ghost` (transparent, no border, text colour) or `btn-danger` (transparent, 1px danger border, danger text). All keep 44×44px and the 2px teal `:focus-visible` outline.
-- `btn-primary`: at most one per form, its main submit (Add to journal, Apply damage, Roll loot, Generate encounter, Add (battle), Save in a modal, Create/Next/Confirm in the tunnels), plus the openers of a page's main list (`new-campaign`, `new-character`, `new-scene`). The quick damage buttons (`damage-minor`, `damage-major`, `damage-severe`) are `btn-secondary`.
-- `btn-secondary`: Set current, Mark done, condition toggles, Back in the tunnels, the other `new-*` openers, `new-edit`, `level-up`, `campaign-run-link`, `scene-edit-open`.
+- `btn-primary`: at most one per form, its main submit (Add to journal, Apply damage, Roll loot, Generate encounter, Add (battle), Save in a modal, Create/Next/Confirm in the tunnels), plus the openers of a page's main list (`new-campaign`, `new-character`, `new-scene`) and the sheet's `level-up`. The quick damage buttons (`damage-minor`, `damage-major`, `damage-severe`) are `btn-secondary`.
+- `btn-secondary`: Set current, Mark done, condition toggles, Back in the tunnels, the other `new-*` openers, `new-edit`, `campaign-run-link` (character sheet only), `scene-edit-open`.
 - `btn-ghost`: steppers (−/+ of every tracker, Fear, `unit-hp-plus`, `unit-hp-minus`), Move up, Move down, Cancel links, and the non-current language button.
 - `btn-danger`: every delete or remove action.
 - Toggles carry `aria-pressed`. A pressed `btn-secondary` looks primary.
@@ -61,12 +61,12 @@ Trackers and help:
 - `Tracker` is a `grid grid-cols-[6rem_auto_1fr] items-center` grid. The `row` variant has two lines (`gap-x-2 gap-y-1`): line 1 is the label as `Help label` in column 1 and a nowrap group (ghost −, the value, ghost +) in column 2; line 2 is `Pips` (`col-span-full`), starting at the label's left edge, so the pips sit below the − button. Fear (`variant="band"`) stays on one line at every width (label, stepper, pips); its label column is `auto` below 768px and 6rem from 768px. In one container (a Run card, `sheet-trackers`), the − buttons line up within 1px, and so do the pips and the labels.
 - Fear uses `variant="band"`: surface background, 1px `--border` border, 0.5rem radius, 0.5rem 0.75rem padding (0.25rem 0.5rem below 768px), label in Cinzel; sticky (`top-0 z-10`) at the top of the Run step on a surface background; at most 60px tall at 375px; `Pips size="band"`: 0.625rem pips with a 0.125rem gap below 768px, 1.25rem with a 0.25rem gap from 768px.
 - `Help` takes an optional `label`. With it, `help-open` shows the label with a dotted underline instead of "?", and the label is not repeated before it. The `aria-label` stays `"<help.label> <name>"`.
-- Every helper after a visible label uses `label`: tracker labels, Evasion, Thresholds, Proficiency, trait names, condition badges, `Chosen` names and the class. The `/reference` page and helpers inside prose keep "?".
+- Every helper after a visible label uses `label`: tracker labels, Evasion, Thresholds, Proficiency, trait names, condition badges, `Chosen` names and the class. Helpers inside prose keep "?".
 
 Navigation:
 - The header is one row at 375, 768, 1024 and 1180px: sigil, `nav-home`, `nav-reference`, then `language-switcher` at the right end. At 375px it is at most 60px tall with no sideways scroll. Below 768px the `nav-home` text may be `sr-only` (the link keeps its accessible name and 44×44px). The `<header>` has no `justify-between`: the switcher's `ml-auto` keeps it at the right end, and below 768px the nav sits right after the sigil (left-aligned).
 - `language-switcher` is two 44px buttons, 8px apart, with no padding around them. Their text is `EN` and `FR`, rendered from the language code (`code.toUpperCase()`, not catalog keys, because us-104's equal-value budget is used up). Their `aria-label` is `language.en`/`language.fr` and their `lang` is their own language. The current one is `aria-pressed="true"` with the primary look; the other is ghost.
-- Tab bars (`step-*`, `sheet-tabs`): 44px-high links on a 1px `--border` bottom line, no underline. The current tab has an accent background and bg text; the others have muted text on a transparent background. At 375px `sheet-tabs` fits on one row or scrolls inside itself (`overflow-x: auto`).
+- Tab bars (`step-*`, `sheet-tabs`): 44px-high links on a 1px `--border` bottom line, no underline. The current tab has an accent background and bg text; the others have muted text on a transparent background. At 375px `sheet-tabs` fits on one row or scrolls inside itself (`overflow-x: auto`). While `sheet-tabs` can scroll further right, an `aria-hidden` `pointer-events-none` span (2rem wide, full height, gradient from transparent to `--bg`) fades its right edge; it is absent otherwise and without JavaScript (computed on mount, on `scroll` and by a `ResizeObserver`).
 
 Run step:
 - `fear` band first. Below 1024px: `party`, then `current-scene`, then `journal` in one column. From 1024px: `lg:grid-cols-[1fr_18rem]`, with `party` left and an `<aside>` holding `current-scene` then `journal` right, starting at the same top.
@@ -83,14 +83,14 @@ Build step:
 - `build-party` takes 1/3 and `build-scenes` 2/3 from 768px.
 
 Character sheet:
-- Header: `h1`, `Divider`, a meta line (`flex flex-wrap items-center gap-x-3`: class and level, `Chosen`, `domain`s, `ConditionBadges`), then a button row (`flex flex-wrap gap-2`) of `btn-secondary` `campaign-run-link`, `level-up` and `new-edit`.
+- Header: `h1`, `Divider`, a meta line (`flex flex-wrap items-center gap-x-3`: class and level, `Chosen`, `domain`s, `ConditionBadges`), then a button row (`flex flex-wrap gap-2`) of `btn-primary` `level-up` (first, when shown), then `btn-secondary` `campaign-run-link` and `new-edit`; one line at 375px.
 - Condition toggles are one row of `aria-pressed` `btn-secondary` buttons.
 - `traits`: one row per trait, with the name (help trigger) left and the signed value right-aligned in a fixed `3rem` column.
 - `damage-result`: one `<p role="status" aria-live="polite">` (body-size text, at least 16px (us-14), `damageText`), always present and empty until a hit. Run step: between the Fear tracker and the party/aside grid (outside the cards), filled from the `damage` action's `form.damage`. Sheet: Play tab only, in `sheet-trackers` right after `DamageForm`, shows `form?.damage ?? data.damageResult` (the no-JS redirect carries `?tab=play&hit=N[&armor=1]`).
 - Run card height budget: 500px at 1024×768 since the quick damage buttons (it was 440px before them).
 
 Other pages:
-- Home: the campaign grid stays 1/2/3 columns; `campaign-name` in Cinzel; `campaign-run-link` `btn-secondary`; `new-campaign` `btn-primary`.
+- Home: the campaign grid stays 1/2/3 columns; `campaign-name` in Cinzel; `campaign-meta` smaller than the name; `new-campaign` `btn-primary`.
 - Tunnel and level-up: `tunnel-progress`/`levelup-progress` are a row of numbered steps (current: accent background; done: accent text; next: muted). Next/Create/Confirm are primary, Back secondary, Cancel ghost.
 - Reference: entries keep their card look and 2 columns from 768px; the entry name is in Cinzel and its kind in small muted text.
 - Modals: `btn-primary` Save and `btn-ghost` `modal-cancel` side by side at the bottom.
@@ -101,6 +101,7 @@ In `src/lib/components/`:
 - `Divider`: the h1 flourish (`divider`), left-aligned under the `h1` (`preserveAspectRatio="xMinYMid meet"`; width unchanged, `max-w-xs`).
 - `Pips`: filled/empty pips for a tracker (`<name>-pips`).
 - `Help`: glossary `id`, `text` prop or `lines: Line[]`, optional `label`; native Popover API: `help-open` (`popovertarget`; the label with a dotted underline, or "?") opens a `popover="auto"` `help-panel` (inline-level `<span>`) styled like the `Modal` panel, closed by Escape, an outside click or `help-close`. The one exception to `Modal` being the only dialog.
+- `SrdLines`: props `lines: Line[]` and `lang` (page language); renders SRD lines with inline-level markup only (block `span`s): the label in `lang`, the text in `line.lang`. Used by `Help`'s panel body and by Reference entries.
 - `Chosen`: subclass, ancestry and community of a character.
 - `Tracker`: one POST form per tracker (`.tracker` marker class), props `name`, `label`, `helpId`, `value`, `filled`, `max`, `action`, `hidden`, `lang`, `variant` (`band` for Fear). A 3-column grid (`6rem` label as `Help label`, nowrap ghost −/value/+, `Pips`); `row`: pips on a second line; see Design system. Used for HP, Stress, Hope and Armor on the sheet and Run cards, and for Fear.
 - `DefenseLine`: `Evasion 9 · Thresholds 7/14` on one `ul.stats` line of inline `li`s, each part with its `Help` (`evasion`, `thresholds`). Props `evasion`, `major`, `severe`, `lang`.
@@ -146,7 +147,7 @@ Test ids: `levelup-progress` (step indicator), `levelup-next`, `levelup-back`, `
   - `cards`: empty (no cards: empty list, `new-card` opener).
   - `notes`: empty (blank textarea).
 - Level-up: error (`?step=N&invalid=<field>` with `[role=alert]`); loading (busy submit); success (redirect to the sheet).
-- Reference: static, no forms; empty sections are not shown.
+- Reference: static, only the GET filter form; empty sections are not shown when filtering by name; sections and entries are closed `<details>` and work without JavaScript.
 - Load errors (unknown id, server) go through `+error.svelte`, which translates by status.
 
 ## Battle tracker (Run step)
@@ -156,9 +157,9 @@ Each `encounter-adversary` card of the current scene lists one `battle-unit` per
 Stable: keep them when restyling.
 
 Existing:
-`build`, `run`, `sheet-sections`, `sheet-trackers`, `sheet-traits`, `sheet-equipment`, `sheet-experiences`, `sheet-inventory`, `sheet-cards`, `sheet-notes`, `sheet-tabs`, `tab-play`, `tab-traits`, `tab-gear`, `tab-cards`, `tab-notes`, `sheet-panel`, `sheet-conditions`, `sheet-gold`, `campaign-link`, `campaign-name`, `campaign-run-link`, `card`, `party`, `character-card`, `character-name`, `condition-hidden`, `condition-restrained`, `condition-vulnerable`, `current-scene`, `divider`, `domain`, `down`, `encounter-adjustments`, `encounter-adversary`, `encounter-budget`, `evasion`, `experience`, `fear`, `gold`, `help`, `help-close`, `help-open`, `help-panel`, `inventory`, `item`, `item-row`, `journal`, `journal-entry`, `lang-en`, `lang-fr`, `language-switcher`, `loot-entry`, `nav-home`, `nav-reference`, `notes`, `notes-status`, `party-member`, `ref-item`, `scene`, `scene-environment`, `scene-notes`, `scene-status`, `secondary-blocked`, `sigil`, `srd-licence`, `thresholds`, `battle-unit`, `unit-hp`, `unit-defeated`, `unit-damage`, `unit-hit`, `unit-hp-plus`, `unit-hp-minus`, `battle-add`, `battle-add-adversary`, `battle-add-count`, `battle-add-submit`, `battle-add-more`, `adversary-pips`, `build-party`, `build-scenes`, `damage-minor`, `damage-major`, `damage-severe`, `damage-result`, `adversary-count`, `adversary-count-minus`, `adversary-count-plus`.
+`build`, `run`, `sheet-sections`, `sheet-trackers`, `sheet-traits`, `sheet-equipment`, `sheet-experiences`, `sheet-inventory`, `sheet-cards`, `sheet-notes`, `sheet-tabs`, `tab-play`, `tab-traits`, `tab-gear`, `tab-cards`, `tab-notes`, `sheet-panel`, `sheet-conditions`, `sheet-gold`, `campaign-link`, `campaign-name`, `campaign-meta`, `campaign-run-link`, `card`, `party`, `character-card`, `character-name`, `condition-hidden`, `condition-restrained`, `condition-vulnerable`, `current-scene`, `divider`, `domain`, `down`, `encounter-adjustments`, `encounter-adversary`, `encounter-budget`, `evasion`, `experience`, `fear`, `gold`, `help`, `help-close`, `help-open`, `help-panel`, `inventory`, `item`, `item-row`, `journal`, `journal-entry`, `lang-en`, `lang-fr`, `language-switcher`, `loot-entry`, `nav-home`, `nav-reference`, `notes`, `notes-status`, `party-member`, `ref-item`, `scene`, `scene-environment`, `scene-notes`, `scene-status`, `secondary-blocked`, `sigil`, `srd-licence`, `thresholds`, `battle-unit`, `unit-hp`, `unit-defeated`, `unit-damage`, `unit-hit`, `unit-hp-plus`, `unit-hp-minus`, `battle-add`, `battle-add-adversary`, `battle-add-count`, `battle-add-submit`, `battle-add-more`, `adversary-pips`, `build-party`, `build-scenes`, `damage-minor`, `damage-major`, `damage-severe`, `damage-result`, `adversary-count`, `adversary-count-minus`, `adversary-count-plus`, `gold-handfuls-minus`, `gold-handfuls-plus`, `gold-bags-minus`, `gold-bags-plus`, `gold-chests-minus`, `gold-chests-plus`.
 
-Dynamic: `ref-<kind>` (reference sections), `step-<k>` (`step-build`, `step-run`), `trait-<k>` (one per trait), `trait-marked-<name>` (one per marked trait), `<name>-pips` (e.g. `fear-pips`), tracker values by key (e.g. `hp`, `hope`), subclass/ancestry/community from `Chosen`, and the equipment blocks `primary-weapon`, `secondary-weapon`, `equipped-armor`.
+Dynamic: `ref-<kind>` (reference sections), `ref-chip-<kind>` (reference type chips), `step-<k>` (`step-build`, `step-run`), `trait-<k>` (one per trait), `trait-marked-<name>` (one per marked trait), `<name>-pips` (e.g. `fear-pips`), tracker values by key (e.g. `hp`, `hope`), subclass/ancestry/community from `Chosen`, and the equipment blocks `primary-weapon`, `secondary-weapon`, `equipped-armor`.
 
 New (*planned*):
 - Sheet: `proficiency`, `subclass-stage`.

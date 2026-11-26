@@ -20,14 +20,20 @@ const LANGS = ['en', 'fr'];
 const within = (xs, tol, msg) => assert.ok(Math.max(...xs) - Math.min(...xs) <= tol, `${msg}: ${xs.join(', ')}`);
 
 for (const lang of LANGS) for (const vp of S.SHEET_VIEWPORTS) for (const tab of S.SHEET_TABS) {
-	test(`header buttons are secondary, 44px and 8px apart on every tab (${lang} ${vp.join('x')} ${tab})`, async () => {
+	test(`header buttons (level-up primary, the others secondary), 44px and 8px apart on every tab (${lang} ${vp.join('x')} ${tab})`, async () => {
 		const p = await openPage(browser, sheetUrl(BASE, id, tab), vp, { lang });
 		const b = await S.headerButtons(p);
 		for (const [k, v] of Object.entries(b)) {
-			assert.ok(v.cls.includes('btn-secondary'), `${k} class`);
-			assert.equal(v.color, ACCENT, `${k} text`);
-			assert.deepEqual(v.border, Array(4).fill(`1px solid ${ACCENT}`), `${k} border`);
-			assert.equal(v.bg, CLEAR, `${k} background`);
+			if (k === 'level-up') {
+				// us-408: level-up is the primary action
+				assert.ok(v.cls.includes('btn-primary'), `${k} class`);
+				assert.equal(v.bg, ACCENT, `${k} background`);
+			} else {
+				assert.ok(v.cls.includes('btn-secondary'), `${k} class`);
+				assert.equal(v.color, ACCENT, `${k} text`);
+				assert.deepEqual(v.border, Array(4).fill(`1px solid ${ACCENT}`), `${k} border`);
+				assert.equal(v.bg, CLEAR, `${k} background`);
+			}
 			assert.ok(v.w >= 43.5 && v.h >= 43.5, `${k} size ${v.w}x${v.h}`);
 		}
 		const ks = Object.keys(b);
@@ -98,6 +104,7 @@ test('the one submit of the gold, quantity, experience value, notes and damage f
 		for (const a of actions) {
 			let looks = await S.submitLooks(p, a);
 			// the quick damage buttons (name=quick) are secondary: only the Apply submit is checked
+			if (a === 'gold') looks = looks.filter((b) => !b.cls.includes('btn-ghost')); // #409: the ghost steppers share the gold action
 			if (a === 'damage') looks = looks.slice(await p.locator('form[action^="?/damage"] button[name=quick]').count());
 			assert.ok(looks.length >= 1, `${a} has a submit`);
 			for (const b of looks) { assert.ok(b.cls.includes('btn-primary'), `${a} primary`); assert.equal(b.bg, ACCENT, `${a} background`); }

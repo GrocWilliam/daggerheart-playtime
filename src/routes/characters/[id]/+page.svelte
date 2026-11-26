@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
+	import type { SubmitFunction } from '@sveltejs/kit';
 	import { enhance } from '$app/forms';
 	import { page } from '$app/state';
 	import { busy } from '$lib/forms/busy';
@@ -16,6 +18,8 @@
 	import Chosen from '$lib/components/Chosen.svelte';
 	import { SHEET_TABS, TAB_LABEL, actionHref } from './tabs';
 	let { data, form } = $props();
+	let js = $state(false);
+	onMount(() => (js = true));
 	const shownDamage = $derived(form?.damage ?? data.damageResult);
 	const t = (key: string, params?: Record<string, string | number>) => translate(data.lang, key, params);
 	const n = (v: number) => formatNumber(data.lang, v);
@@ -27,6 +31,30 @@
 	// a modal opened (or failed) from another tab still shows, in the header
 	const opened = (kind: string) => form?.modal === kind || page.url.searchParams.get('new') === kind;
 	const c = $derived(data.character);
+	// a stepper shows its result at once; the action's answer (or an error) replaces it
+	let pendingTotal = $state<number | null>(null);
+	const settled = $derived(form?.gold ?? c.gold);
+	const g = $derived(
+		pendingTotal !== null && pendingTotal >= 0
+			? { chests: Math.floor(pendingTotal / 100), bags: Math.floor(pendingTotal / 10) % 10, handfuls: pendingTotal % 10 }
+			: settled
+	);
+	const UNIT_KEY = 'gold.unit.';
+	const unitName = (u: string | number) => t(UNIT_KEY + u);
+	let goldRun = 0;
+	const goldEnhance: SubmitFunction = (input) => {
+		const delta = Number(input.submitter?.getAttribute('value') ?? input.formData.get('handfuls'));
+		const mine = ++goldRun;
+		pendingTotal = Number.isFinite(delta) ? g.chests * 100 + g.bags * 10 + g.handfuls + delta : null;
+		const after = busy(input);
+		return async (opts) => {
+			try {
+				await (await after)?.(opts);
+			} finally {
+				if (mine === goldRun) pendingTotal = null;
+			}
+		};
+	};
 	const fields = $derived([
 		['name', 'field.name', 'text', c.name],
 		['level', 'field.level', 'number', c.level],
@@ -40,6 +68,19 @@
 	const traits = ['agility', 'strength', 'finesse', 'instinct', 'presence', 'knowledge'];
 	const signed = (v: number) => (v > 0 ? `+${v}` : `${v}`);
 	const conditions = ['vulnerable', 'restrained', 'hidden'];
+
+	let tabsNav: HTMLElement | undefined = $state();
+	let fade = $state(false);
+	function measureFade() {
+		const n = tabsNav;
+		fade = !!n && n.scrollLeft + n.clientWidth < n.scrollWidth - 1;
+	}
+	onMount(() => {
+		measureFade();
+		const ro = new ResizeObserver(measureFade);
+		if (tabsNav) ro.observe(tabsNav);
+		return () => ro.disconnect();
+	});
 </script>
 
 <svelte:head><title>{c.name} – {t('home.title')}</title></svelte:head>
@@ -62,7 +103,7 @@
 	{/if}
 <ConditionBadges conditions={c.conditions} lang={data.lang} />
 </div>
-<div class="mb-3 flex flex-wrap gap-2"><a class="btn-secondary" data-testid="campaign-run-link" href="/campaigns/{c.campaignId}?step=run">{t('character.runLink')}</a>{#if data.canLevelUp}<a class="btn-secondary" data-testid="level-up" href="/characters/{c.id}/level-up?step=1">{t('levelup.title')}</a>{/if}<Modal kind="edit" openerClass="btn-secondary" params={{ tab: data.tab }} title={t('section.edit')} lang={data.lang}>
+<div class="mb-3 flex flex-wrap gap-2">{#if data.canLevelUp}<a class="btn-primary whitespace-nowrap px-3!" data-testid="level-up" href="/characters/{c.id}/level-up?step=1">{t('levelup.title')}</a>{/if}<a class="btn-secondary whitespace-nowrap px-3!" data-testid="campaign-run-link" href="/campaigns/{c.campaignId}?step=run">{t('character.sheetRun')}</a><Modal kind="edit" openerClass="btn-secondary whitespace-nowrap px-3!" params={{ tab: data.tab }} title={t('section.edit')} lang={data.lang}>
 {#snippet children(cancel)}
 <form use:enhance={busy} method="POST" action={actionHref('edit', data.tab)} class="grid grid-cols-[minmax(0,1fr)] gap-x-4 *:min-w-0 min-[600px]:grid-cols-[repeat(2,minmax(0,1fr))]" class:form-grid={true}>
 	{#if form?.modal === 'edit' && form.error}<p role="alert" class="col-span-full">{t(form.error)}</p>{/if}
@@ -125,12 +166,15 @@
 {#if data.tab !== 'gear' && opened('item')}{@render itemModal()}{/if}
 {#if data.tab !== 'cards' && opened('card')}{@render cardModal()}{/if}
 
-<nav data-testid="sheet-tabs" class="mb-4 flex gap-1 overflow-x-auto border-b border-solid border-border">
+<div class="relative mb-4">
+<nav bind:this={tabsNav} onscroll={measureFade} data-testid="sheet-tabs" class="flex gap-1 overflow-x-auto border-b border-solid border-border">
 	{#each SHEET_TABS as k (k)}
 		<a class="flex min-h-11 shrink-0 items-center px-3 no-underline {data.tab === k ? 'bg-accent font-bold text-bg' : 'bg-transparent text-muted'}" data-testid="tab-{k}" href="?tab={k}"
 			aria-current={data.tab === k ? 'page' : undefined}>{t(TAB_LABEL[k])}</a>
 	{/each}
 </nav>
+{#if fade}<span aria-hidden="true" class="pointer-events-none absolute inset-y-0 right-0 w-8 bg-[linear-gradient(to_right,transparent,var(--color-bg))]"></span>{/if}
+</div>
 
 {#snippet experienceModal()}
 <Modal kind="experience" openerClass="btn-secondary" params={{ tab: 'traits' }} title={t('experience.new')} lang={data.lang}>
@@ -214,7 +258,7 @@
 	<form use:enhance={busy} class="flex flex-wrap items-end gap-2" method="POST" action={actionHref('equip', data.tab)}>
 		<label class="mb-0! w-full md:w-auto">
 			{t(label)}
-			<select {name}>
+			<select {name} onchange={(e) => e.currentTarget.form?.requestSubmit()}>
 				<option value="" selected={!current}>{t('option.none')}</option>
 				{#each groups as g (g.tier)}
 					<optgroup label={t('equipment.tier', { tier: g.tier })}>
@@ -225,11 +269,11 @@
 				{/each}
 			</select>
 		</label>
-		<button type="submit" class="btn-primary">{t('action.equip')}</button>
+		<button type="submit" class="btn-primary" class:sr-only={js} class:min-h-0!={js} class:min-w-0!={js} class:p-0!={js}>{t('action.equip')}</button>
 	</form>
 {/snippet}
 <div data-testid="sheet-panel" class="bg-surface border-[3px] border-double border-accent rounded-[0.5rem] p-3">
-<div data-testid="sheet-sections" class="grid grid-cols-[minmax(0,1fr)] gap-x-4 *:min-w-0 {data.tab === 'cards' || data.tab === 'notes' ? '' : 'md:grid-cols-[repeat(2,minmax(0,1fr))]'}">
+<div data-testid="sheet-sections" class="grid grid-cols-[minmax(0,1fr)] gap-x-4 *:min-w-0 {data.tab !== 'traits' && data.tab !== 'gear' ? '' : 'md:grid-cols-[repeat(2,minmax(0,1fr))]'}">
 {#if data.tab === 'play'}
 <div data-testid="sheet-trackers">
 {#if form?.section === 'sheet-trackers'}<p role="alert">{t(form.error)}</p>{/if}
@@ -237,8 +281,8 @@
 	<Tracker name={key} label={t(`tracker.${key}`)} helpId={key} action={actionHref('tracker', data.tab)} hidden={{ tracker: key }} lang={data.lang}
 		{...trackerValues(c[key])} />
 {/each}
-<DefenseLine evasion={c.evasion} major={c.majorThreshold} severe={c.severeThreshold} lang={data.lang} />
-<p class="mt-0 mb-3" data-testid="proficiency"><Help id="proficiency" name={t('levelup.proficiency')} label={t('levelup.proficiency')} text={t('levelup.help.proficiency')} lang={data.lang} /> <span>{c.proficiency}</span></p>
+<div class="flex flex-wrap items-center gap-x-4"><DefenseLine evasion={c.evasion} major={c.majorThreshold} severe={c.severeThreshold} lang={data.lang} />
+<p class="mt-0 mb-3" data-testid="proficiency"><Help id="proficiency" name={t('levelup.proficiency')} label={t('levelup.proficiency')} text={t('levelup.help.proficiency')} lang={data.lang} /> <span>{c.proficiency}</span></p></div>
 <DamageForm action={actionHref('damage', data.tab)} lang={data.lang} major={c.majorThreshold} severe={c.severeThreshold} />
 <p class="mt-0 mb-3" data-testid="damage-result" role="status" aria-live="polite">{#if shownDamage}{damageText(data.lang, shownDamage)}{/if}</p>
 </div>
@@ -248,9 +292,9 @@
 <h2 class="mt-4 mb-2">{t('section.conditions')}</h2>
 <div class="flex flex-wrap gap-2">
 {#each conditions as k (k)}
-	<form use:enhance={busy} method="POST" action={actionHref('condition', data.tab)}>
+	<form class="m-0 min-w-0 flex-1 basis-0" use:enhance={busy} method="POST" action={actionHref('condition', data.tab)}>
 		<input type="hidden" name="condition" value={k} />
-		<button type="submit" class="btn-secondary" aria-pressed={c.conditions[k] ? 'true' : 'false'} name="value" value={c.conditions[k] ? 'off' : 'on'}>
+		<button type="submit" class="btn-secondary w-full px-2" aria-pressed={c.conditions[k] ? 'true' : 'false'} name="value" value={c.conditions[k] ? 'off' : 'on'}>
 			{t(`condition.${c.conditions[k] ? 'clear' : 'set'}.${k}`)}
 		</button>
 	</form>
@@ -310,9 +354,18 @@
 
 <div data-testid="sheet-gold">
 {#if form?.section === 'sheet-gold'}<p role="alert">{t(form.error)}</p>{/if}
-<div class="flex items-center gap-2"><h2 class="mt-4 mb-2">{t('section.gold')}</h2><Help id="gold" name={t('section.gold')} lang={data.lang} /></div>
-<p data-testid="gold">{n(c.gold.chests)} {t('gold.chests')}, {n(c.gold.bags)} {t('gold.bags')}, {n(c.gold.handfuls)} {t('gold.handfuls')}</p>
-<form use:enhance={busy} class="flex flex-wrap items-end gap-2" method="POST" action={actionHref('gold', data.tab)}>
+<h2 class="mt-4 mb-2"><Help id="gold" name={t('section.gold')} label={t('section.gold')} quiet lang={data.lang} /></h2>
+<p data-testid="gold">{n(g.chests)} {t('gold.chests')}, {n(g.bags)} {t('gold.bags')}, {n(g.handfuls)} {t('gold.handfuls')}</p>
+<form use:enhance={goldEnhance} class="flex flex-wrap items-center gap-x-4 gap-y-2 mb-3" method="POST" action={actionHref('gold', data.tab)}>
+	{#each [['handfuls', 1], ['bags', 10], ['chests', 100]] as [unit, step] (unit)}
+		<div class="flex items-center gap-1">
+			<span>{t(`gold.${unit}`)}</span>
+			<button type="submit" name="handfuls" value={-step} class="btn-ghost" data-testid="gold-{unit}-minus" aria-label={t('gold.spendOne', { unit: unitName(unit) })}>−</button>
+			<button type="submit" name="handfuls" value={step} class="btn-ghost" data-testid="gold-{unit}-plus" aria-label={t('gold.addOne', { unit: unitName(unit) })}>+</button>
+		</div>
+	{/each}
+</form>
+<form use:enhance={goldEnhance} class="flex flex-wrap items-end gap-2" method="POST" action={actionHref('gold', data.tab)}>
 	<label class="mb-0! w-full md:w-auto">{t('gold.adjust')} <input type="number" name="handfuls" step="1" required /></label>
 	<button type="submit" class="btn-primary">{t('action.updateGold')}</button>
 </form>

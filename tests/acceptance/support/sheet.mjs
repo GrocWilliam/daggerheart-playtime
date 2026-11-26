@@ -28,7 +28,7 @@ const LOOK = `(e) => { const c = getComputedStyle(e), r = e.getBoundingClientRec
 		left: r.left, right: r.right, top: r.top, bottom: r.bottom, w: r.width, h: r.height }; }`;
 const look = (loc) => loc.evaluate(eval(LOOK));
 
-export const headerButtonIds = ['campaign-run-link', 'level-up', 'new-edit'];
+export const headerButtonIds = ['level-up', 'campaign-run-link', 'new-edit'];
 export const headerButtons = async (page) => {
 	const out = {};
 	for (const id of headerButtonIds) out[id] = await look(page.locator(`[data-testid="${id}"]`));
@@ -114,3 +114,26 @@ export const hasTestId = (html, testId) => html.includes(`data-testid="${testId}
 
 /** The `lang` the server put on <html>. */
 export const htmlLang = (html) => html.match(/<html lang="([^"]*)"/)?.[1];
+
+/** Boxes (left/right/top/bottom/w/h) by data-testid. Reads only. */
+export const boxOf = (page, testId) => look(page.locator(`[data-testid="${testId}"]`));
+/** Box of the last tracker form, of the evasion/thresholds line, and of the damage form, on the Play tab. */
+export const lastTrackerBox = (page) => look(page.locator('[data-testid="sheet-trackers"] form[action^="?/tracker"]').last());
+export const defenseLineBox = (page) => page.locator('[data-testid="sheet-trackers"] [data-testid="thresholds"]').evaluate((e) => { const r = e.closest('ul').getBoundingClientRect(); return { top: r.top, bottom: r.bottom, left: r.left, right: r.right }; });
+export const damageFormBox = (page) => look(page.locator('[data-testid="sheet-trackers"] form[action^="?/damage"]').first());
+export const proficiencyInTrackers = (page) => page.locator('[data-testid="sheet-trackers"] [data-testid="proficiency"]').count();
+export const conditionToggleBoxes = (page) => Promise.all(['hidden', 'restrained', 'vulnerable'].map((k) => conditionToggleLook(page, k)));
+/** The document order of the header buttons (those present) by test id, read from the HTML. */
+export const headerOrderInHtml = (html) => {
+	const found = [];
+	for (const id of ['level-up', 'campaign-run-link', 'new-edit']) {
+		const i = html.search(new RegExp(`<[a-z]+\\b[^>]*data-testid="${id}"`));
+		if (i >= 0) found.push([i, id]);
+	}
+	return found.sort((a, b) => a[0] - b[0]).map((f) => f[1]);
+};
+/** The class list of the opening tag of the element with this test id in the HTML (empty when absent). */
+export const classesInHtml = (html, testId) => {
+	const tag = html.match(new RegExp(`<[a-z]+\\b[^>]*data-testid="${testId}"[^>]*>`))?.[0] ?? '';
+	return (tag.match(/\sclass="([^"]*)"/)?.[1] ?? '').split(/\s+/).filter(Boolean);
+};

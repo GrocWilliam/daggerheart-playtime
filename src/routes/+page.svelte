@@ -17,7 +17,7 @@
 
 <ul class="list mb-3 mt-0 grid list-none grid-cols-[minmax(0,1fr)] gap-3 pl-0! md:grid-cols-[repeat(2,minmax(0,1fr))] lg:grid-cols-[repeat(3,minmax(0,1fr))]">
 	{#each data.campaigns as c (c.id)}
-		<li class="flex flex-wrap items-center gap-2 rounded-lg border-l-[3px] border-solid border-accent bg-surface pb-2"><a class="flex! min-h-11 w-full min-w-0 items-center px-3 py-0" data-testid="campaign-link" href="/campaigns/{c.id}"><span class="font-display" data-testid="campaign-name">{c.name}</span></a><a class="btn-secondary ml-3" data-testid="campaign-run-link" href="/campaigns/{c.id}?step=run">{t('character.runLink')}</a></li>
+		<li class="rounded-lg border-y-0 border-l-[3px] border-solid border-accent bg-surface"><a class="flex min-h-11 w-full min-w-0 flex-col justify-center px-3 py-0" data-testid="campaign-link" href="/campaigns/{c.id}"><span class="pt-2 font-display text-xl" data-testid="campaign-name">{c.name}</span><p class="m-0 pb-2 text-base text-muted" data-testid="campaign-meta">{[translate(data.lang, 'home.meta.characters', { count: c.characters }), c.scene ?? t('home.meta.noScene'), c.lastJournal].filter(Boolean).join(' · ')}</p></a></li>
 	{/each}
 </ul>
 

@@ -36,7 +36,7 @@ const actions = (page, scope) => page.locator(`${scope} form`).evaluateAll((l) =
 test('gear tab: gold, equip and modal-item forms post with &tab=gear', async () => {
 	const id = await mk();
 	const { ctx, page } = await open(id, 'tab=gear');
-	assert.deepEqual(await actions(page, '[data-testid=sheet-gold]'), ['?/gold&tab=gear']);
+	for (const a of await actions(page, '[data-testid=sheet-gold]')) assert.equal(a, '?/gold&tab=gear'); // #409: the free form and the steppers form
 	const eq = await actions(page, '[data-testid=sheet-equipment]');
 	assert.ok(eq.length > 0);
 	for (const a of eq) assert.equal(a, '?/equip&tab=gear');
@@ -70,7 +70,7 @@ test('no JS: setting gold to 7 on ?tab=gear ends on tab=gear with gold shown', a
 	const id = await mk();
 	const { ctx, page } = await open(id, 'tab=gear', { js: false });
 	await page.locator('[data-testid=sheet-gold] input[name=handfuls]').fill('7');
-	await Promise.all([page.waitForNavigation(), page.locator('[data-testid=sheet-gold] button[type=submit]').click()]);
+	await Promise.all([page.waitForNavigation(), page.locator('[data-testid=sheet-gold] form:has(input[name=handfuls]) button[type=submit]').click()]);
 	assert.equal(new URL(page.url()).searchParams.toString(), 'tab=gear');
 	assert.match(await page.locator('[data-testid=gold]').innerText(), /7/);
 	await ctx.close();

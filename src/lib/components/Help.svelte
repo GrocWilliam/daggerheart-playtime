@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { translate, type Lang } from '$lib/i18n';
 	import glossary from '$lib/srd/glossary.json';
+	import SrdLines from './SrdLines.svelte';
 
 	// Helper: a "?" button opening a native popover panel (Popover API, no click handler: works without JavaScript,
 	// never submits an enclosing form). Inline-level elements only: helpers sit inside <p> and <form>. Pass `id` of a glossary term for glossary text, `text` for a catalog
@@ -14,7 +15,8 @@
 		lines = undefined,
 		text = undefined,
 		label = undefined,
-		heading = false
+		heading = false,
+		quiet = false
 	}: {
 		id: string;
 		name: string;
@@ -24,6 +26,7 @@
 		text?: string;
 		label?: string;
 		heading?: boolean;
+		quiet?: boolean;
 	} = $props();
 	const uid = $props.id();
 	const panelId = `help-${uid}`;
@@ -48,15 +51,9 @@
 	<button type="button" data-testid="help-open" popovertarget={panelId} aria-label="{translate(lang, 'help.label')} {name}" class="btn-ghost inline-flex min-h-11 min-w-11 items-center justify-center bg-transparent! p-0! align-middle font-bold text-text! {label ? 'px-1! underline decoration-dotted' : ''}">{label ?? '?'}</button>
 	{/if}
 	<span popover="auto" id={panelId} data-testid="help-panel" class="m-auto max-h-[80dvh] w-[min(32rem,100vw_-_2rem)] overflow-y-auto rounded-[0.5rem] border-[3px] border-double border-accent bg-surface p-4 text-text backdrop:bg-bg backdrop:opacity-80">
-		<strong lang={nameLang}>{name}</strong>
+		{#if !quiet}<strong lang={nameLang}>{name}</strong>{/if}
 		{#if lines}
-			{#each lines as line, i (i)}
-				{#if line.label}
-					<span class="my-1 block"><span {lang}>{line.label}:</span> <span lang={line.lang}>{line.text}</span></span>
-				{:else}
-					<span lang={line.lang} class="my-1 block">{line.text}</span>
-				{/if}
-			{/each}
+			<SrdLines {lines} {lang} />
 		{:else if text}
 			<span class="my-1 block">{text}</span>
 		{:else if term}

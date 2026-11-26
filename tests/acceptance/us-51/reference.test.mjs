@@ -1,6 +1,7 @@
 import { test, before, after } from 'node:test';
 import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
+import { openRefSections } from '../support/chrome.mjs';
 
 const { chromium } = createRequire(process.env.PW_DIR + '/')('playwright-core');
 const BASE = process.env.BASE_URL;
@@ -24,7 +25,8 @@ async function items(qs, lang = 'en') {
 	const ctx = await browser.newContext();
 	await ctx.addCookies([{ name: 'lang', value: lang, url: BASE }]);
 	const p = await ctx.newPage();
-	await p.goto(`${BASE}/reference${qs}`);
+	await p.goto(`${BASE}/reference${qs}`, { waitUntil: "networkidle" });
+	await openRefSections(p); // us-411: sections are closed <details>
 	const out = {};
 	for (const k of KINDS) {
 		const sec = p.locator(`[data-testid="ref-${k}"]`);
@@ -56,30 +58,40 @@ for (const lang of ['en', 'fr']) {
 	});
 }
 
-test('every ref-item has a helper (data-testid=help)', async () => {
+// us-411: the helper is replaced by a <details> per entry whose opened body shows the entry's text.
+test('every ref-item has a <details> whose opened body shows its text', async () => {
 	const ctx = await browser.newContext();
 	const p = await ctx.newPage();
 	await p.goto(`${BASE}/reference`);
 	const n = await p.locator('[data-testid="ref-item"]').count();
 	assert.ok(n > 500);
-	const without = await p.locator('[data-testid="ref-item"]').evaluateAll((els) => els.filter((e) => !e.querySelector('[data-testid="help"]')).length);
-	assert.equal(without, 0, 'items without helper');
+	await openRefSections(p);
+	const without = await p.locator('[data-testid="ref-item"]').evaluateAll((els) => els.filter((e) => {
+		const d = e.querySelector('details');
+		if (!d) return true;
+		d.open = true;
+		const summary = d.querySelector(':scope > summary');
+		return !summary || d.innerText.trim().length <= summary.innerText.trim().length;
+	}).length);
+	assert.equal(without, 0, 'items without a <details> showing text');
 	await ctx.close();
 });
 
-test('helpers open and explain the element with lang="en" SRD text; help-open is at least 44x44', async () => {
+// us-411: entries open inline (<details>) instead of through a helper; the summary is the 44px target.
+test('entries open and explain the element with SRD text in its lang; the entry summary is at least 44px high', { timeout: 120000 }, async () => {
 	for (const lang of ['en', 'fr']) {
 		const ctx = await browser.newContext();
 		await ctx.addCookies([{ name: 'lang', value: lang, url: BASE }]);
 		const p = await ctx.newPage();
-		await p.goto(`${BASE}/reference?kind=weapons&q=sword`);
+		await p.goto(`${BASE}/reference?kind=weapons&q=sword`, { waitUntil: "networkidle" });
+		await openRefSections(p);
 		const item = p.locator('[data-testid="ref-item"]').first();
-		const sum = item.locator('[data-testid="help"] [data-testid="help-open"]');
+		const sum = item.locator('details > summary').first();
 		const box = await sum.boundingBox();
-		assert.ok(box.width >= 44 && box.height >= 44, `${lang} help-open ${box.width}x${box.height}`);
+		assert.ok(box.height >= 44, `${lang} entry summary ${box.width}x${box.height}`);
 		await sum.click();
-		assert.equal(await item.locator('[data-testid="help"]').locator('[data-testid="help-panel"]').evaluate((e) => e.matches(':popover-open')), true);
-		const en = await item.locator(`[data-testid="help"] [lang="${lang}"]`).first().innerText();
+		assert.equal(await item.locator('details').first().evaluate((e) => e.open), true);
+		const en = await item.locator(`details > :not(summary)[lang="${lang}"], details > :not(summary) [lang="${lang}"]`).first().innerText();
 		assert.ok(en.trim().length > 5, `SRD text in a lang="${lang}" block`);
 		await ctx.close();
 	}

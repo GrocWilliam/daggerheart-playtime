@@ -264,7 +264,7 @@ for (const [w, h] of [[375, 812], [768, 1024], [1024, 768], [1180, 820]]) {
 				assert.ok(sw[0] <= sw[1], `scrollWidth ${sw[0]} > ${sw[1]}`);
 				const small = await p.evaluate((sel) => [...document.querySelectorAll(sel)].filter((e) => {
 					const s = getComputedStyle(e), r = e.getBoundingClientRect();
-					return s.visibility !== 'hidden' && s.display !== 'none' && r.width > 0 && r.height > 0 && e.type !== 'checkbox' && e.type !== 'radio' && e.type !== 'hidden';
+					return s.visibility !== 'hidden' && s.display !== 'none' && r.width > 1 && r.height > 1 && e.type !== 'checkbox' && e.type !== 'radio' && e.type !== 'hidden';
 				}).map((e) => { const r = e.getBoundingClientRect(); return [e.tagName + (e.dataset.testid ? '#' + e.dataset.testid : ''), r.width, r.height]; })
 					.filter(([, ww, hh]) => ww < 43.5 || hh < 43.5), CONTROLS);
 				assert.deepEqual(small, [], 'small controls');

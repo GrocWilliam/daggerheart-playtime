@@ -142,8 +142,9 @@ test('at 768x1024 each tab lays out its sections in the stated grid', async () =
 	const W = { w: 768, h: 1024 };
 	let { ctx, p } = await open(`/characters/${id}?tab=play`, W);
 	let a = await box(p, 'sheet-trackers'), b = await box(p, 'sheet-conditions');
-	assert.ok(a.x + a.width <= b.x + 4, `trackers left of conditions: ${JSON.stringify([a, b])}`);
-	assert.ok(Math.abs(a.y - b.y) <= 4, `play tops ${a.y} ${b.y}`);
+	// us-408: Play is one column, conditions below trackers with the same left edge.
+	assert.ok(b.y >= a.y + a.height - 1, `conditions below trackers: ${JSON.stringify([a, b])}`);
+	assert.ok(Math.abs(a.x - b.x) <= 1, `play left edges ${a.x} ${b.x}`);
 	await ctx.close();
 
 	({ ctx, p } = await open(`/characters/${id}?tab=traits`, W));
