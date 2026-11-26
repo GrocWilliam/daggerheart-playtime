@@ -4,6 +4,7 @@
 	import { damageText, type DamageResult } from '$lib/forms/damage';
 	import Divider from '$lib/components/Divider.svelte';
 	import Modal from '$lib/components/Modal.svelte';
+	import Pips from '$lib/components/Pips.svelte';
 	import Tracker from '$lib/components/Tracker.svelte';
 	import DefenseLine from '$lib/components/DefenseLine.svelte';
 	import ConditionBadges from '$lib/components/ConditionBadges.svelte';
@@ -17,7 +18,7 @@
 	const ADJUSTMENTS = ['easier', 'damageBoost', 'harder'] as const;
 	const badge: Record<string, string> = { planned: 'bg-muted', current: 'bg-accent', done: 'bg-calm' };
 	let { data, form: rawForm } = $props();
-	const form = $derived(rawForm as { error?: string; modal?: string; sceneId?: string; values?: Record<string, string>; damage?: DamageResult | null } | null);
+	const form = $derived(rawForm as { error?: string; modal?: string; section?: string; sceneId?: string; values?: Record<string, string>; damage?: DamageResult | null } | null);
 	import { onMount } from 'svelte';
 	type Scene = (typeof data.scenes)[number];
 	type Adversary = NonNullable<Scene['encounter']>['adversaries'][number];
@@ -69,6 +70,7 @@
 			<div class="flex flex-wrap items-center gap-x-2">
 				<span class="grow" lang={a.nameLang}>{label}</span>
 				<span data-testid="unit-hp">{u.marked}/{u.max}</span>
+				<Pips name="adversary" max={u.max} filled={u.defeated ? u.max : u.marked} muted={u.defeated} size="sm" row />
 				{#if u.defeated}<span data-testid="unit-defeated">{t('battle.defeated')}</span>{/if}
 			</div>
 			<div class="flex flex-wrap items-center gap-1">
@@ -278,10 +280,13 @@
 			<input type="hidden" name="sceneId" value={s.id} />
 			<label class="mb-0!">{t('encounter.partySize')} <input class="w-[5rem]! min-w-0!" name="partySize" type="number" min="1" max="8" value={s.encounter?.partySize ?? data.party.partySize} required /></label>
 			<label class="mb-0!">{t('encounter.tier')} <input class="w-[5rem]! min-w-0!" name="tier" type="number" min="1" max="4" value={s.encounter?.tier ?? data.party.tier} required /></label>
-			{#each ADJUSTMENTS as a (a)}
-				<label class="mb-0!"><input type="checkbox" name="adjustments" value={a} checked={s.encounter?.adjustments.includes(a) ?? false} /> {t(`encounter.adjust.${a}`)}</label>
-			{/each}
 			<button class="btn-primary" type="submit">{s.encounter ? t('encounter.regenerate') : t('encounter.generate')}</button>
+			<details data-testid="encounter-adjustments" class="basis-full md:pointer-events-none md:-mt-[3.25rem]" open={(s.encounter?.adjustments.length ?? 0) > 0}>
+				<summary class="flex min-h-11 items-center md:pointer-events-auto md:ml-auto md:w-fit">{t('encounter.adjustments')}</summary>
+				{#each ADJUSTMENTS as a (a)}
+					<label class="mb-0! md:pointer-events-auto"><input type="checkbox" name="adjustments" value={a} checked={s.encounter?.adjustments.includes(a) ?? false} /> {t(`encounter.adjust.${a}`)}</label>
+				{/each}
+			</details>
 		</form>
 		{#if s.encounter}
 			{@const enc = s.encounter}
@@ -292,20 +297,23 @@
 			{#each enc.adversaries as a (a.id)}
 				<div class="mb-2 rounded-[0.5rem] border-[3px] border-double border-accent bg-surface p-3" data-testid="encounter-adversary">
 					{@render adversaryStats(a)}
-					<form use:enhance={busy} class="mb-0 flex flex-wrap items-center gap-2" method="POST" action="?/setCount&step=build">
+					<form use:enhance={busy} class="mb-0 flex flex-nowrap items-center gap-2" method="POST" action="?/setCount&step=build">
 						<input type="hidden" name="sceneId" value={s.id} />
-						<input type="hidden" name="id" value={a.id} />
-						<input class="w-[5rem]! min-w-0!" name="count" type="number" min="1" value={a.count} required aria-label={translate(data.lang, 'encounter.count', { name: a.name })} />
-						{#each enc.adversaries.filter((o) => o.id !== a.id) as o (o.id)}
+						{#each enc.adversaries as o (o.id)}
 							<input type="hidden" name="id" value={o.id} />
 							<input type="hidden" name="count" value={o.count} />
 						{/each}
-						<button class="btn-secondary" type="submit">{t('encounter.update')}</button>
-						<button class="btn-danger" type="submit" formaction="?/removeAdversary&step=build" name="remove" value={a.id} formnovalidate>{t('encounter.remove')}</button>
+						<input type="hidden" name="target" value={a.id} />
+						<div role="group" class="flex flex-nowrap items-center gap-2" aria-label={translate(data.lang, 'encounter.count', { name: a.name })}>
+							<button class="btn-ghost min-h-11 min-w-11" type="submit" name="delta" value="-1" data-testid="adversary-count-minus" disabled={a.count <= 1} aria-label={translate(data.lang, 'encounter.countDown', { name: a.name })}>{t('action.decrease')}</button>
+							<span data-testid="adversary-count">{a.count}</span>
+							<button class="btn-ghost min-h-11 min-w-11" type="submit" name="delta" value="1" data-testid="adversary-count-plus" disabled={a.count >= 20} aria-label={translate(data.lang, 'encounter.countUp', { name: a.name })}>{t('action.increase')}</button>
+						</div>
+						<button class="btn-danger ml-auto" type="submit" formaction="?/removeAdversary&step=build" name="remove" value={a.id} formnovalidate>{t('encounter.remove')}</button>
 					</form>
 				</div>
 			{/each}
-			<form use:enhance={busy} method="POST" action="?/deleteEncounter&step=build">
+			<form use:enhance={busy} class="flex justify-end" method="POST" action="?/deleteEncounter&step=build">
 				<input type="hidden" name="sceneId" value={s.id} />
 				<button class="btn-danger" type="submit">{t('encounter.delete')}</button>
 			</form>
@@ -385,21 +393,24 @@
 				{@render battleUnits(a, cs.id)}
 			</div>
 		{/each}
-		<form use:enhance={busy} class="mb-2" method="POST" action="?/battleAdd" data-testid="battle-add">
-			<input type="hidden" name="sceneId" value={cs.id} />
-			<label>{t('battle.addWhich')}
-				<select name="adversaryId" required data-testid="battle-add-adversary">
-					<option value=""></option>
-					{#each data.battleOptions as g (g.tier)}
-						<optgroup label="{t('encounter.tier')} {g.tier}">
-							{#each g.adversaries as o (o.id)}<option value={o.id} lang={o.nameLang} label={o.name}></option>{/each}
-						</optgroup>
-					{/each}
-				</select>
-			</label>
-			<label>{t('battle.addQuantity')} <input type="number" name="count" value="1" min="1" max="20" data-testid="battle-add-count" /></label>
-			<button type="submit" class="btn-primary" data-testid="battle-add-submit">{t('battle.add')}</button>
-		</form>
+		<details data-testid="battle-add-more" class="mb-2" open={form?.section === 'battleAdd'}>
+			<summary class="flex min-h-11 items-center">{t('battle.add')}</summary>
+			<form use:enhance={busy} class="mb-2" method="POST" action="?/battleAdd" data-testid="battle-add">
+				<input type="hidden" name="sceneId" value={cs.id} />
+				<label>{t('battle.addWhich')}
+					<select name="adversaryId" required data-testid="battle-add-adversary">
+						<option value=""></option>
+						{#each data.battleOptions as g (g.tier)}
+							<optgroup label="{t('encounter.tier')} {g.tier}">
+								{#each g.adversaries as o (o.id)}<option value={o.id} lang={o.nameLang} label={o.name}></option>{/each}
+							</optgroup>
+						{/each}
+					</select>
+				</label>
+				<label>{t('battle.addQuantity')} <input type="number" name="count" value="1" min="1" max="20" data-testid="battle-add-count" /></label>
+				<button type="submit" class="btn-primary" data-testid="battle-add-submit">{t('battle.add')}</button>
+			</form>
+		</details>
 	{/if}
 	{#each cs.loot as l (l.id)}
 		<div class="mb-2 rounded-[0.5rem] border-[3px] border-double border-accent bg-surface p-3" data-testid="loot-entry" data-given={l.given}>

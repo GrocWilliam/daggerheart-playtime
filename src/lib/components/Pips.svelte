@@ -1,6 +1,6 @@
 <script lang="ts">
 	// `row`: inside a Tracker row, without the bottom margin (the Tracker form has it).
-	let { name, max, filled, row = false, size = 'md' }: { name: string; max: number; filled: number; row?: boolean; size?: 'sm' | 'md' | 'band' } = $props();
+	let { name, max, filled, row = false, size = 'md', muted = false }: { name: string; max: number; filled: number; row?: boolean; size?: 'sm' | 'md' | 'band'; muted?: boolean } = $props();
 	// `pip` and `filled` are marker classes without CSS: frozen tests (us-40) select on them.
 	// Full class names so Tailwind finds them; each tracker has its own colour.
 	const colours: Record<string, [string, string]> = {
@@ -8,10 +8,11 @@
 		hp: ['border-danger', 'bg-danger'],
 		stress: ['border-accent', 'bg-accent'],
 		hope: ['border-calm', 'bg-calm'],
-		armor: ['border-muted', 'bg-muted']
+		armor: ['border-muted', 'bg-muted'],
+		adversary: ['border-danger', 'bg-danger']
 	};
 	const dim = { sm: 'size-3', md: 'size-3', band: 'size-2.5 md:size-5' };
-	const [border, fill] = $derived(colours[name] ?? colours.armor);
+	const [border, fill] = $derived(muted ? colours.armor : (colours[name] ?? colours.armor));
 </script>
 
 <div class="{row ? 'mb-0' : 'mb-3'} flex text-base {size === 'band' ? 'flex-nowrap gap-0.5 md:gap-1' : 'flex-wrap gap-1'}" data-testid="{name}-pips" aria-hidden="true"

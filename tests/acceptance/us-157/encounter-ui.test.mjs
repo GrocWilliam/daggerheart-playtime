@@ -32,6 +32,10 @@ async function open(path, lang = 'en') {
 const scene = (p) => p.locator('[data-testid=scene]', { hasText: 'Ambush' });
 // US-341: a non-current scene's controls sit in the closed scene-more disclosure
 const press = async (p, loc) => { await openSceneMore(scene(p)); await Promise.all([p.waitForLoadState('load'), loc.click()]); await openSceneMore(scene(p)); };
+const openAdjustments = async (p) => {
+	const d = scene(p).locator('[data-testid="encounter-adjustments"]');
+	if (!(await d.evaluate((e) => e.open))) await d.locator(':scope > summary').click();
+};
 const budget = async (p) => {
 	const t = (await scene(p).locator('[data-testid=encounter-budget]').textContent()).replace(/\s+/g, ' ');
 	const m = t.match(/(\d+)\s*\/\s*(\d+)/);
@@ -94,11 +98,13 @@ test('the generate button reads Regenerate once an encounter exists and replaces
 test('adjustment checkboxes are sent with the generate form', async () => {
 	const { c, s, url } = await setup([1, 1]);
 	const p = await open(url);
+	await openAdjustments(p);
 	await scene(p).getByLabel(/easier/i).check();
 	await scene(p).getByLabel(/damage boost/i).check();
 	await generate(p);
 	const enc = await stored(c, s);
 	assert.deepEqual([...enc.adjustments].sort(), ['damageBoost', 'easier']);
+	await openAdjustments(p);
 	await scene(p).getByLabel(/harder/i).check();
 	await press(p, scene(p).getByRole('button', { name: /^regenerate$/i }));
 	assert.ok((await stored(c, s)).adjustments.includes('harder'));
@@ -114,10 +120,16 @@ test('changing a count updates the budget, over budget is flagged, removing upda
 	const name = (await stored(c, s)).adversaries[0].name;
 	const byName = (n) => scene(p).locator('[data-testid=encounter-adversary]').filter({ hasText: new RegExp('^\\s*' + n.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ' ×') }).first();
 	const card = byName(name);
-	await card.locator('input[type=number]').fill('30');
-	await press(p, card.getByRole('button', { name: /update/i }));
+	let reached = 1;
+	for (let n = (await stored(c, s)).adversaries.find((a) => a.name === name).count; n < 20; n++) {
+		await press(p, card.getByTestId('adversary-count-plus'));
+		const b = await budget(p);
+		reached = n + 1;
+		if (b.spent > b.budget) break;
+	}
 	const enc = await stored(c, s);
-	assert.equal(enc.adversaries.find((a) => a.name === name).count, 30);
+	assert.equal(enc.adversaries.find((a) => a.name === name).count, +(await card.getByTestId('adversary-count').textContent()));
+	assert.equal(enc.adversaries.find((a) => a.name === name).count, reached, 'the stored count equals the count reached');
 	const after = await budget(p);
 	assert.equal(after.spent, enc.spent);
 	assert.notEqual(after.spent, before.spent);

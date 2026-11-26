@@ -51,7 +51,12 @@ async function until(fn, msg) {
 	for (let n = 0; n < 50; n++) { if (await fn()) return; await new Promise((r) => setTimeout(r, 100)); }
 	assert.fail(msg);
 }
+async function openMore(page) {
+	const d = page.locator('[data-testid="battle-add-more"]');
+	if (!(await d.evaluate((e) => e.open))) await d.locator('summary').first().click();
+}
 async function add(page, adv, count) {
+	await openMore(page);
 	const f = page.locator('[data-testid="battle-add"]');
 	await f.locator('[data-testid="battle-add-adversary"]').selectOption(adv);
 	if (count !== undefined) await f.locator('[data-testid="battle-add-count"]').fill(String(count));
@@ -98,6 +103,7 @@ test('select: blank first option, 4 tier optgroups, one labelled option per adve
 test('page text does not contain Acid Burrower while it is only an option', async () => {
 	const sc = await setup();
 	const { ctx, page } = await open(sc);
+	await openMore(page);
 	await page.locator('[data-testid="battle-add-adversary"]').waitFor();
 	assert.equal((await page.evaluate(() => document.documentElement.innerText)).includes('Acid Burrower'), false);
 	await ctx.close();
@@ -108,6 +114,7 @@ for (const lang of ['en', 'fr']) {
 		const T = lang === 'en' ? EN : FR;
 		const sc = await setup();
 		const { ctx, page } = await open(sc, { lang });
+		await openMore(page);
 		const f = page.locator('[data-testid="battle-add"]');
 		const c = f.locator('[data-testid="battle-add-count"]');
 		assert.equal(await c.inputValue(), '1');
@@ -177,6 +184,7 @@ test('no JS: count 21 without max shows error.invalid and adds nothing', async (
 	});
 	const page = await ctx.newPage(); page.setDefaultTimeout(4000);
 	await page.goto(sc.run);
+	await openMore(page);
 	const c = page.locator('[data-testid="battle-add-count"]');
 	assert.equal(await c.getAttribute('max'), null);
 	await add(page, BUR, 21);
@@ -192,6 +200,7 @@ test('no JS: count 21 without max shows error.invalid and adds nothing', async (
 test('360px viewport: no sideways scroll with the add form shown', async () => {
 	const sc = await setup();
 	const { ctx, page } = await open(sc, { width: 360 });
+	await openMore(page);
 	await page.locator('[data-testid="battle-add"]').waitFor();
 	assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= 360));
 	await ctx.close();

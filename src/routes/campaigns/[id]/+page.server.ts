@@ -7,6 +7,7 @@ import type { Lang } from '$lib/i18n';
 import { partyDefaults, ADJUSTMENTS, marksOf, type Encounter } from '$lib/server/features/encounters';
 import { trackerFieldSchema } from '$lib/server/features/characters';
 import { splitDamage } from './damage';
+import { countsFrom, stepCount } from './counts';
 type Actions = import('./$types').Actions;
 type PageServerLoad = import('./$types').PageServerLoad;
 
@@ -277,13 +278,18 @@ add: async (e) => {
 	},
 	setCount: async (e) => {
 		const f = await e.request.formData();
-		const counts = f.getAll('id').map((id, i) => ({ id: text(id), count: Number(f.getAll('count')[i]) }));
+		let counts = countsFrom(f);
+		const target = text(f.get('target'));
+		if (target && f.has('delta')) {
+			const delta = Number(f.get('delta'));
+			counts = counts.map((c) => (c.id === target ? { ...c, count: stepCount(c.count, delta) } : c));
+		}
 		return run(e, 'PATCH', encPath(e, f), { adversaries: counts });
 	},
 	removeAdversary: async (e) => {
 		const f = await e.request.formData();
 		const gone = text(f.get('remove'));
-		const counts = f.getAll('id').map((id, i) => ({ id: text(id), count: Number(f.getAll('count')[i]) })).filter((a) => a.id !== gone);
+		const counts = countsFrom(f).filter((a) => a.id !== gone);
 		return run(e, 'PATCH', encPath(e, f), { adversaries: counts });
 	},
 	battleDamage: async (e) => {
@@ -296,7 +302,8 @@ add: async (e) => {
 	},
 	battleAdd: async (e) => {
 		const f = await e.request.formData();
-		return run(e, 'POST', `${encPath(e, f)}/adversaries`, { adversaryId: text(f.get('adversaryId')), count: Number(f.get('count')) });
+		const r = await call(e.fetch, 'POST', `${encPath(e, f)}/adversaries`, { adversaryId: text(f.get('adversaryId')), count: Number(f.get('count')) });
+		return r.ok ? { ok: true } : fail(r.status, { error: errorKey(r.status), section: 'battleAdd' });
 	},
 	deleteEncounter: async (e) => {
 		const f = await e.request.formData();

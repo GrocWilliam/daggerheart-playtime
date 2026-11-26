@@ -104,7 +104,7 @@ export function generateEncounter(
 	pool: PoolAdversary[]
 ): Encounter {
 	const partySize = input.partySize;
-	const adjustments = [...new Set(input.adjustments ?? [])];
+	const adjustments = [...new Set(input.adjustments ?? [])].sort();
 	const random = seededRandom(input.seed ?? Math.floor(Math.random() * 2 ** 32));
 	const base = evaluate(partySize, adjustments, []).budget - 1; // budget before the "no big threat" bonus
 	const unit = (role: string) => (role === 'Minion' ? partySize : 1);

@@ -3,7 +3,7 @@
 # 1 'Generate encounter' (no JS) shows data-testid=encounter-adversary entries (count, role, difficulty, HP, Stress,
 #   thresholds, attack, damage, features in <details>) and data-testid=encounter-budget 'spent / budget';
 #   button reads 'Regenerate' when one exists and replaces it; over-budget is visibly flagged;
-# 2 changing a count (update button) or removing an adversary updates the budget; delete button removes the encounter;
+# 2 changing a count (count stepper) or removing an adversary updates the budget; delete button removes the encounter;
 # 3 form defaults (party size, tier inputs) match the campaign's characters;
 # 4 French works (labels translated, SRD text English); i18n + hardcoded-text unit tests pass.
 # Assumed English labels: inputs "Party size", "Tier"; checkboxes "Easier", "Damage boost", "Harder";

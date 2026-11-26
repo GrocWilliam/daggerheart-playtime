@@ -147,7 +147,7 @@ test('a scene with an environment shows its name, type, difficulty, impulses and
 		// us-246: features sit in the Help popover (formerly a <details>) or a plain <details>.
 		assert.ok(await el.locator('[data-testid="help"], details').count() >= 1, 'features in a helper or details');
 		assert.ok(text.includes(shown.feature[0].name.trim()), 'feature name');
-		assert.equal(await scene(p, 'Plain').locator('[data-testid="help"], details:not([data-testid="scene-more"])').count(), 0);
+		assert.equal(await scene(p, 'Plain').locator('[data-testid="help"], details:not([data-testid="scene-more"]):not([data-testid="encounter-adjustments"])').count(), 0);
 	}
 });
 

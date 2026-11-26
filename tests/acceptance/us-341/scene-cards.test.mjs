@@ -4,7 +4,7 @@ import { launchBrowser, closePage } from '../support/browser.mjs';
 import { createCampaign, createCharacter } from '../support/api.mjs';
 import { buildStepUrl, createScene, environments, openAs } from '../support/scenes.mjs';
 import {
-	addLootAndEncounter, setCurrent, openMore, moreOf, buttonVisible, environmentVisible, pressSceneButton, listedTitles,
+	sceneCard, addLootAndEncounter, setCurrent, openMore, moreOf, buttonVisible, environmentVisible, pressSceneButton, listedTitles,
 	sceneButtonLook, sceneButtonLooks, lookOfTestId, headerCentres, headerControlRects, oneRowForm, horizontalOverflow, buildColumns
 } from '../support/buildscenes.mjs';
 
@@ -162,7 +162,7 @@ test('in an opened scene Roll loot and Generate encounter are btn-primary; Set c
 	} finally { await closePage(page); }
 });
 
-test('in an opened scene with loot and an encounter, Give and Update are btn-secondary; Delete loot, Remove and Delete encounter are btn-danger', async () => {
+test('in an opened scene with loot and an encounter, Give is btn-secondary, the count stepper buttons are btn-ghost; Delete loot, Remove and Delete encounter are btn-danger', async () => {
 	const { campaignId } = await campaignAlphaBeta({ rich: true });
 	const { page } = await openAs(browser, buildStepUrl(BASE, campaignId), { viewport: [1024, 768] });
 	try {
@@ -172,10 +172,15 @@ test('in an opened scene with loot and an encounter, Give and Update are btn-sec
 			assert.ok(looks.length >= 1, `${name} present`);
 			for (const l of looks) assert.ok(l.classes.includes('btn-danger'), `${name}: ${l.classes}`);
 		}
-		for (const name of ['Give', 'Update']) {
+		for (const name of ['Give']) {
 			const looks = await sceneButtonLooks(page, 'Beta', name);
 			assert.ok(looks.length >= 1, `${name} present`);
 			for (const l of looks) assert.ok(l.classes.includes('btn-secondary'), `${name}: ${l.classes}`);
+		}
+		for (const id of ['adversary-count-minus', 'adversary-count-plus']) {
+			const looks = await sceneCard(page, 'Beta').getByTestId(id).evaluateAll((els) => els.map((e) => [...e.classList]));
+			assert.ok(looks.length >= 1, `${id} present`);
+			for (const classes of looks) assert.ok(classes.includes('btn-ghost'), `${id}: ${classes}`);
 		}
 	} finally { await closePage(page); }
 });
